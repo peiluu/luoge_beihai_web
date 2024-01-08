@@ -1,0 +1,35 @@
+$sideMenuRowHeight: 50px;
+
+$blueColor: #1B90FF;
+$greenColor: #44BEC7;
+$yellowColor: #FDC13B;
+
+// sidebar
+$menuText:#bfcbd9;
+$menuActiveText:#409EFF;
+$subMenuActiveText:#f4f4f5;
+
+$menuBg:#001529;
+$menuHover:#263445;
+
+$subMenuBg:#001529;
+$subMenuHover:#001528;
+
+$sideBarWidth: 200px;
+$headerHeight: 50px;
+$tabHeight: 40px;
+$sideMenuHeight: calc(100% - #{$headerHeight});
+$containerPadding: 10px;
+$containerHeight: calc(100% - 20px);
+$containerHeightWithTab: calc(100% - #{$tabHeight} - 20px);
+
+:export {
+  menuText: $menuText;
+  menuActiveText: $menuActiveText;
+  subMenuActiveText: $subMenuActiveText;
+  menuBg: $menuBg;
+  menuHover: $menuHover;
+  subMenuBg: $subMenuBg;
+  subMenuHover: $subMenuHover;
+  sideBarWidth: $sideBarWidth;
+}
