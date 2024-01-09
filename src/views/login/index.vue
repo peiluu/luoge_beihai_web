@@ -112,14 +112,6 @@ export default {
               const { roleList = [], token = '' } = res.data;
               Cookies.set('token', token);
               Cookies.set('roleList', JSON.stringify(roleList));
-              // 客户角色跳转至另一首页
-              // if (roleList.includes('客户')) {
-              //   this.$router.replace({ name: 'systemHome' });
-              //   return;
-              // }
-
-              // this.$router.replace({ name: 'home' });
-
               // 登录成功后获取菜单
               this.getMenus(roleList);
               this.getDicts();
@@ -143,11 +135,6 @@ export default {
           }
           window.SITE_CONFIG['menuList'] = res.data;
           this.fnAddDynamicMenuRoutes(res.data);
-          // 客户角色跳转至另一首页
-          if (roleList.includes('客户')) {
-            this.$router.replace({ name: 'systemHome' });
-            return;
-          }
           this.$router.replace({ name: 'home' });
         })
         .catch((e) => {
@@ -192,7 +179,7 @@ export default {
         } else {
           URL = URL.replace(/^\//, '').replace(/_/g, '-');
           route['path'] = route['name'] = URL.replace(/\//g, '-');
-          route['component'] = () => import(`@/views/modules/${URL}`);
+          route['component'] = () => import(`@/views//${URL}`);
         }
         routes.push(route);
       }

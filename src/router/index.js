@@ -26,7 +26,7 @@ Router.prototype.replace = function replace(location, onResolve, onReject) {
 export const pageRoutes = [
   {
     path: '/404',
-    component: () => import('@/views/pages/404'),
+    component: () => import('@/views/404'),
     name: '404',
     meta: { title: '404未找到' },
     beforeEnter (to, from, next) {
@@ -38,7 +38,7 @@ export const pageRoutes = [
       next()
     }
   },
-  { path: '/login', component: () => import('@/views/pages/login'), name: 'login', meta: { title: '登录' } }
+  { path: '/login', component: () => import('@/views/login/index'), name: 'login', meta: { title: '登录' } }
 ]
 
 // 模块路由(基于主入口布局页面)
@@ -49,7 +49,7 @@ export const moduleRoutes = {
   redirect: { name: 'home' },
   meta: { title: '主入口布局' },
   children: [
-    { path: '/home', component: () => import('@/views/modules/home'), name: 'home', meta: { title: '首页', isTab: true } }
+    { path: '/home', component: () => import('@/views/home'), name: 'home', meta: { title: '首页', isTab: true } }
   ]
 }
 
@@ -63,7 +63,7 @@ export function addDynamicRoute (routeParams, router) {
   // 否则: 添加并全局变量保存, 再跳转
   dynamicRoute = {
     path: routeName,
-    component: () => import(`@/views/modules/${routeParams.path}`),
+    component: () => import(`@/views/${routeParams.path}`),
     name: routeName,
     meta: {
       ...window.SITE_CONFIG['contentTabDefault'],
@@ -168,7 +168,7 @@ function fnAddDynamicMenuRoutes (menuList = [], routes = []) {
     } else {
       URL = URL.replace(/^\//, '').replace(/_/g, '-')
       route['path'] = route['name'] = URL.replace(/\//g, '-')
-      route['component'] = () => import(`@/views/modules/${URL}`)
+      route['component'] = () => import(`@/views/${URL}`)
     }
     routes.push(route)
   }
@@ -176,14 +176,13 @@ function fnAddDynamicMenuRoutes (menuList = [], routes = []) {
     return fnAddDynamicMenuRoutes(temp, routes)
   }
   // 添加路由
-  router.addRoutes([
+  router.addRoute(
     {
       ...moduleRoutes,
       name: 'main-dynamic-menu',
       children: routes
-    },
-    { path: '*', redirect: { name: '404' } }
-  ])
+    })
+  router.addRoute({ path: '*', redirect: { name: '404' } });
   window.SITE_CONFIG['dynamicMenuRoutes'] = routes
   window.SITE_CONFIG['dynamicMenuRoutesHasAdded'] = true
 }
