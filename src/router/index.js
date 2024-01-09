@@ -6,9 +6,21 @@ import { isURL } from '@/utils/validate'
 Vue.use(Router)
 
 const originalPush = Router.prototype.push
-Router.prototype.push = function push(location) {
-  return originalPush.call(this, location).catch(err => err)
-}
+const originalReplace = Router.prototype.replace;
+//push
+Router.prototype.push = function push(location, onResolve, onReject) {
+  if (onResolve || onReject){
+    return originalPush.call(this, location, onResolve, onReject);
+  }
+  return originalPush.call(this, location).catch(err => err);
+};
+//replace
+Router.prototype.replace = function replace(location, onResolve, onReject) {
+    if (onResolve || onReject){
+      return originalReplace.call(this, location, onResolve, onReject);
+    }
+    return originalReplace.call(this, location).catch(err => err);
+};
 
 // 页面路由(独立页面)
 export const pageRoutes = [
@@ -208,13 +220,13 @@ export function addDynamicRoute (routeParams, router) {
       title: `${routeParams.title}`
     }
   }
-  router.addRoutes([
+  router.addRoute(
     {
       ...moduleRoutes,
       name: `main-dynamic__${dynamicRoute.name}`,
       children: [dynamicRoute]
     }
-  ])
+  )
   window.SITE_CONFIG['dynamicRoutes'].push(dynamicRoute)
   router.push({ name: dynamicRoute.name, params: routeParams.params })
 }
@@ -228,7 +240,7 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   // 添加动态(菜单)路由
   // 已添加或者当前路由为页面路由, 可直接访问
-  if (window.SITE_CONFIG['dynamicMenuRoutesHasAdded'] || fnCurrentRouteIsPageRoute(to, pageRoutes)) {
+  if (window.SITE_CONFIG['menuList'].length || fnCurrentRouteIsPageRoute(to, pageRoutes)) {
     return next()
   }
   // 获取字典列表, 添加并全局变量保存

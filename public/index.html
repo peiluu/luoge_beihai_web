@@ -24,35 +24,38 @@
     window.SITE_CONFIG['permissions'] = [];                  // 页面按钮操作权限（后台返回，未做处理）
     window.SITE_CONFIG['dynamicRoutes'] = [];                // 动态路由列表
     window.SITE_CONFIG['dynamicMenuRoutes'] = [];            // 动态(菜单)路由列表
-    window.SITE_CONFIG['dynamicMenuRoutesHasAdded'] = false; // 动态(菜单)路由是否已经添加的状态标示（用于判断是否需要重新拉取数据并进行动态添加操作）
   </script>
 
   <!-- 开发环境 -->
   <% if (process.env.VUE_APP_NODE_ENV === 'dev') { %>
     <script>
     // window.SITE_CONFIG['apiURL'] = 'http://127.0.0.1:8080/PTCMS';
-    window.SITE_CONFIG['apiURL'] = 'http://172.20.107.67:8080/PTCMS';
+    // window.SITE_CONFIG['apiURL'] = 'http://172.20.107.67:8080/PTCMS';
+    window.SITE_CONFIG['apiURL'] = 'http://192.168.6.170:8002/mtcAuth';
     // window.SITE_CONFIG['apiURL'] = 'http://ptc.luoge.com/PTCMS';
     </script>
   <% } %>
   <!-- 集成测试环境 -->
   <% if (process.env.VUE_APP_NODE_ENV === 'prod:sit') { %>
     <script>
-      window.SITE_CONFIG['apiURL'] = 'http://172.20.107.67:8080/PTCMS';
+      // window.SITE_CONFIG['apiURL'] = 'http://172.20.107.67:8080/PTCMS';
+    window.SITE_CONFIG['apiURL'] = 'http://192.168.6.170:8002/mtcAuth';
       // window.SITE_CONFIG['apiURL'] = 'http://ptc.luoge.com/PTCMS';
     </script>
   <% } %>
   <!-- 验收测试环境 -->
   <% if (process.env.VUE_APP_NODE_ENV === 'prod:uat') { %>
     <script>
-      window.SITE_CONFIG['apiURL'] = 'http://172.20.107.67:8080/PTCMS';
+      // window.SITE_CONFIG['apiURL'] = 'http://172.20.107.67:8080/PTCMS';
+    window.SITE_CONFIG['apiURL'] = 'http://192.168.6.170:8002/mtcAuth';
       // window.SITE_CONFIG['apiURL'] = 'http://ptc.luoge.com/PTCMS';
     </script>
   <% } %>
   <!-- 生产环境 -->
   <% if (process.env.VUE_APP_NODE_ENV === 'prod') { %>
     <script>
-      window.SITE_CONFIG['apiURL'] = 'http://172.20.107.67:8080/PTCMS';
+      // window.SITE_CONFIG['apiURL'] = 'http://172.20.107.67:8080/PTCMS';
+    window.SITE_CONFIG['apiURL'] = 'http://192.168.6.170:8002/mtcAuth';
       // window.SITE_CONFIG['apiURL'] = 'http://ptc.luoge.com/PTCMS';
     </script>
   <% } %>
