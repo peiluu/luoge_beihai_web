@@ -86,12 +86,13 @@ export default {
   },
   created() {
     this.getCaptcha();
+    console.log(process.env)
   },
   methods: {
     // 获取验证码
     getCaptcha() {
       this.dataForm.uuid = getUUID();
-      this.captchaPath = `${window.SITE_CONFIG['apiURL']}/captcha?uuid=${this.dataForm.uuid}`;
+      this.captchaPath = `${process.env.VUE_APP_APIURL}/captcha?uuid=${this.dataForm.uuid}`;
     },
     // 表单提交
     dataFormSubmitHandle: debounce(

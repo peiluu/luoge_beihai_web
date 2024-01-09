@@ -25,40 +25,6 @@
     window.SITE_CONFIG['dynamicRoutes'] = [];                // 动态路由列表
     window.SITE_CONFIG['dynamicMenuRoutes'] = [];            // 动态(菜单)路由列表
   </script>
-
-  <!-- 开发环境 -->
-  <% if (process.env.VUE_APP_NODE_ENV === 'dev') { %>
-    <script>
-    // window.SITE_CONFIG['apiURL'] = 'http://127.0.0.1:8080/PTCMS';
-    // window.SITE_CONFIG['apiURL'] = 'http://172.20.107.67:8080/PTCMS';
-    window.SITE_CONFIG['apiURL'] = 'http://192.168.6.170:8002/mtcAuth';
-    // window.SITE_CONFIG['apiURL'] = 'http://ptc.luoge.com/PTCMS';
-    </script>
-  <% } %>
-  <!-- 集成测试环境 -->
-  <% if (process.env.VUE_APP_NODE_ENV === 'prod:sit') { %>
-    <script>
-      // window.SITE_CONFIG['apiURL'] = 'http://172.20.107.67:8080/PTCMS';
-    window.SITE_CONFIG['apiURL'] = 'http://192.168.6.170:8002/mtcAuth';
-      // window.SITE_CONFIG['apiURL'] = 'http://ptc.luoge.com/PTCMS';
-    </script>
-  <% } %>
-  <!-- 验收测试环境 -->
-  <% if (process.env.VUE_APP_NODE_ENV === 'prod:uat') { %>
-    <script>
-      // window.SITE_CONFIG['apiURL'] = 'http://172.20.107.67:8080/PTCMS';
-    window.SITE_CONFIG['apiURL'] = 'http://192.168.6.170:8002/mtcAuth';
-      // window.SITE_CONFIG['apiURL'] = 'http://ptc.luoge.com/PTCMS';
-    </script>
-  <% } %>
-  <!-- 生产环境 -->
-  <% if (process.env.VUE_APP_NODE_ENV === 'prod') { %>
-    <script>
-      // window.SITE_CONFIG['apiURL'] = 'http://172.20.107.67:8080/PTCMS';
-    window.SITE_CONFIG['apiURL'] = 'http://192.168.6.170:8002/mtcAuth';
-      // window.SITE_CONFIG['apiURL'] = 'http://ptc.luoge.com/PTCMS';
-    </script>
-  <% } %>
 </head>
 <body>
   <div id="app"></div>

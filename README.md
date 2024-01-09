@@ -72,15 +72,7 @@ npm run serve
 ## 常见问题
 
 如何修改API请求地址？
-* 修改`/src/pubilc/index.html`文件中`<!-- 开发环境 -->`注释下的`window.SITE_CONFIG['apiURL']`变量值。
-```
-<!-- 开发环境 -->
-<% if (process.env.VUE_APP_NODE_ENV === 'dev') { %>
-<script>
-window.SITE_CONFIG['apiURL'] = 'http://localhost:8080/renren-admin';
-</script>
-<% } %>
-```
+* 修改`.env.dev/.prod/.sit/.uat`文件中`APIURL`变量值。
 <br>
 
 **如何交流、反馈、参与贡献？**

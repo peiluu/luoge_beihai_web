@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build --mode development",
     "build:prod": "vue-cli-service build --mode production",
-    "build:sit": "vue-cli-service build --mode production.sit",
-    "build:uat": "vue-cli-service build --mode production.uat"
+    "build:sit": "vue-cli-service build --mode sit",
+    "build:uat": "vue-cli-service build --mode uat"
   },
   "dependencies": {
     "axios": "^0.19.2",

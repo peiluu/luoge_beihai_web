@@ -29,7 +29,7 @@ export default {
   methods: {
     init () {
       this.visible = true
-      this.url = `${window.SITE_CONFIG['apiURL']}/sys/oss/upload?token=${Cookies.get('token')}`
+      this.url = `${process.env.VUE_APP_APIURL}/sys/oss/upload?token=${Cookies.get('token')}`
       this.num = 0
       this.fileList = []
     },

@@ -166,7 +166,7 @@ export default {
         'token': Cookies.get('token'),
         ...this.dataForm
       })
-      window.location.href = `${window.SITE_CONFIG['apiURL']}${this.mixinViewModuleOptions.exportURL}?${params}`
+      window.location.href = `${process.env.VUE_APP_APIURL}${this.mixinViewModuleOptions.exportURL}?${params}`
     }
   }
 }

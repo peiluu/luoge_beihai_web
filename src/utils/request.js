@@ -6,7 +6,7 @@ import { clearLoginInfo } from '@/utils'
 import isPlainObject from 'lodash/isPlainObject'
 
 const http = axios.create({
-  baseURL: window.SITE_CONFIG['apiURL'],
+  baseURL: process.env.VUE_APP_APIURL,
   timeout: 60000,
   withCredentials: true
 })
