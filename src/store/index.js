@@ -43,6 +43,9 @@ export default new Vuex.Store({
       Object.keys(state).forEach((key) => {
         state[key] = cloneDeep(window.SITE_CONFIG['storeState'][key])
       })
-    }
+    },
+    saveSidebarMenuList(state, data) {
+      state.sidebarMenuList = data
+  },
   }
 })

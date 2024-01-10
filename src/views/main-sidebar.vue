@@ -23,8 +23,5 @@ export default {
   components: {
     SubMenu
   },
-  created () {
-    this.$store.state.sidebarMenuList = window.SITE_CONFIG['menuList']
-  }
 }
 </script>

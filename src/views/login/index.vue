@@ -86,7 +86,6 @@ export default {
   },
   created() {
     this.getCaptcha();
-    console.log(process.env)
   },
   methods: {
     // 获取验证码
@@ -134,7 +133,7 @@ export default {
           if (res.code !== 0) {
             this.$message.error(res.msg);
           }
-          window.SITE_CONFIG['menuList'] = res.data;
+          this.$store.commit('saveSidebarMenuList', res.data || []);
           this.fnAddDynamicMenuRoutes(res.data);
           this.$router.replace({ name: 'home' });
         })
