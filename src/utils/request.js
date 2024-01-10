@@ -62,3 +62,50 @@ http.interceptors.response.use(response => {
 })
 
 export default http
+
+//默认请求加上的参数名称
+let defaultExtendParamNames = [];
+// 异步操作会令该变量数据有误
+let dealExtendParamNames = (v) => {
+  if (v && v.length >= 0) {
+      defaultExtendParamNames = v
+  } else {
+      defaultExtendParamNames = ['applicationCode', 'tenantCode']
+  }
+}
+export function postJSON(url, params, extendParamNames = null, showLoading = false) {
+  let loading = {};
+  if (showLoading){
+    loading = Loading.service({
+      lock: true, //同v-loading的修饰符
+      // text: this.$t('加载中'), //加载文案
+      background: 'rgba(255,255,255,.9)', //背景色
+      // spinner: 'el-icon-loading', //加载图标
+    });
+  }
+  const loadingClose = () => {
+    if (showLoading) {
+      setTimeout(() => {
+        loading.close();
+      }, 100)
+    }
+  }
+
+dealExtendParamNames(extendParamNames);
+  return new Promise((resolve, reject) => {
+    http.post(url, params, {
+          headers: {
+              'Content-Type': 'application/json; charset=utf-8'
+          },
+      }).then(res => {
+
+        resolve(res)
+        loadingClose()
+      }).catch(err => {
+        loadingClose()
+
+          reject(err)
+
+      })
+  })
+}
