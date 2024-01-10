@@ -97,3 +97,7 @@ export function treeDataTranslate (data, id = 'id', pid = 'pid') {
   }
   return res
 }
+
+export function isBlank(str){
+  return !str || str=='';
+}
