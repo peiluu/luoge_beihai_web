@@ -23,12 +23,12 @@ export default new Vuex.Store({
     contentIsNeedRefresh: false,
     // 内容, 标签页(默认添加首页)
     contentTabs: [
-      {
-        ...window.SITE_CONFIG['contentTabDefault'],
-        'name': 'home',
-        'title': 'home',
-        'isShow': 'true',
-      }
+      // {
+      //   ...window.SITE_CONFIG['contentTabDefault'],
+      //   'name': 'home',
+      //   'title': 'home',
+      //   'isShow': 'true',
+      // }
     ],
     contentTabsActiveName: 'home'
   },

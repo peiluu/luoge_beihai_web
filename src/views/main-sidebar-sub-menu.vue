@@ -28,6 +28,7 @@ export default {
   methods: {
     // 通过menuId与动态(菜单)路由进行匹配跳转至指定路由
     gotoRouteHandle (menuId) {
+      console.log('---menuId---', menuId)
       var route = window.SITE_CONFIG['dynamicMenuRoutes'].filter(item => item.meta.menuId === menuId)[0]
       if (route) {
         this.$router.push({ name: route.name })
