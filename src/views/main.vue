@@ -76,7 +76,13 @@ export default {
           'query': { ...route.query },
           'isShow': true,
         }
-        this.$store.commit('saveContentTabs', [...this.$store.state.contentTabs, tab])
+        let tabs = []
+        if(tab.name === 'home'){
+          tabs = [tab, ...this.$store.state.contentTabs]
+        } else {
+          tabs = [...this.$store.state.contentTabs, tab]
+        }
+        this.$store.commit('saveContentTabs', tabs)
       }
       this.$store.commit('saveSidebarMenuActiveName', tab.menuId);
       this.$store.commit('saveContentTabsActiveName', tab.name);

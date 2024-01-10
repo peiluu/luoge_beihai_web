@@ -102,9 +102,6 @@ router.beforeEach((to, from, next) => {
       return
     }
     store.commit('app/saveDictList', res.data || [])
-    setTimeout(()=>{
-      console.log('--this.$store.state.dictList--',store.state.app.dictList)
-    },1000)
   }).catch(() => {})
   // 获取菜单列表, 添加并全局变量保存
   http.get('/sys/menu/nav').then(({ data: res }) => {
@@ -180,7 +177,6 @@ function fnAddDynamicMenuRoutes (menuList = [], routes = []) {
   if (temp.length >= 1) {
     return fnAddDynamicMenuRoutes(temp, routes)
   }
-  console.log('---routes---', routes)
   // 添加路由
   router.addRoute({
     ...moduleRoutes,

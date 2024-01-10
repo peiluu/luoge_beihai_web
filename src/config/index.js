@@ -7,7 +7,6 @@ export const config = {
     useAnimate: true,
     /*是否显示水印*/
     showWater: true,
-    host:"http://192.168.6.170:8003/mtcAuth"
-    //host:"http://124.70.98.105:8801/ptc"
+    host:"http://192.168.6.170:8003/mtclq-mtclqback"
     // host:"http://ptc.luoge.com/ptc"
 }
