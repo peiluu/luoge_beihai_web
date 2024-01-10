@@ -21,7 +21,7 @@ export default new Vuex.Store({
     sidebarMenuActiveName: '',
     // 内容, 是否需要刷新
     contentIsNeedRefresh: false,
-    // 内容, 标签页(默认添加首页)
+    // 内容, 标签页(默认取后端返回的第一个导航，即首页)
     contentTabs: [
       // {
       //   ...window.SITE_CONFIG['contentTabDefault'],
@@ -53,5 +53,8 @@ export default new Vuex.Store({
     saveContentTabsActiveName(state, data) {
       state.contentTabsActiveName = data
     },
+    saveContentTabs(state, data){
+      state.contentTabs = data
+    }
   }
 })

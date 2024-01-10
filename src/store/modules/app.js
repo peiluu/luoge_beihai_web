@@ -10,7 +10,8 @@ export default {
         activeTab: null,
         useAnimate: config.useAnimate,
         useWater: config.showWater,
-        host: config.host
+        host: config.host,
+        dictList: [] // 字典数据
     },
     mutations: {
         saveCollapsed(state, collapsed) {
@@ -68,7 +69,11 @@ export default {
                     break
                 }
             }
+        },
+        saveDictList(state, data){
+            state.dictList = data
         }
+
     },
     actions: {
         updateCollapsed(context, collapsed) {

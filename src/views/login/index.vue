@@ -153,7 +153,7 @@ export default {
           if (res.code !== 0) {
             return;
           }
-          window.SITE_CONFIG['dictList'] = res.data;
+          this.$store.commit('app/saveDictList', res.data || [])
         })
         .catch(() => {});
     },

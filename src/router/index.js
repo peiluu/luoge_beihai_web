@@ -47,7 +47,7 @@ export const moduleRoutes = {
   path: '/',
   component: () => import('@/views/main'),
   name: 'main',
-  redirect: { name: 'home' },
+  redirect: { name: 'index' },
   meta: { title: '主入口布局' },
   children: [
     { path: '/index', component: () => import('@/views/index'), name: 'index', meta: { title: '首页', isTab: true } }
@@ -101,7 +101,10 @@ router.beforeEach((to, from, next) => {
     if (res.code !== 0) {
       return
     }
-    window.SITE_CONFIG['dictList'] = res.data
+    store.commit('app/saveDictList', res.data || [])
+    setTimeout(()=>{
+      console.log('--this.$store.state.dictList--',store.state.app.dictList)
+    },1000)
   }).catch(() => {})
   // 获取菜单列表, 添加并全局变量保存
   http.get('/sys/menu/nav').then(({ data: res }) => {
