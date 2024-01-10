@@ -4,9 +4,7 @@ export default {
     namespaced: true,
     state: {
         collapsed: false,
-        apps: [],
         currentAppCode: null,
-        menus: null,
         useTab: config.useTab,
         tabs: [],
         activeTab: null,
@@ -18,14 +16,8 @@ export default {
         saveCollapsed(state, collapsed) {
             state.collapsed = collapsed
         },
-        saveApplications(state, apps) {
-            state.apps = apps
-        },
         saveCurrentApp(state, appCode) {
             state.currentAppCode = appCode
-        },
-        saveMenus(state, menus) {
-            state.menus = menus
         },
         saveUseTab(state, useTab) {
             state.useTab = useTab
@@ -81,12 +73,6 @@ export default {
     actions: {
         updateCollapsed(context, collapsed) {
             context.commit('saveCollapsed', collapsed)
-        },
-        saveMenus(context, menus) {
-            context.commit('saveMenus', menus)
-        },
-        saveApplications(context, apps) {
-            context.commit('saveApplications', apps);
         },
         saveCurrentApp(context, appCode) {
             context.commit('saveCurrentApp', appCode);

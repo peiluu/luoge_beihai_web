@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import http from '@/utils/request'
 import { isURL } from '@/utils/validate'
+import store from '../store/index'
 
 Vue.use(Router)
 
@@ -49,7 +50,7 @@ export const moduleRoutes = {
   redirect: { name: 'home' },
   meta: { title: '主入口布局' },
   children: [
-    { path: '/home', component: () => import('@/views/home'), name: 'home', meta: { title: '首页', isTab: true } }
+    { path: '/home', component: () => import('@/views/home/index'), name: 'home', meta: { title: '首页', isTab: true, menuId: 'home' } }
   ]
 }
 
@@ -91,7 +92,8 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   // 添加动态(菜单)路由
   // 已添加或者当前路由为页面路由, 可直接访问
-  if (window.SITE_CONFIG['menuList'].length || fnCurrentRouteIsPageRoute(to, pageRoutes)) {
+  // console.log('----store---',to, from)
+  if (store.state.sidebarMenuList.length || fnCurrentRouteIsPageRoute(to, pageRoutes)) {
     return next()
   }
   // 获取字典列表, 添加并全局变量保存
@@ -107,14 +109,14 @@ router.beforeEach((to, from, next) => {
       Vue.prototype.$message.error(res.msg)
       return next({ name: 'login' })
     }
-    window.SITE_CONFIG['menuList'] = res.data
-    fnAddDynamicMenuRoutes(window.SITE_CONFIG['menuList'])
+    store.commit('saveSidebarMenuList', res.data || []);
+    fnAddDynamicMenuRoutes(res.data)
     if(from.path === '/login'){
       next()
     }else{
       next({ ...to, replace: true })
     }
-  }).catch(() => {
+  }).catch((e) => {
     next({ name: 'login' })
   })
 })
@@ -175,6 +177,7 @@ function fnAddDynamicMenuRoutes (menuList = [], routes = []) {
   if (temp.length >= 1) {
     return fnAddDynamicMenuRoutes(temp, routes)
   }
+  console.log('---routes---', routes)
   // 添加路由
   router.addRoute(
     {

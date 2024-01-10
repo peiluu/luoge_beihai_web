@@ -78,8 +78,8 @@ export default {
         }
         this.$store.state.contentTabs = this.$store.state.contentTabs.concat(tab)
       }
-      this.$store.state.sidebarMenuActiveName = tab.menuId
-      this.$store.state.contentTabsActiveName = tab.name
+      this.$store.commit('saveSidebarMenuActiveName', tab.menuId);
+      this.$store.commit('saveContentTabsActiveName', tab.name);
     },
     // 获取当前管理员信息
     getUserInfo () {

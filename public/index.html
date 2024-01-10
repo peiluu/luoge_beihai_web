@@ -8,8 +8,6 @@
   <script>
     window.SITE_CONFIG = {};
     window.SITE_CONFIG['version'] = 'v5.0.0';
-    window.SITE_CONFIG['nodeEnv'] = '<%= process.env.VUE_APP_NODE_ENV %>';
-    window.SITE_CONFIG['apiURL'] = '';                      // api请求地址
     window.SITE_CONFIG['storeState'] = {};                  // vuex本地储存初始化状态（用于不刷新页面的情况下，也能重置初始化项目中所有状态）
     window.SITE_CONFIG['contentTabDefault'] = {             // 内容标签页默认属性对象
       'name': '',        // 名称, 由 this.$route.name 自动赋值（默认，名称 === 路由名称 === 路由路径）
@@ -20,7 +18,6 @@
       'isTab': true,     // 是否通过tab展示内容?
       'iframeURL': ''    // 是否通过iframe嵌套展示内容? (以http[s]://开头, 自动匹配)
     };
-    window.SITE_CONFIG['menuList'] = [];                     // 左侧菜单列表（后台返回，未做处理）
     window.SITE_CONFIG['permissions'] = [];                  // 页面按钮操作权限（后台返回，未做处理）
     window.SITE_CONFIG['dynamicRoutes'] = [];                // 动态路由列表
     window.SITE_CONFIG['dynamicMenuRoutes'] = [];            // 动态(菜单)路由列表

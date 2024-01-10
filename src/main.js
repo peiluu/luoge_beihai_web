@@ -71,64 +71,7 @@ new Vue({
   render: h => h(App)
 }).$mount('#app')
 
-//算税状态
-Vue.prototype.formatCalState = (cellValue) => {
-  if(cellValue==0){
-    return {txt:'待算税', clazz: 'other'}
-  }else if(cellValue==1){
-    return {txt:'算税中', clazz: 'other'}
-  }else if(cellValue==2){
-    return {txt:'算税成功', clazz: 'success'}
-  }else if(cellValue==3){
-    return {txt:'算税失败', clazz: 'failed'}
-  }else if(cellValue == 4){
-    return {txt:'已算税确认', clazz: 'success'}
-  }else if(cellValue == 5){
-    return {txt:'申报中', clazz: 'other'}
-  }else if(cellValue == 6){
-    return {txt:'申报成功', clazz: 'success'}
-  }else if(cellValue == 7){
-    return {txt:'申报失败', clazz: 'failed'}
-  }else if(cellValue == 8){
-    return {txt:'申报作废中', clazz: 'other'}
-  }else if(cellValue == 9){
-    return {txt:'缴税中', clazz: 'other'}
-  }else if(cellValue == 10){
-    return {txt:'缴税成功', clazz: 'success'}
-  }else if(cellValue == 11){
-    return {txt:'缴税失败', clazz: 'failed'}
-  }else if(cellValue == 12){
-    return {txt:'申报成功,无需缴税', clazz: 'success'}
-  }else {
-    return {txt:'待算税', clazz: 'other'}
-  }
-}
-//申报缴税状态
-Vue.prototype.formatState = (cellValue) => {
-  if(cellValue<4){
-    return {txt:'未算税确认', clazz: 'other'}
-  }else if(cellValue == 4){
-    return {txt:'已算税确认', clazz: 'success'}
-  }else if(cellValue == 5){
-    return {txt:'申报中', clazz: 'other'}
-  }else if(cellValue == 6){
-    return {txt:'申报成功', clazz: 'success'}
-  }else if(cellValue == 7){
-    return {txt:'申报失败', clazz: 'failed'}
-  }else if(cellValue == 8){
-    return {txt:'申报作废中', clazz: 'other'}
-  }else if(cellValue == 9){
-    return {txt:'缴税中', clazz: 'other'}
-  }else if(cellValue == 10){
-    return {txt:'缴税成功', clazz: 'success'}
-  }else if(cellValue == 11){
-    return {txt:'缴税失败', clazz: 'failed'}
-  }else if(cellValue == 12){
-    return {txt:'申报成功,无需缴税', clazz: 'success'}
-  }else {
-    return {txt:'未算税确认', clazz: 'other'}
-  }
-}
+
 Vue.prototype.ceil = (form, field, digit, cb) => {
   if(!form[field] && form[field]!==0) return;
   form[field] = parseFloat(form[field]||0).toFixed(digit);
@@ -187,13 +130,7 @@ Vue.prototype.validateNsrsbm = (rule, value, callback) => {
   if (!re.test(value) || (value.length < 15 || value.length > 20) ) callback(new Error('请输入15-20位数字和字母'));
   callback();
 };
-//申报密码         6-14位的字母数字组合
-Vue.prototype.validatePassword = (rule, value, callback) => {
-  if(!value) callback();
-  var re = /^[a-zA-Z0-9]+$/;
-  if (!re.test(value) || (value.length < 6 || value.length > 14) ) callback(new Error('请输入6-14位数字和字母'));
-  callback();
-};
+
 //地区编号      6位数字
 Vue.prototype.validateDqbh = (rule, value, callback) => {
   if(!value) callback();
