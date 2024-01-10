@@ -1370,6 +1370,12 @@ import ProductProfileModal from "@/components/ProductProfileModal/Index.vue";
 import { dynamicUrlMap } from "@/config/constant.js";
 export default {
   name: "BlueInvoiceForm",
+  props:{
+    thirdData: {
+      type: Object,
+      default: ()=>{}
+    }
+  },
   components: {
     Step,
     HouseInfoDlg,
@@ -2006,14 +2012,14 @@ export default {
     reChooseFplx() {
       this.clearProject();
       this.clearAll();
-      this.$router.push({
-        path: "/buleInvoice/ChooseInvoiceType",
-        query: {
-          orgid: this.mideaInfo.orgid,
-          isDigital: "Y",
-          ...this.$route.query,
-        },
-      });
+      // this.$router.push({
+      //   path: "/buleInvoice/ChooseInvoiceType",
+      //   query: {
+      //     orgid: this.mideaInfo.orgid,
+      //     isDigital: "Y",
+      //     ...this.$route.query,
+      //   },
+      // });
     },
     /**
      * 清空重填
@@ -3044,7 +3050,7 @@ export default {
   },
   computed: {
     query() {
-      return this.$route.query;
+      return this.thirdData ||  this.$route.query;
     },
     contentHeight() {
       return window.innerHeight - 156;
