@@ -1,34 +1,41 @@
 <template>
-  <div class="content" :style="'height: ' + contentHeight + 'px;'">
-    <Step :stepData="{current:2,total:4,title:'选择发票种类'}"></Step>
-    <el-form v-if="isDigital=='Y'" class="content-form" ref="form" :inline="false" :model="form" :rules="rules" size="mini">
-      <el-form-item label="选择票类" prop="fppz">
+  <div class="" :style="'height: ' + contentHeight + 'px;'">
+    <!-- <Step :stepData="{current:2,total:4,title:'选择发票种类'}"></Step> -->
+    <article>
+
+    </article>
+    <!-- 选择表单 -->
+    <article>
+      <el-form  class="content-form" ref="form" :inline="false" :model="form" :rules="rules" size="mini">
+      <el-form-item label="选择发票类型" prop="fppz">
         <el-select  class="form-inline-input" v-model="form.fppz" size="small" clearable>
           <el-option key="sdzp" label="数电增值税专用发票" value="01"></el-option>
           <el-option key="sdpp" label="数电增值税普通发票" value="02"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="特定业务" prop="tdys">
+      <el-form-item label="是否特定业务" prop="tdys">
         <el-select :disabled="isBlank(form.fppz)"  class="form-inline-input" v-model="form.tdys" size="small" clearable>
         <el-option key="jzfw" label="建筑服务" value="03"></el-option>
         <el-option key="bdcxs" label="不动产销售" value="05"></el-option>
         <el-option key="bdczl" label="不动产经营租赁服务" value="06"></el-option>
       </el-select>
       </el-form-item>
-      <el-form-item label="差额征税" prop="cezslxDm">
+      <el-form-item label="是否差额" prop="cezslxDm">
         <el-select :disabled="!isBlank(form.jazs)"  class="form-inline-input" v-model="form.cezslxDm" size="small" clearable>
           <el-option key="qekp" label="差额征税-全额开票" value="01"></el-option>
           <el-option key="cekp" label="差额征税-差额开票" value="02"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="减按征税" prop="jazs">
+      <el-form-item label="是否减按征税" prop="jazs">
         <el-select :disabled="isBlank(form.fppz) || form.tdys=='03' || form.tdys=='05'|| !isBlank(form.cezslxDm)"  class="form-inline-input" v-model="form.jazs" size="small" clearable>
           <el-option v-if="form.fppz=='02' && isBlank(form.tdys)" key="gdzc" label="销售自己使用过的固定资产" value="01"></el-option>
           <el-option key="zfzl" label="住房租赁" value="02"></el-option>
         </el-select>
       </el-form-item>
     </el-form>
-    <el-form v-else class="content-form" ref="skform" :model="skform" :rules="skrules" size="mini">
+    </article>
+    
+    <!-- <el-form v-else class="content-form" ref="skform" :model="skform" :rules="skrules" size="mini">
       <el-form-item label="选择发票种类" prop="skfplx">
         <el-radio-group v-model="skform.skfplx" >
           <el-radio-button :label="1">增值税电子普通发票</el-radio-button>
@@ -37,13 +44,16 @@
           <el-radio-button :label="4">增值税专用发票</el-radio-button>
         </el-radio-group>
       </el-form-item>
-    </el-form>
-
+    </el-form> -->
+<!-- 
     <div class="content-tips">
       <span style="color: #D9001B;margin-right:4px;vertical-align: sub;">*</span>温馨提示：当前企业<template>{{isDigital=='Y'?'已':'未'}}</template>开通数电发票业务
-    </div>
-
-    <StepFooter style="margin-top: 80px;" :pre="pre" :next="next" @handlePre="handlePre" @handleNext="handleNext"></StepFooter>
+    </div> -->
+    <footer>
+      <el-button>返回</el-button>
+      <el-button type="primary">上一步</el-button>
+    </footer>
+    <!-- <StepFooter style="margin-top: 80px;" :pre="pre" :next="next" @handlePre="handlePre" @handleNext="handleNext"></StepFooter> -->
   </div>
 </template>
 
@@ -92,7 +102,7 @@
         return this.$route.query.isDigital
       },
       contentHeight(){
-        return window.innerHeight - 132;
+        return window.innerHeight - 294;
       }
     },
     watch:{
