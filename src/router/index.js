@@ -50,7 +50,7 @@ export const moduleRoutes = {
   redirect: { name: 'home' },
   meta: { title: '主入口布局' },
   children: [
-    // { path: '/home', component: () => import('@/views/home/index'), name: 'home', meta: { title: '首页', isTab: true } }
+    { path: '/home', component: () => import('@/views/home/index'), name: 'home', meta: { title: '首页', isTab: true, menuId: 'home' } }
   ]
 }
 
