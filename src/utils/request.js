@@ -62,3 +62,52 @@ http.interceptors.response.use(response => {
 })
 
 export default http
+
+export function postJSON(url, params, extendParamNames = null, showLoading = false) {
+  let loading = {};
+  if (showLoading){
+    loading = Loading.service({
+      lock: true, //同v-loading的修饰符
+      // text: this.$t('加载中'), //加载文案
+      background: 'rgba(255,255,255,.9)', //背景色
+      // spinner: 'el-icon-loading', //加载图标
+    });
+  }
+  const loadingClose = () => {
+    if (showLoading) {
+      setTimeout(() => {
+        loading.close();
+      }, 100)
+    }
+  }
+
+dealExtendParamNames(extendParamNames);
+  return new Promise((resolve, reject) => {
+      request.post(url, params, {
+          headers: {
+              'Content-Type': 'application/json; charset=utf-8'
+          },
+      }).then(res => {
+
+        resolve(res)
+        loadingClose()
+      }).catch(err => {
+        loadingClose()
+
+          reject(err)
+
+      })
+  })
+}
+export function deleteOne(url, id, params) {
+  return new Promise((resolve, reject) => {
+      request.post(`${url}`, {
+          id,
+          ...params
+      }).then(res => {
+          resolve(res)
+      }).catch(err => {
+          reject(err)
+      })
+  })
+}
