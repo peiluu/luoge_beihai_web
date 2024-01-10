@@ -119,7 +119,9 @@ export default {
       var tabName = this.$store.state.contentTabsActiveName
       this.$store.state.contentTabs = this.$store.state.contentTabs.filter(item => item.name !== tabName)
       if (this.$store.state.contentTabs.length <= 0) {
-        this.$store.state.sidebarMenuActiveName = this.$store.state.contentTabsActiveName = 'home'
+
+        this.$store.commit('saveSidebarMenuActiveName', 'home');
+        this.$store.commit('saveContentTabsActiveName', 'home');
         return false
       }
       if (tabName === this.$store.state.contentTabsActiveName) {

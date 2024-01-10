@@ -50,7 +50,7 @@ export const moduleRoutes = {
   redirect: { name: 'home' },
   meta: { title: '主入口布局' },
   children: [
-    { path: '/home', component: () => import('@/views/home'), name: 'home', meta: { title: '首页', isTab: true } }
+    // { path: '/home', component: () => import('@/views/home/index'), name: 'home', meta: { title: '首页', isTab: true } }
   ]
 }
 
@@ -177,6 +177,7 @@ function fnAddDynamicMenuRoutes (menuList = [], routes = []) {
   if (temp.length >= 1) {
     return fnAddDynamicMenuRoutes(temp, routes)
   }
+  console.log('---routes---', routes)
   // 添加路由
   router.addRoute(
     {

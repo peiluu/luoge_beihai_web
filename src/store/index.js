@@ -46,6 +46,12 @@ export default new Vuex.Store({
     },
     saveSidebarMenuList(state, data) {
       state.sidebarMenuList = data
-  },
+    },
+    saveSidebarMenuActiveName(state, data) {
+      state.sidebarMenuActiveName = data
+    },
+    saveContentTabsActiveName(state, data) {
+      state.contentTabsActiveName = data
+    },
   }
 })

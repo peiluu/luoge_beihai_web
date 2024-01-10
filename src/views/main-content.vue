@@ -97,7 +97,8 @@ export default {
         e.isShow = false
       });
       if (this.$store.state.contentTabs.length <= 0) {
-        this.$store.state.sidebarMenuActiveName = this.$store.state.contentTabsActiveName = 'home'
+        this.$store.commit('saveSidebarMenuActiveName', 'home');
+        this.$store.commit('saveContentTabsActiveName', 'home');
         return false
       }
       // 当前选中tab被删除
