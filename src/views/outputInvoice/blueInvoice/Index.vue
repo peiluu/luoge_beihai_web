@@ -46,7 +46,7 @@
           ref="list"
         >
           <template #isDigital="row">
-            <el-button type="primary" @click="handleNext(row)"
+            <el-button type="primary" @click="handleNext(row,0)"
               >去开票</el-button
             >
           </template>
@@ -62,10 +62,20 @@
       </article>
       <!-- 选择类型 -->
       <article v-show="active === 1">
-        <app-choose-invoice></app-choose-invoice>
+        <app-choose-invoice :next-obj="nextObj">
+          <template v-slot:default="slotProps">
+            <footer v-if="[1].includes(active)" style="text-align:center;margin-top: 42px;">
+            <el-button @click="handBack">返回</el-button>
+            <el-button type="primary" @click="handleNext(slotProps,1)">下一步</el-button>
+          </footer>
+          </template>
+         
+        </app-choose-invoice>
       </article>
       <!-- 信息录入 -->
-      <article v-show="active === 2"></article>
+      <article v-if="active === 2">
+        <app-invoice-form :third-data="thirdData"></app-invoice-form>
+      </article>
       <!-- 提交成功 -->
       <article v-show="active === 3"></article>
     </el-card>
@@ -84,7 +94,7 @@
         ref="list"
       >
         <template #isDigital="row">
-          <el-button type="primary" @click="handleNext(row)">去开票</el-button>
+          <el-button type="primary" @click="handleNext(row,0)">去开票</el-button>
         </template>
         <!-- ="row" -->
         <template #tableFooter>
@@ -96,6 +106,8 @@
         </template>
       </form-list>
     </article>
+    <!-- 脚部 -->
+    
   </div>
 </template>
 
@@ -103,12 +115,14 @@
 import FormList from "@/components/FormList.vue";
 // import Step from "@/components/Step.vue";
 // import StepFooter from "@/components/StepFooter.vue";
-import AppChooseInvoice from './ChooseInvoiceType.vue'
+import AppChooseInvoice from './ChooseInvoiceType.vue';
+import AppInvoiceForm from './BlueInvoiceForm.vue'
 export default {
   name: "BuleInvoice",
   components: {
     FormList,
-    AppChooseInvoice
+    AppChooseInvoice,
+    AppInvoiceForm
     // Step,
     // StepFooter,
   },
@@ -164,10 +178,12 @@ export default {
       next: true,
       defaultRadioValue: this.$route?.query?.orgid || "",
       active: 0, //当前步骤
+      nextObj:{},//第二步数据
+      thirdData:{},//第三步数据
     };
   },
   methods: {
-    handleNext() {
+    handleNext(row,type) {
       // 从最新的列表里取值，规避同步修改组织管理里的数电切换时已经选中的数据无法及时更新的问题
       //const tableData = this.$refs.list.data;
       //let selectedRow = tableData.find((item) => item.id == this.$refs.list.selectedRow.id) || {};
@@ -185,11 +201,27 @@ export default {
       //   query: {orgid: selectedRow.id || this.$route?.query?.orgid, isDigital: selectedRow.isDigital || this.$route?.query?.isDigital}
       // });
       //this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+      switch(type){
+        case 0:{
+          this.nextObj = {...row,orgid:row?.id,isDigital:"Y"};
+          break;
+        }
+        case 1: {
+          this.thirdData = {...row};
+          break;
+        }
+        default: {
+          break;
+        }
+      }
       this.active = this.active + 1;
     },
     handleOk() {
       this.$refs.list.reload();
     },
+    handBack(){
+      this.active = this.active -1;
+    }
   },
   computed: {
     height() {

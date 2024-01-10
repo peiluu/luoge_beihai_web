@@ -121,3 +121,52 @@ export function deleteOne(url, id, params) {
       })
   })
 }
+
+/**
+ * @description 下载文件
+ */
+export function download(url, params, extendParamNames = null, showLoading = false) {
+  let loading = {};
+  if (showLoading){
+    loading = Loading.service({
+      lock: true,
+      text: '',
+      spinner: 'el-icon-loading',
+      background: 'rgba(0, 0, 0, 0.7)'
+    });
+  }
+  const { reqData, fileName = '' } = params
+
+  dealExtendParamNames(extendParamNames);
+  return new Promise((resolve, reject) => {
+    request.post(url, reqData, {
+      headers: {"Content-Type":"application/json","Data-Type":"json"},
+      responseType: 'blob'
+    }).then(res => {
+      const blob = new Blob([res])
+      if ('download' in document.createElement('a')) {
+        // 非IE下载
+        const elink = document.createElement('a')
+        elink.download = fileName
+        elink.style.display = 'none'
+        elink.href = URL.createObjectURL(blob)
+        document.body.appendChild(elink)
+        elink.click()
+        URL.revokeObjectURL(elink.href) // 释放URL 对象
+        document.body.removeChild(elink)
+      } else {
+        // IE10+下载
+        navigator.msSaveBlob(blob, fileName)
+      }
+
+      resolve(res)
+
+      showLoading && loading.close();
+    }).catch(err => {
+      showLoading && loading.close();
+
+      reject(err)
+
+    })
+  })
+}
