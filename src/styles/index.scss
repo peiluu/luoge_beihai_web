@@ -134,15 +134,13 @@ html {
         color: #343435;
     }
 }
-
+.ele_body{
+    padding: 15px;
+}
 .custom-content {
-    background-color: #FFFFFF;
+    
     border-radius: 8px;
-    margin: 15px;
     overflow: scroll;
-    height: calc(100vh - 120px);
-    padding-top:10px;
-
     .main-table-header-cell {
         border-color: #ffffff !important;
         background-color: #F5F5F5 !important;

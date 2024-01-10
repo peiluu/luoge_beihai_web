@@ -7,6 +7,8 @@ import store from '@/store'
 import '@/icons'
 import '@/element-ui/theme/index.css'
 import '@/assets/scss/aui.scss'
+import '@/styles/index.scss'
+import '@/styles/transition.scss'
 import http from '@/utils/request'
 import renRadioGroup from '@/components/ren-radio-group'
 import renSelect from '@/components/ren-select'
@@ -14,8 +16,7 @@ import renDeptTree from '@/components/ren-dept-tree'
 import renRegionTree from '@/components/ren-region-tree'
 import { hasPermission, getDictLabel } from '@/utils'
 import cloneDeep from 'lodash/cloneDeep'
-import '@/styles/index.scss'
-import '@/styles/transition.scss'
+
 
 import './utils/dialogDrag.js'
 

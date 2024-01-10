@@ -173,6 +173,7 @@ export default {
             });
         },
         async handleGetData(obj, args) {
+            
             this.searchParam = obj;
             let param = {};
             Object.keys(obj).map(key => {
@@ -198,6 +199,7 @@ export default {
                     ...param,
                 });
                 let res = result.data;
+                
                 if (res && res.code==0) {
                     if (vm.buildFunction) {
                         data = vm.buildFunction(res.data);
@@ -223,6 +225,7 @@ export default {
                 }
                 vm.loading = false
             } catch (e) {
+                this.data = [{}];
                 vm.loading = false
             }
         },
@@ -296,8 +299,10 @@ export default {
             return this.$refs.table.selection;
         },
     },
+   
     activated() {
         if(this.firstLoading){
+           
            this.$nextTick(() => {
                this.handleGetData(this.param);
            });
@@ -307,6 +312,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .form-list {
-    padding: 15px
+    // padding: 15px
 }
 </style>

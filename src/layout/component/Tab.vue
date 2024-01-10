@@ -167,4 +167,5 @@ export default {
     border-radius: 10px;
     padding: $containerPadding;
 }
+
 </style>
