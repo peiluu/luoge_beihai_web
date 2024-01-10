@@ -254,6 +254,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .form-list {
-    padding: 15px
+    // padding: 15px
 }
 </style>

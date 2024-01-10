@@ -50,7 +50,7 @@ export const moduleRoutes = {
   redirect: { name: 'home' },
   meta: { title: '主入口布局' },
   children: [
-    { path: '/home', component: () => import('@/views/home/index'), name: 'home', meta: { title: '首页', isTab: true, menuId: 'home' } }
+    { path: '/index', component: () => import('@/views/index'), name: 'index', meta: { title: '首页', isTab: true } }
   ]
 }
 
@@ -179,12 +179,11 @@ function fnAddDynamicMenuRoutes (menuList = [], routes = []) {
   }
   console.log('---routes---', routes)
   // 添加路由
-  router.addRoute(
-    {
-      ...moduleRoutes,
-      name: 'main-dynamic-menu',
-      children: routes
-    })
+  router.addRoute({
+    ...moduleRoutes,
+    name: 'main-dynamic-menu',
+    children: routes
+  })
   router.addRoute({ path: '*', redirect: { name: '404' } });
   window.SITE_CONFIG['dynamicMenuRoutes'] = routes
   window.SITE_CONFIG['dynamicMenuRoutesHasAdded'] = true

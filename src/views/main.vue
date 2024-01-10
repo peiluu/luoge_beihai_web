@@ -60,6 +60,7 @@ export default {
     },
     // 路由, 监听
     routeHandle (route) {
+      console.log('---route--',route)
       if (!route.meta.isTab) {
         return false
       }
@@ -67,6 +68,7 @@ export default {
         e.isShow = false
       });
       var tab = this.$store.state.contentTabs.filter(item => item.name === route.name)[0]
+      console.log('---tab---', tab);
       if (!tab) {
         tab = {
           ...window.SITE_CONFIG['contentTabDefault'],

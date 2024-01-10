@@ -4,7 +4,7 @@
       <el-menu
         :default-active="$store.state.sidebarMenuActiveName"
         :collapse="$store.state.sidebarFold"
-        :unique-opened="true"
+        :unique-opened="false"
         :collapseTransition="false"
         class="aui-sidebar__menu">
         <sub-menu v-for="menu in $store.state.sidebarMenuList" :key="menu.id" :menu="menu" />
