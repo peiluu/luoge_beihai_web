@@ -47,10 +47,10 @@ export const moduleRoutes = {
   path: '/',
   component: () => import('@/views/main'),
   name: 'main',
-  redirect: { name: 'index' },
+  // redirect: { name: 'index' },
   meta: { title: '主入口布局' },
   children: [
-    { path: '/index', component: () => import('@/views/index'), name: 'index', meta: { title: '首页', isTab: true } }
+    // { path: '/index', component: () => import('@/views/index'), name: 'index', meta: { title: '首页', isTab: true } }
   ]
 }
 
