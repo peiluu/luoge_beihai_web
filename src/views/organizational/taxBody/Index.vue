@@ -1,0 +1,369 @@
+<template>
+  <div class="com-taxBody">
+    <form-list :columns="columns" :searchKey="propsKey" :searchRow="searchList" :api="api" :param="param" :height="height" :firstLoading="false" v-loading="loading" @getSearchParam="getSearchParam" ref="list">
+      <!-- 中间部分 -->
+      <template #topTool>
+        <div class="toolbar">
+          <div class="toolbar-left">
+            <!-- <el-input @keyup.enter.native="getList" @clear="getList" v-model="param.keyword" style="width: 300px; marginRight: 12px" placeholder="请输入纳税人名称/纳税人识别号码" clearable>
+              <i slot="prefix" class="el-input__icon el-icon-search" @click="getList" />
+            </el-input> -->
+          </div>
+          <div class="toolbar-right">
+            <el-button @click="openDigitalBatch('Y')">开通数电</el-button>
+            <el-button type="success" @click="hanldeEnter('add')">新增纳税主体</el-button>
+            <el-button @click="batchOperate('batchDel')">删除</el-button>
+            <el-button @click="handleImport">导入</el-button>
+            <el-button @click="handleExport">导出</el-button>
+          </div>
+        </div>
+      </template>
+      <template #isDigital="{ data }"> {{ data.isDigital == 'Y' ? '是' : '否' }}</template>
+      <template #sffgs="{ data }"> {{ data.sffgs == 'Y' ? '是' : '否' }}</template>
+      <template #city="{ data }"> {{ data.city || '' + data.area || '' }}</template>
+      <template #zgsmc="{ data }"> {{ data.sffgs == 'Y' ? data.zgsmc : '' }}</template>
+
+      <template #myscope="{ data }">
+        <el-popover placement="left" trigger="hover" popper-class="customPopper">
+          <template>
+            <el-button @click.stop="hanldeEnter('detail', data)" type="success">查看</el-button>
+            <el-button @click.stop="hanldeEnter('edit', data)" type="info">编辑</el-button>
+            <el-button @click.stop="batchOperate('delete', data)" type="danger">删除</el-button>
+            <el-button @click.stop="batchOperate('digital', data)" type="success">切换数电开通</el-button>
+            <el-button @click.stop="hanldeMaintenance(data, '2')" type="success">维护开票点</el-button>
+            <el-button @click.stop="hanldeMaintenance(data, '3')" type="success">维护受票点</el-button>
+          </template>
+          <el-button slot="reference">操作</el-button>
+        </el-popover>
+      </template>
+    </form-list>
+    <el-dialog title="是否开通数电" :visible.sync="dialogVisible" width="40%" :before-close="handleClose">
+      <el-form :inline="true" :model="form" :rules="rules" ref="ruleForm" class="dialog-form">
+        <el-form-item label="是否开通数电业务" prop="isDigital">
+          <el-select v-model="form.isDigital" placeholder="请选择">
+            <el-option label="是" value="Y" />
+            <el-option label="否" value="N" />
+          </el-select>
+        </el-form-item>
+        <template v-if="form.isDigital === 'Y'">
+          <el-form-item label="乐企ID" prop="lqid">
+            <el-input v-model="form.lqid" placeholder="请输入" maxlength="30" />
+          </el-form-item>
+          <el-form-item label="乐企秘钥" prop="secretkey">
+            <el-input v-model="form.secretkey" placeholder="请输入" maxlength="100" />
+          </el-form-item>
+        </template>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="success" @click="setIsDigital">保 存</el-button>
+      </span>
+    </el-dialog>
+
+  </div>
+</template>
+
+<script>
+import FormList from '@/components/FormList.vue';
+import { rgionEnum, cityEnum, provincesEnmu } from '@/config/regionEnums.js';
+import { listCascaderDict, selectYtList, delTaxBodyBatch, setIsDigital, getListAll, selectQyList, downLoadApplyList, exportTaxBodyInfo, } from './Api.js'
+
+export default {
+  name: 'organizationTaxBody',
+  components: {
+    FormList
+  },
+  data() {
+    return {
+      form: {},
+      param: {},
+      api: require('./Api'),
+      loading: false,
+      propKey: '',
+      columns: [
+        { type: "selection", width: 50, fixed: 'left', },
+        { title: '序号', type: "index", width: 50, fixed: 'left', },
+        { title: "纳税主体名称", width: 160, dataIndex: "nsrmc", },
+        { title: "纳税主体识别号", width: 160, dataIndex: "nsrsbh", },
+        { title: "地址", width: 160, dataIndex: "address", },
+        { title: "电话号码", width: 160, dataIndex: "phone" },
+        { title: "开户行名称", width: 160, dataIndex: "bank", },
+        { title: "开户行账号", width: 160, dataIndex: "bankAccount", },
+        { title: "是否开通数电", width: 100, dataIndex: "isDigital", slot: 'isDigital', align: 'center' },
+        { title: "所属业态", width: 100, dataIndex: "businessFormat", align: 'center' },
+        { title: "所属区域", width: 140, dataIndex: "region" },
+        { title: "包含开票组织数量", width: 120, dataIndex: "orgCount", align: 'right' },
+        { title: "所属省份", width: 100, dataIndex: "province" },
+        { title: "所属城市", width: 100, dataIndex: "city", },
+        { title: "所属区县", width: 100, dataIndex: "area", },
+        { title: "是否分公司", width: 100, dataIndex: "sffgs", slot: 'sffgs', align: 'center' },
+        { title: "总公司名称", width: 130, dataIndex: "zgsmc", slot: 'zgsmc' },
+        { title: "开立时间", width: 100, dataIndex: "openDate", align: 'center' },
+        { title: "乐企ID", width: 100, dataIndex: "lqid", },
+        { title: "乐企密钥", width: 120, dataIndex: "secretkey", },
+        {
+          title: "操作",
+          key: "action",
+          width: 80,
+          fixed: 'right',
+          scopedSlots: { customRender: "action" }
+        }
+      ],
+      searchList: [
+        {
+          label: "纳税主体",
+          key: "taxBodyId",
+          val: "",
+          type: "select",
+          placeholder: '请输入'
+        },
+        {
+          label: "是否开通数电",
+          key: "isDigital",
+          val: '',
+          type: "select",
+          options: [
+            { value: "", label: "全部" },
+            { value: "Y", label: "是" },
+            { value: "N", label: "否" }]
+        },
+        {
+          label: "所属业态",
+          key: "businessFormat",
+          val: '',
+          type: "select",
+          options: []
+        },
+        {
+          label: "所属区域",
+          key: "region",
+          val: '',
+          type: "select",
+          options: []
+        },
+        {
+          label: "所属省份",
+          key: "province",
+          val: '',
+          type: "select",
+          options: [{ label: '全部', value: '' }, ...provincesEnmu]
+        },
+        {
+          label: "所属城市",
+          key: "city",
+          val: '',
+          type: "select",
+          options: [{ label: '全部', value: '' }, ...cityEnum]
+        },
+        // {
+        //   label: "所属省市区",
+        //   key: "areaList",
+        //   val: '',
+        //   type: "areaCascader",
+        //   options: [],
+        //   separator: "",
+        //   // showAllLevels: false,
+        //   props: { value: 'txt', label: 'txt', checkStrictly: true }
+        // },
+
+      ],
+      dialogVisible: false,
+      districts: [],
+      qyList: [],
+      batchOperateType: '',
+      propsKey: '',
+      taxBodyList: [],
+      queryParam: {},
+      rules: {
+        isDigital: [{ required: true, message: "请选择", trigger: "blur" }],
+        lqid: [{ required: true, message: "请输入", trigger: "blur" }],
+        secretkey: [{ required: true, message: "请输入", trigger: "blur" }],
+      },
+    };
+
+  },
+  mounted() {
+    this.getListAll()
+    this.listCascaderDict();
+    this.selectYtList()
+    this.selectQyList()
+    this.getList()
+  },
+  computed: {
+    height() {
+      return window.innerHeight - 310
+    },
+    selections() {
+      return this.$refs.list.getSelections()
+    }
+  },
+
+  methods: {
+    // 获取纳税主体
+    async getListAll() {
+      const { code = '', data = [] } = await getListAll({})
+      const index = this.searchList.findIndex((item) => item.key === 'taxBodyId');
+      if (code === '0') {
+        this.propsKey = data && data[0].id
+        this.searchList[index].options = [{ value: "", label: "全部" }].concat(data.map((item) => {
+          return {
+            value: item.id,
+            label: `${item.nsrmc} ${item.nsrsbh}`
+          }
+        }))
+      }
+    },
+    // 获取区域
+    async listCascaderDict() {
+      const { code = '', data = [] } = await listCascaderDict()
+      // if (code === '0') {
+      //   const index = this.searchList.findIndex((item) => item.key === 'areaList');
+      //   this.searchList[index].options = data
+      // }
+    },
+    /**
+    * @desption 【组织管理】获取区域选择下拉
+    */
+    async selectQyList() {
+      const { code = '', data = [] } = await selectQyList({})
+      if (code === '0') {
+        const index = this.searchList.findIndex((item) => item.key === 'region');
+        this.searchList[index].options = [{ value: "", label: "全部" }].concat(data.map((item) => {
+          return {
+            value: item,
+            label: item
+          }
+        }))
+      }
+    },
+    /**
+     * @desption 【组织管理】获取业态选择下拉
+     */
+    async selectYtList() {
+      const { code = '', data = [] } = await selectYtList()
+      if (code === '0') {
+        const index = this.searchList.findIndex((item) => item.key === 'businessFormat');
+        this.searchList[index].options = [{ value: "", label: "全部" }].concat(data.map((item) => {
+          return {
+            value: item,
+            label: item
+          }
+        }))
+      }
+    },
+
+    //  按钮操作
+    batchOperate(type, data = {}) {
+      this.batchOperateType = type
+      if (this.selections.length == 0 && type === 'batchDel') {
+        this.$message.warning("未选择企业，请选择企业");
+        return;
+      }
+      this.form = data
+      if (type === 'digital') {
+        this.dialogVisible = true
+        return;
+      }
+      this.delTaxBodyBatch();
+    },
+
+    openDigitalBatch(isDigital) {
+      if (this.selections.length == 0) {
+        this.$message.warning("未选择企业，请选择企业");
+        return;
+      }
+      if (!this.selections.every((item) => item.lqid && item.secretkey)) {
+        this.$message.warning("乐企ID和乐企密钥不能为空");
+        return;
+      }
+      this.$confirm(`确定要开通数电吗`, '请确认', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        const ids = this.selections.map((item) => item.id);
+        const { code = '' } = await this.api.openDigitalBatchApi({ ids, "isDigital": isDigital });
+        if (code === '0') {
+          this.$message.success('操作成功');
+          this.getList();
+        }
+      }).catch((res => { }))
+    },
+
+    // 删除企业
+    delTaxBodyBatch() {
+      this.$confirm(`是否确定删除当前企业`, '请确认', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+
+        const ids = this.batchOperateType === 'delete' ? [this.form.id] : this.selections.map((item) => item.id)
+        const { code = '' } = await delTaxBodyBatch({ ids });
+        if (code === '0') {
+          this.$message.success('删除成功');
+          this.getList();
+        }
+      }).catch((res => { }))
+
+    },
+    // 切换数电开通
+    async setIsDigital() {
+      this.$refs["ruleForm"].validate(async valid => {
+        if (!valid) return;
+        const { code = '' } = await setIsDigital(this.form);
+        if (code === '0') {
+          this.$message.success('操作成功');
+          this.dialogVisible = false
+          this.getList();
+        }
+      })
+    },
+    hanldeEnter(operateType, data = {}) {
+      if (operateType === 'add') {
+        sessionStorage.setItem('clearTaxBody', 1)
+      }
+      this.$router.push({
+        path: '/organization/taxBodyDetail',
+        query: {
+          operateType,
+          id: data.id
+        }
+      })
+      this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+
+    },
+    // 维护开票点 / 受票点
+    hanldeMaintenance(data, activeName) {
+      const key =
+      this.$emit('hanldeMaintenance', data.id, activeName)
+    },
+    getList() {
+      this.$refs.list && this.$refs.list.reload()
+    },
+    //导入
+    handleImport() {
+      sessionStorage.setItem('clearTaxBodyImport', 1)
+      this.$router.push({ path: "/organization/TaxBodyImport" })
+      this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+    },
+    getSearchParam(param) {
+      this.queryParam = param;
+    },
+    // 导出
+    async handleExport() {
+      const fileName = `纳税主体信息列表.xlsx`
+      await exportTaxBodyInfo({
+        reqData: { ...this.queryParam, pageNo: -1, pageSize: -1 },
+        fileName
+      })
+    },
+
+    handleClose() {
+      this.dialogVisible = false;
+      this.form = {}
+    },
+
+  }
+};
+</script>
