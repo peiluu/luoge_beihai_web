@@ -109,3 +109,15 @@ dealExtendParamNames(extendParamNames);
       })
   })
 }
+export function deleteOne(url, id, params) {
+  return new Promise((resolve, reject) => {
+      http.post(`${url}`, {
+          id,
+          ...params
+      }).then(res => {
+          resolve(res)
+      }).catch(err => {
+          reject(err)
+      })
+  })
+}
