@@ -299,7 +299,23 @@ Vue.prototype.decryptJe = (row, column, cellValue, index) => {
   return '****';
 }
 
+/**
+ * @description 格式化金额,每个3位用逗号分隔
+ * @param notFixed 不需要保留两位小数
+ */
+Vue.prototype.formatMoney = (data, notFixed) => {
+  // const str = data ? notFixed ? data.toString() : parseFloat(data).toFixed(2).toString() : '0.00';
+  // // const str = data ? data.toFixed(2).toString() : '0.00'
+  // const intSum = str.split(".")[0].replace( /\B(?=(?:\d{3})+$)/g, ',' );//取到整数部分
+  // // const dot = str.split(".")[1].replace(/\B(?=(?:\d{3})+$)/g, ',') //取到小数部分搜索
+  // const dot = str.indexOf(".") > -1 ? str.substring(str.length,str.indexOf(".")) : '' //取到小数部分搜索
+  // const ret = intSum + dot;
 
+  return  data ? parseFloat(data).toLocaleString("zh", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }) : '0.00'
+}
 
 
 

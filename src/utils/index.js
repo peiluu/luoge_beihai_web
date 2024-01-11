@@ -47,7 +47,9 @@ export function getDictLabel (dictType, dictValue) {
 export function clearLoginInfo () {
   store.commit('resetStore')
   Cookies.remove('token')
-  window.SITE_CONFIG['dynamicMenuRoutesHasAdded'] = false
+  Cookies.remove('roleList')
+  sessionStorage.clear()
+  localStorage.clear()
 }
 
 /**

@@ -290,8 +290,3 @@ export default {
   }
 };
 </script>
-<style lang="scss" scoped>
-.com-invoicing-organization {
-
-}
-</style>

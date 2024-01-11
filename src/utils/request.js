@@ -1,3 +1,4 @@
+import { Message, Loading } from 'element-ui'
 import axios from 'axios'
 import Cookies from 'js-cookie'
 import router from '@/router'

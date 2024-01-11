@@ -94,6 +94,9 @@ router.beforeEach((to, from, next) => {
   // 已添加或者当前路由为页面路由, 可直接访问
   // console.log('----store---',to, from)
   if (store.state.sidebarMenuList.length || fnCurrentRouteIsPageRoute(to, pageRoutes)) {
+    if(to.path === '/' && to.name === 'main'){
+      return next({name: 'home'})
+    }
     return next()
   }
   // 获取字典列表, 添加并全局变量保存
@@ -185,7 +188,6 @@ function fnAddDynamicMenuRoutes (menuList = [], routes = []) {
   })
   router.addRoute({ path: '*', redirect: { name: '404' } });
   window.SITE_CONFIG['dynamicMenuRoutes'] = routes
-  window.SITE_CONFIG['dynamicMenuRoutesHasAdded'] = true
 }
 
 export default router

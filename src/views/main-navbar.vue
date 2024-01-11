@@ -23,7 +23,7 @@
           <el-dropdown placement="bottom" :show-timeout="0">
             <span class="el-dropdown-link">
               <img src="~@/assets/img/avatar.png">
-              <span>{{ $store.state.user.name }}</span>
+              <span>{{ $store.state.user.username }}</span>
               <i class="el-icon-arrow-down"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
