@@ -55,7 +55,7 @@ export default {
             ...this.dataForm
           }
         }
-      ).then(({ data: res }) => {
+      ).then(res => {
         this.dataListLoading = false
         if (res.code !== 0) {
           this.dataList = []
@@ -147,7 +147,7 @@ export default {
           this.mixinViewModuleOptions.deleteIsBatch ? {
             'data': id ? [id] : this.dataListSelections.map(item => item[this.mixinViewModuleOptions.deleteIsBatchKey])
           } : {}
-        ).then(({ data: res }) => {
+        ).then(res => {
           if (res.code !== 0) {
             return this.$message.error(res.msg)
           }

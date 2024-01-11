@@ -90,7 +90,7 @@ export default {
       return data.name.indexOf(value) !== -1
     },
     getDataList (id) {
-      return this.$http.get('/sys/region/tree').then(({ data: res }) => {
+      return this.$http.get('/sys/region/tree').then(res => {
         if (res.code !== 0) {
           return this.$message.error(res.msg)
         }

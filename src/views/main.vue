@@ -89,7 +89,7 @@ export default {
     },
     // 获取当前管理员信息
     getUserInfo () {
-      return this.$http.get('/sys/user/info').then(({ data: res }) => {
+      return this.$http.get('/sys/user/info').then(res => {
         if (res.code !== 0) {
           return this.$message.error(res.msg)
         }
@@ -103,7 +103,7 @@ export default {
     },
     // 获取权限
     getPermissions () {
-      return this.$http.get('/sys/menu/permissions').then(({ data: res }) => {
+      return this.$http.get('/sys/menu/permissions').then(res => {
         if (res.code !== 0) {
           return this.$message.error(res.msg)
         }

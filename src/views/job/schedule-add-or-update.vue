@@ -72,7 +72,7 @@ export default {
     },
     // 获取信息
     getInfo () {
-      this.$http.get(`/sys/schedule/${this.dataForm.id}`).then(({ data: res }) => {
+      this.$http.get(`/sys/schedule/${this.dataForm.id}`).then(res => {
         if (res.code !== 0) {
           return this.$message.error(res.msg)
         }
@@ -85,7 +85,7 @@ export default {
         if (!valid) {
           return false
         }
-        this.$http[!this.dataForm.id ? 'post' : 'put']('/sys/schedule', this.dataForm).then(({ data: res }) => {
+        this.$http[!this.dataForm.id ? 'post' : 'put']('/sys/schedule', this.dataForm).then(res => {
           if (res.code !== 0) {
             return this.$message.error(res.msg)
           }

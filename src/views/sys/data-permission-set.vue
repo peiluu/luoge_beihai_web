@@ -153,7 +153,7 @@ export default {
       console.log("setPermission:",this.selectionAllData);
       var permissionBody={"userid":this.dataForm.userid,"permissiontype":this.selectedPermissionObj.powertype,"permissionlist":this.selectionAllData}
       console.log("permissionBody:",permissionBody);
-      this.$http["post"]('/sys/userdatapermission/setUserPermission', permissionBody).then(({ data: res }) => {
+      this.$http["post"]('/sys/userdatapermission/setUserPermission', permissionBody).then(res => {
 
         if (res.code !== 0) {
           return this.$message.error(res.msg)
@@ -284,7 +284,7 @@ export default {
 
 // 获取信息
     getPermissionList () {
-      this.$http.get(`/sys/powerlist/page`).then(({ data: res }) => {
+      this.$http.get(`/sys/powerlist/page`).then(res => {
         if (res.code !== 0) {
           return this.$message.error(res.msg)
         }
@@ -296,8 +296,8 @@ export default {
     // 获取选中的一组权限字典信息
     getAPermissionList (url) {
       /*-------------先获取外部的所有权限清单-------------*/
-      this.$http.get(`/sys/userdatapermission/getPermissionList?userid=`+this.dataForm.userid+'&permissiontypeid='+this.selectedPermissionObj.id).then(({ data: res }) => {
-      //this.$http.get(`http://localhost:8080/PTCM/sys/powerlist/testpowerlist`).then(({ data: res }) => {
+      this.$http.get(`/sys/userdatapermission/getPermissionList?userid=`+this.dataForm.userid+'&permissiontypeid='+this.selectedPermissionObj.id).then(res => {
+      //this.$http.get(`http://localhost:8080/PTCM/sys/powerlist/testpowerlist`).then(res => {
       if (res.code !== 0) {
           return this.$message.error(res.msg)
         }
@@ -321,7 +321,7 @@ export default {
     },
     // 获取信息
     getInfo () {
-      this.$http.get(`/sys/powerlist/${this.dataForm.id}`).then(({ data: res }) => {
+      this.$http.get(`/sys/powerlist/${this.dataForm.id}`).then(res => {
         if (res.code !== 0) {
           return this.$message.error(res.msg)
         }
@@ -339,7 +339,7 @@ export default {
           return false
         }
         // if(this.dataForm.pstate)this.dataForm.pstate=1;else this.dataForm.pstate=0;
-        this.$http[!this.dataForm.id ? 'post' : 'put']('/sys/powerlist/', this.dataForm).then(({ data: res }) => {
+        this.$http[!this.dataForm.id ? 'post' : 'put']('/sys/powerlist/', this.dataForm).then(res => {
           if (res.code !== 0) {
             return this.$message.error(res.msg)
           }

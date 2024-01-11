@@ -94,9 +94,9 @@ router.beforeEach((to, from, next) => {
   // 添加动态(菜单)路由
   // 已添加或者当前路由为页面路由, 可直接访问
   const token = getToken();
-  console.log('----token----', token)
-  console.log('----beforeEach to----', to)
-  console.log('----beforeEach from----', to)
+  // console.log('----token----', token)
+  // console.log('----beforeEach to----', to)
+  // console.log('----beforeEach from----', to)
   if (!token && to.name !== 'login') { // 未登录且不是在登录页，重定向到登录页
     return next({ name: 'login' });
   }
@@ -107,14 +107,14 @@ router.beforeEach((to, from, next) => {
     return next()
   }
   // 获取字典列表, 添加并全局变量保存
-  http.get('/sys/dict/type/all').then(({ data: res }) => {
+  http.get('/sys/dict/type/all').then(res => {
     if (res.code !== 0) {
       return
     }
     store.commit('app/saveDictList', res.data || [])
   }).catch(() => {})
   // 获取菜单列表, 添加并全局变量保存
-  http.get('/sys/menu/nav').then(({ data: res }) => {
+  http.get('/sys/menu/nav').then(res => {
     if (res.code !== 0) {
       Vue.prototype.$message.error(res.msg)
       return next({ name: 'login' })

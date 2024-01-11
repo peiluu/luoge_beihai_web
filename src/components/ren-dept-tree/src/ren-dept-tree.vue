@@ -76,7 +76,7 @@ export default {
       return data.name.indexOf(value) !== -1
     },
     getDeptList (id) {
-      return this.$http.get('/sys/dept/list').then(({ data: res }) => {
+      return this.$http.get('/sys/dept/list').then(res => {
         if (res.code !== 0) {
           return this.$message.error(res.msg)
         }

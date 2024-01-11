@@ -57,71 +57,77 @@ http.interceptors.request.use(config => {
 http.interceptors.response.use(response => {
   if (response.data.code === 401 || response.data.code === 10001 || response.data.code === '5') {
     goLogin()
-    return Promise.reject(response.data.msg)
+    return Promise.reject(response.data)
   }
-  return response
+  // console.log('--response--', response)
+  if(response.data.code === 0 || response.data.code === '0'){
+    return response.data
+  } else {
+    // console.log("异常", response.data);
+    return Promise.reject(response.data);
+  }
 }, error => {
   // 处理全局错误
   if (error) {
     let code = parseInt(error.response && error.response.status);
-    let message = '未知错误';
+    let msg = '未知错误';
     if (code) {
       switch (code) {
         case 400:
-          message = '错误的请求';
+          msg = '错误的请求';
           break;
         case 401:
-          message = '未授权，请重新登录';
+          msg = '未授权，请重新登录';
           // 跳转登录页
           goLogin()
           break;
         case 403:
-          message = '拒绝访问';
+          msg = '拒绝访问';
           break;
         case 404:
-          message = '请求错误,未找到该资源';
+          msg = '请求错误,未找到该资源';
           break;
         case 405:
-          message = '请求方法未允许';
+          msg = '请求方法未允许';
           break;
         case 408:
-          message = '请求超时';
+          msg = '请求超时';
           break;
         case 500:
-          message = '服务器端出错';
+          msg = '服务器端出错';
           break;
         case 501:
-          message = '网络未实现';
+          msg = '网络未实现';
           break;
         case 502:
-          message = '网络错误';
+          msg = '网络错误';
           break;
         case 503:
-          message = '服务不可用';
+          msg = '服务不可用';
           break;
         case 504:
-          message = '网络超时';
+          msg = '网络超时';
           break;
         case 505:
-          message = 'http版本不支持该请求';
+          msg = 'http版本不支持该请求';
           break;
         default:
-          message = `其他连接错误 --${code}`
+          msg = `其他连接错误 --${code}`
       }
     } else {
       if(error.code){
         code = error.code;
-        message = error.message;
+        msg = error.msg;
       }else{
-        message = `无法连接到服务器！`
+        msg = `无法连接到服务器！`
       }
      
     }
     let err = {
       code,
-      message
+      msg
     }
-    Message.warning(err.message)
+    // Message.warning(err.msg)
     return Promise.reject(err);
   }
 })
@@ -204,7 +210,7 @@ export function download(url, params, extendParamNames = null, showLoading = fal
 
   dealExtendParamNames(extendParamNames);
   return new Promise((resolve, reject) => {
-    request.post(url, reqData, {
+    http.post(url, reqData, {
       headers: {"Content-Type":"application/json","Data-Type":"json"},
       responseType: 'blob'
     }).then(res => {

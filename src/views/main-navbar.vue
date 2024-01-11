@@ -79,7 +79,7 @@ export default {
         cancelButtonText: this.$t('cancel'),
         type: 'warning'
       }).then(() => {
-        this.$http.post('/logout').then(({ data: res }) => {
+        this.$http.post('/logout').then(res => {
           if (res.code !== 0) {
             return this.$message.error(res.msg)
           }

@@ -75,7 +75,7 @@ export default {
         if (!valid) {
           return false
         }
-        this.$http.put('/sys/user/password', this.dataForm).then(({ data: res }) => {
+        this.$http.put('/sys/user/password', this.dataForm).then(res => {
           if (res.code !== 0) {
             return this.$message.error(res.msg)
           }
