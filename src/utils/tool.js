@@ -56,6 +56,21 @@ const formatResponse = function(code, msg, data) {
         resolve(res)
     })
 }
+/**
+ * @description 获取当前属期的xx： 格式比如： 2023年7月
+ * @param pre 当前属期的上pre月，默认值0
+ */
+export const getCurrentMonth = (pre) => {
+  const preNumber = pre || 0;
+  let now = new Date();
+  let year = now.getFullYear();
+  let month = now.getMonth() + 1 - preNumber;
+  return {
+    dateValue: `${year}${month < 10 ? '0' + month : month}`,
+    dateValueLine: `${year}${month < 10 ? '-0' + month : '-' + month}`,
+    dateLabel: `${year}年${month}月`,
+  };
+};
 
 export function dateFormat(fmt, date) {
     if (!date) {
