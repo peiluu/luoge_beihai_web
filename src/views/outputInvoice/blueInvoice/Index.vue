@@ -204,7 +204,11 @@ export default {
       //this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
       switch(type){
         case 0:{
+         
           this.nextObj = {...row.data, orgid:row?.data.id, isDigital: row?.data.isDigital};
+          if((this.nextObj.id??'')!==''){
+            delete this.nextObj.id
+          }
           this.active = this.active + 1;
           break;
         }

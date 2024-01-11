@@ -5,13 +5,13 @@
       <el-form :inline="true" :model="formInline" label-width="140px">
         <el-row :gutter="10">
           <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
-            <el-form-item label="纳税人名称："><span></span></el-form-item>
+            <el-form-item label="纳税人名称："><span>{{ formInline.nsrmc }}</span></el-form-item>
           </el-col>
           <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
-            <el-form-item label="纳税人识别号码："><span></span></el-form-item>
+            <el-form-item label="纳税人识别号码："><span>{{ formInline.nsrsbh }}</span></el-form-item>
           </el-col>
           <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
-            <el-form-item label="所属账套："><span></span></el-form-item>
+            <el-form-item label="所属账套："><span>{{ formInline.ssztName }}</span></el-form-item>
           </el-col>
           
         </el-row>
