@@ -48,3 +48,18 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+#app,
+body,
+html {
+  width: 100%;
+  height: 100vh;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  font-size: 12px;
+  font-family: PingFangSC-Regular, Microsoft YaHei, Helvetica Neue, Helvetica;
+  border: none;
+  overflow: hidden;
+}
+</style>

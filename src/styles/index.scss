@@ -85,10 +85,6 @@ html {
     padding: 0;
 }
 
-.el-tabs__item {
-    color: #888888;
-}
-
 .el-tabs__header {
     margin: 0;
 }
@@ -322,4 +318,28 @@ html {
 .back-button{
     position: absolute;
     right: 40px;
+}
+// 自定义卡片式tab
+.custom-card-tabs {
+    .el-tabs__item {
+        height: 30px;
+        padding: 0 12px !important;
+        line-height: 30px;
+        text-align: center;
+  
+        &:hover {
+            color: $primaryGreenColor;
+        }
+  
+        &.is-active {
+            background: $primaryGreenColor;
+            color: #fff;
+        }
+    }
+}
+.el-tabs__item {
+    font-size: 12px;
+    color: $mainTextColor;
+    font-weight: 400;
+  
 }

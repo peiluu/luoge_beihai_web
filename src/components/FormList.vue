@@ -290,7 +290,6 @@ export default {
           pageSize: pagination.pageSize,
 
         });
-        console.log('---res---', res)
         if (res && res.code == "0") {
           // 向父组件传递参数
           this.$emit('getSearchParam', param)
