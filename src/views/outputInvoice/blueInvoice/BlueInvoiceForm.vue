@@ -343,6 +343,7 @@
                 ></el-switch>
 
                 <!--右边 -->
+                
                 <el-button
                   size="mini"
                   style="float: right; margin-right: 10px"
@@ -356,6 +357,13 @@
                   @click="reChooseFplx"
                   :disabled="!canEdit"
                   >重选发票种类</el-button
+                >
+                <el-button
+                  size="mini"
+                  style="float: right; margin-right: 10px"
+                  @click="clearItems"
+                  :disabled="!canEdit"
+                  >引用模板</el-button
                 >
               </div>
               <div class="form-goods-gird">
@@ -799,9 +807,9 @@
                 ></el-input>
               </el-form-item>
               <el-form-item label="开票人" prop="kpr">
-                <el-input disabled v-model="form.kpr"></el-input>
+                <el-input :disabled="false" v-model="form.kpr"></el-input>
               </el-form-item>
-              <el-form-item label="邮箱" prop="email">
+              <!-- <el-form-item label="邮箱" prop="email">
                 <el-input v-model="form.email"></el-input>
               </el-form-item>
               <el-form-item label="开票日期" prop="kprq">
@@ -812,7 +820,7 @@
                   :default-value="new Date()"
                   placeholder="请选择日期"
                 ></el-date-picker>
-              </el-form-item>
+              </el-form-item> -->
               <!--<el-form-item label="复核人" prop="fhr">
                  <el-input v-model="form.fhr"></el-input>
                </el-form-item>
@@ -3053,7 +3061,7 @@ export default {
       return this.thirdData ||  this.$route.query;
     },
     contentHeight() {
-      return window.innerHeight - 156;
+      return window.innerHeight - 330;
     },
   },
   activated() {

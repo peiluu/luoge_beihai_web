@@ -151,7 +151,7 @@
         }
         .form-goods-gird{
           border-bottom: 2px solid $ticket-color;
-          /deep/ .vxe-cell--title{
+          ::v-deep .vxe-cell--title{
             color: $ticket-color;
             font-size: 14px;
           }
@@ -205,11 +205,12 @@
 }
 .invoice-tools{
   position: fixed;
+  left: 0;
   bottom: 0;
   background-color: #ffffff;
   border-radius: 4px;
   padding: 12px;
-  width: calc(100% - 224px);
+  width: 100%;
   text-align: center;
   z-index: 1;
   .el-button{
