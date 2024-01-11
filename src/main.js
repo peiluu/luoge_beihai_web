@@ -39,6 +39,7 @@ Vue.prototype.$http = http
 Vue.prototype.$hasPermission = hasPermission
 Vue.prototype.$getDictLabel = getDictLabel
 Vue.prototype.isBlank = isBlank
+Vue.prototype.getArrayName = getArrayName
 
 
 //数组过滤

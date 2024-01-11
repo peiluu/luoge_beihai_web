@@ -1383,6 +1383,7 @@
 </template>
 
 <script>
+import { getArrayName } from '@/utils'
 import { numToCny } from "@/utils/tool";
 import Step from "@/components/Step.vue";
 import HouseInfoDlg from "./HouseInfoDlg.vue";
@@ -1391,7 +1392,7 @@ import { dynamicUrlMap } from "@/config/constant.js";
 import {Calc} from '@/utils/calc';
 import AppAddTheme from './component/addTheme'
 import AppUseTheme from './component/useTheme'
-import { getArrayName } from '@/utils'
+//import { getArrayName } from '@/utils'
 export default {
   name: "BlueInvoiceForm",
   props:{
