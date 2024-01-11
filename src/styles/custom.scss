@@ -151,7 +151,7 @@
         }
         .form-goods-gird{
           border-bottom: 2px solid $ticket-color;
-          /deep/ .vxe-cell--title{
+          ::v-deep .vxe-cell--title{
             color: $ticket-color;
             font-size: 14px;
           }

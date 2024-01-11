@@ -24,7 +24,8 @@ import './utils/dialogDrag.js'
 Vue.config.productionTip = false
 
 Vue.use(Element, {
-  size: 'default',
+  size: 'mini',
+  zIndex: 3000,
   i18n: (key, value) => i18n.t(key, value)
 })
 

@@ -94,9 +94,9 @@ router.beforeEach((to, from, next) => {
   // 添加动态(菜单)路由
   // 已添加或者当前路由为页面路由, 可直接访问
   const token = getToken();
-  // console.log('----token----', token)
-  // console.log('----beforeEach to----', to)
-  // console.log('----beforeEach from----', to)
+  console.log('----token----', token)
+  console.log('----beforeEach to----', to)
+  console.log('----beforeEach from----', to)
   if (!token && to.name !== 'login') { // 未登录且不是在登录页，重定向到登录页
     return next({ name: 'login' });
   }
