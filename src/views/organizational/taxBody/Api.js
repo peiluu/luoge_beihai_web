@@ -11,7 +11,7 @@ export const getList = (data) => postJSON(`${config.host}/taxBody/selectPage`, d
  * @desption 初始化行政区划
  */
 export const listCascaderDict = (data) =>
-  postJSON('/Dict/listCascaderDict/1/3', data);
+  postJSON(`${config.host}/Dict/listCascaderDict/1/3`, data);
 
 /**
  * @desption 【组织管理】获取业态选择下拉

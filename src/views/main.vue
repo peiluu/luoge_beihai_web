@@ -20,9 +20,9 @@ export default {
     return {
       // 刷新
       refresh () {
-        this.$store.state.contentIsNeedRefresh = true
+        this.$store.commit('updateContentIsNeedRefresh', true)
         this.$nextTick(() => {
-          this.$store.state.contentIsNeedRefresh = false
+          this.$store.commit('updateContentIsNeedRefresh', false)
         })
       }
     }
