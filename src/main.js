@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Element from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css';
 import App from '@/App'
 import i18n from '@/i18n'
 import router from '@/router'
@@ -16,14 +17,15 @@ import renDeptTree from '@/components/ren-dept-tree'
 import renRegionTree from '@/components/ren-region-tree'
 import { hasPermission, getDictLabel,isBlank } from '@/utils'
 import cloneDeep from 'lodash/cloneDeep'
-
-
+import VXETable from 'vxe-table';
+// import '../vxe-table-variables.scss'
+import 'vxe-table/lib/style.css';
 import './utils/dialogDrag.js'
-
 Vue.config.productionTip = false
 
 Vue.use(Element, {
-  size: 'default',
+  size: 'mini',
+  zIndex: 3000,
   i18n: (key, value) => i18n.t(key, value)
 })
 
@@ -31,7 +33,7 @@ Vue.use(renRadioGroup)
 Vue.use(renSelect)
 Vue.use(renDeptTree)
 Vue.use(renRegionTree)
-
+Vue.use(VXETable);
 // 挂载全局
 Vue.prototype.$http = http
 Vue.prototype.$hasPermission = hasPermission
@@ -299,7 +301,23 @@ Vue.prototype.decryptJe = (row, column, cellValue, index) => {
   return '****';
 }
 
+/**
+ * @description 格式化金额,每个3位用逗号分隔
+ * @param notFixed 不需要保留两位小数
+ */
+Vue.prototype.formatMoney = (data, notFixed) => {
+  // const str = data ? notFixed ? data.toString() : parseFloat(data).toFixed(2).toString() : '0.00';
+  // // const str = data ? data.toFixed(2).toString() : '0.00'
+  // const intSum = str.split(".")[0].replace( /\B(?=(?:\d{3})+$)/g, ',' );//取到整数部分
+  // // const dot = str.split(".")[1].replace(/\B(?=(?:\d{3})+$)/g, ',') //取到小数部分搜索
+  // const dot = str.indexOf(".") > -1 ? str.substring(str.length,str.indexOf(".")) : '' //取到小数部分搜索
+  // const ret = intSum + dot;
 
+  return  data ? parseFloat(data).toLocaleString("zh", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }) : '0.00'
+}
 
 
 

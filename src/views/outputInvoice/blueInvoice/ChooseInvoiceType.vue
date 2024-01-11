@@ -1,8 +1,21 @@
 <template>
   <div class="" :style="'height: ' + contentHeight + 'px;'">
     <!-- <Step :stepData="{current:2,total:4,title:'选择发票种类'}"></Step> -->
-    <article>
-
+    <article style="overflow: hidden auto;">
+      <el-form :inline="true" :model="formInline" label-width="140px">
+        <el-row :gutter="10">
+          <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
+            <el-form-item label="纳税人名称："><span></span></el-form-item>
+          </el-col>
+          <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
+            <el-form-item label="纳税人识别号码："><span></span></el-form-item>
+          </el-col>
+          <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
+            <el-form-item label="所属账套："><span></span></el-form-item>
+          </el-col>
+        </el-row>
+        
+      </el-form>
     </article>
     <!-- 选择表单 -->
     <article>
@@ -50,8 +63,9 @@
       <span style="color: #D9001B;margin-right:4px;vertical-align: sub;">*</span>温馨提示：当前企业<template>{{isDigital=='Y'?'已':'未'}}</template>开通数电发票业务
     </div> -->
     <footer>
-      <el-button>返回</el-button>
-      <el-button type="primary">上一步</el-button>
+      <div>
+        <slot :slotData="{...form}" ></slot>
+      </div>
     </footer>
     <!-- <StepFooter style="margin-top: 80px;" :pre="pre" :next="next" @handlePre="handlePre" @handleNext="handleNext"></StepFooter> -->
   </div>
@@ -63,6 +77,12 @@
   import StepFooter from '@/components/StepFooter.vue';
   export default {
     name: "ChooseInvoiceType",
+    props:{
+      nextObj:{
+        type:Object,
+        default: ()=> {}
+      }
+    },
     components: {
       Step,
       StepFooter
@@ -77,6 +97,9 @@
           tdys: '',
           cezslxDm: '',
           jazs: '',
+        },
+        formInline:{
+          ...this.nextObj
         },
         rules: {
           fppz: [
@@ -96,10 +119,10 @@
     },
     computed:{
       orgid(){
-        return this.$route.query.orgid
+        return this.nextObj.orgid
       },
       isDigital(){
-        return this.$route.query.isDigital
+        return this.nextObj.isDigital
       },
       contentHeight(){
         return window.innerHeight - 294;
@@ -114,25 +137,29 @@
       'form.tdys'(val){
         this.$set(this.form, 'cezslxDm', '');
         this.$set(this.form, 'jazs', '');
+      },
+      nextObj:{
+        handler(val){
+          this.formInline = {...val};
+        }
       }
-
     },
     created(){
-      this.$eventBus.$on('chooseInvoiveTypeReset', () => {
-        try {
-          this.pre = true;
-          this.next =true;
-          this.form = {
-            fppz: '',
-            tdys: '',
-            cezslxDm: '',
-            jazs: '',
-          };
-          this.skform = {}
-        } catch (error) {
-          console.log('--error--', error)
-        }
-      })
+      // this.$eventBus.$on('chooseInvoiveTypeReset', () => {
+      //   try {
+      //     this.pre = true;
+      //     this.next =true;
+      //     this.form = {
+      //       fppz: '',
+      //       tdys: '',
+      //       cezslxDm: '',
+      //       jazs: '',
+      //     };
+      //     this.skform = {}
+      //   } catch (error) {
+      //     console.log('--error--', error)
+      //   }
+      // })
     },
     methods: {
       handlePre(){
@@ -189,17 +216,11 @@
 </script>
 
 <style scoped lang="scss">
-  .content{
-    background-color: #ffffff;
-    border-radius: 4px;
-    margin: 8px;
-    padding: 12px;
-    height: calc(100% - 20px);
-    .content-form{
+ .content-form{
       border: 1px solid #F2F2F2;
       border-radius: 5px;
-      width: 800px;
-      margin-left: calc(50% - 400px);
+      // width: 800px;
+      // margin-left: calc(50% - 400px);
       padding: 30px 0 10px 0;
       .el-form-item{
         display: flex;
@@ -212,6 +233,13 @@
         border: 1px solid #DCDFE6;
       }
     }
+  .content{
+    background-color: #ffffff;
+    border-radius: 4px;
+    margin: 8px;
+    padding: 12px;
+    height: calc(100% - 20px);
+   
     .content-tips{
       text-align: center;
       font-size: 18px;

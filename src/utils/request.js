@@ -1,3 +1,4 @@
+import { Message, Loading } from 'element-ui'
 import axios from 'axios'
 import Cookies from 'js-cookie'
 import router from '@/router'
@@ -10,7 +11,11 @@ const http = axios.create({
   timeout: 60000,
   withCredentials: true
 })
-
+function goLogin() {
+  clearLoginInfo()
+  Message.warning('登录失效，请重新登录')
+  router.replace({ name: 'login' })
+}
 /**
  * 请求拦截
  */
@@ -50,15 +55,81 @@ http.interceptors.request.use(config => {
  * 响应拦截
  */
 http.interceptors.response.use(response => {
-  if (response.data.code === 401 || response.data.code === 10001) {
-    clearLoginInfo()
-    router.replace({ name: 'login' })
-    return Promise.reject(response.data.msg)
+  if (response.data.code === 401 || response.data.code === 10001 || response.data.code === '5') {
+    goLogin()
+    return Promise.reject(response.data)
   }
-  return response
+  // console.log('--response--', response)
+  if(response.data.code === 0 || response.data.code === '0'){
+    return response.data
+  } else {
+    // console.log("异常", response.data);
+    return Promise.reject(response.data);
+  }
 }, error => {
-  console.error(error)
-  return Promise.reject(error)
+  // 处理全局错误
+  if (error) {
+    let code = parseInt(error.response && error.response.status);
+    let msg = '未知错误';
+    if (code) {
+      switch (code) {
+        case 400:
+          msg = '错误的请求';
+          break;
+        case 401:
+          msg = '未授权，请重新登录';
+          // 跳转登录页
+          goLogin()
+          break;
+        case 403:
+          msg = '拒绝访问';
+          break;
+        case 404:
+          msg = '请求错误,未找到该资源';
+          break;
+        case 405:
+          msg = '请求方法未允许';
+          break;
+        case 408:
+          msg = '请求超时';
+          break;
+        case 500:
+          msg = '服务器端出错';
+          break;
+        case 501:
+          msg = '网络未实现';
+          break;
+        case 502:
+          msg = '网络错误';
+          break;
+        case 503:
+          msg = '服务不可用';
+          break;
+        case 504:
+          msg = '网络超时';
+          break;
+        case 505:
+          msg = 'http版本不支持该请求';
+          break;
+        default:
+          msg = `其他连接错误 --${code}`
+      }
+    } else {
+      if(error.code){
+        code = error.code;
+        msg = error.msg;
+      }else{
+        msg = `无法连接到服务器！`
+      }
+     
+    }
+    let err = {
+      code,
+      msg
+    }
+    // Message.warning(err.msg)
+    return Promise.reject(err);
+  }
 })
 
 export default http
@@ -119,5 +190,54 @@ export function deleteOne(url, id, params) {
       }).catch(err => {
           reject(err)
       })
+  })
+}
+
+/**
+ * @description 下载文件
+ */
+export function download(url, params, extendParamNames = null, showLoading = false) {
+  let loading = {};
+  if (showLoading){
+    loading = Loading.service({
+      lock: true,
+      text: '',
+      spinner: 'el-icon-loading',
+      background: 'rgba(0, 0, 0, 0.7)'
+    });
+  }
+  const { reqData, fileName = '' } = params
+
+  dealExtendParamNames(extendParamNames);
+  return new Promise((resolve, reject) => {
+    http.post(url, reqData, {
+      headers: {"Content-Type":"application/json","Data-Type":"json"},
+      responseType: 'blob'
+    }).then(res => {
+      const blob = new Blob([res])
+      if ('download' in document.createElement('a')) {
+        // 非IE下载
+        const elink = document.createElement('a')
+        elink.download = fileName
+        elink.style.display = 'none'
+        elink.href = URL.createObjectURL(blob)
+        document.body.appendChild(elink)
+        elink.click()
+        URL.revokeObjectURL(elink.href) // 释放URL 对象
+        document.body.removeChild(elink)
+      } else {
+        // IE10+下载
+        navigator.msSaveBlob(blob, fileName)
+      }
+
+      resolve(res)
+
+      showLoading && loading.close();
+    }).catch(err => {
+      showLoading && loading.close();
+
+      reject(err)
+
+    })
   })
 }

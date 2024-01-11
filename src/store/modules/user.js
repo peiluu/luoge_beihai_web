@@ -3,7 +3,7 @@ export default {
 
 	state: {
 		id: 0,
-		name: '',
+		username: '',
 		superAdmin: 0,
 		// 企业信息
 		taxpayerInfo: {},
@@ -16,11 +16,10 @@ export default {
 	},
 
 	mutations: {
-		saveUser(state, params) {
-			state = {
-				...state,
-				...params,
-			};
+		saveUser(state, data) {
+			for(let k in data){
+				state[k] = data[k]
+			}
 		},
 	},
 	actions: {

@@ -1,5 +1,5 @@
 @import './variables.scss';
-
+@import './custom.scss';
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -112,6 +112,10 @@ html {
 }
 
 .main-content {
+    background-color: #fff;
+    padding: 12px;
+    margin: 8px;
+    border-radius: 4px;
     height: calc(100% - 40px);
     overflow-y: auto;
 
@@ -166,9 +170,9 @@ html {
 }
 
 //个税通
-.el-button {
-    padding: 8px 20px;
-}
+// .el-button {
+//     padding: 8px 20px;
+// }
 
 .el-table .el-button{
     padding: 5px 10px;

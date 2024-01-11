@@ -1,0 +1,172 @@
+.custom-table {
+  background-color: #ffffff;
+  border-radius: 10px;
+
+  .el-button:focus,
+  .el-button:hover {
+    background: #fff;
+    border: 1px solid $primaryGreenColor;
+    color: $primaryGreenColor;
+  }
+
+  .el-table__header th {
+    border-image: linear-gradient(#fff, #dbe0e5, #fff) 1 10 1;
+    border-right: 1px solid;
+  }
+  /deep/ .el-table {
+    margin-top: 4px;
+    .el-table__body tr.current-row > td {
+      background: #ccf0ec !important;
+    }
+    .el-table--enable-row-hover .el-table__body tr:hover > td {
+      background: #ccf0ec !important;
+    }
+    .el-checkbox__input.is-checked .el-checkbox__inner {
+      background: $primaryGreenColor;
+      border-color: $primaryGreenColor;
+    }
+    .el-checkbox__input.is-indeterminate .el-checkbox__inner {
+      background: $primaryGreenColor;
+    }
+    .el-table__row .el-table__cell {
+      padding: 6px 0;
+      color: $mainTextColor;
+    }
+  }
+}
+
+// 自定义vuetable
+/deep/ .custom-vxe-table {
+  .vxe-header--row {
+    background: #f7f9fd;
+    font-size: 12px;
+  }
+
+  .vxe-header--column,
+  .vxe-footer--column {
+    padding: 10px 0;
+    color: $mainTextColor;
+    font-weight: 400;
+    line-height: 20px;
+  }
+  .vxe-cell--label {
+    color: $mainTextColor;
+  }
+
+  .vxe-body--column {
+    height: 40px;
+    padding: 0;
+    line-height: 40px;
+    position: relative;
+    font-size: 12px;
+  }
+  .vxe-icon-checkbox-checked,
+  .vxe-icon-checkbox-indeterminate {
+    color: $primaryGreenColor !important;
+    border-color: $primaryGreenColor;
+  }
+  .vxe-icon-checkbox-unchecked:hover {
+    color: $primaryGreenColor !important;
+  }
+  .el-icon-remove-outline {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-family: element-icons; // 这个一定要加上去才会显示！！！
+    content: '\e722';
+    font-size: 18px;
+    color: #ce836c;
+  }
+  .table-toolbar {
+    margin-bottom: 8px;
+  }
+
+  .table-price {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    font-weight: 600;
+    border-bottom: 1px solid #f8f8f9;
+    span {
+      margin-left: 20px;
+      color: #000;
+    }
+
+    .price-left {
+      padding: 10px 0;
+      text-align: center;
+      width: 40%;
+    }
+    .price-right {
+      padding: 10px 0;
+      text-align: center;
+      width: 60%;
+    }
+  }
+  .vxe-footer--column:not(:first-of-type) {
+    color: red;
+  }
+  .isred {
+    .vxe-cell--label,
+    .vxe-input--inner {
+      color: red;
+    }
+  }
+  .vxe-input--number-suffix {
+    display: none;
+  }
+}
+.toolbar {
+  display: flex;
+  padding: 8px 0 4px;
+  align-items: center;
+  .toolbar-left {
+    width: 50%;
+    text-align: left;
+    font-size: 14px;
+  }
+  .toolbar-right {
+    display: flex;
+    justify-content: flex-end;
+    width: 50%;
+    text-align: right;
+  }
+}
+
+.pagination {
+  margin-top: 8px;
+  display: flex;
+  justify-content: flex-end;
+  font-size: 12px;
+  /deep/ .el-pagination {
+    display: flex;
+    align-items: center;
+    color: red;
+    .el-input__inner,
+    .el-pagination__total,
+    .el-pagination__jump {
+      font-size: 12px;
+      color: #666;
+    }
+  }
+
+  /deep/ .el-pager li {
+    font-weight: normal;
+    border-radius: 4px;
+    font-size: 12px;
+    min-width: 22px;
+    height: 24px;
+    line-height: 24px;
+    background: none;
+
+    &.active {
+      background: #00cdb5 !important;
+    }
+
+    &:hover {
+      border: 1px solid $primaryGreenColor;
+      color: $primaryGreenColor !important;
+    }
+  }
+}

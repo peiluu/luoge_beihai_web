@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import http from '@/utils/request'
+import { getToken } from '@/utils'
 import { isURL } from '@/utils/validate'
 import store from '../store/index'
 
@@ -92,19 +93,28 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   // 添加动态(菜单)路由
   // 已添加或者当前路由为页面路由, 可直接访问
-  // console.log('----store---',to, from)
+  const token = getToken();
+  // console.log('----token----', token)
+  // console.log('----beforeEach to----', to)
+  // console.log('----beforeEach from----', to)
+  if (!token && to.name !== 'login') { // 未登录且不是在登录页，重定向到登录页
+    return next({ name: 'login' });
+  }
   if (store.state.sidebarMenuList.length || fnCurrentRouteIsPageRoute(to, pageRoutes)) {
+    if(to.path === '/' && to.name === 'main'){
+      return next({name: 'home'})
+    }
     return next()
   }
   // 获取字典列表, 添加并全局变量保存
-  http.get('/sys/dict/type/all').then(({ data: res }) => {
+  http.get('/sys/dict/type/all').then(res => {
     if (res.code !== 0) {
       return
     }
     store.commit('app/saveDictList', res.data || [])
   }).catch(() => {})
   // 获取菜单列表, 添加并全局变量保存
-  http.get('/sys/menu/nav').then(({ data: res }) => {
+  http.get('/sys/menu/nav').then(res => {
     if (res.code !== 0) {
       Vue.prototype.$message.error(res.msg)
       return next({ name: 'login' })
@@ -185,7 +195,6 @@ function fnAddDynamicMenuRoutes (menuList = [], routes = []) {
   })
   router.addRoute({ path: '*', redirect: { name: '404' } });
   window.SITE_CONFIG['dynamicMenuRoutes'] = routes
-  window.SITE_CONFIG['dynamicMenuRoutesHasAdded'] = true
 }
 
 export default router

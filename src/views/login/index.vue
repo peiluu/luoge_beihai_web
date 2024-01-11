@@ -103,7 +103,7 @@ export default {
           this.loading = true;
           this.$http
             .post('/login', this.dataForm)
-            .then(({ data: res }) => {
+            .then( res => {
               if (res.code !== 0) {
                 this.loading = false;
                 this.getCaptcha();
@@ -128,7 +128,7 @@ export default {
     getMenus(roleList) {
       this.$http
         .get('/sys/menu/nav')
-        .then(({ data: res }) => {
+        .then(res => {
           this.loading = false;
           if (res.code !== 0) {
             this.$message.error(res.msg);
@@ -149,7 +149,7 @@ export default {
     getDicts() {
       this.$http
         .get('/sys/dict/type/all')
-        .then(({ data: res }) => {
+        .then(res => {
           if (res.code !== 0) {
             return;
           }

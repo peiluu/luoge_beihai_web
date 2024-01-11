@@ -97,7 +97,7 @@ export default {
     },
     // 获取信息
     getInfo () {
-      this.$http.get(`/sys/powerlist/${this.dataForm.id}`).then(({ data: res }) => {
+      this.$http.get(`/sys/powerlist/${this.dataForm.id}`).then(res => {
         if (res.code !== 0) {
           return this.$message.error(res.msg)
         }
@@ -115,7 +115,7 @@ export default {
           return false
         }
        // if(this.dataForm.pstate)this.dataForm.pstate=1;else this.dataForm.pstate=0;
-        this.$http[!this.dataForm.id ? 'post' : 'put']('/sys/powerlist/', this.dataForm).then(({ data: res }) => {
+        this.$http[!this.dataForm.id ? 'post' : 'put']('/sys/powerlist/', this.dataForm).then(res => {
           if (res.code !== 0) {
             return this.$message.error(res.msg)
           }

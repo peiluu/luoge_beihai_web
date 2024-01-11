@@ -7,7 +7,7 @@
     :append-to-body="true">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmitHandle()" label-width="120px">
       <el-form-item :label="$t('updatePassword.username')">
-        <span>{{ $store.state.user.name }}</span>
+        <span>{{ $store.state.user.username }}</span>
       </el-form-item>
       <el-form-item prop="password" :label="$t('updatePassword.password')">
         <el-input v-model="dataForm.password" type="password" :placeholder="$t('updatePassword.password')"></el-input>
@@ -75,7 +75,7 @@ export default {
         if (!valid) {
           return false
         }
-        this.$http.put('/sys/user/password', this.dataForm).then(({ data: res }) => {
+        this.$http.put('/sys/user/password', this.dataForm).then(res => {
           if (res.code !== 0) {
             return this.$message.error(res.msg)
           }

@@ -55,6 +55,9 @@ export default new Vuex.Store({
     },
     saveContentTabs(state, data){
       state.contentTabs = data
-    }
+    },
+    updateContentIsNeedRefresh (state, status) {
+      state.contentIsNeedRefresh = status
+    },
   }
 })

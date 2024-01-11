@@ -141,7 +141,7 @@ export default {
     },
     // 获取角色列表
     getRoleList () {
-      return this.$http.get('/sys/role/list').then(({ data: res }) => {
+      return this.$http.get('/sys/role/list').then(res => {
         if (res.code !== 0) {
           return this.$message.error(res.msg)
         }
@@ -150,7 +150,7 @@ export default {
     },
     // 获取信息
     getInfo () {
-      this.$http.get(`/sys/user/${this.dataForm.id}`).then(({ data: res }) => {
+      this.$http.get(`/sys/user/${this.dataForm.id}`).then(res => {
         if (res.code !== 0) {
           return this.$message.error(res.msg)
         }
@@ -181,7 +181,7 @@ export default {
             ...this.dataForm.roleIdList,
             ...this.roleIdListDefault
           ]
-        }).then(({ data: res }) => {
+        }).then(res => {
           if (res.code !== 0) {
             return this.$message.error(res.msg)
           }

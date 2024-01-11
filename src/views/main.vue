@@ -20,9 +20,9 @@ export default {
     return {
       // 刷新
       refresh () {
-        this.$store.state.contentIsNeedRefresh = true
+        this.$store.commit('updateContentIsNeedRefresh', true)
         this.$nextTick(() => {
-          this.$store.state.contentIsNeedRefresh = false
+          this.$store.commit('updateContentIsNeedRefresh', false)
         })
       }
     }
@@ -89,18 +89,21 @@ export default {
     },
     // 获取当前管理员信息
     getUserInfo () {
-      return this.$http.get('/sys/user/info').then(({ data: res }) => {
+      return this.$http.get('/sys/user/info').then(res => {
         if (res.code !== 0) {
           return this.$message.error(res.msg)
         }
-        this.$store.state.user.id = res.data.id
-        this.$store.state.user.name = res.data.username
-        this.$store.state.user.superAdmin = res.data.superAdmin
+        // 存储用户信息
+        this.$store.commit('user/saveUser', {
+          id: res.data.id, 
+          username: res.data.username, 
+          superAdmin: res.data.superAdmin
+        })
       }).catch(() => {})
     },
     // 获取权限
     getPermissions () {
-      return this.$http.get('/sys/menu/permissions').then(({ data: res }) => {
+      return this.$http.get('/sys/menu/permissions').then(res => {
         if (res.code !== 0) {
           return this.$message.error(res.msg)
         }

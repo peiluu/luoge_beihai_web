@@ -1,0 +1,226 @@
+.custom-content{
+  background-color: #ffffff;
+  border-radius: 4px;
+  margin: 8px;
+  padding: 12px;
+  .search-form{
+    margin: 10px;
+  }
+  .box{
+    display: flex;
+    flex-wrap: wrap;
+    .box-card{
+      margin: 10px;
+      width: calc(33.3% - 22px);
+      background-color: #F7F9FA;
+
+      .box-card-header{
+        display: flex;
+        justify-content: space-between;
+      }
+      .el-dropdown-link {
+        cursor: pointer;
+        color: #409EFF;
+      }
+      .el-icon-arrow-down {
+        font-size: 12px;
+      }
+    }
+  }
+
+  .el-form-item{
+    margin-bottom: 0;
+  }
+}
+
+
+.ticket-content {
+  background-color: #ffffff;
+  border-radius: 4px;
+  margin: 8px;
+  padding: 12px;
+  max-height: calc(100vh - 110px);
+  overflow: auto;
+  .content-bar{
+    display: flex;
+    justify-content: space-between;
+  }
+  .content-divider{
+    background-color: #E4E6E9;
+    height: 5px;
+    margin: 5px 0;
+  }
+  //开票界面
+  .content-invoice{
+    .invoice-head{
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      height: 70px;
+      text-align: center;
+      .head-left{
+        width: 20%;
+        div{
+          display: inline-block;
+          white-space: nowrap;
+          font-size: 12px;
+          padding: 3px;
+          margin-top: 5px;
+          color: #3658e6;
+          background-color: #d5dcfa;
+          border: 1px solid #3658e6;
+          border-radius: 2px;
+        }
+        .gray{
+          color: #999;
+          background-color: #f2f2f2;
+          border: 1px solid #9c9c9c;
+        }
+      }
+      .head-center{
+        display: inline-block;
+        padding: 2px 0;
+        color: $ticket-color;
+        text-align: center;
+        font-size: 30px;
+        height: 40px;
+        line-height: 40px;
+        .bottom-line{
+          width: 100%;height: 2px;background-color: $ticket-color;margin-top: 3px;
+        }
+        .bottom-line2{
+          width: 100%;height: 2px;background-color: $ticket-color;margin-top: 3.1px;
+        }
+      }
+      .head-right{
+        width: 20%;
+        font-size: 12px;
+        color: $ticket-color;
+      }
+    }
+    .invoice-form{
+      width: 100%;
+      border: 2px solid $ticket-color;
+      .invoice-form-content{
+        display: flex;
+        border-bottom: 2px solid $ticket-color;
+        .invoice-form-seller{
+          width: 50%;
+          display: flex;
+          .seller-name{
+            width: 30px;
+            max-width: 35px;
+            padding: 40px 8px 8px 8px;
+            color: $ticket-color;
+            text-align: center;
+            vertical-align: middle;
+            border-right: 2px solid $ticket-color;
+            font-size: 14px;
+          }
+          .seller-form-items{
+            padding: 12px 12px 0 12px;
+            width: 100%;
+            .top-bar{
+              display: flex;
+              justify-content: space-between;
+              padding: 10px 0;
+              font-size: 14px;
+            }
+            .el-form-item{
+              display: flex;
+              flex-wrap: nowrap;
+              .el-form-item__label{
+                white-space: nowrap;
+                font-weight: 600;
+                color: $ticket-color;
+              }
+              .el-form-item__content{
+                width: 100%;
+                .vxe-input{
+                  width: 100%;
+                }
+              }
+            }
+          }
+        }
+      }
+      .invoice-form-goods{
+        .form-goods-toolbar{
+          padding: 10px;
+          border-bottom: 2px solid $ticket-color;
+        }
+        .form-goods-gird{
+          border-bottom: 2px solid $ticket-color;
+          ::v-deep .vxe-cell--title{
+            color: $ticket-color;
+            font-size: 14px;
+          }
+        }
+      }
+      .invoice-form-price{
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        color: $ticket-color;
+        font-weight: 600;
+        border-bottom: 2px solid $ticket-color;
+        .price-left{
+          padding: 10px 0;
+          text-align: center;
+          width: 40%;
+          border-right: 2px solid $ticket-color;
+        }
+        .price-right{
+          padding: 10px 0;
+          text-align: center;
+          width: 60%;
+        }
+      }
+      .invoice-form-remark{
+        padding: 10px 24px;
+        .remark-title{
+          height: 32px;
+          font-size: 14px;
+          display: flex;
+          justify-content: space-between;
+          .remark-left{
+            font-weight: 600;
+            color: $ticket-color;
+          }
+        }
+        .el-form-item{
+          display: inline-flex;
+          flex-direction: column;
+          width: calc(25% - 10px);
+          .el-form-item__label{
+            text-align: left;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          }
+        }
+      }
+    }
+  }
+}
+.invoice-tools{
+  position: fixed;
+  bottom: 0;
+  background-color: #ffffff;
+  border-radius: 4px;
+  padding: 12px;
+  width: calc(100% - 260px);
+  text-align: center;
+  z-index: 1;
+  right: 16px;
+  
+  .el-button{
+    width: 100px;
+  }
+}
+
+.el-invoice-popover{
+  padding: 10px;
+  background: #606266;
+  color: #ffffff;
+}

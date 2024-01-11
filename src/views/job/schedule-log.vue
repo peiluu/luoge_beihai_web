@@ -62,7 +62,7 @@ export default {
     },
     // 失败信息
     showErrorInfo (id) {
-      this.$http.get(`/sys/scheduleLog/${id}`).then(({ data: res }) => {
+      this.$http.get(`/sys/scheduleLog/${id}`).then(res => {
         if (res.code !== 0) {
           return this.$message.error(res.msg)
         }
