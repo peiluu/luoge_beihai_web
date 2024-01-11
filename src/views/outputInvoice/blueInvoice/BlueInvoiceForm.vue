@@ -364,7 +364,7 @@
                 <el-button
                   size="mini"
                   style="float: right; margin-right: 10px"
-                  @click="clearItems"
+                  @click="handleUseTheme"
                   :disabled="!canEdit"
                   >引用模板</el-button
                 >
@@ -875,7 +875,7 @@
     </div>
     <div class="invoice-tools" v-show="canEdit">
       <div class="invoice_footer">
-        <div> <el-button @click="preview">生成模板</el-button></div>
+        <div> <el-button @click="handleAddTheme">生成模板</el-button></div>
         <div>
           <el-button :disabled="saving" type="success" @click="saveInvoice(1)">开票</el-button>
           <el-button :disabled="saving" @click="saveInvoice(0)">保存</el-button>
@@ -1377,7 +1377,8 @@
         >
       </div>
     </el-dialog>
-    <app-add-theme :visible.sync="addVisible"></app-add-theme>
+    <app-add-theme :visible.sync="addVisible" v-if="addVisible"></app-add-theme>
+    <app-use-theme :visible.sync="useVisible" v-if="useVisible"></app-use-theme>
   </div>
 </template>
 
@@ -1389,6 +1390,7 @@ import ProductProfileModal from "@/components/ProductProfileModal/Index.vue";
 import { dynamicUrlMap } from "@/config/constant.js";
 import {Calc} from '@/utils/calc';
 import AppAddTheme from './component/addTheme'
+import AppUseTheme from './component/useTheme'
 export default {
   name: "BlueInvoiceForm",
   props:{
@@ -1401,7 +1403,8 @@ export default {
     Step,
     HouseInfoDlg,
     ProductProfileModal,
-    AppAddTheme
+    AppAddTheme,
+    AppUseTheme
   },
   data() {
     return {
@@ -1589,6 +1592,7 @@ export default {
 
       saving: false,
       addVisible:false,
+      useVisible:false,
     };
   },
   watch: {
@@ -3070,17 +3074,33 @@ export default {
       this.$set(this.form, "krpq", "");
       this.$set(this.form, "sfhs", "N");
     },
+
+    /* 生成模板 */
+    handleAddTheme(){
+      this.addVisible = true;
+    },
+
+    /* 使用模板 */
+    handleUseTheme(){
+      this.useVisible = true;
+    },
+
   },
   computed: {
     query() {
-      return this.thirdData ||  this.$route.query;
+      return this.thirdData?.slotData || {} ;
     },
     contentHeight() {
       return window.innerHeight - 330;
     },
   },
-  activated() {
+  created(){
+    console.log(this.query,"3")
+  },
+  mounted() {
+    
     this.getSellerInfoById(this.query.orgid);
+   
     //初始化开票组织信息
     this.initOrgInfos();
     //初始化区域
