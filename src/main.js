@@ -17,10 +17,10 @@ import renDeptTree from '@/components/ren-dept-tree'
 import renRegionTree from '@/components/ren-region-tree'
 import { hasPermission, getDictLabel,isBlank } from '@/utils'
 import cloneDeep from 'lodash/cloneDeep'
-
-
+import VXETable from 'vxe-table';
+// import '../vxe-table-variables.scss'
+import 'vxe-table/lib/style.css';
 import './utils/dialogDrag.js'
-
 Vue.config.productionTip = false
 
 Vue.use(Element, {
@@ -32,7 +32,7 @@ Vue.use(renRadioGroup)
 Vue.use(renSelect)
 Vue.use(renDeptTree)
 Vue.use(renRegionTree)
-
+Vue.use(VXETable);
 // 挂载全局
 Vue.prototype.$http = http
 Vue.prototype.$hasPermission = hasPermission
