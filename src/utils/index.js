@@ -103,3 +103,7 @@ export function treeDataTranslate (data, id = 'id', pid = 'pid') {
 export function isBlank(str){
   return !str || str=='';
 }
+
+export function getToken(){
+  return Cookies.get('token');
+}
