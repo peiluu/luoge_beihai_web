@@ -202,7 +202,7 @@ export default {
                 
                 if (res && res.code==0) {
                     if (vm.buildFunction) {
-                        data = vm.buildFunction(res.data);
+                        data = vm.buildFunction(res.data) ;
                     } else {
                         data = res.data;
                     }
@@ -214,7 +214,7 @@ export default {
                             };
                         });
                     }else {
-                        vm.data = []
+                        vm.data = [{}]
                     }
                     vm.pagination.total = res.totalCount;
                     if(res.total){
