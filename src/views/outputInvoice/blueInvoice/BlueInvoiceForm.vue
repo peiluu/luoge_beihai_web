@@ -13,12 +13,14 @@
       >
         <div class="content-bar">
           <div>
-            <vxe-button icon="el-icon-back" size="mini" @click="handleBack"
+            <!-- <vxe-button icon="el-icon-back" size="mini" @click="handleBack"
               >返回</vxe-button
-            >
+            > -->
+            <el-tag size="mini">电子发票</el-tag> <span style="padding-left:8px"></span>
+            <el-tag size="mini" type="warning">普通发票</el-tag>
           </div>
           <div class="midea-form-bar">
-            <el-form-item label="切换开票组织">
+            <!-- <el-form-item label="切换开票组织">
               <el-select
                 filterable
                 class="form-inline-input"
@@ -32,9 +34,10 @@
                   :value="org.id"
                 ></el-option>
               </el-select>
-            </el-form-item>
-            <el-form-item label="项目名称">
-              <el-select
+            </el-form-item> -->
+            <el-form-item label="当前可开票授信额度:">
+              <span>2222222.00</span>
+              <!-- <el-select
                 filterable
                 class="form-inline-input"
                 v-model="mideaInfo.projectId"
@@ -46,7 +49,7 @@
                   :label="project.project_name"
                   :value="project.id"
                 ></el-option>
-              </el-select>
+              </el-select> -->
             </el-form-item>
             <el-form-item v-show="mideaInfo.projectId" label="房间">
               <el-input
@@ -343,6 +346,7 @@
                 ></el-switch>
 
                 <!--右边 -->
+                
                 <el-button
                   size="mini"
                   style="float: right; margin-right: 10px"
@@ -356,6 +360,13 @@
                   @click="reChooseFplx"
                   :disabled="!canEdit"
                   >重选发票种类</el-button
+                >
+                <el-button
+                  size="mini"
+                  style="float: right; margin-right: 10px"
+                  @click="clearItems"
+                  :disabled="!canEdit"
+                  >引用模板</el-button
                 >
               </div>
               <div class="form-goods-gird">
@@ -799,9 +810,9 @@
                 ></el-input>
               </el-form-item>
               <el-form-item label="开票人" prop="kpr">
-                <el-input disabled v-model="form.kpr"></el-input>
+                <el-input :disabled="false" v-model="form.kpr"></el-input>
               </el-form-item>
-              <el-form-item label="邮箱" prop="email">
+              <!-- <el-form-item label="邮箱" prop="email">
                 <el-input v-model="form.email"></el-input>
               </el-form-item>
               <el-form-item label="开票日期" prop="kprq">
@@ -812,7 +823,7 @@
                   :default-value="new Date()"
                   placeholder="请选择日期"
                 ></el-date-picker>
-              </el-form-item>
+              </el-form-item> -->
               <!--<el-form-item label="复核人" prop="fhr">
                  <el-input v-model="form.fhr"></el-input>
                </el-form-item>
@@ -863,12 +874,19 @@
       </el-form>
     </div>
     <div class="invoice-tools" v-show="canEdit">
-      <el-button type="danger" @click="deleteInvoice()">丢弃</el-button>
-      <el-button :disabled="saving" @click="saveInvoice(0)">保存</el-button>
-      <el-button @click="preview">预览</el-button>
-      <el-button :disabled="saving" type="success" @click="saveInvoice(1)"
-        >开票</el-button
-      >
+      <div class="invoice_footer">
+        <div> <el-button @click="preview">生成模板</el-button></div>
+        <div>
+          <el-button :disabled="saving" type="success" @click="saveInvoice(1)">开票</el-button>
+          <el-button :disabled="saving" @click="saveInvoice(0)">保存</el-button>
+          <el-button @click="preview">预览</el-button></div>
+        <div>
+          <el-button @click="handleBack">返回</el-button>
+        </div>
+      </div>
+      <!-- <el-button type="danger" @click="deleteInvoice()">丢弃</el-button> --> 
+     
+      
     </div>
 
     <!--选择购方信息 -->
@@ -1359,6 +1377,7 @@
         >
       </div>
     </el-dialog>
+    <app-add-theme :visible.sync="addVisible"></app-add-theme>
   </div>
 </template>
 
@@ -1368,6 +1387,8 @@ import Step from "@/components/Step.vue";
 import HouseInfoDlg from "./HouseInfoDlg.vue";
 import ProductProfileModal from "@/components/ProductProfileModal/Index.vue";
 import { dynamicUrlMap } from "@/config/constant.js";
+import {Calc} from '@/utils/calc';
+import AppAddTheme from './component/addTheme'
 export default {
   name: "BlueInvoiceForm",
   props:{
@@ -1380,6 +1401,7 @@ export default {
     Step,
     HouseInfoDlg,
     ProductProfileModal,
+    AppAddTheme
   },
   data() {
     return {
@@ -1566,6 +1588,7 @@ export default {
       houseDlgVisible: false,
 
       saving: false,
+      addVisible:false,
     };
   },
   watch: {
@@ -3053,7 +3076,7 @@ export default {
       return this.thirdData ||  this.$route.query;
     },
     contentHeight() {
-      return window.innerHeight - 156;
+      return window.innerHeight - 330;
     },
   },
   activated() {
@@ -3253,5 +3276,13 @@ export default {
   .el-form-item {
     margin-bottom: 0;
   }
+}
+.invoice_footer{
+  display:flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-content: center;
+  justify-content: space-around;
+  align-items: center;
 }
 </style>
