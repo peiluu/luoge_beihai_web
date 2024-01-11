@@ -1391,6 +1391,7 @@ import { dynamicUrlMap } from "@/config/constant.js";
 import {Calc} from '@/utils/calc';
 import AppAddTheme from './component/addTheme'
 import AppUseTheme from './component/useTheme'
+import { getArrayName } from '@/utils'
 export default {
   name: "BlueInvoiceForm",
   props:{
@@ -1993,21 +1994,22 @@ export default {
     handleBack() {
       this.clearAll();
 
-      if (this.query.orgid) {
-        this.$router.push({
-          path: "/buleInvoice/ChooseInvoiceType",
-          query: { orgid: this.query.orgid, isDigital: "Y" },
-        });
-      } else if (this.query.isFormInvoiced == "Y") {
-        this.$router.push({
-          path: "/outputInvoice/invoicedList",
-        });
-      } else if (this.query.isFormInvoiced == "N") {
-        this.$router.push({
-          path: "/noInvoice/noInvoiceList",
-        });
-      }
-      this.$store.dispatch("app/removeTab", this.$store.getters.activeTab);
+      // if (this.query.orgid) {
+      //   this.$router.push({
+      //     path: "/buleInvoice/ChooseInvoiceType",
+      //     query: { orgid: this.query.orgid, isDigital: "Y" },
+      //   });
+      // } else if (this.query.isFormInvoiced == "Y") {
+      //   this.$router.push({
+      //     path: "/outputInvoice/invoicedList",
+      //   });
+      // } else if (this.query.isFormInvoiced == "N") {
+      //   this.$router.push({
+      //     path: "/noInvoice/noInvoiceList",
+      //   });
+      // }
+      // this.$store.dispatch("app/removeTab", this.$store.getters.activeTab);
+      this.$emit('handleBack',this.query);
     },
     clearProject() {
       this.mideaInfo.projectId = "";
@@ -2039,6 +2041,7 @@ export default {
     reChooseFplx() {
       this.clearProject();
       this.clearAll();
+      this.$emit('handleBack',this.query);
       // this.$router.push({
       //   path: "/buleInvoice/ChooseInvoiceType",
       //   query: {

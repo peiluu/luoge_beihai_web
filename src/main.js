@@ -15,7 +15,7 @@ import renRadioGroup from '@/components/ren-radio-group'
 import renSelect from '@/components/ren-select'
 import renDeptTree from '@/components/ren-dept-tree'
 import renRegionTree from '@/components/ren-region-tree'
-import { hasPermission, getDictLabel,isBlank } from '@/utils'
+import { hasPermission, getDictLabel,isBlank,getArrayName } from '@/utils'
 import cloneDeep from 'lodash/cloneDeep'
 import VXETable from 'vxe-table';
 // import '../vxe-table-variables.scss'
@@ -39,6 +39,7 @@ Vue.prototype.$http = http
 Vue.prototype.$hasPermission = hasPermission
 Vue.prototype.$getDictLabel = getDictLabel
 Vue.prototype.isBlank = isBlank
+
 
 //数组过滤
 Vue.prototype.filterById = (arr, value) => {

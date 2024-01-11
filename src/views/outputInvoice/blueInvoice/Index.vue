@@ -74,7 +74,7 @@
       </article>
       <!-- 信息录入 -->
       <article v-if="active === 2">
-        <app-invoice-form :third-data="thirdData"></app-invoice-form>
+        <app-invoice-form :third-data="thirdData" @handleBack="handleBackEmit"></app-invoice-form>
       </article>
       <!-- 提交成功 -->
       <article v-if="active === 3"></article>
@@ -242,6 +242,12 @@ export default {
      // console.log('Form is invalid:', error.message);
       // 在这里处理表单验证失败的情况
     }
+    },
+
+    handleBackEmit(val){
+      console.log(val,"emit")
+      //this.nextObj = {...val};
+      this.active = this.active - 1;
     }
   },
   computed: {
