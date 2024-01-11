@@ -205,14 +205,15 @@
 }
 .invoice-tools{
   position: fixed;
-  left: 0;
   bottom: 0;
   background-color: #ffffff;
   border-radius: 4px;
   padding: 12px;
-  width: 100%;
+  width: calc(100% - 260px);
   text-align: center;
   z-index: 1;
+  right: 16px;
+  
   .el-button{
     width: 100px;
   }
