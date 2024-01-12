@@ -301,7 +301,6 @@ export default {
     this.selectQyList();
     this.getZgsList();
     const { operateType = '', id = '' } = this.detailInfo;
-    console.log('----id----', id)
     this.operateType = operateType;
     if (id) {
       this.getDetailById(id);
@@ -341,7 +340,6 @@ export default {
       const { code = '', data = [] } = await selectQyList({ yt: this.form.businessFormat || '' })
       if (code === '0') {
         this.qyList = data
-        console.log(data)
       }
     },
     /**

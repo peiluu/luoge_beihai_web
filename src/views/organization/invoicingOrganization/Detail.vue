@@ -244,7 +244,6 @@ export default {
       try {
         const { code = '', data = [] } = await getOrgList({taxBodyId: this.form.taxBodyId, isSelectAll: 'Y', isInvoice: 'N'})
         if (code === '0') {
-          console.log('---data---',data)
           let opts = []
           if(data.length){
             opts = data.map(item=>{
@@ -269,11 +268,12 @@ export default {
       this.form = {}
       this.isAddKp = false;
       this.billingStationAddDto = {}
-      this.$router.push({
-        path: '/organization/index',
-        query: { activeName: '2' }
-      })
-      this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+      this.$emit('onClose')
+      // this.$router.push({
+      //   path: '/organization/index',
+      //   query: { activeName: '2' }
+      // })
+      // this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
 
     },
 
