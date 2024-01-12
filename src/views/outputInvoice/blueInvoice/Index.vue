@@ -62,7 +62,7 @@
       </article>
       <!-- 选择类型 -->
       <article v-show="active === 1">
-        <app-choose-invoice :next-obj="nextObj">
+        <app-choose-invoice :next-obj="nextObj" ref="choose">
           <template v-slot:default="slotProps">
             <footer v-if="[1].includes(active)" style="text-align:center;margin-top: 42px;">
             <el-button @click="handBack">返回</el-button>
@@ -74,10 +74,10 @@
       </article>
       <!-- 信息录入 -->
       <article v-if="active === 2">
-        <app-invoice-form :third-data="thirdData"></app-invoice-form>
+        <app-invoice-form :third-data="thirdData" @handleBack="handleBackEmit"></app-invoice-form>
       </article>
       <!-- 提交成功 -->
-      <article v-show="active === 3"></article>
+      <article v-if="active === 3"></article>
     </el-card>
     <!-- 旧版本 参照 -->
     <article v-if="false">
@@ -137,7 +137,7 @@ export default {
       columns: [
         // {type: "radio",width: 50,align:"center",},
         { title: "开票点名称", width: 180, dataIndex: "name", align: "center" },
-        { title: "所属账套", width: 180, dataIndex: "nsrsbh", align: "center" },
+        { title: "所属账套", width: 180, dataIndex: "ssztName", align: "center" },
         {
           title: "纳税人名称",
           width: 200,
@@ -147,15 +147,15 @@ export default {
         {
           title: "纳税人识别号",
           width: 200,
-          dataIndex: "nsrmc",
+          dataIndex: "nsrsbh",
           align: "center",
         },
-        {
-          title: "剩余开票额度",
-          width: 180,
-          dataIndex: "nsrmc",
-          align: "center",
-        },
+        // {
+        //   title: "剩余开票额度",
+        //   width: 180,
+        //   dataIndex: "nsrmc",
+        //   align: "center",
+        // },
         {
           title: "操作",
           width: 80,
@@ -184,6 +184,7 @@ export default {
   },
   methods: {
     handleNext(row,type) {
+      
       // 从最新的列表里取值，规避同步修改组织管理里的数电切换时已经选中的数据无法及时更新的问题
       //const tableData = this.$refs.list.data;
       //let selectedRow = tableData.find((item) => item.id == this.$refs.list.selectedRow.id) || {};
@@ -203,24 +204,54 @@ export default {
       //this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
       switch(type){
         case 0:{
-          this.nextObj = {...row,orgid:row?.id,isDigital:"Y"};
+         
+          this.nextObj = {...row.data, orgid:row?.data.id, isDigital: row?.data.isDigital};
+          if((this.nextObj.id??'')!==''){
+            delete this.nextObj.id
+          }
+          this.active = this.active + 1;
           break;
         }
         case 1: {
-          this.thirdData = {...row};
+          this.handleValidation(row);
+          console.log(row.slotData,"-------")
+          this.thirdData = {...row.slotData.slotData};
+          
           break;
         }
         default: {
           break;
         }
       }
-      this.active = this.active + 1;
+     
+     
     },
     handleOk() {
       this.$refs.list.reload();
     },
     handBack(){
       this.active = this.active -1;
+    },
+
+    async handleValidation(row){
+      
+      try {
+      const result = await this.$refs.choose.handleFormValidate();
+      if (result) {
+        this.thirdData = {...row};
+        this.active = this.active + 1;
+        // 在这里处理表单验证通过的情况
+      }
+    } catch (error) {
+     // console.log('Form is invalid:', error.message);
+      // 在这里处理表单验证失败的情况
+    }
+    },
+
+    handleBackEmit(val){
+      console.log(val,"emit")
+      //this.nextObj = {...val};
+      this.active = this.active - 1;
     }
   },
   computed: {
