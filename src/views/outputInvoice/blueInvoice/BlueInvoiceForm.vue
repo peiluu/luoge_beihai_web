@@ -35,9 +35,9 @@
                 ></el-option>
               </el-select>
             </el-form-item> -->
-            <el-form-item label="当前可开票授信额度:">
+             <!--<el-form-item label="当前可开票授信额度:">
               <span>2222222.00</span>
-              <!-- <el-select
+              <el-select
                 filterable
                 class="form-inline-input"
                 v-model="mideaInfo.projectId"
@@ -49,8 +49,8 @@
                   :label="project.project_name"
                   :value="project.id"
                 ></el-option>
-              </el-select> -->
-            </el-form-item>
+              </el-select> 
+            </el-form-item>-->
             <el-form-item v-show="mideaInfo.projectId" label="房间">
               <el-input
                 size="small"
