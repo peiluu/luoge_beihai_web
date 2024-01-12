@@ -1,16 +1,22 @@
 <template>
     <div class="">
         <el-dialog
-            title="提示"
+            title="生成模板"
             :visible = "visible"
-            width="30%"
+            width="40%"
             @update:visible="updateVisible"
             :before-close="handleClose">
-            <span>这是一段信息</span>
-            <span slot="footer" class="dialog-footer">
+           <main>
+            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                <el-form-item label="模板名称" prop="name">
+                    <el-input size="small" v-model="ruleForm.name" placeholder="请输入模板名称"></el-input>
+                </el-form-item>
+            </el-form>
+           </main>
+            <footer slot="footer" class="dialog-footer" >
                 <el-button @click="updateVisible(false)">取 消</el-button>
                 <el-button type="primary" @click="handeOk">确 定</el-button>
-            </span>
+            </footer>
         </el-dialog>
     </div>
 </template>
@@ -28,7 +34,16 @@ export default {
     components: {},
     data() {
         return {
+            ruleForm:{
+                name:'',
+            },
 
+            rules:{
+                name: [
+                    { required: true, message: '请输入模板名称', trigger: 'blur' },
+                   
+                ],
+            }
         };
     },
     computed: {},
@@ -41,7 +56,14 @@ export default {
       
       /*确定 */
       handeOk(){
-        this.updateVisible(false)
+        this.$refs.ruleForm.validate((valid)=>{
+            if(valid){
+                this.updateVisible(false)
+            }else{
+                return
+            }
+        })
+        
       }
     },
     created() {},
@@ -55,7 +77,9 @@ export default {
     activated() {},
     }
 </script>
-<style scoped>
+<style scoped lang="scss">
 /*@import url(); 引入公共css类*/
-
+.dialog-footer{
+    text-align: center;
+}
 </style>

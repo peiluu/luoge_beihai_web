@@ -55,6 +55,62 @@ export const moduleRoutes = {
   ]
 }
 
+export const mainChildrenRoutes = [
+  {
+    path: '/organization/taxBodyDetail',
+    name: 'taxBodyDetail',
+    meta: { title: '纳税主体信息', tab: true},
+    component: () =>
+      import('@/views/organization/taxBody/Detail'),
+  },
+  {
+    path: '/organization/TaxBodyImport',
+    name: 'TaxBodyImport',
+    meta: { title: '纳税主体信息导入', tab: true},
+    component: () =>
+      import(
+        '@/views/organization/taxBody/TaxBodyImport'
+      ),
+  },
+  {
+    path: '/organization/invoicingOrganizationDeatil',
+    name: 'InvoicingOrganizationDeatil',
+    meta: { title: '开票点组织信息', tab: true },
+    component: () =>
+      import(
+        '@/views/organization/invoicingOrganization/Detail'
+      ),
+  },
+  {
+    path: '/organization/invoiceOrganizationImport',
+    name: 'InvoiceOrganizationImport',
+    meta: { title: '开票点组织信息导入', tab: true },
+    component: () =>
+      import(
+        '@/views/organization/invoicingOrganization/InvoiceOrganizationImport'
+      ),
+  },
+
+  {
+    path: '/organization/acceptOrganizationDetail',
+    name: 'acceptOrganizationDetail',
+    meta: { title: '受票点组织信息', tab: true },
+    component: () =>
+      import(
+        '@/views/organization/acceptOrganization/Detail'
+      ),
+  },
+  {
+    path: '/organization/acceptOrganizationImport',
+    name: 'AcceptOrganizationImport',
+    meta: { title: '受票点组织信息导入', tab: true },
+    component: () =>
+      import(
+        '@/views/organization/acceptOrganization/AcceptOrganizationImport'
+      ),
+  },
+]
+
 export function addDynamicRoute (routeParams, router) {
   // 组装路由名称, 并判断是否已添加, 如是: 则直接跳转
   var routeName = routeParams.routeName
@@ -101,7 +157,7 @@ router.beforeEach((to, from, next) => {
     return next({ name: 'login' });
   }
   if (store.state.sidebarMenuList.length || fnCurrentRouteIsPageRoute(to, pageRoutes)) {
-    if(to.path === '/' && to.name === 'main'){
+    if(to.path === '/'){
       return next({name: 'home'})
     }
     return next()
@@ -179,7 +235,9 @@ function fnAddDynamicMenuRoutes (menuList = [], routes = []) {
       route['meta']['iframeURL'] = URL
     } else {
       URL = URL.replace(/^\//, '').replace(/_/g, '-')
-      route['path'] = route['name'] = URL.replace(/\//g, '-')
+      // route['path'] = route['name'] = URL.replace(/\//g, '-')
+      route['path'] = URL ? `/${URL}` : URL
+      route['name'] = URL.replace(/\//g, '-')
       route['component'] = () => import(`@/views/${URL}`)
     }
     routes.push(route)
@@ -187,6 +245,7 @@ function fnAddDynamicMenuRoutes (menuList = [], routes = []) {
   if (temp.length >= 1) {
     return fnAddDynamicMenuRoutes(temp, routes)
   }
+  routes = [...routes, ...mainChildrenRoutes]
   // 添加路由
   router.addRoute({
     ...moduleRoutes,
@@ -194,6 +253,7 @@ function fnAddDynamicMenuRoutes (menuList = [], routes = []) {
     children: routes
   })
   router.addRoute({ path: '*', redirect: { name: '404' } });
+  console.log('----routes----', routes)
   window.SITE_CONFIG['dynamicMenuRoutes'] = routes
 }
 

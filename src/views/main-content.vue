@@ -1,5 +1,5 @@
 <template>
-  <main :class="['aui-content', { 'aui-content--tabs': $route.meta.isTab }]">
+  <main :class="['aui-content', { 'aui-content--tabs': $route.meta.isTab || $route.meta.tab}]">
     <!-- tab展示内容 -->
     <template>
       <el-dropdown class="aui-content--tabs-tools">

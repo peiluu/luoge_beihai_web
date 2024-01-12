@@ -5,14 +5,15 @@
       <el-form :inline="true" :model="formInline" label-width="140px">
         <el-row :gutter="10">
           <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
-            <el-form-item label="纳税人名称："><span></span></el-form-item>
+            <el-form-item label="纳税人名称："><span>{{ formInline.nsrmc }}</span></el-form-item>
           </el-col>
           <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
-            <el-form-item label="纳税人识别号码："><span></span></el-form-item>
+            <el-form-item label="纳税人识别号码："><span>{{ formInline.nsrsbh }}</span></el-form-item>
           </el-col>
           <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
-            <el-form-item label="所属账套："><span></span></el-form-item>
+            <el-form-item label="所属账套："><span>{{ formInline.ssztName }}</span></el-form-item>
           </el-col>
+          
         </el-row>
         
       </el-form>
@@ -64,7 +65,7 @@
     </div> -->
     <footer>
       <div>
-        <slot :slotData="{...form}" ></slot>
+        <slot :slotData="{...form,...formInline}" ></slot>
       </div>
     </footer>
     <!-- <StepFooter style="margin-top: 80px;" :pre="pre" :next="next" @handlePre="handlePre" @handleNext="handleNext"></StepFooter> -->
@@ -119,10 +120,10 @@
     },
     computed:{
       orgid(){
-        return this.nextObj.orgid
+        return this.formInline.orgid
       },
       isDigital(){
-        return this.nextObj.isDigital
+        return this.formInline.isDigital
       },
       contentHeight(){
         return window.innerHeight - 294;
@@ -140,11 +141,14 @@
       },
       nextObj:{
         handler(val){
+          console.log(val,"2222")
           this.formInline = {...val};
-        }
+        },
+        deep:true
       }
     },
     created(){
+     
       // this.$eventBus.$on('chooseInvoiveTypeReset', () => {
       //   try {
       //     this.pre = true;
@@ -160,6 +164,7 @@
       //     console.log('--error--', error)
       //   }
       // })
+     
     },
     methods: {
       handlePre(){
@@ -211,6 +216,20 @@
         }
         this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
       },
+      
+      /* 表单验证 */
+    handleFormValidate() {
+        return new Promise((resolve, reject) => {
+          this.$refs.form.validate((valid) => {
+           
+            if (valid) {
+              resolve(true);
+            } else {
+              reject(new Error("Form validation failed"));
+            }
+          });
+        });
+      }
     },
   };
 </script>

@@ -1,8 +1,6 @@
 <template>
   <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
-    <div class="back-button">
-      <el-button icon="el-icon-back" @click="handleBack">返回</el-button>
-    </div>
+    <el-button icon="el-icon-back" @click="handleBack">返回</el-button>
     <div class="mid-margin-40">
       <el-steps :active="step">
         <el-step title="上传"></el-step>
@@ -11,7 +9,7 @@
     </div>
     <el-divider></el-divider>
     <div v-if="step === 1" class="mid-margin-35 upload-template mb10">
-      <span>上传开票点组织信息</span>
+      <span>上传纳税主体信息</span>
       <span class="right"><el-button type="text" @click="downloadTemplate">下载模板</el-button></span>
       <el-upload action="" drag accept=".xlsx,.xls" :limit="1" :http-request="ajaxUpload">
         <i class="el-icon-upload"></i>
@@ -37,25 +35,23 @@
             <slot name="myscope" :data="scope.row"><span style="color: #FF0000;" v-if="scope.row.failInfo">{{ scope.row.failInfo }}</span></slot>
           </template>
         </el-table-column>
-        <!-- <el-table-column prop="djxhid" align="left" label="登记序号" min-width="150"></el-table-column> -->
-        <el-table-column prop="nsrmc" label="所属纳税主体名称" align="nsrmc" min-width="180"></el-table-column>
-        <el-table-column prop="nsrsbh" label="所属纳税主体识别号" align="nsrsbh" min-width="180"></el-table-column>
-        <el-table-column prop="code" label="组织编码" align="left" min-width="180"></el-table-column>
-        <el-table-column prop="name" label="组织名称" align="left" min-width="180"></el-table-column>
+        <el-table-column prop="nsrsbh" label="纳税主体识别号" align="left" min-width="180"></el-table-column>
+        <el-table-column prop="nsrmc" label="纳税主体名称" align="left" min-width="180"></el-table-column>
       </el-table>
       <div class="footer-button">
         <el-button type="default" @click="initData">上一步</el-button>
-        <el-button type="primary" @click="handleConfirm" :disabled="failCount > 0 || successCount == 0 || importing">导入</el-button>
+        <el-button type="primary" @click="handleConfirm" :disabled="failCount > 0 || sssCount == 0 || importing">导入</el-button>
       </div>
     </template>
   </div>
 </template>
 <script>
 import { config } from '@/config'
+
 import { downExcel } from './Api.js'
 
 export default {
-  name: "InvoiceOrganizationImport",
+  name: "TaxBodyImport",
   components: {
   },
   data() {
@@ -82,26 +78,44 @@ export default {
     },
   },
   activated() {
-    if (sessionStorage.getItem('clearInvoiceOrganizationImport') == 1) {
+    if (sessionStorage.getItem('clearTaxBodyImport') == 1) {
       this.initData();
-      sessionStorage.setItem('clearInvoiceOrganizationImport', 0)
+      sessionStorage.setItem('clearTaxBodyImport', 0)
     }
+
   },
+
+
   methods: {
     //ajax上传
     ajaxUpload(content) {
       let that = this;
       let formData = new FormData();
       formData.append("file", content.file);
-      that.step = 2;
+
       that.importing = true;
       that.business.customPost(
-        that.request_host + "/orgnization/importOutputExcelInfo",
+        that.request_host + "/taxBody/importTaxBodyExcelInfo",
         { 'Content-Type': 'multipart/form-data' },
         formData,
-        res => {
-          console.log(res)
+        // res => {
+        //   if (res.code == 0) {
+        //     that.step = 2;
+        //     that.$message({
+        //       message: '文件上传成功',
+        //       type: 'success'
+        //     });
+        //     that.importing = false;
+        //     that.tableData = res.data.list
+        //     that.successCount = res.data.successCount;
+        //     that.failCount = res.data.failCount;
+        //   } else {
+        //     that.importing = false;
+        //   }
+        // }
+        ).then(res=>{
           if (res.code == 0) {
+            that.step = 2;
             that.$message({
               message: '文件上传成功',
               type: 'success'
@@ -113,26 +127,28 @@ export default {
           } else {
             that.importing = false;
           }
+        }).catch(err=>{
+          this.$message.error(err.msg || '文件上传失败')
         })
     },
     //下载模板
     async downloadTemplate() {
-      const fileName = `开票点组织_导入模板.xlsx`
+      const fileName = `纳税主体_导入模板.xlsx`
       await downExcel({
-        reqData: { type: 2 },
+        reqData: { type: 1 },
         fileName
       })
 
     },
     //下载导入失败数据
-    // downloadFailed() {
-    //   window.open(this.request_host + "/Taxpayer/downLoadExcel", "_target");
-    // },
+    downloadFailed() {
+      window.open(this.request_host + "/Taxpayer/downLoadExcel", "_target");
+    },
     handleConfirm() {
       let that = this;
       that.importing = true;
       that.business.customPost(
-        that.request_host + "/orgnization/importOutputInfo",
+        that.request_host + "/taxBody/importTaxBodyInfo",
         { 'Content-Type': 'application/json; charset=utf-8' },
         {},
         res => {
@@ -143,10 +159,11 @@ export default {
             });
             that.importing = false;
             that.$router.push({
-              path: '/settingsManagement/organization',
-              query: { activeName: '2' }
+              path: '/organization/index',
+              query: { activeName: '1' }
             })
             this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+
           } else {
             that.importing = false;
           }
@@ -154,10 +171,10 @@ export default {
       )
     },
     handleBack() {
-      this.initData()
+      this.initData();
       this.$router.push({
-        path: '/settingsManagement/organization',
-        query: { activeName: '2' }
+        path: '/organization/index',
+        query: { activeName: '1' }
       })
       this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
     },
@@ -167,6 +184,7 @@ export default {
       this.failCount = 0;
       this.step = 1;
     },
+
   },
 };
 </script>
@@ -212,11 +230,11 @@ export default {
   float: right;
 }
 
-::v-deep .el-upload-list__item {
-  display: none;
-}
-
 .main {
   overflow: scroll;
+}
+
+::v-deep .el-upload-list__item {
+  display: none;
 }
 </style>

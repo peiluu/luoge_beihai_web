@@ -223,7 +223,7 @@ export default {
       this.isAddKp = false;
       this.billingStationAddDto = {}
       this.$router.push({
-        path: '/settingsManagement/organization',
+        path: '/organization/index',
         query: { activeName: '2' }
       })
       this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);

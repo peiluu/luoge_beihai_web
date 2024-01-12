@@ -132,8 +132,6 @@ http.interceptors.response.use(response => {
   }
 })
 
-export default http
-
 //默认请求加上的参数名称
 let defaultExtendParamNames = [];
 // 异步操作会令该变量数据有误
@@ -143,6 +141,19 @@ let dealExtendParamNames = (v) => {
   } else {
       defaultExtendParamNames = ['applicationCode', 'tenantCode']
   }
+}
+// 上传文件
+export const customPost = function(url, hearders, params, cb){
+  return new Promise((resolve, reject) => {
+    postJSON(url, params, {
+          headers: hearders,
+      }).then(res => {
+          if(cb && typeof cb === 'function')cb(res);
+          resolve(res)
+      }).catch(err => {
+          reject(err)
+      })
+  })
 }
 export function postJSON(url, params, extendParamNames = null, showLoading = false) {
   let loading = {};
@@ -162,7 +173,7 @@ export function postJSON(url, params, extendParamNames = null, showLoading = fal
     }
   }
 
-dealExtendParamNames(extendParamNames);
+  dealExtendParamNames(extendParamNames);
   return new Promise((resolve, reject) => {
     http.post(url, params, {
           headers: {
@@ -192,7 +203,36 @@ export function deleteOne(url, id, params) {
       })
   })
 }
+export const getingBlob = (url = '', data = {}) => {
+  // console.log('--data--',data)
+  let config = {
+    method: 'post',
+    url,
+    data: data,
+    headers: {'Content-Type':'application/json','Data-Type':'json','token': Cookies.get('token') || ''},
+    responseType: 'blob'
+  }
+  return axios(config).then((res)=>{
+    return res
+  }).catch((error) => {
+    const { data = {}, status,msg } = error.response || {}
+    if (status === 401) {
 
+    } else {
+      if (data?.type === 'application/json') {
+        // 说明是普通对象数据，读取信息
+        const fileReader = new FileReader()
+        fileReader.onloadend = () => {
+          const jsonData = JSON.parse(fileReader.result)
+          console.log(jsonData)
+          // 后台信息
+          // alert(jsonData.msg || jsonData.message || jsonData.error || '服务异常')
+        }
+        fileReader.readAsText(data)  //或者读取response.data
+      }
+    }
+  })
+}
 /**
  * @description 下载文件
  */
@@ -208,36 +248,27 @@ export function download(url, params, extendParamNames = null, showLoading = fal
   }
   const { reqData, fileName = '' } = params
 
-  dealExtendParamNames(extendParamNames);
-  return new Promise((resolve, reject) => {
-    http.post(url, reqData, {
-      headers: {"Content-Type":"application/json","Data-Type":"json"},
-      responseType: 'blob'
-    }).then(res => {
-      const blob = new Blob([res])
-      if ('download' in document.createElement('a')) {
-        // 非IE下载
-        const elink = document.createElement('a')
-        elink.download = fileName
-        elink.style.display = 'none'
-        elink.href = URL.createObjectURL(blob)
-        document.body.appendChild(elink)
-        elink.click()
-        URL.revokeObjectURL(elink.href) // 释放URL 对象
-        document.body.removeChild(elink)
-      } else {
-        // IE10+下载
-        navigator.msSaveBlob(blob, fileName)
-      }
-
-      resolve(res)
-
-      showLoading && loading.close();
-    }).catch(err => {
-      showLoading && loading.close();
-
-      reject(err)
-
-    })
+  // dealExtendParamNames(extendParamNames);
+  getingBlob(url, reqData).then(res=>{
+    const blob = new Blob([res.data])
+    if ('download' in document.createElement('a')) {
+      // 非IE下载
+      const elink = document.createElement('a')
+      elink.download = fileName
+      elink.style.display = 'none'
+      elink.href = URL.createObjectURL(blob)
+      document.body.appendChild(elink)
+      elink.click()
+      URL.revokeObjectURL(elink.href) // 释放URL 对象
+      document.body.removeChild(elink)
+    } else {
+      // IE10+下载
+      navigator.msSaveBlob(blob, fileName)
+    }
+    showLoading && loading.close();
+  }).catch(err=>{
+    console.log('err', err)
+    showLoading && loading.close();
   })
 }
+export default http

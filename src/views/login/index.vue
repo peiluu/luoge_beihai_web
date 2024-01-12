@@ -62,6 +62,7 @@ import Cookies from 'js-cookie';
 import debounce from 'lodash/debounce';
 import { getUUID } from '@/utils';
 import { isURL } from '@/utils/validate';
+import { mainChildrenRoutes } from '@/router'
 export default {
   data() {
     return {
@@ -182,7 +183,9 @@ export default {
           route['meta']['iframeURL'] = URL;
         } else {
           URL = URL.replace(/^\//, '').replace(/_/g, '-');
-          route['path'] = route['name'] = URL.replace(/\//g, '-');
+          // route['path'] = route['name'] = URL.replace(/\//g, '-');
+          route['path'] = URL ? `/${URL}` : URL
+          route['name'] = URL.replace(/\//g, '-')
           route['component'] = () => import(`@/views//${URL}`);
         }
         routes.push(route);
@@ -190,6 +193,8 @@ export default {
       if (temp.length >= 1) {
         return this.fnAddDynamicMenuRoutes(temp, routes);
       }
+
+      routes = [...routes, ...mainChildrenRoutes]
       // 添加路由
       this.$router.addRoute({
         path: '/',

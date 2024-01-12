@@ -257,7 +257,6 @@ export default {
       });
     },
     async handleGetData(obj, args, keepSelections) {
-      console.log('---loader -----')
       // this.keepSelections = false;
       this.searchParam = obj;
       let param = {};

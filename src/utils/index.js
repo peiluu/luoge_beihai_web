@@ -107,3 +107,13 @@ export function isBlank(str){
 export function getToken(){
   return Cookies.get('token');
 }
+
+export function getArrayName (array, value){
+  for(var i=0; i<array.length; i++){
+    var obj = array[i];
+    if(obj.value == value){
+      return obj.name
+    }
+  }
+  return '';
+}
