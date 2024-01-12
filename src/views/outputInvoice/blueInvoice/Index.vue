@@ -74,10 +74,12 @@
       </article>
       <!-- 信息录入 -->
       <article v-if="active === 2">
-        <app-invoice-form :third-data="thirdData" @handleBack="handleBackEmit"></app-invoice-form>
+        <app-invoice-form :third-data="thirdData" @handleBack="handleBackEmit" @handeDoneOk="handeDoneOkEmit"></app-invoice-form>
       </article>
       <!-- 提交成功 -->
-      <article v-if="active === 3"></article>
+      <article v-if="active === 3">
+        <app-apply-success :invoice-suc-id="invoiceSucId"></app-apply-success>
+      </article>
     </el-card>
     <!-- 旧版本 参照 -->
     <article v-if="false">
@@ -116,13 +118,15 @@ import FormList from "@/components/FormList.vue";
 // import Step from "@/components/Step.vue";
 // import StepFooter from "@/components/StepFooter.vue";
 import AppChooseInvoice from './ChooseInvoiceType.vue';
-import AppInvoiceForm from './BlueInvoiceForm.vue'
+import AppInvoiceForm from './BlueInvoiceForm.vue';
+import AppApplySuccess from './ApplySuccess.vue';
 export default {
   name: "BuleInvoice",
   components: {
     FormList,
     AppChooseInvoice,
-    AppInvoiceForm
+    AppInvoiceForm,
+    AppApplySuccess
     // Step,
     // StepFooter,
   },
@@ -180,6 +184,7 @@ export default {
       active: 0, //当前步骤
       nextObj:{},//第二步数据
       thirdData:{},//第三步数据
+      invoiceSucId:null,//第四步数据
     };
   },
   methods: {
@@ -252,6 +257,15 @@ export default {
       console.log(val,"emit")
       //this.nextObj = {...val};
       this.active = this.active - 1;
+    },
+    handeDoneOkEmit(val){
+      console.log(val,"34")
+      
+      if(val?.type === 'makeInvoice'){
+        this.invoiceSucId = val.data;
+        this.active = this.active + 1;
+        
+      }
     }
   },
   computed: {
