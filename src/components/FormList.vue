@@ -11,7 +11,7 @@
       <el-table
         row-key="id"
         :reserve-selection="true"
-        ref="table" :data="data" :height="height" border stripe @row-click="rowClcik"
+        ref="table" :data="data" border stripe @row-click="rowClcik"
         :header-cell-style="{fontWeight: 400,borderTop: '1px solid #adb4bc',background: '#f7f9fd',color: '#333333',padding: '7px 0'}"
         tooltip-effect="dark"
         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
@@ -440,7 +440,11 @@ export default {
     },
     getNextList(val, type) {
       this.$emit('getNextList', val, type)
-     },
+    },
+    autoHeigth(){
+      const el = this.$refs.table
+      console.log(el)
+    } 
   },
   activated() {
     if (this.firstLoading) {
@@ -448,6 +452,7 @@ export default {
         this.handleGetData(this.param);
       });
     }
+    this.autoHeigth()
   }
 };
 </script>

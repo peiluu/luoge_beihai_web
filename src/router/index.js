@@ -253,7 +253,7 @@ function fnAddDynamicMenuRoutes (menuList = [], routes = []) {
     children: routes
   })
   router.addRoute({ path: '*', redirect: { name: '404' } });
-  console.log('----routes----', routes)
+  // console.log('----routes----', routes)
   window.SITE_CONFIG['dynamicMenuRoutes'] = routes
 }
 

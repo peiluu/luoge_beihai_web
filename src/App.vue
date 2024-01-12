@@ -53,13 +53,13 @@ export default {
 body,
 html {
   width: 100%;
-  height: 100vh;
+  // height: 100vh;
   padding: 0;
   margin: 0;
   list-style: none;
   font-size: 12px;
   font-family: PingFangSC-Regular, Microsoft YaHei, Helvetica Neue, Helvetica;
   border: none;
-  overflow: hidden;
+  // overflow: hidden;
 }
 </style>

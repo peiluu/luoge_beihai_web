@@ -112,13 +112,13 @@ html {
     padding: 12px;
     margin: 8px;
     border-radius: 4px;
-    height: calc(100% - 40px);
-    overflow-y: auto;
+    // height: calc(100% - 40px);
+    // overflow-y: auto;
     .toolbar {
         margin-bottom: 15px;
     }
     .custom-table {
-        padding: 16px;
+        padding: 16px 0;
         background-color: #FFFFFF;
         border-radius: 10px;
     }
@@ -356,4 +356,8 @@ html {
     .el-button {
       // width: 100px;
     }
+}
+.el-table__body-wrapper,
+.el-table__fixed-body-wrapper {
+  min-height: 380px;
 }

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="main-content tax-detail">
+    <div class="main-content">
       <el-form :inline="true" :model="form" :rules="rules" ref="ruleForm" :disabled="operateType === 'detail'">
         <div class="content-title">基本信息</div>
         <el-form-item class="form-header-left">
@@ -454,11 +454,6 @@ export default {
 .main-content {
   padding: 0 32px 16px;
   margin-bottom: 32px;
-  &.tax-detail {
-    height: calc(100vh - 50px - 52px) !important;
-    overflow: hidden;
-    overflow-y: auto;
-  }
 }
 
 ::v-deep .el-form-item {

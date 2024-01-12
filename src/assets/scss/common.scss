@@ -529,8 +529,7 @@ img {
 .aui-content {
   position: relative;
   // padding: $content--padding;
-  height: calc(100vh - #{$navbar--height});
-  overflow: hidden;
+  min-height: calc(100vh - #{$navbar--height});
   &__wrapper {
     position: relative;
     margin-left: $sidebar--width;

@@ -1,6 +1,6 @@
 <template>
   <div class="com-taxBody">
-    <form-list :columns="columns" :searchKey="propsKey" :searchRow="searchList" :api="api" :param="param" :height="height" :firstLoading="false" v-loading="loading" @getSearchParam="getSearchParam" ref="list">
+    <form-list :columns="columns" :searchKey="propsKey" :searchRow="searchList" :api="api" :param="param" :firstLoading="false" v-loading="loading" @getSearchParam="getSearchParam" ref="list">
       <!-- 中间部分 -->
       <template #topTool>
         <div class="toolbar">
@@ -194,9 +194,9 @@ export default {
     this.getList()
   },
   computed: {
-    height() {
-      return window.innerHeight - 310
-    },
+    // height() {
+    //   return window.innerHeight - 310
+    // },
     selections() {
       return this.$refs.list.getSelections()
     }
