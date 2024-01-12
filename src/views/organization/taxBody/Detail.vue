@@ -5,9 +5,9 @@
         <div class="content-title">基本信息</div>
         <el-form-item class="form-header-left">
           <el-checkbox v-model="form.isInstitution" style="margin-left: 180px;">机关、事业单位</el-checkbox>
-          <div class="right-item">
+          <!-- <div class="right-item">
             是否开通数电业务 <el-switch class="switch" v-model="form.isDigital" active-text="启用" inactive-text="停用" active-value="Y" inactive-value="N" />
-          </div>
+          </div> -->
         </el-form-item>
 
         <el-form-item label="供应链协同" prop="isSupplychain">
@@ -406,10 +406,10 @@ export default {
     cancel() {
       this.form = { isDigital: 'N' }
       this.$router.push({
-        path: '/settingsManagement/organization',
+        path: '/organization/index',
         query: { activeName: '1' }
       })
-      this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+      // this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
     },
     // 增加独立生产经营部门
     addFunction() {

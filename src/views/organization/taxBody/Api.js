@@ -79,7 +79,7 @@ export const getTaxPayerInfo = (data) =>
  * @desption 【组织管理】纳税主体列表Excel导出
  */
 export const exportTaxBodyInfo = (data) =>
-  download(`${config.host}/taxBody/exportTaxBodyInfo`, data);
+  download(`${config.host}/taxBody/exportTaxBodyInfo`, data, null, true);
 
 /**
  * @desption 【组织管理】纳税主体列表Excel导入

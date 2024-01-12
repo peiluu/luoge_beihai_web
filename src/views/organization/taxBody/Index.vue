@@ -10,11 +10,11 @@
             </el-input> -->
           </div>
           <div class="toolbar-right">
-            <el-button @click="openDigitalBatch('Y')">开通数电</el-button>
+            <!-- <el-button @click="openDigitalBatch('Y')">开通数电</el-button> -->
             <el-button type="success" @click="hanldeEnter('add')">新增纳税主体</el-button>
             <el-button @click="batchOperate('batchDel')">删除</el-button>
             <el-button @click="handleImport">导入</el-button>
-            <el-button @click="handleExport">导出</el-button>
+            <el-button @click="handleExport" :loading="exportLoading">导出</el-button>
           </div>
         </div>
       </template>
@@ -29,7 +29,7 @@
             <el-button @click.stop="hanldeEnter('detail', data)" type="success">查看</el-button>
             <el-button @click.stop="hanldeEnter('edit', data)" type="info">编辑</el-button>
             <el-button @click.stop="batchOperate('delete', data)" type="danger">删除</el-button>
-            <el-button @click.stop="batchOperate('digital', data)" type="success">切换数电开通</el-button>
+            <!-- <el-button @click.stop="batchOperate('digital', data)" type="success">切换数电开通</el-button> -->
             <el-button @click.stop="hanldeMaintenance(data, '2')" type="success">维护开票点</el-button>
             <el-button @click.stop="hanldeMaintenance(data, '3')" type="success">维护受票点</el-button>
           </template>
@@ -59,7 +59,6 @@
         <el-button type="success" @click="setIsDigital">保 存</el-button>
       </span>
     </el-dialog>
-
   </div>
 </template>
 
@@ -67,11 +66,10 @@
 import FormList from '@/components/FormList.vue';
 import { rgionEnum, cityEnum, provincesEnmu } from '@/config/regionEnums.js';
 import { listCascaderDict, selectYtList, delTaxBodyBatch, setIsDigital, getListAll, selectQyList, downLoadApplyList, exportTaxBodyInfo, } from './Api.js'
-
 export default {
   name: 'organizationTaxBody',
   components: {
-    FormList
+    FormList,
   },
   data() {
     return {
@@ -89,7 +87,7 @@ export default {
         { title: "电话号码", width: 160, dataIndex: "phone" },
         { title: "开户行名称", width: 160, dataIndex: "bank", },
         { title: "开户行账号", width: 160, dataIndex: "bankAccount", },
-        { title: "是否开通数电", width: 100, dataIndex: "isDigital", slot: 'isDigital', align: 'center' },
+        // { title: "是否开通数电", width: 100, dataIndex: "isDigital", slot: 'isDigital', align: 'center' },
         { title: "所属业态", width: 100, dataIndex: "businessFormat", align: 'center' },
         { title: "所属区域", width: 140, dataIndex: "region" },
         { title: "包含开票组织数量", width: 120, dataIndex: "orgCount", align: 'right' },
@@ -167,6 +165,7 @@ export default {
         // },
 
       ],
+      dialogVisibleEdit: false,
       dialogVisible: false,
       districts: [],
       qyList: [],
@@ -179,6 +178,11 @@ export default {
         lqid: [{ required: true, message: "请输入", trigger: "blur" }],
         secretkey: [{ required: true, message: "请输入", trigger: "blur" }],
       },
+      editData: {
+        operateType: '',
+        id: null,
+      },
+      exportLoading: false,
     };
 
   },
@@ -199,6 +203,13 @@ export default {
   },
 
   methods: {
+    onClose(){
+      this.dialogVisibleEdit = false;
+      this.editData = {
+        operateType: '',
+        id: null,
+      }
+    },
     // 获取纳税主体
     async getListAll() {
       const { code = '', data = [] } = await getListAll({})
@@ -320,6 +331,11 @@ export default {
       })
     },
     hanldeEnter(operateType, data = {}) {
+      // this.dialogVisibleEdit = true;
+      // this.editData = {
+      //   operateType,
+      //   id: data.id
+      // }
       if (operateType === 'add') {
         sessionStorage.setItem('clearTaxBody', 1)
       }
@@ -352,11 +368,14 @@ export default {
     },
     // 导出
     async handleExport() {
-      const fileName = `纳税主体信息列表.xlsx`
+      const fileName = `纳税主体信息列表.xlsx`;
+      this.exportLoading = true;
       await exportTaxBodyInfo({
         reqData: { ...this.queryParam, pageNo: -1, pageSize: -1 },
         fileName
       })
+      // setTimeout()
+      this.exportLoading = false;
     },
 
     handleClose() {

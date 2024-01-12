@@ -98,7 +98,22 @@ export default {
         that.request_host + "/taxBody/importTaxBodyExcelInfo",
         { 'Content-Type': 'multipart/form-data' },
         formData,
-        res => {
+        // res => {
+        //   if (res.code == 0) {
+        //     that.step = 2;
+        //     that.$message({
+        //       message: '文件上传成功',
+        //       type: 'success'
+        //     });
+        //     that.importing = false;
+        //     that.tableData = res.data.list
+        //     that.successCount = res.data.successCount;
+        //     that.failCount = res.data.failCount;
+        //   } else {
+        //     that.importing = false;
+        //   }
+        // }
+        ).then(res=>{
           if (res.code == 0) {
             that.step = 2;
             that.$message({
@@ -112,6 +127,8 @@ export default {
           } else {
             that.importing = false;
           }
+        }).catch(err=>{
+          this.$message.error(err.msg || '文件上传失败')
         })
     },
     //下载模板
@@ -142,7 +159,7 @@ export default {
             });
             that.importing = false;
             that.$router.push({
-              path: '/settingsManagement/organization',
+              path: '/organization/index',
               query: { activeName: '1' }
             })
             this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
@@ -156,7 +173,7 @@ export default {
     handleBack() {
       this.initData();
       this.$router.push({
-        path: '/settingsManagement/organization',
+        path: '/organization/index',
         query: { activeName: '1' }
       })
       this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);

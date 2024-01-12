@@ -528,7 +528,7 @@ img {
 ------------------------------ */
 .aui-content {
   position: relative;
-  padding: $content--padding;
+  // padding: $content--padding;
   min-height: calc(100vh - #{$navbar--height});
   &__wrapper {
     position: relative;

@@ -343,3 +343,16 @@ html {
     font-weight: 400;
   
 }
+.fixed-footer {
+    position: fixed;
+    bottom: 0;
+    background-color: #ffffff;
+  
+    padding: 12px;
+    width: calc(100% - 230px);
+    text-align: center;
+    z-index: 1;
+    .el-button {
+      // width: 100px;
+    }
+}

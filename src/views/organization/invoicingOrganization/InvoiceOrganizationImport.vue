@@ -90,17 +90,31 @@ export default {
   methods: {
     //ajax上传
     ajaxUpload(content) {
+      console.log('---content---', content)
       let that = this;
       let formData = new FormData();
       formData.append("file", content.file);
-      that.step = 2;
       that.importing = true;
       that.business.customPost(
         that.request_host + "/orgnization/importOutputExcelInfo",
         { 'Content-Type': 'multipart/form-data' },
         formData,
-        res => {
-          console.log(res)
+        // res => {
+        //   console.log(res)
+        //   if (res.code == 0) {
+        //     that.$message({
+        //       message: '文件上传成功',
+        //       type: 'success'
+        //     });
+        //     that.importing = false;
+        //     that.tableData = res.data.list
+        //     that.successCount = res.data.successCount;
+        //     that.failCount = res.data.failCount;
+        //   } else {
+        //     that.importing = false;
+        //   }
+        // }
+        ).then(res=>{
           if (res.code == 0) {
             that.$message({
               message: '文件上传成功',
@@ -113,6 +127,10 @@ export default {
           } else {
             that.importing = false;
           }
+          that.step = 2;
+        }).catch(err=>{
+          console.log(err)
+          this.$message.error(err.msg || '文件上传失败')
         })
     },
     //下载模板
@@ -143,7 +161,7 @@ export default {
             });
             that.importing = false;
             that.$router.push({
-              path: '/settingsManagement/organization',
+              path: '/organization/index',
               query: { activeName: '2' }
             })
             this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
@@ -156,7 +174,7 @@ export default {
     handleBack() {
       this.initData()
       this.$router.push({
-        path: '/settingsManagement/organization',
+        path: '/organization/index',
         query: { activeName: '2' }
       })
       this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
