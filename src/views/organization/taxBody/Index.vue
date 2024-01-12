@@ -298,7 +298,9 @@ export default {
           this.$message.success('操作成功');
           this.getList();
         }
-      }).catch((res => { }))
+      }).catch(err=>{
+        this.$message.error(err.msg || '操作失败')
+      })
     },
 
     // 删除企业
@@ -315,7 +317,9 @@ export default {
           this.$message.success('删除成功');
           this.getList();
         }
-      }).catch((res => { }))
+      }).catch(err=>{
+        this.$message.error(err.msg || '删除失败')
+      })
 
     },
     // 切换数电开通

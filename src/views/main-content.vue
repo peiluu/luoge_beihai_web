@@ -10,7 +10,7 @@
           <el-dropdown-item @click.native="tabsCloseAllHandle()">{{ $t('contentTabs.closeAll') }}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-      <el-tabs v-model="$store.state.contentTabsActiveName" @tab-click="tabSelectedHandle" @tab-remove="tabRemoveHandle">
+      <el-tabs class="custom-tabs" v-model="$store.state.contentTabsActiveName" @tab-click="tabSelectedHandle" @tab-remove="tabRemoveHandle">
         <el-tab-pane
                 v-for="item in $store.state.contentTabs"
                 :key="item.name"
@@ -129,5 +129,12 @@ export default {
 <style lang="scss" scoped>
   .main {
     background-color: #F0F2F5;
+  }
+ 
+  .custom-tabs {
+    /deep/ &.el-tabs{
+      height: 100%;
+    }
+    
   }
 </style>

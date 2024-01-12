@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="main-content" :style="'min-height: ' + contentHeight + 'px;'">
+    <div class="main-content tax-detail">
       <el-form :inline="true" :model="form" :rules="rules" ref="ruleForm" :disabled="operateType === 'detail'">
         <div class="content-title">基本信息</div>
         <el-form-item class="form-header-left">
@@ -387,14 +387,21 @@ export default {
      * @desption 【组织管理】保存纳税主体
     */
     async saveTaxBody(param) {
-      const api = param.id ? updateTaxBody : addTaxBody
-      const { code = '', data = [] } = await api(param)
-      if (code === '0') {
-        this.$message.success('操作成功');
-        setTimeout(() => {
-          this.cancel();
-        }, 1000)
+      try {
+        const api = param.id ? updateTaxBody : addTaxBody
+        const { code = '', data = [], msg = '操作失败' } = await api(param)
+        if (code === '0') {
+          this.$message.success('操作成功');
+          setTimeout(() => {
+            this.cancel();
+          }, 1000)
+        } else {
+          this.$message.error(msg)
+        }
+      } catch (error) {
+          this.$message.error(error.msg || '操作失败')
       }
+      
     },
 
     handleRemove(file, fileList) {
@@ -447,6 +454,11 @@ export default {
 .main-content {
   padding: 0 32px 16px;
   margin-bottom: 32px;
+  &.tax-detail {
+    height: calc(100vh - 50px - 52px) !important;
+    overflow: hidden;
+    overflow-y: auto;
+  }
 }
 
 ::v-deep .el-form-item {

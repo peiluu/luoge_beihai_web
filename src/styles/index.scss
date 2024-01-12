@@ -115,9 +115,10 @@ html {
     border-radius: 4px;
     height: calc(100% - 40px);
     overflow-y: auto;
-
+    .toolbar {
+        margin-bottom: 15px;
+    }
     .custom-table {
-        margin-top: 16px;
         padding: 16px;
         background-color: #FFFFFF;
         border-radius: 10px;

@@ -131,10 +131,10 @@ export default {
     cancel() {
       this.form = {}
       this.$router.push({
-        path: '/settingsManagement/organization',
+        path: '/organization/index',
         query: { activeName: '3' }
       })
-      this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+      // this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
     },
 
   }
