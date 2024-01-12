@@ -78,7 +78,7 @@
       </article>
       <!-- 提交成功 -->
       <article v-if="active === 3">
-        <app-apply-success :invoice-suc-id="invoiceSucId"></app-apply-success>
+        <app-apply-success :invoice-suc-id="invoiceSucId" @handleResume="handleResume"></app-apply-success>
       </article>
     </el-card>
     <!-- 旧版本 参照 -->
@@ -266,6 +266,11 @@ export default {
         this.active = this.active + 1;
         
       }
+    },
+
+    /* 继续开票 */
+    handleResume(val){
+      this.active = 1;
     }
   },
   computed: {
