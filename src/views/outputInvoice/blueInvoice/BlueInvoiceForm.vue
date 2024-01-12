@@ -2926,11 +2926,16 @@ export default {
                                 //   "app/removeTab",
                                 //   that.$store.getters.activeTab
                                 // );
+                              }else{
+                                that.$notify({
+                                  message: res.msg,
+                                  type: "error",
+                                });
                               }
-                              that.loading = false;
+                             
                             });
                           })
-                          .catch(() => {
+                          .finally(() => {
                             that.loading = false;
                           });
                       } else {
@@ -2954,10 +2959,16 @@ export default {
                             //   that.$store.getters.activeTab
                             // );
                           }
-                          that.loading = false;
                         });
                       }
+                    }else{
+                      that.$notify({
+                        message: result.msg,
+                        type: "error",
+                      });
                     }
+                  }).finally(()=>{
+                    that.loading = false;
                   });
                 } else {
                   that.loading = true;

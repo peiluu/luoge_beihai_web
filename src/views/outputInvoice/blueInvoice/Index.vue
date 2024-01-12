@@ -1,6 +1,6 @@
 <template>
-  <div class="" style="height: calc(100vh - 132px)">
-    <el-card shadow="hover">
+  <div class="" style="height: 100%">
+    <el-card shadow="hover" :body-style="{padding:'20px'}">
       <article class="invoice_header">
         <div class="header_title_content">
           <span>蓝字发票开具</span>
@@ -174,7 +174,7 @@ export default {
           key: "name",
           val: "",
           type: "input",
-          label: "请输入纳税人名称/账套名称/开票点名称",
+          label: "搜索",
           placeholder: "请输入纳税人名称/账套名称/开票点名称",
         },
       ],
@@ -306,4 +306,17 @@ export default {
   font-weight: bold;
   color: #008FE0;
 }
+::v-deep .el-card__body{
+  padding: 0;
+  padding-bottom: 3px;
+}
+::v-deep.aui-wrapper .el-pagination{
+  margin-top: 0;
+}
+.invoice_header{
+  ::v-deep .el-card__body{
+  padding: 20px;
+}
+}
 </style>
+
