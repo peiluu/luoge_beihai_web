@@ -31,7 +31,7 @@ export const getDetailById = (data) => postJSON(`${config.host}/taxBody/getDetai
  * @desption 【组织管理】保存纳税主体
  */
 export const addTaxBody = (data) =>
-  postJSON(`/taxBody/addTaxBody`, data, null, true);
+  postJSON(`${config.host}/taxBody/addTaxBody`, data, null, true);
 
 /**
  * @desption 【组织管理】获取所有总公司
