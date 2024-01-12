@@ -59,6 +59,17 @@
         <el-button type="success" @click="setIsDigital">保 存</el-button>
       </span>
     </el-dialog>
+
+    <el-dialog
+      v-if="detailVisible"
+      :visible.sync="detailVisible"
+      width="80%"
+      :before-close="onClose"
+      class="detail-dialog"
+      destroy-on-close
+    >
+      <Detail :detailInfo="detailInfo" @onOk="onOk" @onClose="onClose"/>
+    </el-dialog>
   </div>
 </template>
 
@@ -66,10 +77,12 @@
 import FormList from '@/components/FormList.vue';
 import { rgionEnum, cityEnum, provincesEnmu } from '@/config/regionEnums.js';
 import { listCascaderDict, selectYtList, delTaxBodyBatch, setIsDigital, getListAll, selectQyList, downLoadApplyList, exportTaxBodyInfo, } from './Api.js'
+import Detail from './Detail.vue'
 export default {
   name: 'organizationTaxBody',
   components: {
     FormList,
+    Detail
   },
   data() {
     return {
@@ -93,9 +106,9 @@ export default {
         { title: "包含开票组织数量", width: 120, dataIndex: "orgCount", align: 'right' },
         { title: "所属省份", width: 100, dataIndex: "province" },
         { title: "所属城市", width: 100, dataIndex: "city", },
-        { title: "所属区县", width: 100, dataIndex: "area", },
-        { title: "是否分公司", width: 100, dataIndex: "sffgs", slot: 'sffgs', align: 'center' },
-        { title: "总公司名称", width: 130, dataIndex: "zgsmc", slot: 'zgsmc' },
+        // { title: "所属区县", width: 100, dataIndex: "area", },
+        // { title: "是否分公司", width: 100, dataIndex: "sffgs", slot: 'sffgs', align: 'center' },
+        // { title: "总公司名称", width: 130, dataIndex: "zgsmc", slot: 'zgsmc' },
         { title: "开立时间", width: 100, dataIndex: "openDate", align: 'center' },
         { title: "乐企ID", width: 100, dataIndex: "lqid", },
         { title: "乐企密钥", width: 120, dataIndex: "secretkey", },
@@ -183,6 +196,11 @@ export default {
         id: null,
       },
       exportLoading: false,
+      detailVisible: false,
+      detailInfo: {
+        operateType: '',
+        id: null
+      }
     };
 
   },
@@ -203,9 +221,13 @@ export default {
   },
 
   methods: {
+    onOk(){
+      this.getList()
+      this.onClose()
+    },
     onClose(){
-      this.dialogVisibleEdit = false;
-      this.editData = {
+      this.detailVisible = false;
+      this.detailInfo = {
         operateType: '',
         id: null,
       }
@@ -335,22 +357,22 @@ export default {
       })
     },
     hanldeEnter(operateType, data = {}) {
-      // this.dialogVisibleEdit = true;
-      // this.editData = {
-      //   operateType,
-      //   id: data.id
-      // }
-      if (operateType === 'add') {
-        sessionStorage.setItem('clearTaxBody', 1)
+      this.detailVisible = true;
+      this.detailInfo = {
+        operateType,
+        id: data.id
       }
-      this.$router.push({
-        path: '/organization/taxBodyDetail',
-        query: {
-          operateType,
-          id: data.id
-        }
-      })
-      this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+      // if (operateType === 'add') {
+      //   sessionStorage.setItem('clearTaxBody', 1)
+      // }
+      // this.$router.push({
+      //   path: '/organization/taxBodyDetail',
+      //   query: {
+      //     operateType,
+      //     id: data.id
+      //   }
+      // })
+      // this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
 
     },
     // 维护开票点 / 受票点
@@ -390,3 +412,10 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.detail-dialog {
+  /deep/ .el-dialog__body {
+    padding-top: 12px;
+  }
+}
+</style>

@@ -119,6 +119,8 @@ export default {
             })
             .catch((e) => {
               console.log(e);
+              this.loading = false;
+              this.$message.error(e.msg || '登录失败')
             });
         });
       },

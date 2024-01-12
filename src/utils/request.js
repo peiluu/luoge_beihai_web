@@ -119,7 +119,7 @@ http.interceptors.response.use(response => {
         code = error.code;
         msg = error.msg;
       }else{
-        msg = `无法连接到服务器！`
+        msg = `无法连接到服务器！`;
       }
      
     }

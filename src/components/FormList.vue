@@ -189,7 +189,6 @@ export default {
     }
   },
   watch: {
-    api(val) { },
     "param.nsrsbh": function (val) {
       if (val) {
         this.$emit('getOrgList', val)
@@ -335,9 +334,10 @@ export default {
       } else if (param) {
         param.pageNo = 1;
         this.pagination.pageNo = 1;
-        Object.assign(param, val);
-        this.param = param;
-        this.handleGetData(param);
+        // 修复重置问题
+        // Object.assign(param, val);
+        // this.param = param;
+        this.handleGetData({...param, ...val});
       }
     },
     // 重置搜索内容
@@ -441,10 +441,6 @@ export default {
     getNextList(val, type) {
       this.$emit('getNextList', val, type)
     },
-    autoHeigth(){
-      const el = this.$refs.table
-      console.log(el)
-    } 
   },
   activated() {
     if (this.firstLoading) {
@@ -452,7 +448,6 @@ export default {
         this.handleGetData(this.param);
       });
     }
-    this.autoHeigth()
   }
 };
 </script>

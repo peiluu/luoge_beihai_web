@@ -1,5 +1,5 @@
 // 数据字典
-import { postJSON, download } from '@/utils/request';
+import http, { postJSON, download } from '@/utils/request';
 import { config } from "@/config"
 
 // 【组织管理】获取组织列表
@@ -83,3 +83,8 @@ export const downExcel = data => download(`${config.host}/taxBody/downExcel/2`, 
  */
 export const exportOrganizationInfo = data =>
   download(`${config.host}/orgnization/exportOrganizationInfo`, data);
+
+//   /**
+//  * @description 获取当前用户可以开票的组织（不分页）
+//  */
+// export const getOrgList = data => http.get(`${config.host}/taxBody/getListAll`, data);
