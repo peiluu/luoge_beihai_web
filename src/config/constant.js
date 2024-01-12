@@ -209,7 +209,7 @@ export const dynamicUrlMap = {
   // 测试环境 - 本地地址
   development: {
     mtcLoginUrl: 'https://mtc-sit-k8s.mideazy.com/piaoeda-cloud/cas/',
-    frontUrl: 'https://mtclq-uat.mideazy.com/',
+    frontUrl: 'https://192.168.1.24:8001/',
     testUrl: 'https://mtc-sit-k8s.mideazy.com/ent-views/#/warningMessage/warningMessage_wb/',
   },
   // 测试环境 - 线上地址

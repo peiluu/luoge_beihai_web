@@ -271,4 +271,18 @@ export function download(url, params, extendParamNames = null, showLoading = fal
     showLoading && loading.close();
   })
 }
+export function postOne(url, id, params, extendParamNames = null) {
+  dealExtendParamNames(extendParamNames);
+  return new Promise((resolve, reject) => {
+      request.post(`${url}`, params, {
+          headers: {
+              'Content-Type': 'application/json; charset=utf-8',
+          },
+      }).then(res => {
+          resolve(res)
+      }).catch(err => {
+          reject(err)
+      })
+  })
+}
 export default http
