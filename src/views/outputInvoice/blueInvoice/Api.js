@@ -72,7 +72,7 @@ export const getInvoicePreview = data => postJSON(`${config.host}/invoicePreview
  * @param data
  * @returns {*}
  */
-export const getInvoiceDetailById = data => postJSON('/applyInvoiceUpload/getDetailById', data);
+export const getInvoiceDetailById = data => postJSON(`${config.host}/applyInvoiceUpload/getDetailById`, data);
 
 /**
  * 已开具发票详情
