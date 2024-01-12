@@ -13,7 +13,7 @@
       >
         <div class="content-bar">
           <div>
-            <vxe-button icon="el-icon-back" size="mini" @click="handleBack"
+            <vxe-button :loading="loading" icon="el-icon-back" size="mini" @click="handleBack"
               >返回</vxe-button
             >
             <!-- <el-tag size="mini">电子发票</el-tag> <span style="padding-left:8px"></span>
@@ -352,12 +352,14 @@
                   style="float: right; margin-right: 10px"
                   @click="clearItems"
                   :disabled="!canEdit"
+                  :loading="loading"
                   >清空重填</el-button
                 >
                 <el-button
                   size="mini"
                   style="float: right; margin-right: 10px"
                   @click="reChooseFplx"
+                  :loading="loading"
                   :disabled="!canEdit"
                   >重选发票种类</el-button
                 >
@@ -366,6 +368,7 @@
                   style="float: right; margin-right: 10px"
                   @click="handleUseTheme"
                   :disabled="!canEdit"
+                  :loading="loading"
                   >引用模板</el-button
                 >
               </div>
@@ -875,13 +878,13 @@
     </div>
     <div class="invoice-tools" v-show="canEdit">
       <div class="invoice_footer">
-        <div> <el-button @click="handleAddTheme">生成模板</el-button></div>
+        <div> <el-button @click="handleAddTheme" :loading="loading">生成模板</el-button></div>
         <div>
-          <el-button :disabled="saving" type="success" @click="saveInvoice(1)">开票</el-button>
-          <el-button :disabled="saving" @click="saveInvoice(0)">保存</el-button>
-          <el-button @click="preview">预览</el-button></div>
+          <el-button :disabled="saving" type="success" @click="saveInvoice(1)" :loading="loading">开票</el-button>
+          <el-button :disabled="saving" @click="saveInvoice(0)" :loading="loading">保存</el-button>
+          <el-button @click="preview" :loading="loading">预览</el-button></div>
         <div>
-          <el-button @click="handleBack">返回</el-button>
+          <el-button @click="handleBack" :loading="loading">返回</el-button>
         </div>
       </div>
       <!-- <el-button type="danger" @click="deleteInvoice()">丢弃</el-button> --> 

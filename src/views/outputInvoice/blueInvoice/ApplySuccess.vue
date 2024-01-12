@@ -10,7 +10,7 @@
         detail.shzt == 0 ? '您已成功提交开票申请，本单无需审核，请耐心等待开具结果' : '您已成功提交开票申请，本单需审核，请等待审核人员审核' 
         }}
         </div>
-        <div class="tip-txt">请及时关注与更新发票开具状态</div>
+        <div class="tip-txt">请及时关注与更新发票开具状态<router-link to="/outputInvoice/invoicedList/Index">去查询>></router-link></div>
       </div>
       <el-card class="content-info">
         <div class="info-title">发票简要信息</div>
@@ -23,8 +23,8 @@
         </div>
       </el-card>
     </div>
-    <div class="fixed-footer">
-      <el-button type="primary" @click="make">重新开票</el-button>
+    <div class="fixed-footer" style="right:0">
+      <el-button type="primary" @click="make">继续开票</el-button>
     </div>
   </div>
 </template>
@@ -74,10 +74,11 @@
         this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
       },
       make(){
-        this.$router.push({
-          path: '/buleInvoice/index'
-        })
-        this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+        // this.$router.push({
+        //   path: '/buleInvoice/index'
+        // })
+        // this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+        this.$emit('handleResume',true)
       }
     }
   };
