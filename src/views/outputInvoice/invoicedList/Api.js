@@ -3,7 +3,7 @@ import { postJSON, download } from '@/utils/request';
 import { config } from "@/config"
 // 获取列表
 export const getList = data =>
-  postJSON(`/invoiceUpload/successfulInvoice`, { ...data, scope: '2' });
+  postJSON(`${config.host}/invoiceUpload/successfulInvoice`, { ...data, scope: '2' });
 
 /**
  * @desption 获取当前用户可以开票的开票点（不分页）

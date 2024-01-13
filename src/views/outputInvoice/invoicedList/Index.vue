@@ -129,7 +129,7 @@ export default {
         { title: "发票种类", dataIndex: "fppz", slot: 'fppz', width: 150 },
         { title: "开票状态", width: 100, dataIndex: "status",align:"center", slot: 'status' },
         // { title: "发票代码", width: 100, dataIndex: "fpdm" },
-        { title: "发票号码", width: 100, dataIndex: "fphm", },
+        { title: "发票号码", width: 100, dataIndex: "fphm", slot: 'fphm', showTooltip: true},
         { title: "开票组织名称", width: 100, dataIndex: "orgName", slot: "orgName" },
         { title: "购买方名称", width: 100, dataIndex: "gmfmc", },
         { title: "购买方识别号/身份证号", width: 180, dataIndex: "gmfnsrsbh", },
@@ -454,30 +454,35 @@ export default {
         this.$message.warning('请先设定开票组织!');
         return;
       }
-      const { code = '' } = await invoiceUsedStatus({
-        fplx: row.fppz,
-        fphm: row.fphm,
-        kprq: row.kprq,
-        nsrsbh: row.xsfnsrsbh // 销方纳税人识别号
-      })
-
-      // 可以红冲
-      if (code === '0') {
-        // sessionStorage.setItem('clearRedInvoice', 1);
-        this.$router.push({
-          // 选择默认填充
-          path: '/redInvoice/redInfoConfirm',
-          query: {
-            nsrmc: row.xsfmc,
-            nsrsbh: row.xsfnsrsbh,
-            taxBodyId: row.taxBodyId,
-            blueInvoiceId: row.id,
-            operateType: 'queryBlue',
-            isFormInvoiced: 'Y',
-          }
+      try {
+        const { code = '' } = await invoiceUsedStatus({
+          fplx: row.fppz,
+          fphm: row.fphm,
+          kprq: row.kprq,
+          nsrsbh: row.xsfnsrsbh // 销方纳税人识别号
         })
-        this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+
+        // 可以红冲
+        if (code === '0') {
+          // sessionStorage.setItem('clearRedInvoice', 1);
+          this.$router.push({
+            // 选择默认填充
+            path: '/redInvoice/redInfoConfirm',
+            query: {
+              nsrmc: row.xsfmc,
+              nsrsbh: row.xsfnsrsbh,
+              taxBodyId: row.taxBodyId,
+              blueInvoiceId: row.id,
+              operateType: 'queryBlue',
+              isFormInvoiced: 'Y',
+            }
+          })
+          this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+        }
+      } catch (error) {
+        this.$message.error(error.msg || '操作失败')
       }
+      
     },
 
     // 邮箱分享
@@ -542,7 +547,7 @@ export default {
         return;
       }
       this.$router.push({
-        path: '/buleInvoice/BlueInvoiceForm',
+        path: '/outputInvoice/blueInvoice/Index',
         query: {
           invoiceId: row.id,
           isFormInvoiced: 'Y'
