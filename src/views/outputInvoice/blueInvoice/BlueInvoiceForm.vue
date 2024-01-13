@@ -2887,16 +2887,20 @@ export default {
                 this.form.installmentCode = this.mideaInfo.installmentCode;
                 that.form.fpmxList = that.tableData;
                 that.form.type = type;
+                
                 if (type == 1) {
+               
                   //如果为开票请求，需要判断是否超出单张限额
                   that.api.checkOpenInvoice(that.form).then((result) => {
                     //如果超出单张限额，给出提示是否要继续开票
                     if (result && result.code == "0") {
+                    
                       let msg = "提交开票成功";
                       if (result.data.sh && result.data.sh == "sh") {
+                     
                         msg = "您的开票请求已成功提交，请等待审核";
-                      }
-                      if (result.data.cxe && result.data.cxe == "cxe") {
+                      }else if (result.data.cxe && result.data.cxe == "cxe") {
+                        
                         this.$confirm(
                           `超出单张发票限额，您确定要开票吗？`,
                           "警告",
@@ -2909,6 +2913,7 @@ export default {
                           .then(() => {
                             that.loading = true;
                             that.api.saveInvoice(that.form).then((res) => {
+                             
                               if (res && res.code == "0") {
                                 that.$notify({
                                   message: msg,
@@ -2939,9 +2944,12 @@ export default {
                             that.loading = false;
                           });
                       } else {
+                       
                         that.loading = true;
                         that.api.saveInvoice(that.form).then((res) => {
-                          if (res && res.code == "0") {
+                          
+                          if (res && res.code === "0") {
+                          
                             that.$notify({
                               message: msg,
                               type: "success",
@@ -2958,7 +2966,20 @@ export default {
                             //   "app/removeTab",
                             //   that.$store.getters.activeTab
                             // );
+                          }else{
+                           
+                            that.$notify({
+                              message: res.msg,
+                              type: "error",
+                            });
                           }
+                        }).catch((e)=>{
+                         
+                          that.$notify({
+                              message: e.msg,
+                              type: "error",
+                            });
+                          
                         });
                       }
                     }else{
@@ -2971,8 +2992,10 @@ export default {
                     that.loading = false;
                   });
                 } else {
+                  
                   that.loading = true;
                   that.api.saveInvoice(that.form).then((res) => {
+                   
                     if (res && res.code == "0") {
                       that.$notify({
                         message: "发票信息已保存成功，请在未开票页面中查看",
@@ -2981,7 +3004,15 @@ export default {
                       //  that.$set(that.form, "id", res.data);
                       //  that.clearAll()
                       that.deleteInvoice();
+                    }else{
+                      
+                      that.$notify({
+                        message: res.msg,
+                        type: "error",
+                      });
                     }
+                    
+                  }).finally(()=>{
                     that.loading = false;
                   });
                 }
@@ -3111,7 +3142,7 @@ export default {
       return this.thirdData?.slotData || {} ;
     },
     contentHeight() {
-      return window.innerHeight - 330;
+      return window.innerHeight - 230;
     },
   },
   created(){

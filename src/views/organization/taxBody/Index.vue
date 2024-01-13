@@ -75,10 +75,10 @@
       :visible.sync="importVisible"
       width="80%"
       :before-close="onClose"
-      class="detail-dialog"
+      class="import-dialog"
       destroy-on-close
     >
-      <TaxBodyImport :detailInfo="detailInfo" @onOk="onOk" @onClose="onClose"/>
+      <TaxBodyImport @onOk="onOk"/>
     </el-dialog>
   </div>
 </template>
@@ -363,11 +363,13 @@ export default {
     async setIsDigital() {
       this.$refs["ruleForm"].validate(async valid => {
         if (!valid) return;
-        const { code = '' } = await setIsDigital(this.form);
+        const { code = '', msg } = await setIsDigital(this.form);
         if (code === '0') {
           this.$message.success('操作成功');
           this.dialogVisible = false
           this.getList();
+        } else {
+          this.$message.error(msg || '操作失败')
         }
       })
     },
@@ -431,6 +433,14 @@ export default {
 .detail-dialog {
   /deep/ .el-dialog__body {
     padding-top: 12px;
+  }
+}
+.import-dialog {
+  display: flex;
+  align-items: center;
+  /deep/ .el-dialog {
+    margin-top: auto !important;
+    margin-bottom: auto !important;
   }
 }
 </style>

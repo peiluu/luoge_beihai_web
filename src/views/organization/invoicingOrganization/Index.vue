@@ -70,6 +70,16 @@
     >
       <Detail :detailInfo="detailInfo" @onOk="onOk" @onClose="onClose"/>
     </el-dialog>
+    <el-dialog
+      v-if="importVisible"
+      :visible.sync="importVisible"
+      width="80%"
+      :before-close="onClose"
+      class="import-dialog"
+      destroy-on-close
+    >
+      <InvoiceOrganizationImport @onOk="onOk"/>
+    </el-dialog>
   </div>
 </template>
 
@@ -77,11 +87,13 @@
 import FormList from '@/components/FormList.vue';
 import { getListAll, delOrg, moveOrg, setEnable, exportOrganizationInfo } from './Api.js'
 import Detail from './Detail.vue'
+import InvoiceOrganizationImport from './InvoiceOrganizationImport.vue'
 export default {
   name: 'InvoicingOrganization',
   components: {
     FormList,
-    Detail
+    Detail,
+    InvoiceOrganizationImport
   },
   props: {
     taxBodyId: {},
@@ -163,7 +175,8 @@ export default {
       detailInfo: {
         operateType: '',
         id: null
-      }
+      },
+      importVisible: false
     };
 
   },
@@ -188,6 +201,7 @@ export default {
     },
     onClose(){
       this.detailVisible = false;
+      this.importVisible  = false;
       this.detailInfo = {
         operateType: '',
         id: null,
@@ -219,6 +233,7 @@ export default {
         ...data,
         taxBodyId: data && data.taxBodyId && data.taxBodyId.toString()
       }
+      console.log(this.form)
       this.dialogVisible = true
     },
 
@@ -234,12 +249,16 @@ export default {
         type: 'warning'
       }).then(async () => {
         const orgIds = type === 'delete' ? [data.id] : this.selections.map((item) => item.id)
-        const { code = '' } = await delOrg({ orgIds });
+        const { code = '', msg } = await delOrg({ orgIds });
         if (code === '0') {
           this.$message.success('删除成功');
           this.getList();
+        } else {
+          this.$message.error(msg || '删除失败')
         }
-      }).catch((res => { }))
+      }).catch(err=>{
+        this.$message.error(err.msg || '删除失败')
+      })
     },
 
     //
@@ -260,20 +279,24 @@ export default {
 
     // 转移
     async moveOrg(param) {
-      const { code = '' } = await moveOrg(param);
+      const { code = '', msg } = await moveOrg(param);
       if (code === '0') {
         this.$message.success('转移成功');
         this.handleClose();
         this.getList();
+      } else {
+        this.$message.error(msg || '转移失败')
       }
     },
     // 启停
     async setEnable(param) {
-      const { code = '' } = await setEnable(param);
+      const { code = '', msg } = await setEnable(param);
       if (code === '0') {
         this.$message.success('操作成功');
         this.handleClose();
         this.getList();
+      } else {
+        this.$message.error(msg || '操作失败')
       }
     },
     hanldeEnter(operateType, data = {}) {
@@ -299,9 +322,9 @@ export default {
     },
     // 导入
     handleImport() {
-      sessionStorage.setItem('clearInvoiceOrganizationImport', 1)
-      this.$router.push({ path: "/organization/invoiceOrganizationImport" })
-      this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+      this.importVisible = true;
+      // this.$router.push({ path: "/organization/invoiceOrganizationImport" })
+      // this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
     },
     getSearchParam(param) {
       this.queryParam = param;
@@ -322,3 +345,18 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.detail-dialog {
+  /deep/ .el-dialog__body {
+    padding-top: 12px;
+  }
+}
+.import-dialog {
+  display: flex;
+  align-items: center;
+  /deep/ .el-dialog {
+    margin-top: auto !important;
+    margin-bottom: auto !important;
+  }
+}
+</style>

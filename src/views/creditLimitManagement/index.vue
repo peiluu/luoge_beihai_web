@@ -83,6 +83,16 @@
         </template>
       </el-table>
     </div>
+    <el-dialog
+      v-if="detailVisible"
+      :visible.sync="detailVisible"
+      width="80%"
+      :close="onClose"
+      class="detail-dialog"
+      destroy-on-close
+    >
+      <HistoricalDetails :detailInfo="detailInfo"/>
+    </el-dialog>
   </div>
 </template>
 
@@ -90,9 +100,12 @@
 import moment from "moment";
 import { getCurrentMonth } from "@/utils/tool";
 import { getCreditInfo, getListByUser, creditCredit, creditCode, updateCredit } from './Api'
+import HistoricalDetails from './historicalDetails/Index.vue'
 export default {
   name: 'CreditLimitHandle',
-  components: {},
+  components: {
+    HistoricalDetails
+  },
   data() {
     return {
       activeName: 'credit',
@@ -141,6 +154,8 @@ export default {
       },
       taxBodyList: [],
       creditInfo: {},
+      detailVisible: false,
+      detailInfo: {}
     };
   },
   computed: {
@@ -162,6 +177,9 @@ export default {
   },
 
   methods: {
+    onClose(){
+      this.detailVisible = false;
+    },
     dateFormat(fmt, val) {
       return moment(val).format(fmt)
     },
@@ -222,14 +240,19 @@ export default {
       this.activeName = name
     },
     toDetail() {
-      this.$router.push({
-        path: '/creditLimitManagement/historicalDetails',
-        query: {
-          activeName: this.activeName,
-          ...this.form,
-        }
-      })
-      this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+      this.detailVisible = true
+      this.detailInfo = {
+        activeName: this.activeName,
+        ...this.form,
+      }
+      // this.$router.push({
+      //   path: '/creditLimitManagement/historicalDetails',
+      //   query: {
+      //     activeName: this.activeName,
+      //     ...this.form,
+      //   }
+      // })
+      // this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
 
     }
   }
@@ -362,6 +385,17 @@ export default {
     cursor: pointer;
     font-size: 12px;
     color: $blueColor;
+  }
+}
+.detail-dialog {
+  display: flex;
+  align-items: center;
+  /deep/ .el-dialog {
+    margin-top: auto !important;
+    margin-bottom: auto !important;
+  }
+  /deep/ .el-dialog__body {
+    padding: 10px 20px;
   }
 }
 </style>
