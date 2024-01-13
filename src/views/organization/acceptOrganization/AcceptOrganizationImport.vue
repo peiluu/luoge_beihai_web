@@ -1,7 +1,7 @@
 <template>
-  <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
+  <div class="main-content">
     <div class="back-button">
-      <el-button icon="el-icon-back" @click="handleBack">返回</el-button>
+      <!-- <el-button icon="el-icon-back" @click="handleBack">返回</el-button> -->
     </div>
     <div class="mid-margin-40">
       <el-steps :active="step">
@@ -24,7 +24,7 @@
         <!-- <el-button type="text" @click="downloadFailed">下载</el-button>
         <span style="margin-left: 0;">清单修改</span> -->
       </div>
-      <el-table stripe border :data="tableData" :height="height" v-loading="importing" :header-cell-class-name="'main-table-header-cell'" style="margin: 10px 2% ;width: 96%;">
+      <el-table class="import-table" stripe border :data="tableData" v-loading="importing" :header-cell-class-name="'main-table-header-cell'" style="margin: 10px 2% ;width: 96%;">
         <el-table-column prop="yzjg" label="验证" align="left" min-width="80">
           <template slot-scope="scope">
             <slot name="myscope" :data="scope.row">
@@ -72,19 +72,9 @@ export default {
     request_host() {
       return config.host
     },
-    height() {
-      return window.innerHeight - 400;
-
-    },
-    contentHeight() {
-      return window.innerHeight - 132;
-    },
   },
-  activated() {
-    if (sessionStorage.getItem('clearAcceptOrganizationImport') == 1) {
-      this.initData();
-      sessionStorage.setItem('clearAcceptOrganizationImport', 0)
-    }
+  mounted() {
+    this.initData();
   },
   methods: {
     //ajax上传
@@ -92,26 +82,41 @@ export default {
       let that = this;
       let formData = new FormData();
       formData.append("file", content.file);
-      that.step = 2;
       that.importing = true;
       that.business.customPost(
         that.request_host + "/orgnization/importOrganizationExcelInfo",
         { 'Content-Type': 'multipart/form-data' },
         formData,
-        res => {
-          console.log(res)
+        // res => {
+        //   console.log(res)
+        //   if (res.code == 0) {
+        //     that.$message({
+        //       message: '文件上传成功',
+        //       type: 'success'
+        //     });
+        //     that.importing = false;
+        //     that.tableData = res.data.list
+        //     that.successCount = res.data.successCount;
+        //     that.failCount = res.data.failCount;
+        //   } else {
+        //     that.importing = false;
+        //   }
+        // }
+        ).then(res=>{
           if (res.code == 0) {
             that.$message({
               message: '文件上传成功',
               type: 'success'
             });
-            that.importing = false;
             that.tableData = res.data.list
             that.successCount = res.data.successCount;
             that.failCount = res.data.failCount;
-          } else {
-            that.importing = false;
+            that.step = 2;
           }
+          that.importing = false;
+          that.$message.error(res.msg || '文件上传失败')
+        }).catch(err=>{
+          this.$message.error(err.msg || '文件上传失败')
         })
     },
     //下载模板
@@ -134,33 +139,28 @@ export default {
         that.request_host + "/orgnization/importOrganizationInfo",
         { 'Content-Type': 'application/json; charset=utf-8' },
         {},
-        res => {
-
-          if (res.code == 0) {
-            that.$message({
-              message: '导入成功',
-              type: 'success'
-            });
-            that.importing = false;
-            that.$router.push({
-              path: '/organization/index',
-              query: { activeName: '3' }
-            })
-            this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
-          } else {
-            that.importing = false;
-          }
+      ).then(res=>{
+        if (res.code == 0) {
+          that.$message({
+            message: '导入成功',
+            type: 'success'
+          });
+          that.$emit('onOk')
         }
-      )
-    },
-    handleBack() {
-      this.initData()
-      this.$router.push({
-        path: '/organization/index',
-        query: { activeName: '3' }
+        that.importing = false;
+      }).catch(err=>{
+        that.importing = false;
+        this.$message.error(err.msg || '导入失败')
       })
-      this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
     },
+    // handleBack() {
+    //   this.initData()
+    //   this.$router.push({
+    //     path: '/organization/index',
+    //     query: { activeName: '3' }
+    //   })
+    //   this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+    // },
     initData() {
       this.tableData = [];
       this.successCount = 0;
@@ -181,8 +181,8 @@ export default {
 }
 
 .upload-template {
-  height: 30px;
-  line-height: 30px;
+  // height: 30px;
+  // line-height: 30px;
   font-size: 14px;
 
   .right {
@@ -208,13 +208,21 @@ export default {
 }
 
 .footer-button {
-  padding: 20px 2% 0 0;
-  float: right;
+  padding-top: 20px;
+  text-align: center;
 }
 ::v-deep .el-upload-list__item {
   display: none;
  }
 .main {
   overflow: scroll;
+}
+.import-table {
+  ::v-deep .el-table__body-wrapper {
+    height: calc(100vh - 440px);
+    overflow: hidden;
+    overflow-y: auto;
+    min-height: initial;
+  }
 }
 </style>

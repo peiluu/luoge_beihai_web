@@ -70,6 +70,16 @@
     >
       <Detail :detailInfo="detailInfo" @onOk="onOk" @onClose="onClose"/>
     </el-dialog>
+    <el-dialog
+      v-if="importVisible"
+      :visible.sync="importVisible"
+      width="80%"
+      :before-close="onClose"
+      class="import-dialog"
+      destroy-on-close
+    >
+      <AcceptOrganizationImport @onOk="onOk"/>
+    </el-dialog>
   </div>
 </template>
 
@@ -77,11 +87,13 @@
 import FormList from '@/components/FormList.vue';
 import { getListAll, delOrg, moveOrg, setEnable, exportOrganizationInfo } from './Api.js'
 import Detail from './Detail.vue'
+import AcceptOrganizationImport from './AcceptOrganizationImport.vue'
 export default {
   name: 'nvoicingOrganization',
   components: {
     FormList,
-    Detail
+    Detail,
+    AcceptOrganizationImport
   },
   props: {
     taxBodyId: {},
@@ -153,7 +165,8 @@ export default {
       detailInfo: {
         operateType: '',
         id: null
-      }
+      },
+      importVisible: false,
     };
   },
 
@@ -178,6 +191,7 @@ export default {
     },
     onClose(){
       this.detailVisible = false;
+      this.importVisible = false;
       this.detailInfo = {
         operateType: '',
         id: null,
@@ -307,9 +321,7 @@ export default {
     },
     // 导入
     handleImport() {
-      sessionStorage.setItem('clearAcceptOrganizationImport', 1)
-      this.$router.push({ path: "/organization/acceptOrganizationImport" })
-      // this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+      this.importVisible = true
     },
     getSearchParam(param) {
       this.queryParam = param;
@@ -333,3 +345,18 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.detail-dialog {
+  /deep/ .el-dialog__body {
+    padding-top: 12px;
+  }
+}
+.import-dialog {
+  display: flex;
+  align-items: center;
+  /deep/ .el-dialog {
+    margin-top: auto !important;
+    margin-bottom: auto !important;
+  }
+}
+</style>

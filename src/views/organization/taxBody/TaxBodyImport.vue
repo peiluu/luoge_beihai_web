@@ -40,7 +40,7 @@
       </el-table>
       <div class="footer-button">
         <el-button type="default" @click="initData">上一步</el-button>
-        <el-button type="primary" @click="handleConfirm" :disabled="failCount > 0 || importing">导入</el-button>
+        <el-button type="primary" @click="handleConfirm" :disabled="failCount > 0 || successCount > 0 || importing">导入</el-button>
       </div>
     </template>
   </div>
@@ -104,18 +104,17 @@ export default {
         // }
         ).then(res=>{
           if (res.code == 0) {
-            that.step = 2;
             that.$message({
               message: '文件上传成功',
               type: 'success'
             });
-            that.importing = false;
             that.tableData = res.data.list
             that.successCount = res.data.successCount;
             that.failCount = res.data.failCount;
-          } else {
-            that.importing = false;
+            that.step = 2;
           }
+          that.importing = false;
+          that.$message.error(res.msg || '文件上传失败')
         }).catch(err=>{
           this.$message.error(err.msg || '文件上传失败')
         })
@@ -158,19 +157,19 @@ export default {
         //   }
         // }
       ).then(res=>{
-          if (res.code == 0) {
-            that.$message({
-              message: '导入成功',
-              type: 'success'
-            });
-            that.$emit('onOk')
-          }
-          that.importing = false;
-        }).catch(err=>{
-          console.log(err)
-          that.importing = false;
-          this.$message.error(err.msg || '导入失败')
-        })
+        if (res.code == 0) {
+          that.$message({
+            message: '导入成功',
+            type: 'success'
+          });
+          that.$emit('onOk')
+        }
+        that.importing = false;
+      }).catch(err=>{
+        console.log(err)
+        that.importing = false;
+        this.$message.error(err.msg || '导入失败')
+      })
     },
     handleBack() {
       this.initData();
@@ -241,10 +240,10 @@ export default {
 }
 .import-table {
   ::v-deep .el-table__body-wrapper {
-    height: calc(100vh - 600px);
-    background: red;
+    height: calc(100vh - 440px);
     overflow: hidden;
     overflow-y: auto;
+    min-height: initial;
   }
 }
 </style>
