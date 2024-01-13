@@ -1,11 +1,15 @@
 <template>
-  <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
+  <div class="main-content">
     <!-- form表单 -->
     <el-form :inline="true" :model="form" class="edit-form">
-
       <el-form-item label="纳税主体" prop="nsrList">
         <el-select multiple v-model="form.nsrList" placeholder="请选择" filterable :filter-method="filterMethod">
-          <el-option v-for="(item, index) in nsrOptions" :key="index" :label="item.label" :value="item.value"></el-option>
+          <el-option
+            v-for="(item, index) in nsrOptions"
+            :key="index"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item></el-form-item>
@@ -14,7 +18,6 @@
           <el-button type="success" @click="getDetailList">查询</el-button>
           <el-button @click="reset">重置</el-button>
         </div>
-
       </el-form-item>
       <div class="toolbar">
         <div class="toolbar-left" />
@@ -33,8 +36,17 @@
     </el-form>
 
     <div class="custom-vxe-table">
-      <vxe-table :height="height" border show-overflow keep-source ref="xTable" :data="tableData" :edit-config="{ trigger: 'click', mode: 'cell', icon: 'vxe-icon-edit' }" v-loading="loading" :edit-rules="validRules"
-        :cell-style="setCellStyle">
+      <vxe-table
+        border
+        show-overflow
+        keep-source
+        ref="xTable"
+        :data="tableData"
+        :edit-config="{ trigger: 'click', mode: 'cell', icon: 'vxe-icon-edit' }"
+        v-loading="loading"
+        :edit-rules="validRules"
+        :cell-style="setCellStyle"
+      >
         <vxe-column type="checkbox"></vxe-column>
         <vxe-column type="seq" width="50" title="序号" />
         <vxe-column field="name" title="纳税主体名称" width="20%" />
@@ -42,7 +54,14 @@
 
         <vxe-column field="codeNum" title="单次申请发票数量" :edit-render="{}" width="11%" align="right">
           <template #edit="{ row }">
-            <vxe-input size="mini" v-model="row.codeNum" type="number" max="5000" min="0" placeholder="请输入（不得大于5000）" />
+            <vxe-input
+              size="mini"
+              v-model="row.codeNum"
+              type="number"
+              max="5000"
+              min="0"
+              placeholder="请输入（不得大于5000）"
+            />
           </template>
         </vxe-column>
         <vxe-column field="auto" title="是否开通单张发票限额设定" align="center" :edit-render="{}" width="15%">
@@ -53,13 +72,20 @@
             </vxe-select>
           </template>
           <template #default="{ row }">
-            <span>{{ row.sfdzxe === 'Y' ? "是" : '否' }}</span>
+            <span>{{ row.sfdzxe === 'Y' ? '是' : '否' }}</span>
           </template>
         </vxe-column>
 
         <vxe-column field="amount" title="单张发票限额值" :edit-render="{}" width="11%" align="right">
           <template #edit="{ row }">
-            <vxe-input size="mini" v-model="row.amount" type="number" min="0" placeholder="请输入（仅支持正整数）" :disabled="row.sfdzxe == 'N'" />
+            <vxe-input
+              size="mini"
+              v-model="row.amount"
+              type="number"
+              min="0"
+              placeholder="请输入（仅支持正整数）"
+              :disabled="row.sfdzxe == 'N'"
+            />
           </template>
         </vxe-column>
 
@@ -72,7 +98,6 @@
           <template #default="{ row }">
             <span>{{ ratioListMap[row.ratio] }}</span>
           </template>
-
         </vxe-column>
 
         <vxe-column field="email" title="邮件通知" :edit-render="{}" width="12%">
@@ -84,26 +109,39 @@
 
       <div class="table-footer">
         <div class="footer-left">
-          <div><i class="el-icon-warning-outline"></i> </div>
+          <div><i class="el-icon-warning-outline"></i></div>
           <div>
             <div>默认发票赋码数量到10%时，会自动下载发票赋码数量；</div>
-            <div> 授信额度比例低于设定数值时，会提示“授信额度预警”标志</div>
+            <div>授信额度比例低于设定数值时，会提示“授信额度预警”标志</div>
           </div>
         </div>
         <div class="pagination">
-          <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.pageNo" :page-sizes="[10, 20, 30, 40, 50, 100, 500, 1000]"
-            :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.totalCount">
+          <el-pagination
+            background
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="pagination.pageNo"
+            :page-sizes="[10, 20, 30, 40, 50, 100, 500, 1000]"
+            :page-size="pagination.pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="pagination.totalCount"
+          >
           </el-pagination>
         </div>
       </div>
 
       <div class="flex-center">
-        <el-button @click="submit" type="success">保存</el-button>
+        <el-button @click="submit" type="success" :disabled="tableData.length === 0">保存</el-button>
       </div>
     </div>
 
     <!-- 批量设置 -->
-    <el-dialog :title="batchOperateTypeMap[batchOperateType]" :visible.sync="dialogVisible" width="40%" :before-close="handleClose">
+    <el-dialog
+      :title="batchOperateTypeMap[batchOperateType]"
+      :visible.sync="dialogVisible"
+      width="40%"
+      :before-close="handleClose"
+    >
       <el-form :inline="true" :model="editForm" ref="editForm">
         <!-- 是否开通单张发限额设定 -->
         <template v-if="batchOperateType == 'amount'">
@@ -115,7 +153,15 @@
           </el-form-item>
           <el-form-item label="单张发票限额值" prop="amount">
             <!-- <el-input type="number" min="0" v-model="editForm.amount" :disabled="editForm.sfdzxe == 'N'" placeholder="请输入" /> -->
-            <vxe-input size="mini" v-model="editForm.amount" type="number" :min="0" placeholder="请输入" :disabled="editForm.sfdzxe == 'N'" :aria-required="editForm.sfdzxe == 'Y'" />
+            <vxe-input
+              size="mini"
+              v-model="editForm.amount"
+              type="number"
+              :min="0"
+              placeholder="请输入"
+              :disabled="editForm.sfdzxe == 'N'"
+              :aria-required="editForm.sfdzxe == 'Y'"
+            />
           </el-form-item>
         </template>
 
@@ -131,7 +177,14 @@
         <!-- 单次申请发票数量设定 -->
         <template v-if="batchOperateType == 'codeNum'">
           <el-form-item label="单次申请发票数量" prop="codeNum">
-            <vxe-input v-model="editForm.codeNum" size="mini" type="number" :max="5000" :min="0" placeholder="请输入（不得大于5000）" />
+            <vxe-input
+              v-model="editForm.codeNum"
+              size="mini"
+              type="number"
+              :max="5000"
+              :min="0"
+              placeholder="请输入（不得大于5000）"
+            />
             <!-- <el-input type="number" min="0" max="2000" v-model="editForm.codeNum" placeholder="请输入" /> -->
           </el-form-item>
         </template>
@@ -145,13 +198,12 @@
 </template>
 
 <script>
-import { updateDetail, getDetailList, getListByUser } from './Api'
+import { updateDetail, getDetailList, getListByUser } from './Api';
 
 export default {
   name: 'Creditlimit',
   data() {
     return {
-
       // monitoringFrequencyList,
       form: {},
       editForm: { sfdzxe: 'Y' },
@@ -162,9 +214,9 @@ export default {
       taxBodyList: [],
       nsrOptions: [],
       batchOperateTypeMap: {
-        'amount': '单张发票限额设定',
-        'ratio': '授信额度预警比例设定',
-        'codeNum': '单次申请发票数量设定',
+        amount: '单张发票限额设定',
+        ratio: '授信额度预警比例设定',
+        codeNum: '单次申请发票数量设定',
       },
       pagination: {
         pageNo: 1,
@@ -174,12 +226,14 @@ export default {
         showTotal: (total) => `共${total}条`,
       },
 
-      ratioList: [{ label: '5%', value: 0.05 },
-      { label: '10%', value: 0.1 },
-      { label: '20%', value: 0.2 },
-      { label: '30%', value: 0.3 },
-      { label: '40%', value: 0.4 },
-      { label: '50%', value: 0.5 }],
+      ratioList: [
+        { label: '5%', value: 0.05 },
+        { label: '10%', value: 0.1 },
+        { label: '20%', value: 0.2 },
+        { label: '30%', value: 0.3 },
+        { label: '40%', value: 0.4 },
+        { label: '50%', value: 0.5 },
+      ],
       ratioListMap: {
         0.05: '5%',
         0.1: '10%',
@@ -189,14 +243,19 @@ export default {
         0.5: '50%',
       },
       rules: {
-        ratio: [{ required: true, message: "请选择", trigger: "blur" }],
-        codeNum: [{ required: true, message: "请输入", trigger: "blur" }],
+        ratio: [{ required: true, message: '请选择', trigger: 'blur' }],
+        codeNum: [{ required: true, message: '请输入', trigger: 'blur' }],
       },
       validRules: {
         lzfpmxxh: [{ required: true, message: '原发票序号不能为空' }],
         xmmc: [{ required: true, message: '项目名称不能为空' }],
         codeNum: [{ type: 'number', message: '请填写正确数字' }],
-        email: [{ pattern: /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/, message: "请输入正确的邮箱格式" }]
+        email: [
+          {
+            pattern: /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/,
+            message: '请输入正确的邮箱格式',
+          },
+        ],
       },
     };
   },
@@ -206,90 +265,102 @@ export default {
   },
   computed: {
     selections() {
-      return this.$refs.xTable.getCheckboxRecords()
+      return this.$refs.xTable.getCheckboxRecords();
     },
-    height() {
-      return window.innerHeight - 320;
-    },
-    contentHeight() {
-      return window.innerHeight - 132;
-    }
   },
 
   methods: {
+    handleChange(e){
+      console.log('--eeeeee--', e)
+    },
     filterMethod(value) {
-      this.nsrOptions = this.taxBodyList.filter(item => item.label.includes(value))
+      this.nsrOptions = this.taxBodyList.filter((item) => item.label.includes(value));
     },
     // 获取纳税主体
     async getListByUser() {
-      const { code = '', data = [] } = await getListByUser({})
+      const { code = '', data = [] } = await getListByUser({});
       if (code === '0') {
         this.taxBodyList = data.map((item) => {
           return {
             value: item.nsrsbh,
-            label: item.nsrmc + " " + item.nsrsbh
-          }
-        })
+            label: item.nsrmc + ' ' + item.nsrsbh,
+          };
+        });
 
-        this.nsrOptions = [...this.taxBodyList]
+        this.nsrOptions = [...this.taxBodyList];
       }
     },
 
-
     // 查询预警信息
     async getDetailList(pagination) {
-      this.loading = true;
-      const { code = '', data = [], pageNo, pageSize, totalCount } = await getDetailList({
-        ...this.form,
-        pageNo: pagination?.pageNo || 1,
-        pageSize: pagination?.pageSize || 10,
-      })
-
-      if (code === '0') {
-        this.loading = false;
-        this.pagination = {
+      try {
+        this.loading = true;
+        const {
+          code = '',
+          data = [],
           pageNo,
           pageSize,
           totalCount,
+          msg,
+        } = await getDetailList({
+          ...this.form,
+          pageNo: pagination?.pageNo || 1,
+          pageSize: pagination?.pageSize || 10,
+        });
+        if (code === '0') {
+          this.pagination = {
+            pageNo,
+            pageSize,
+            totalCount,
+          };
+          this.tableData = data;
         }
-        this.tableData = data;
+      } catch (error) {
+        // console.log('---error---', error);
+        this.$message.error(error.msg || '查询预警信息失败，请联系管理员')
+      } finally {
+        this.loading = false;
       }
     },
 
     // 更细预警信息
     async updateDetail() {
       const { code = '', data = {} } = await updateDetail({
-        detailList: this.tableData
-      })
+        detailList: this.tableData,
+      });
       if (code === '0') {
         this.getDetailList();
-        this.$message.success('保存成功 ')
-        this.handleClose()
+        this.$message.success('保存成功 ');
+        this.handleClose();
       }
     },
 
     // 批量操作
     batchOperate(type) {
       if (this.selections.length == 0) {
-        this.$message.warning("请至少选择一条数据");
+        this.$message.warning('请至少选择一条数据');
         return;
       }
       this.batchOperateType = type;
-      this.dialogVisible = true
+      this.dialogVisible = true;
     },
 
     // 批量修改表格数据
     saveData() {
-      if (this.batchOperateType == 'amount' && this.editForm.sfdzxe == 'Y' && (!this.editForm.amount || this.editForm.amount <= 0)) {
-        this.$message.warning('请填入单张发票限额数量')
+      if (
+        this.batchOperateType == 'amount' &&
+        this.editForm.sfdzxe == 'Y' &&
+        (!this.editForm.amount || this.editForm.amount <= 0)
+      ) {
+        this.$message.warning('请填入单张发票限额数量');
         return;
       }
       if (this.batchOperateType == 'ratio' && !this.editForm.ratio) {
-        this.$message.warning('请选择授信额度预警比例')
+        this.$message.warning('请选择授信额度预警比例');
         return;
       }
       if (this.batchOperateType == 'codeNum' && !this.editForm.codeNum) {
-        this.$message.warning('请输入单次申请发票数量')
+        this.$message.warning('请输入单次申请发票数量');
         return;
       }
       // this.$refs["ruleForm"].validate(async valid => {
@@ -298,22 +369,24 @@ export default {
       // 数据映射到表格
       for (let key in this.editForm) {
         this.tableData = this.tableData.map((item) => {
-          const selectionItem = this.selections.find((subitem) => item.id === subitem.id)
-          return !selectionItem ? item : {
-            ...item,
-            [key]: this.editForm[key] ? this.editForm[key] : item[key],
-          }
-        })
+          const selectionItem = this.selections.find((subitem) => item.id === subitem.id);
+          return !selectionItem
+            ? item
+            : {
+                ...item,
+                [key]: this.editForm[key] ? this.editForm[key] : item[key],
+              };
+        });
       }
       this.updateDetail();
     },
     /**
-       * @description 提交表单，验证数据格式
-       */
+     * @description 提交表单，验证数据格式
+     */
     async submit() {
       // 验证表格数据
-      const errMap = await this.$refs.xTable.fullValidate(true).catch(errMap => errMap)
-      console.log(errMap)
+      const errMap = await this.$refs.xTable.fullValidate(true).catch((errMap) => errMap);
+      console.log(errMap);
       if (errMap) return;
       this.updateDetail();
     },
@@ -321,7 +394,7 @@ export default {
     // 设置单元格样式
     setCellStyle({ row, column }) {
       if (row.sfdzxe === 'N' && column.field == 'amount') {
-        return { background: '#f3f3f3' }
+        return { background: '#f3f3f3' };
       }
     },
 
@@ -346,10 +419,9 @@ export default {
     },
     handleClose() {
       this.dialogVisible = false;
-      this.editForm = {}
+      this.editForm = {};
     },
-
-  }
+  },
 };
 </script>
 
@@ -419,7 +491,6 @@ export default {
 }
 
 /deep/ .el-dialog__body {
-
   .el-form-item {
     width: 100%;
 
@@ -443,7 +514,9 @@ export default {
         width: 100%;
       }
     }
-
   }
+}
+/deep/ .vxe-table--body-wrapper {
+  min-height: calc(100vh -  414px) !important;
 }
 </style>

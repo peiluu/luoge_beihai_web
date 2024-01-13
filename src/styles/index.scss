@@ -1,6 +1,7 @@
 @import './variables.scss';
 @import './custom.scss';
 @import './transition.scss';
+@import './customTable.scss';
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -361,4 +362,10 @@ html {
 .el-table__body-wrapper,
 .el-table__fixed-body-wrapper {
   min-height: 380px;
+}
+// 居中对齐
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
