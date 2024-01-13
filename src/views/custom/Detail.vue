@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="main-content" :style="'min-height: ' + contentHeight + 'px;'">
+    <div class="main-content">
       <el-form :inline="true" :model="form" :rules="rules" ref="ruleForm" :disabled="operateType === 'detail'">
         <div class="content-title">客户信息</div>
         <el-form-item label="所属企业" prop="enterprise">
@@ -39,7 +39,7 @@
       <!-- <ExtendInfo :nsrsbh="form.nsrsbh" v-if="form.isDigital === 'Y' && operateType == 'detail'" /> -->
     </div>
 
-    <div class="fixed-footer">
+    <div class="footer">
       <el-button @click="cancel">取消</el-button>
       <el-button type="success" @click="submit" v-if="operateType !== 'detail'">保存</el-button>
     </div>
@@ -95,6 +95,12 @@ import {  getDetailById, getAllZt, selectYtList, selectQyList, addTaxBody, getZg
 export default {
   name: "organizationTaxBodyDetail",
   components: {},
+  props: {
+    detailInfo: {
+      type: Object,
+      default: () => ({})
+    }
+  },
   data() {
     return {
       form: { isDigital: 'N' },
@@ -112,24 +118,14 @@ export default {
       provincesEnmu, // 所属省份
       areaEnum, // 所属市区
       rules: {
-        enterprise: [{ required: true, message: "请输入", trigger: "blur" }, regCollection.enterprise],
+        enterprise: [{ required: true, message: "请输入", trigger: "blur" }],
         nsrsbh: [{ required: true, message: "请输入", trigger: "blur" }, regCollection.nsrsbh],
-        oldNsrsbh: [regCollection.nsrsbh],
         nsrmc: [{ required: true, message: "请输入", trigger: "blur" }],
         address: [{ required: true, message: "请输入", trigger: "blur" }],
         phone: [{ required: true, message: "请输入", trigger: "blur" }, regCollection.phone],
-        oldPhone: [regCollection.phone],
-        lqid: [{ required: true, message: "请输入", trigger: "blur" }],
-        secretkey: [{ required: true, message: "请输入", trigger: "blur" }],
-        bank: [{ required: true, message: "请输入", trigger: "blur" }],
         bankAccount: [{ required: true, message: "请输入", trigger: "blur" }],
-        sffgs: [{ required: true, message: "请选择", trigger: "blur" }],
-        sfdlscjy: [{ required: true, message: "请选择", trigger: "blur" }],
-        sfzfjg: [{ required: true, message: "请选择", trigger: "blur" }],
-        zgsId: [{ required: true, message: "请选择", trigger: "blur" }],
-        areaList: [{ required: true, message: "请选择", trigger: "blur" }],
-        withdrawalDate: [{ required: true, message: "请选择", trigger: "blur" }],
       },
+      saveLoading: false
     };
   },
 
@@ -165,6 +161,24 @@ export default {
       this.getDetailById(id);
       this.getAllZt(id)
     }
+  },
+  mounted() {
+    if (sessionStorage.getItem('clearTaxBody') == 1) {
+      this.form = { isDigital: 'N' }
+      sessionStorage.setItem('clearTaxBody', 0)
+    }
+    // this.listCascaderDict();
+    this.getTaxArea();
+    this.selectYtList();
+    this.selectQyList();
+    this.getZgsList();
+    const { operateType = '', id = '' } = this.detailInfo;
+    this.operateType = operateType;
+    if (id) {
+      this.getDetailById(id);
+      this.getAllZt(id)
+    }
+    
   },
 
   methods: {
@@ -231,7 +245,9 @@ export default {
      */
     async submit() {
       this.$refs["ruleForm"].validate(async valid => {
+        debugger;
         if (!valid) return;
+        
         const param = {
           ...this.form,
           dlscjybmList: this.dlscjybmList,
@@ -246,14 +262,22 @@ export default {
      * @desption 【组织管理】保存纳税主体
     */
     async saveTaxBody(param) {
-      const api = param.id ? updateTaxBody : addTaxBody
-      const { code = '', data = [] } = await api(param)
-      if (code === '0') {
-        this.$message.success('操作成功');
-        setTimeout(() => {
-          this.cancel();
-        }, 1000)
+      try {
+        this.saveLoading = true
+        const api = param.id ? updateTaxBody : addTaxBody
+        const { code = '', data = [], msg = '操作失败' } = await api(param)
+        if (code === '0') {
+          this.$message.success('操作成功');
+          this.$emit('onOk')
+        } else {
+          this.$message.error(msg)
+        }
+      } catch (error) {
+          this.$message.error(error.msg || '操作失败')
+      } finally {
+        this.saveLoading = false;
       }
+      
     },
 
     handleRemove(file, fileList) {
@@ -263,11 +287,11 @@ export default {
       return this.$confirm(`确定移除 ${file.name}？`);
     },
     cancel() {
-      this.form = { isDigital: 'N' }
-      this.$router.push({
-        path: '/custom/index',
-        query: { activeName: '1' }
-      })
+      this.$emit('onClose')
+      // this.$router.push({
+      //   path: '/organization/index',
+      //   query: { activeName: '1' }
+      // })
       // this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
     },
     // 增加独立生产经营部门
@@ -431,6 +455,9 @@ export default {
     justify-content: flex-end;
     padding-bottom: 4px;
   }
+}
+.footer {
+  text-align: center;
 }
 </style>
 

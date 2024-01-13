@@ -13,8 +13,9 @@
           <div class="toolbar-right">
             <!-- <el-button @click="openDigitalBatch('Y')">开通数电</el-button> -->
             <el-button type="success" @click="hanldeEnter('add')">新增</el-button>
-            <el-button @click="handleDelete('batchDel')">删除</el-button>
-            <el-button @click="batchOperate('batchEnable')">切换启停</el-button>
+            <el-button @click="batchOperate('batchDel')">删除</el-button>
+            <el-button @click="batchOperate(1)">标记黑名单</el-button>
+            <el-button @click="batchOperate(2)">移除黑名单</el-button>
           </div>
         </div>
       </template>
@@ -74,16 +75,38 @@
         <el-button type="success" @click="submit">保 存</el-button>
       </span>
     </el-dialog>
+    <!-- <el-dialog
+      v-if="dialogVisibleEdit"
+      :visible.sync="dialogVisibleEdit"
+      width="80%"
+      :before-close="onClose"
+      class="detail-dialog"
+      destroy-on-close
+    >
+      <Detail :editData="editData" @onOk="onOk" @onClose="onClose"/>
+    </el-dialog> -->
+    <el-dialog
+      v-if="detailVisible"
+      :visible.sync="detailVisible"
+      width="80%"
+      :before-close="onClose"
+      class="detail-dialog"
+      destroy-on-close
+    >
+      <Detail :detailInfo="detailInfo" @onOk="onOk" @onClose="onClose"/>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import FormList from '@/components/FormList.vue';
-import { listCascaderDict, selectYtList, delTaxBodyBatch, setIsDigital, getListAll, selectQyList, downLoadApplyList, exportTaxBodyInfo, } from './Api.js'
+import { listCascaderDict, selectYtList, delTaxBodyBatch, setIsDigital, getListAll, selectQyList, downLoadApplyList, exportTaxBodyInfo } from './Api.js';
+import Detail from './Detail.vue'
 export default {
   name: 'organizationTaxBody',
   components: {
     FormList,
+    Detail
   },
   data() {
     return {
@@ -95,11 +118,11 @@ export default {
       columns: [
         { type: "selection", width: 50, fixed: 'left', },
         { title: '序号', type: "index", width: 50, fixed: 'left', },
-        { title: "客户名称", width: 160, dataIndex: "", },
-        { title: "纳税人识别号", width: 160, dataIndex: "", },
-        { title: "开户行", width: 160, dataIndex: "", },
-        { title: "账号", width: 160, dataIndex: "", },
-        { title: "地址", width: 160, dataIndex: "", },
+        { title: "客户名称", width: 160, dataIndex: "gmfMc", },
+        { title: "纳税人识别号", width: 160, dataIndex: "gmfNsrsbh", },
+        { title: "开户行", width: 160, dataIndex: "bankname", },
+        { title: "账号", width: 160, dataIndex: "bankaccount", },
+        { title: "地址", width: 160, dataIndex: "address", },
         { title: "电话", width: 160, dataIndex: "" },
         { title: "联系人", width: 100, dataIndex: "", align: 'center' },
         { title: "联系人手机", width: 140, dataIndex: "" },
@@ -133,7 +156,7 @@ export default {
         },
 
       ],
-      dialogVisibleEdit: false,
+      detailVisible: false,
       dialogVisible: false,
       districts: [],
       qyList: [],
@@ -155,6 +178,10 @@ export default {
         id: null,
       },
       exportLoading: false,
+      detailInfo: {
+        operateType: '',
+        id: null
+      },
     };
 
   },
@@ -164,6 +191,7 @@ export default {
     //this.selectYtList()
     //this.selectQyList()
     this.getList()
+
   },
   computed: {
     height() {
@@ -176,11 +204,15 @@ export default {
 
   methods: {
     onClose() {
-      this.dialogVisibleEdit = false;
-      this.editData = {
+      this.detailVisible = false;
+      this.detailInfo = {
         operateType: '',
         id: null,
       }
+    },
+    onOk(){
+      this.getList()
+      this.onClose()
     },
     // 获取纳税主体
     async getListAll() {
@@ -284,33 +316,88 @@ export default {
     },
 
     // 批量操作
-    batchOperate(type, data = {}) {
+    // batchOperate(type, data = {}) {
      
-      console.log(this.selections,"=")
-      this.batchOperateType = type;
-      this.form = {
-        ...data,
-        taxBodyId: data && data.taxBodyId && data.taxBodyId.toString()
-      }
-      if (type === 'batchDel') {
-        if (!this.data || this.data.length === 0) {
-          console.warn('this.data is empty or not defined!');
-          return;
-        }
-        delTaxBodyBatch()
+    //   console.log(this.selections,"=")
+    //   this.batchOperateType = type;
+    //   this.form = {
+    //     ...data,
+    //     taxBodyId: data && data.taxBodyId && data.taxBodyId.toString()
+    //   }
+    //   if (type === 'batchDel') {
+    //     if (!this.data || this.data.length === 0) {
+    //       console.warn('this.data is empty or not defined!');
+    //       return;
+    //     }
+    //     delTaxBodyBatch()
         
-      } else {
-        if (this.selections.length == 0 && ['batchEnable'].includes(type)) {
-          this.$message.warning("未选择组织，请选择组织");
-          return;
-        } else {
-          this.dialogVisible = true
-        }
+    //   } else {
+    //     if (this.selections.length == 0 && ['batchEnable'].includes(type)) {
+    //       this.$message.warning("未选择组织，请选择组织");
+    //       return;
+    //     } else {
+    //       this.dialogVisible = true
+    //     }
 
+    //   }
+    // },
+    batchOperate(type, data = {}) {
+      this.batchOperateType = type
+      if (this.selections.length == 0 && type === 'batchDel') {
+        this.$message.warning("未选择企业，请选择企业");
+        return;
       }
+      this.form = data
+      if (type === 'digital') {
+        this.dialogVisible = true
+        return;
+      }
+      this.delTaxBodyBatch(type);
     },
+    // 删除企业
+    delTaxBodyBatch(type) {
+      let tipTxt = ''; 
+      let apiFn = '';
+      let switchType = null;
+      switch (type) {
+        case 'batchDel' :
+          tipTxt = '是否确定删除当前企业';
+          apiFn = delTaxBodyBatch;
+          break;
+        case 1:
+          tipTxt = '是否确定将当前企业标记黑名单';
+          apiFn = delTaxBodyBatch;
+          switchType = 1;
+          break;
+        case 2:
+          tipTxt = '是否确定将当前企业移除黑名单';
+          apiFn = delTaxBodyBatch;
+          switchType = 2;
+          break;
+      }
+      this.$confirm(tipTxt, '请确认', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
 
+        const ids = this.batchOperateType === 'delete' ? [this.form.id] : this.selections.map((item) => item.id)
+        
+        let params = {
+          ids
+        }
+        switchType !== null && (params.switchType=switchType);
+        console.log('----ids----',ids, params)
+        const { code = '' } = await apiFn(params);
+        if (code === '0') {
+          this.$message.success('操作成功');
+          this.getList();
+        }
+      }).catch(err=>{
+        this.$message.error(err.msg || '操作失败')
+      })
 
+    },
     //
     async submit() {
       this.$refs["ruleForm"].validate(async valid => {
@@ -339,25 +426,26 @@ export default {
     //   })
     // },
     hanldeEnter(operateType, data = {}) {
-      // this.dialogVisibleEdit = true;
-      // this.editData = {
-      //   operateType,
-      //   id: data.id
-      // }
-      if (operateType === 'add') {
-        sessionStorage.setItem('clearTaxBody', 1)
+      this.detailVisible = true;
+      this.detailInfo = {
+        operateType,
+        id: data.id
       }
-      this.$router.push({
-        path: '/custom/Detail',
-        query: {
-          operateType,
-          id: data.id
-        }
-      })
-      this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+      // if (operateType === 'add') {
+      //   sessionStorage.setItem('clearTaxBody', 1)
+      // }
+      // this.$router.push({
+      //   path: '/custom/Detail',
+      //   query: {
+      //     operateType,
+      //     id: data.id
+      //   }
+      // })
+      // this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
 
     },
     getList() {
+      console.log('--111--',111)
       this.$refs.list && this.$refs.list.reload()
     },
     getSearchParam(param) {

@@ -1,10 +1,12 @@
 // 数据字典
 import { deleteOne, postJSON } from '@/utils/request';
+import { config } from "@/config"
 
 // 获取列表
 export const getList = (data) =>
-  postJSON(`/home/redApplyList`, data);
+  postJSON(`${config.host}/home/redApplyList`, data);
 
 // 通过
 export const passRefuseList = (data) =>
-  postJSON(`/redInvoice/passRefuseList`, data);
+  postJSON(`${config.host}/Customer/customerPage`, data);
+

@@ -5,7 +5,7 @@ import { config } from "@/config"
 /**
  * @desption 【组织管理】纳税主体列表
  */
-export const getList = (data) => postJSON(`${config.host}/taxBody/selectPage`, data);
+export const getList = (data) => postJSON(`${config.host}/Customer/customerPage`, data);
 
 /**
  * @desption 初始化行政区划
