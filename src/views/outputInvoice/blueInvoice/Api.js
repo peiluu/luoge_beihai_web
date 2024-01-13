@@ -58,7 +58,7 @@ export const listDistrictDict = data => postJSON(`${config.host}/Dict/listCascad
  * @param data
  * @returns {*}
  */
-export const saveInvoicePreview = data => postJSON('/invoicePreview/saveInvoicePreview', data);
+export const saveInvoicePreview = data => postJSON(`${config.host}/invoicePreview/saveInvoicePreview`, data);
 
 /**
  * 查询发票预览
@@ -72,7 +72,7 @@ export const getInvoicePreview = data => postJSON(`${config.host}/invoicePreview
  * @param data
  * @returns {*}
  */
-export const getInvoiceDetailById = data => postJSON('/applyInvoiceUpload/getDetailById', data);
+export const getInvoiceDetailById = data => postJSON(`${config.host}/applyInvoiceUpload/getDetailById`, data);
 
 /**
  * 已开具发票详情

@@ -1,13 +1,16 @@
 <template>
   <div>
     <div class="main-content" :style="'min-height: ' + contentHeight + 'px;'">
-      <Step :stepData="{ current: 4, total: 4, title: '提交成功' }"></Step>
+      <!-- <Step :stepData="{ current: 4, total: 4, title: '提交成功' }"></Step> -->
       <div class="content-header"> <img src="@/assets/success.png" alt=""></div>
       <div class="conetent-tip">
         <!-- <div>您提交的红字发票信息表，已成功申请</div> -->
         <!-- shzt为0不需要审核 -->
-        <div class="tip-txt">{{ detail.shzt == 0 ? '您已成功提交开票申请，本单无需审核，请耐心等待开具结果' : '您已成功提交开票申请，本单需审核，请等待审核人员审核' }}</div>
-        <div class="tip-txt">请及时关注与更新发票开具状态</div>
+        <div class="tip-txt">{{ 
+        detail.shzt == 0 ? '您已成功提交开票申请，本单无需审核，请耐心等待开具结果' : '您已成功提交开票申请，本单需审核，请等待审核人员审核' 
+        }}
+        </div>
+        <div class="tip-txt">请及时关注与更新发票开具状态<router-link to="/outputInvoice/invoicedList/Index">去查询>></router-link></div>
       </div>
       <el-card class="content-info">
         <div class="info-title">发票简要信息</div>
@@ -20,8 +23,8 @@
         </div>
       </el-card>
     </div>
-    <div class="fixed-footer">
-      <el-button type="primary" @click="make">重新开票</el-button>
+    <div class="fixed-footer" style="right:0">
+      <el-button type="primary" @click="make">继续开票</el-button>
     </div>
   </div>
 </template>
@@ -31,6 +34,11 @@
 
   export default {
     name: 'BuleInvoiceApplySucce',
+    props:{
+      invoiceSucId:{
+        type:[Number,String]
+      }
+    },
     components: { Step },
     data() {
       return {
@@ -38,14 +46,16 @@
         detail: {},
       };
     },
-    activated() {
+    mounted() {
+     
       if (this.invoiceId) {
+       
         this.getInvoiceDetail({id : this.invoiceId})
       }
     },
     computed: {
       invoiceId(){
-        return this.$route.query.invoiceId
+        return this.invoiceSucId
       },
       contentHeight() {
         return window.innerHeight - 156;
@@ -64,10 +74,11 @@
         this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
       },
       make(){
-        this.$router.push({
-          path: '/buleInvoice/index'
-        })
-        this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+        // this.$router.push({
+        //   path: '/buleInvoice/index'
+        // })
+        // this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+        this.$emit('handleResume',true)
       }
     }
   };

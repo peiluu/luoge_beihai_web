@@ -143,7 +143,7 @@ export default {
             });
             that.importing = false;
             that.$router.push({
-              path: '/settingsManagement/organization',
+              path: '/organization/index',
               query: { activeName: '3' }
             })
             this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
@@ -156,7 +156,7 @@ export default {
     handleBack() {
       this.initData()
       this.$router.push({
-        path: '/settingsManagement/organization',
+        path: '/organization/index',
         query: { activeName: '3' }
       })
       this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);

@@ -66,7 +66,7 @@ export const setEnable = data => postJSON(`${config.host}/orgnization/setEnable`
  * @description 获取所有主体（不分页）
  */
 export const getListAll = data =>
-  postJSON(`${config.host}/taxBody/getListAll`, data, null, true);
+  postJSON(`${config.host}/taxBody/getListAll`, data);
 
 /**
  * @desption 下载excel模板

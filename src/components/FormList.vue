@@ -11,7 +11,7 @@
       <el-table
         row-key="id"
         :reserve-selection="true"
-        ref="table" :data="data" :height="height" border stripe @row-click="rowClcik"
+        ref="table" :data="data" border stripe @row-click="rowClcik"
         :header-cell-style="{fontWeight: 400,borderTop: '1px solid #adb4bc',background: '#f7f9fd',color: '#333333',padding: '7px 0'}"
         tooltip-effect="dark"
         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
@@ -189,7 +189,6 @@ export default {
     }
   },
   watch: {
-    api(val) { },
     "param.nsrsbh": function (val) {
       if (val) {
         this.$emit('getOrgList', val)
@@ -335,9 +334,10 @@ export default {
       } else if (param) {
         param.pageNo = 1;
         this.pagination.pageNo = 1;
-        Object.assign(param, val);
-        this.param = param;
-        this.handleGetData(param);
+        // 修复重置问题
+        // Object.assign(param, val);
+        // this.param = param;
+        this.handleGetData({...param, ...val});
       }
     },
     // 重置搜索内容
@@ -440,7 +440,7 @@ export default {
     },
     getNextList(val, type) {
       this.$emit('getNextList', val, type)
-     },
+    },
   },
   activated() {
     if (this.firstLoading) {

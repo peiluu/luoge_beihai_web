@@ -1,9 +1,9 @@
 <template>
-  <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
+  <div class="main-content">
     <el-tabs class="custom-card-tabs" v-model="activeName" type="card" :key="activeName">
       <el-tab-pane label="纳税主体信息" name="1" />
-      <el-tab-pane label="开票点组织信息" name="2" />
-      <el-tab-pane label="受票组织信息" name="3" />
+      <el-tab-pane label="帐套信息" name="3" />
+      <el-tab-pane label="开票点信息" name="2" />
     </el-tabs>
 
     <!-- 纳税主体信息 -->
@@ -32,11 +32,6 @@ export default {
       invoicingTaxBodyId: '',
       activeName: '1',
     };
-  },
-  computed: {
-    contentHeight() {
-      return window.innerHeight - 132;
-    },
   },
   activated() {
     const { activeName = '1' } = this.$route.query;

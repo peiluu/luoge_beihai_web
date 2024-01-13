@@ -1,18 +1,18 @@
 <template>
   <div>
-    <div class="main-content" :style="'min-height: ' + contentHeight + 'px;'">
+    <div class="main-content">
       <el-form :inline="true" :model="form" :rules="rules" ref="ruleForm" :disabled="operateType === 'detail'">
         <div class="content-title">基本信息</div>
-        <el-form-item class="form-header-left">
-          <el-checkbox v-model="form.isInstitution" style="margin-left: 180px;">机关、事业单位</el-checkbox>
+        <!-- <el-form-item class="form-header-left"> -->
+          <!-- <el-checkbox v-model="form.isInstitution" style="margin-left: 180px;">机关、事业单位</el-checkbox> -->
           <!-- <div class="right-item">
             是否开通数电业务 <el-switch class="switch" v-model="form.isDigital" active-text="启用" inactive-text="停用" active-value="Y" inactive-value="N" />
           </div> -->
-        </el-form-item>
+        <!-- </el-form-item> -->
 
-        <el-form-item label="供应链协同" prop="isSupplychain">
+        <!-- <el-form-item label="供应链协同" prop="isSupplychain">
           <el-switch class="switch" v-model="form.isSupplychain" active-text="启用" inactive-text="停用" active-value="Y" inactive-value="N" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="纳税人识别号" prop="nsrsbh">
           <el-input v-model="form.nsrsbh" placeholder="请输入" maxlength="20" />
         </el-form-item>
@@ -26,7 +26,8 @@
         <el-form-item label="电话" prop="phone">
           <el-input v-model="form.phone" placeholder="请输入" maxlength="13" />
         </el-form-item>
-        <template v-if="form.isDigital === 'Y'">
+        <!-- <template v-if="form.isDigital === 'Y'"> -->
+        <template>
           <el-form-item label="乐企ID" prop="lqid">
             <el-input v-model="form.lqid" placeholder="请输入" maxlength="30" />
           </el-form-item>
@@ -69,12 +70,12 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="所属市区" prop="area">
+        <!-- <el-form-item label="所属市区" prop="area">
           <el-select v-model="form.area" placeholder="请选择" filterable clearable>
             <el-option v-for="(item, index) in areaEnum" :key="index" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="曾用税号" prop="oldNsrsbh">
           <el-input v-model="form.oldNsrsbh" placeholder="请输入" maxlength="20" />
         </el-form-item>
@@ -128,15 +129,15 @@
           </template>
         </el-form-item> -->
 
-        <div class="company-info">
-          <el-form-item label="公司名称" prop="companyName" class="input-name">
-            <el-input v-model="form.companyName" placeholder="请输入" maxlength="100" />
+        <!-- <div class="company-info"> -->
+          <!-- <el-form-item label="公司名称" prop="companyName" class="input-name"> -->
+            <!-- <el-input v-model="form.companyName" placeholder="请输入" maxlength="100" /> -->
             <!-- <el-upload class="upload" action="https://jsonplaceholder.typicode.com/posts/">
               <i class="el-icon-plus" v-if="!form.name" />
               <img src="" v-else />
             </el-upload> -->
-            <div v-if="form.name" class="el-upload__tip" @click="handleRemove">清空</div>
-          </el-form-item>
+            <!-- <div v-if="form.name" class="el-upload__tip" @click="handleRemove">清空</div> -->
+          <!-- </el-form-item> -->
 
           <el-form-item label="开立时间" prop="openDate">
             <el-date-picker v-model="form.openDate" value-format="yyyy-MM-dd" :picker-options="{
@@ -144,17 +145,17 @@
             }" placeholder="请选择" />
           </el-form-item>
 
-        </div>
-        <el-form-item label="合并报表系统编码" prop="hbbbxtbm">
+        <!-- </div> -->
+        <!-- <el-form-item label="合并报表系统编码" prop="hbbbxtbm">
           <el-input v-model="form.hbbbxtbm" placeholder="请输入" maxlength="90" />
-        </el-form-item>
-        <el-form-item label="涉税业务是否终止" prop="isWithdrawal">
+        </el-form-item> -->
+        <el-form-item label="是否注销" prop="isWithdrawal">
           <el-select v-model="form.isWithdrawal" placeholder="请选择">
             <el-option label="是" value="Y" />
             <el-option label="否" value="N" />
           </el-select>
         </el-form-item>
-        <el-form-item label="涉税业务终止月份" prop="withdrawalDate" v-if="form.isWithdrawal == 'Y'">
+        <!-- <el-form-item label="涉税业务终止月份" prop="withdrawalDate" v-if="form.isWithdrawal == 'Y'">
           <el-date-picker type="month" v-model="form.withdrawalDate" value-format="yyyy-MM" placeholder="请选择" />
         </el-form-item>
         <el-form-item label="是否全功能上线" prop="fullFunctionOnline">
@@ -168,16 +169,16 @@
             <el-option label="是" value="Y" />
             <el-option label="否" value="N" />
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
 
       </el-form>
       <!-- 扩展信息 -->
       <ExtendInfo :nsrsbh="form.nsrsbh" v-if="form.isDigital === 'Y' && operateType == 'detail'" />
     </div>
 
-    <div class="fixed-footer">
+    <div class="footer">
       <el-button @click="cancel">取消</el-button>
-      <el-button type="success" @click="submit" v-if="operateType !== 'detail'">保存</el-button>
+      <el-button type="success" @click="submit" v-if="operateType !== 'detail'" :loading="saveLoading">保存</el-button>
     </div>
 
     <el-dialog title="编辑独立生产经营部门" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
@@ -229,9 +230,15 @@ import { listCascaderDict, getDetailById, getAllZt, selectYtList, selectQyList, 
 export default {
   name: "organizationTaxBodyDetail",
   components: { ExtendInfo },
+  props: {
+    detailInfo: {
+      type: Object,
+      default: () => ({})
+    }
+  },
   data() {
     return {
-      form: { isDigital: 'N' },
+      form: { isDigital: 'Y' },
       districts: [],
       operateType: '',
       ytList: [],
@@ -263,6 +270,7 @@ export default {
         areaList: [{ required: true, message: "请选择", trigger: "blur" }],
         withdrawalDate: [{ required: true, message: "请选择", trigger: "blur" }],
       },
+      saveLoading: false
     };
   },
 
@@ -282,7 +290,7 @@ export default {
     },
   },
 
-  activated() {
+  mounted() {
     if (sessionStorage.getItem('clearTaxBody') == 1) {
       this.form = { isDigital: 'N' }
       sessionStorage.setItem('clearTaxBody', 0)
@@ -292,13 +300,13 @@ export default {
     this.selectYtList();
     this.selectQyList();
     this.getZgsList();
-
-    const { operateType = '', id = '' } = this.$route.query;
+    const { operateType = '', id = '' } = this.detailInfo;
     this.operateType = operateType;
     if (id) {
       this.getDetailById(id);
       this.getAllZt(id)
     }
+    
   },
 
   methods: {
@@ -332,7 +340,6 @@ export default {
       const { code = '', data = [] } = await selectQyList({ yt: this.form.businessFormat || '' })
       if (code === '0') {
         this.qyList = data
-        console.log(data)
       }
     },
     /**
@@ -387,14 +394,22 @@ export default {
      * @desption 【组织管理】保存纳税主体
     */
     async saveTaxBody(param) {
-      const api = param.id ? updateTaxBody : addTaxBody
-      const { code = '', data = [] } = await api(param)
-      if (code === '0') {
-        this.$message.success('操作成功');
-        setTimeout(() => {
-          this.cancel();
-        }, 1000)
+      try {
+        this.saveLoading = true
+        const api = param.id ? updateTaxBody : addTaxBody
+        const { code = '', data = [], msg = '操作失败' } = await api(param)
+        if (code === '0') {
+          this.$message.success('操作成功');
+          this.$emit('onOk')
+        } else {
+          this.$message.error(msg)
+        }
+      } catch (error) {
+          this.$message.error(error.msg || '操作失败')
+      } finally {
+        this.saveLoading = false;
       }
+      
     },
 
     handleRemove(file, fileList) {
@@ -404,11 +419,11 @@ export default {
       return this.$confirm(`确定移除 ${file.name}？`);
     },
     cancel() {
-      this.form = { isDigital: 'N' }
-      this.$router.push({
-        path: '/organization/index',
-        query: { activeName: '1' }
-      })
+      this.$emit('onClose')
+      // this.$router.push({
+      //   path: '/organization/index',
+      //   query: { activeName: '1' }
+      // })
       // this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
     },
     // 增加独立生产经营部门
@@ -431,7 +446,6 @@ export default {
       }
       this.form.dlscjybmList = [...this.dlscjybmList]
       this.dialogVisible = false
-
     },
     handleAddFun() {
       this.dlscjybmList.push({ id: '', dlscjymc: '' })
@@ -446,7 +460,7 @@ export default {
 @import '../../../styles/variables.scss';
 .main-content {
   padding: 0 32px 16px;
-  margin-bottom: 32px;
+  margin-bottom: 12px;
 }
 
 ::v-deep .el-form-item {
@@ -571,6 +585,9 @@ export default {
     justify-content: flex-end;
     padding-bottom: 4px;
   }
+}
+.footer {
+  text-align: center;
 }
 </style>
 

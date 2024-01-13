@@ -10,27 +10,27 @@
             </el-input> -->
           </div>
           <div class="toolbar-right">
-            <!--<el-button type="success" @click="hanldeEnter('add')">新增受票组织</el-button>
+            <el-button type="success" @click="hanldeEnter('add')">新增受票组织</el-button>
             <el-button @click="batchOperate('batchEnable')">切换启停</el-button>
             <el-button @click="batchOperate('batchMoveOrg')">转移</el-button>
             <el-button @click="handleDelete('batchDel')">删除</el-button>
             <el-button @click="handleImport">导入</el-button>
-            <el-button @click="handleExport">导出</el-button>-->
+            <el-button @click="handleExport">导出</el-button>
           </div>
         </div>
       </template>
 
       <template #enable="row"> {{ row.data.enable == 'Y' ? '是' : '否' }}</template>
-      <!--<template #myscope="{ data }">
+      <template #myscope="{ data }">
         <el-popover placement="left" trigger="hover" popper-class="customPopper">
           <template>
             <el-button @click.stop="hanldeEnter('edit', data)" type="success">编辑</el-button>
-            <el-button @click.stop="handleDelete('delete', data)" type="danger">删除</el-button>&ndash;&gt;
+            <el-button @click.stop="handleDelete('delete', data)" type="danger">删除</el-button>
             <el-button @click="batchOperate('moveOrg', data)" type="success">转移</el-button>
           </template>
           <el-button slot="reference">操作</el-button>
         </el-popover>
-      </template>-->
+      </template>
     </form-list>
 
     <!-- dialog 转移 / 启停 -->
@@ -59,17 +59,29 @@
         <el-button type="success" @click="submit">保 存</el-button>
       </span>
     </el-dialog>
+
+    <el-dialog
+      v-if="detailVisible"
+      :visible.sync="detailVisible"
+      width="80%"
+      :before-close="onClose"
+      class="detail-dialog"
+      destroy-on-close
+    >
+      <Detail :detailInfo="detailInfo" @onOk="onOk" @onClose="onClose"/>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import FormList from '@/components/FormList.vue';
 import { getListAll, delOrg, moveOrg, setEnable, exportOrganizationInfo } from './Api.js'
-
+import Detail from './Detail.vue'
 export default {
   name: 'nvoicingOrganization',
   components: {
     FormList,
+    Detail
   },
   props: {
     taxBodyId: {},
@@ -89,13 +101,13 @@ export default {
         { title: "所属主体", width: 150, dataIndex: "nsrmc", },
         { title: "启用状态", width: 100, dataIndex: "enable", slot: 'enable', align: 'center' },
         { title: "建立时间", width: 100, dataIndex: "createtime", align: 'center' },
-        // {
-        //   title: "操作",
-        //   key: "action",
-        //   width: 80,
-        //   fixed: 'right',
-        //   scopedSlots: { customRender: "action" }
-        // }
+        {
+          title: "操作",
+          key: "action",
+          width: 80,
+          fixed: 'right',
+          scopedSlots: { customRender: "action" }
+        }
       ],
       searchList: [
         {
@@ -137,6 +149,11 @@ export default {
         'enable': '启停设置',
         'batchEnable': '启停设置',
       },
+      detailVisible: false,
+      detailInfo: {
+        operateType: '',
+        id: null
+      }
     };
   },
 
@@ -155,6 +172,17 @@ export default {
   },
 
   methods: {
+    onOk(){
+      this.getList()
+      this.onClose()
+    },
+    onClose(){
+      this.detailVisible = false;
+      this.detailInfo = {
+        operateType: '',
+        id: null,
+      }
+    },
     // 获取纳税主体
     async getListAll() {
       const { code = '', data = [] } = await getListAll({})
@@ -203,7 +231,9 @@ export default {
           this.$message.success('删除成功');
           this.getList();
         }
-      }).catch((res => { }))
+      }).catch(err=>{
+        this.$message.error(err.msg || '删除失败')
+      })
     },
 
     //
@@ -224,42 +254,62 @@ export default {
 
     // 转移
     async moveOrg(param) {
-      const { code = '' } = await moveOrg(param);
-      if (code === '0') {
-        this.$message.success('转移成功');
-        this.handleClose();
-        this.getList();
+      try {
+        const { code = '', msg } = await moveOrg(param);
+        if (code === '0') {
+          this.$message.success('转移成功');
+          this.handleClose();
+          this.getList();
+        } else {
+          this.$message.error(msg || '转移失败')
+        }
+      } catch (err) {
+        this.$message.error(err.msg || '转移失败')
       }
+      
     },
     // 启停
     async setEnable(param) {
-      const { code = '' } = await setEnable(param);
-      if (code === '0') {
-        this.$message.success('操作成功');
-        this.handleClose();
-        this.getList();
+      
+
+      try {
+        const { code = '', msg } = await setEnable(param);
+        if (code === '0') {
+          this.$message.success('操作成功');
+          this.handleClose();
+          this.getList();
+        } else {
+          this.$message.error(msg || '操作失败')
+        }
+      } catch (err) {
+        this.$message.error(err.msg || '操作失败')
       }
     },
     hanldeEnter(operateType, data = {}) {
-      if (operateType === 'add') {
-        sessionStorage.setItem('clearAcceptOrganization', 1)
+      this.detailVisible = true;
+      this.detailInfo = {
+        operateType,
+        id: data.id
       }
+      // if (operateType === 'add') {
+      //   sessionStorage.setItem('clearAcceptOrganization', 1)
+      // }
 
-      this.$router.push({
-        path: '/organization/acceptOrganizationDetail',
-        query: {
-          operateType,
-          id: data.id
-        }
-      })
-      this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+      // this.$router.push({
+      //   path: '/organization/acceptOrganizationDetail',
+      //   query: {
+      //     operateType,
+      //     id: data.id
+      //   }
+      // })
+      // this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
 
     },
     // 导入
     handleImport() {
       sessionStorage.setItem('clearAcceptOrganizationImport', 1)
       this.$router.push({ path: "/organization/acceptOrganizationImport" })
-      this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+      // this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
     },
     getSearchParam(param) {
       this.queryParam = param;

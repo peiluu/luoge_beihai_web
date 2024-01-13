@@ -57,13 +57,6 @@ export const moduleRoutes = {
 
 export const mainChildrenRoutes = [
   {
-    path: '/organization/taxBodyDetail',
-    name: 'taxBodyDetail',
-    meta: { title: '纳税主体信息', tab: true},
-    component: () =>
-      import('@/views/organization/taxBody/Detail'),
-  },
-  {
     path: '/organization/TaxBodyImport',
     name: 'TaxBodyImport',
     meta: { title: '纳税主体信息导入', tab: true},
@@ -73,31 +66,12 @@ export const mainChildrenRoutes = [
       ),
   },
   {
-    path: '/organization/invoicingOrganizationDeatil',
-    name: 'InvoicingOrganizationDeatil',
-    meta: { title: '开票点组织信息', tab: true },
-    component: () =>
-      import(
-        '@/views/organization/invoicingOrganization/Detail'
-      ),
-  },
-  {
     path: '/organization/invoiceOrganizationImport',
     name: 'InvoiceOrganizationImport',
     meta: { title: '开票点组织信息导入', tab: true },
     component: () =>
       import(
         '@/views/organization/invoicingOrganization/InvoiceOrganizationImport'
-      ),
-  },
-
-  {
-    path: '/organization/acceptOrganizationDetail',
-    name: 'acceptOrganizationDetail',
-    meta: { title: '受票点组织信息', tab: true },
-    component: () =>
-      import(
-        '@/views/organization/acceptOrganization/Detail'
       ),
   },
   {
@@ -260,7 +234,7 @@ function fnAddDynamicMenuRoutes (menuList = [], routes = []) {
     children: routes
   })
   router.addRoute({ path: '*', redirect: { name: '404' } });
-  console.log('----routes----', routes)
+  // console.log('----routes----', routes)
   window.SITE_CONFIG['dynamicMenuRoutes'] = routes
 }
 

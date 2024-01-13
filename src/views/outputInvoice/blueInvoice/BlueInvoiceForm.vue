@@ -13,11 +13,11 @@
       >
         <div class="content-bar">
           <div>
-            <!-- <vxe-button icon="el-icon-back" size="mini" @click="handleBack"
+            <vxe-button :loading="loading" icon="el-icon-back" size="mini" @click="handleBack"
               >返回</vxe-button
-            > -->
-            <el-tag size="mini">电子发票</el-tag> <span style="padding-left:8px"></span>
-            <el-tag size="mini" type="warning">普通发票</el-tag>
+            >
+            <!-- <el-tag size="mini">电子发票</el-tag> <span style="padding-left:8px"></span>
+            <el-tag size="mini" type="warning">普通发票</el-tag> -->
           </div>
           <div class="midea-form-bar">
             <!-- <el-form-item label="切换开票组织">
@@ -35,9 +35,9 @@
                 ></el-option>
               </el-select>
             </el-form-item> -->
-            <el-form-item label="当前可开票授信额度:">
+             <!--<el-form-item label="当前可开票授信额度:">
               <span>2222222.00</span>
-              <!-- <el-select
+              <el-select
                 filterable
                 class="form-inline-input"
                 v-model="mideaInfo.projectId"
@@ -49,8 +49,8 @@
                   :label="project.project_name"
                   :value="project.id"
                 ></el-option>
-              </el-select> -->
-            </el-form-item>
+              </el-select> 
+            </el-form-item>-->
             <el-form-item v-show="mideaInfo.projectId" label="房间">
               <el-input
                 size="small"
@@ -352,12 +352,14 @@
                   style="float: right; margin-right: 10px"
                   @click="clearItems"
                   :disabled="!canEdit"
+                  :loading="loading"
                   >清空重填</el-button
                 >
                 <el-button
                   size="mini"
                   style="float: right; margin-right: 10px"
                   @click="reChooseFplx"
+                  :loading="loading"
                   :disabled="!canEdit"
                   >重选发票种类</el-button
                 >
@@ -366,6 +368,7 @@
                   style="float: right; margin-right: 10px"
                   @click="handleUseTheme"
                   :disabled="!canEdit"
+                  :loading="loading"
                   >引用模板</el-button
                 >
               </div>
@@ -875,13 +878,13 @@
     </div>
     <div class="invoice-tools" v-show="canEdit">
       <div class="invoice_footer">
-        <div> <el-button @click="handleAddTheme">生成模板</el-button></div>
+        <div> <el-button @click="handleAddTheme" :loading="loading">生成模板</el-button></div>
         <div>
-          <el-button :disabled="saving" type="success" @click="saveInvoice(1)">开票</el-button>
-          <el-button :disabled="saving" @click="saveInvoice(0)">保存</el-button>
-          <el-button @click="preview">预览</el-button></div>
+          <el-button :disabled="saving" type="success" @click="saveInvoice(1)" :loading="loading">开票</el-button>
+          <el-button :disabled="saving" @click="saveInvoice(0)" :loading="loading">保存</el-button>
+          <el-button @click="preview" :loading="loading">预览</el-button></div>
         <div>
-          <el-button @click="handleBack">返回</el-button>
+          <el-button @click="handleBack" :loading="loading">返回</el-button>
         </div>
       </div>
       <!-- <el-button type="danger" @click="deleteInvoice()">丢弃</el-button> --> 
@@ -2912,21 +2915,27 @@ export default {
                                   type: "success",
                                 });
                                 that.clearAll();
-                                that.$router.push({
-                                  path: "/buleInvoice/ApplySuccess",
-                                  query: {
-                                    invoiceId: res.data,
-                                  },
+                                this.$emit("handeDoneOk",{type:'makeInvoice',data:res.data})
+                                // that.$router.push({
+                                //   path: "/buleInvoice/ApplySuccess",
+                                //   query: {
+                                //     invoiceId: res.data,
+                                //   },
+                                // });
+                                // that.$store.dispatch(
+                                //   "app/removeTab",
+                                //   that.$store.getters.activeTab
+                                // );
+                              }else{
+                                that.$notify({
+                                  message: res.msg,
+                                  type: "error",
                                 });
-                                that.$store.dispatch(
-                                  "app/removeTab",
-                                  that.$store.getters.activeTab
-                                );
                               }
-                              that.loading = false;
+                             
                             });
                           })
-                          .catch(() => {
+                          .finally(() => {
                             that.loading = false;
                           });
                       } else {
@@ -2938,21 +2947,28 @@ export default {
                               type: "success",
                             });
                             that.clearAll();
-                            that.$router.push({
-                              path: "/buleInvoice/ApplySuccess",
-                              query: {
-                                invoiceId: res.data,
-                              },
-                            });
-                            that.$store.dispatch(
-                              "app/removeTab",
-                              that.$store.getters.activeTab
-                            );
+                            this.$emit("handeDoneOk",{type:'makeInvoice',data:res.data})
+                            // that.$router.push({
+                            //   path: "/buleInvoice/ApplySuccess",
+                            //   query: {
+                            //     invoiceId: res.data,
+                            //   },
+                            // });
+                            // that.$store.dispatch(
+                            //   "app/removeTab",
+                            //   that.$store.getters.activeTab
+                            // );
                           }
-                          that.loading = false;
                         });
                       }
+                    }else{
+                      that.$notify({
+                        message: result.msg,
+                        type: "error",
+                      });
                     }
+                  }).finally(()=>{
+                    that.loading = false;
                   });
                 } else {
                   that.loading = true;

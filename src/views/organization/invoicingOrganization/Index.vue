@@ -60,17 +60,28 @@
         <el-button type="success" @click="submit">保 存</el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      v-if="detailVisible"
+      :visible.sync="detailVisible"
+      width="80%"
+      :before-close="onClose"
+      class="detail-dialog"
+      destroy-on-close
+    >
+      <Detail :detailInfo="detailInfo" @onOk="onOk" @onClose="onClose"/>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import FormList from '@/components/FormList.vue';
 import { getListAll, delOrg, moveOrg, setEnable, exportOrganizationInfo } from './Api.js'
-
+import Detail from './Detail.vue'
 export default {
   name: 'InvoicingOrganization',
   components: {
     FormList,
+    Detail
   },
   props: {
     taxBodyId: {},
@@ -148,6 +159,11 @@ export default {
       },
       taxBodyList: [],
       queryParam: {},
+      detailVisible: false,
+      detailInfo: {
+        operateType: '',
+        id: null
+      }
     };
 
   },
@@ -166,6 +182,17 @@ export default {
   },
 
   methods: {
+    onOk(){
+      this.getList()
+      this.onClose()
+    },
+    onClose(){
+      this.detailVisible = false;
+      this.detailInfo = {
+        operateType: '',
+        id: null,
+      }
+    },
     // 获取纳税主体
     async getListAll() {
       const { code = '', data = [] } = await getListAll({})
@@ -250,17 +277,22 @@ export default {
       }
     },
     hanldeEnter(operateType, data = {}) {
-      if (operateType === 'add') {
-        sessionStorage.setItem('clearInvoicingOrganization', 1)
+      this.detailVisible = true;
+      this.detailInfo = {
+        operateType,
+        id: data.id
       }
-      this.$router.push({
-        path: '/organization/invoicingOrganizationDeatil',
-        query: {
-          operateType,
-          id: data.id
-        }
-      })
-      this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+      // if (operateType === 'add') {
+      //   sessionStorage.setItem('clearInvoicingOrganization', 1)
+      // }
+      // this.$router.push({
+      //   path: '/organization/invoicingOrganizationDeatil',
+      //   query: {
+      //     operateType,
+      //     id: data.id
+      //   }
+      // })
+      // this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
     },
     getList() {
       this.$refs.list && this.$refs.list.reload()

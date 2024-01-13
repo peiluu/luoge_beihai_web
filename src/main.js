@@ -25,7 +25,7 @@ Vue.config.productionTip = false
 
 Vue.use(Element, {
   size: 'mini',
-  zIndex: 3000,
+  // zIndex: 3000,
   i18n: (key, value) => i18n.t(key, value)
 })
 

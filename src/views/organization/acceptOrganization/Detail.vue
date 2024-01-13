@@ -1,16 +1,16 @@
 <template>
   <div>
-    <div class="main-content" :style="'min-height: ' + contentHeight + 'px;'">
+    <div class="main-content">
       <el-form :inline="true" :model="form" :rules="rules" ref="ruleForm">
         <div class="content-title">基本信息</div>
         <div class="content-section">
-          <div>
+          <!-- <div> -->
             <el-form-item label="所属主体" prop="taxBodyId">
               <el-select v-model="form.taxBodyId" placeholder="请选择" filterable clearable :disabled="$route.query.nsrsbh">
                 <el-option v-for="item in taxBodyList" :label="item.nsrmc" :value="item.id" :key="item.id" />
               </el-select>
             </el-form-item>
-          </div>
+          <!-- </div> -->
           <el-form-item label="组织编码" prop="code">
             <el-input v-model="form.code" placeholder="请输入" />
           </el-form-item>
@@ -33,9 +33,9 @@
         </div>
       </el-form>
     </div>
-    <div class="fixed-footer">
+    <div class="footer">
       <el-button @click="cancel">取消</el-button>
-      <el-button type="success" @click="submit">保存</el-button>
+      <el-button type="success" @click="submit" :loading="saveLoading">保存</el-button>
     </div>
   </div>
 </template>
@@ -48,6 +48,12 @@ import { getListAll, updateReceiveOrg, saveReceiveOrg, loadOrgDetail, bmb_bbh } 
  */
 export default {
   name: "acceptOrganizationDetail",
+  props: {
+    detailInfo: {
+      type: Object,
+      default: () => ({})
+    }
+  },
   data() {
     return {
       tableData: [],
@@ -70,6 +76,7 @@ export default {
       },
       taxBodyList: [],
       selectKprList: [],
+      saveLoading: false,
     }
   },
   computed: {
@@ -78,13 +85,13 @@ export default {
 
     },
   },
-  activated() {
+  mounted() {
     if (sessionStorage.getItem('clearAcceptOrganization') == 1) {
       this.form = {};
       sessionStorage.setItem('clearAcceptOrganization', 0)
     }
     this.getListAll();
-    const { operateType = '', id = '' } = this.$route.query;
+    const { operateType = '', id = '' } = this.detailInfo;
     this.operateType = operateType;
     if (id) {
       this.loadOrgDetail(id);
@@ -117,24 +124,33 @@ export default {
     async submit() {
       this.$refs["ruleForm"].validate(async valid => {
         if (!valid) return;
-        const api = this.form.id ? updateReceiveOrg : saveReceiveOrg
-        const { code = '', data = [] } = await api(this.form)
-        if (code === '0') {
-          this.$message.success('操作成功');
-          setTimeout(() => {
-            this.cancel();
-          }, 1000)
+        try {
+          this.saveLoading = true;
+          const api = this.form.id ? updateReceiveOrg : saveReceiveOrg
+          const { code = '', data = [], msg = '操作失败' } = await api(this.form)
+          if (code === '0') {
+            this.$message.success('操作成功');
+            this.$emit('onOk')
+          } else {
+            this.$message.error(msg)
+          }
+        } catch (error) {
+          this.$message.error(error.msg || '操作失败')
+        } finally {
+          this.saveLoading = false;
         }
+        
       })
     },
 
     cancel() {
       this.form = {}
-      this.$router.push({
-        path: '/settingsManagement/organization',
-        query: { activeName: '3' }
-      })
-      this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+      this.$emit('onClose')
+      // this.$router.push({
+      //   path: '/organization/index',
+      //   query: { activeName: '3' }
+      // })
+      // this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
     },
 
   }
@@ -213,6 +229,9 @@ export default {
   &:last-of-type {
     margin-top: 12px;
   }
+}
+.footer {
+  text-align: center;
 }
 </style>
 
