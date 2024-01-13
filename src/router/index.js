@@ -109,6 +109,13 @@ export const mainChildrenRoutes = [
         '@/views/organization/acceptOrganization/AcceptOrganizationImport'
       ),
   },
+  {
+    path: '/custom/Detail',
+    name: 'customDetail',
+    meta: { title: '客户信息', tab: true},
+    component: () =>
+      import('@/views/custom/Detail'),
+  },
 ]
 
 export function addDynamicRoute (routeParams, router) {
