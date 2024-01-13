@@ -1,6 +1,6 @@
 <template>
-  <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
-    <el-button icon="el-icon-back" @click="handleBack">返回</el-button>
+  <div class="main-content">
+    <!-- <el-button icon="el-icon-back" @click="handleBack">返回</el-button> -->
     <div class="mid-margin-40">
       <el-steps :active="step">
         <el-step title="上传"></el-step>
@@ -22,7 +22,7 @@
         <!-- <el-button type="text" @click="downloadFailed">下载</el-button>
         <span style="margin-left: 0;">清单修改</span> -->
       </div>
-      <el-table stripe border :data="tableData" :height="height" v-loading="importing" :header-cell-class-name="'main-table-header-cell'" style="margin: 10px 2% ;width: 96%;">
+      <el-table class="import-table" stripe border :data="tableData" v-loading="importing" :header-cell-class-name="'main-table-header-cell'" style="margin: 10px 2% ;width: 96%;">
         <el-table-column prop="yzjg" label="验证" align="left" min-width="80">
           <template slot-scope="scope">
             <slot name="myscope" :data="scope.row">
@@ -40,7 +40,7 @@
       </el-table>
       <div class="footer-button">
         <el-button type="default" @click="initData">上一步</el-button>
-        <el-button type="primary" @click="handleConfirm" :disabled="failCount > 0 || sssCount == 0 || importing">导入</el-button>
+        <el-button type="primary" @click="handleConfirm" :disabled="failCount > 0 || importing">导入</el-button>
       </div>
     </template>
   </div>
@@ -69,20 +69,9 @@ export default {
     request_host() {
       return config.host
     },
-    height() {
-      return window.innerHeight - 400;
-
-    },
-    contentHeight() {
-      return window.innerHeight - 132;
-    },
   },
-  activated() {
-    if (sessionStorage.getItem('clearTaxBodyImport') == 1) {
-      this.initData();
-      sessionStorage.setItem('clearTaxBodyImport', 0)
-    }
-
+  mounted() {
+    this.initData();
   },
 
 
@@ -151,24 +140,37 @@ export default {
         that.request_host + "/taxBody/importTaxBodyInfo",
         { 'Content-Type': 'application/json; charset=utf-8' },
         {},
-        res => {
+        // res => {
+        //   if (res.code == 0) {
+        //     that.$message({
+        //       message: '导入成功',
+        //       type: 'success'
+        //     });
+        //     that.importing = false;
+        //     that.$router.push({
+        //       path: '/organization/index',
+        //       query: { activeName: '1' }
+        //     })
+        //     this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+
+        //   } else {
+        //     that.importing = false;
+        //   }
+        // }
+      ).then(res=>{
           if (res.code == 0) {
             that.$message({
               message: '导入成功',
               type: 'success'
             });
-            that.importing = false;
-            that.$router.push({
-              path: '/organization/index',
-              query: { activeName: '1' }
-            })
-            this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
-
-          } else {
-            that.importing = false;
+            that.$emit('onOk')
           }
-        }
-      )
+          that.importing = false;
+        }).catch(err=>{
+          console.log(err)
+          that.importing = false;
+          this.$message.error(err.msg || '导入失败')
+        })
     },
     handleBack() {
       this.initData();
@@ -199,8 +201,8 @@ export default {
 }
 
 .upload-template {
-  height: 30px;
-  line-height: 30px;
+  // height: 30px;
+  // line-height: 30px;
   font-size: 14px;
 
   .right {
@@ -226,8 +228,8 @@ export default {
 }
 
 .footer-button {
-  padding: 20px 2% 0 0;
-  float: right;
+  padding-top: 20px;
+  text-align: center;
 }
 
 .main {
@@ -236,5 +238,13 @@ export default {
 
 ::v-deep .el-upload-list__item {
   display: none;
+}
+.import-table {
+  ::v-deep .el-table__body-wrapper {
+    height: calc(100vh - 600px);
+    background: red;
+    overflow: hidden;
+    overflow-y: auto;
+  }
 }
 </style>

@@ -30,8 +30,8 @@
             <el-button @click.stop="hanldeEnter('edit', data)" type="info">编辑</el-button>
             <el-button @click.stop="batchOperate('delete', data)" type="danger">删除</el-button>
             <!-- <el-button @click.stop="batchOperate('digital', data)" type="success">切换数电开通</el-button> -->
+            <el-button @click.stop="hanldeMaintenance(data, '3')" type="success">维护帐套</el-button>
             <el-button @click.stop="hanldeMaintenance(data, '2')" type="success">维护开票点</el-button>
-            <el-button @click.stop="hanldeMaintenance(data, '3')" type="success">维护受票点</el-button>
           </template>
           <el-button slot="reference">操作</el-button>
         </el-popover>
@@ -70,6 +70,16 @@
     >
       <Detail :detailInfo="detailInfo" @onOk="onOk" @onClose="onClose"/>
     </el-dialog>
+    <el-dialog
+      v-if="importVisible"
+      :visible.sync="importVisible"
+      width="80%"
+      :before-close="onClose"
+      class="detail-dialog"
+      destroy-on-close
+    >
+      <TaxBodyImport :detailInfo="detailInfo" @onOk="onOk" @onClose="onClose"/>
+    </el-dialog>
   </div>
 </template>
 
@@ -78,11 +88,13 @@ import FormList from '@/components/FormList.vue';
 import { rgionEnum, cityEnum, provincesEnmu } from '@/config/regionEnums.js';
 import { listCascaderDict, selectYtList, delTaxBodyBatch, setIsDigital, getListAll, selectQyList, downLoadApplyList, exportTaxBodyInfo, } from './Api.js'
 import Detail from './Detail.vue'
+import TaxBodyImport from './TaxBodyImport.vue'
 export default {
   name: 'organizationTaxBody',
   components: {
     FormList,
-    Detail
+    Detail,
+    TaxBodyImport
   },
   data() {
     return {
@@ -200,7 +212,9 @@ export default {
       detailInfo: {
         operateType: '',
         id: null
-      }
+      },
+      importVisible: false,
+
     };
 
   },
@@ -227,6 +241,7 @@ export default {
     },
     onClose(){
       this.detailVisible = false;
+      this.importVisible  = false;
       this.detailInfo = {
         operateType: '',
         id: null,
@@ -385,9 +400,9 @@ export default {
     },
     //导入
     handleImport() {
-      sessionStorage.setItem('clearTaxBodyImport', 1)
-      this.$router.push({ path: "/organization/TaxBodyImport" })
-      this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+      this.importVisible = true;
+      // this.$router.push({ path: "/organization/TaxBodyImport" })
+      // this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
     },
     getSearchParam(param) {
       this.queryParam = param;
