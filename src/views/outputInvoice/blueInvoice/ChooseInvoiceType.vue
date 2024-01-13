@@ -1,17 +1,19 @@
 <template>
   <div class="" :style="'height: ' + contentHeight + 'px;'">
     <!-- <Step :stepData="{current:2,total:4,title:'选择发票种类'}"></Step> -->
-    <article style="overflow: hidden auto;">
-      <el-form :inline="true" :model="formInline" label-width="140px">
+    <article style="overflow: hidden auto;padding-top: 15px;">
+      <el-form :inline="true" :model="formInline" >
         <el-row :gutter="10">
           <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
-            <el-form-item label="纳税人名称："><span>{{ formInline.nsrmc }}</span></el-form-item>
+            <el-form-item label="纳税人名称：" label-width="105px"><span>{{ formInline.nsrmc }}</span></el-form-item>
           </el-col>
-          <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
-            <el-form-item label="纳税人识别号码："><span>{{ formInline.nsrsbh }}</span></el-form-item>
+          <el-col :xs="6" :sm="6" :md="6" :lg="6" :xl="6">
+            <el-form-item label="纳税人识别号码：" label-width="125px"><span>{{ formInline.nsrsbh }}</span></el-form-item>
           </el-col>
-          <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
-            <el-form-item label="所属账套："><span>{{ formInline.ssztName }}</span></el-form-item>
+          <el-col :xs="10" :sm="10" :md="10" :lg="10" :xl="10">
+            <el-form-item label="所属账套：" label-width="105px">
+              <span class="">{{ formInline.ssztName }}</span>
+            </el-form-item>
           </el-col>
           
         </el-row>
@@ -63,7 +65,7 @@
     <div class="content-tips">
       <span style="color: #D9001B;margin-right:4px;vertical-align: sub;">*</span>温馨提示：当前企业<template>{{isDigital=='Y'?'已':'未'}}</template>开通数电发票业务
     </div> -->
-    <footer>
+    <footer class="choose_footer">
       <div>
         <slot :slotData="{...form,...formInline}" ></slot>
       </div>
@@ -126,7 +128,7 @@
         return this.formInline.isDigital
       },
       contentHeight(){
-        return window.innerHeight - 294;
+        return window.innerHeight - 230;
       }
     },
     watch:{
@@ -274,5 +276,9 @@
     background-color: #00B390;
     border-color: #00B390;
   }
-
+.choose_footer{
+  position: absolute;
+  bottom: 15px;
+  left: 48%;
+}
 </style>
