@@ -93,9 +93,16 @@ export const mainChildrenRoutes = [
   {
     path: '/redInvoice/redInfoConfirm',
     name: 'redInfoConfirm',
-    meta: { title: '客户信息', tab: true},
+    meta: { title: '预填发票申请单', tab: true},
     component: () =>
       import('@/views/outputInvoice/redInvoice/redInfoConfirm/Index.vue'),
+  },
+  {
+    path: '/redInvoice/addApplyForm',
+    name: 'addApplyForm',
+    meta: { title: '新增红色信息表', tab: true},
+    component: () =>
+      import('@/views/outputInvoice/redInvoice/addApplyForm/Index.vue'),
   },
 ]
 
