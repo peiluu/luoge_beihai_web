@@ -271,6 +271,18 @@ export default {
     /* 继续开票 */
     handleResume(val){
       this.active = 1;
+    },
+    /* 路由是否有参数 */
+    handlerInit(){
+      let route = this.$route.query || {};
+      
+      if(route?.isFormInvoiced){
+        this.thirdData = {};
+        const {invoiceId,isFormInvoiced} = route || {}
+        this.thirdData.slotData = {invoiceId,isFormInvoiced};
+       
+        this.active = 2;
+      }
     }
   },
   computed: {
@@ -283,6 +295,7 @@ export default {
   },
   mounted() {
     console.log(this.$route, "00988");
+    this.handlerInit();
   },
 };
 </script>

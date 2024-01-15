@@ -348,6 +348,7 @@ export default {
     },
     // 刷新
     reload(args) {
+      debugger
       this.handleGetData(this.param, args);
     },
     async deleteApi(id, param = {}) {

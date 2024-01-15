@@ -361,7 +361,7 @@ export default {
     // 新增红色信息表
     async addApplyForm() {
       const { code = '', data = [] } = await check({
-        nsrsbh: this.$route.query.nsrsbh
+        nsrsbh: this.$route.query.nsrsbh || '',
       })
       if (code === '0') {
         this.$router.push({
@@ -369,7 +369,6 @@ export default {
           query: this.$route.query
         });
         this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
-
       }
 
     },
