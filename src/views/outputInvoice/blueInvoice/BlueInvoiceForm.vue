@@ -1998,22 +1998,21 @@ export default {
     handleBack() {
       this.clearAll();
 
-      // if (this.query.orgid) {
-      //   this.$router.push({
-      //     path: "/buleInvoice/ChooseInvoiceType",
-      //     query: { orgid: this.query.orgid, isDigital: "Y" },
-      //   });
-      // } else if (this.query.isFormInvoiced == "Y") {
-      //   this.$router.push({
-      //     path: "/outputInvoice/invoicedList",
-      //   });
-      // } else if (this.query.isFormInvoiced == "N") {
-      //   this.$router.push({
-      //     path: "/noInvoice/noInvoiceList",
-      //   });
-      // }
-      // this.$store.dispatch("app/removeTab", this.$store.getters.activeTab);
-      this.$emit('handleBack',this.query);
+      if (this.query.orgid) {
+        this.$emit('handleBack',this.query);
+      } else if (this.query.isFormInvoiced == "Y") {
+        this.$router.push({
+          path: "/outputInvoice/invoicedList/Index",
+        });
+        this.$store.dispatch("app/removeTab", this.$store.getters.activeTab);
+      } else if (this.query.isFormInvoiced == "N") {
+        this.$router.push({
+          path: "/outputInvoice/noInvoice/Index",
+        });
+        this.$store.dispatch("app/removeTab", this.$store.getters.activeTab);
+      }
+      
+     
     },
     clearProject() {
       this.mideaInfo.projectId = "";
@@ -3166,6 +3165,8 @@ export default {
       this.$refs.ceItemForm.clearValidate();
     }
     this.loading = true;
+    console.log(this.query);
+    
     if (this.query.isFormInvoiced == "Y") {
       //复制开票
       this.api.getCopyDetailById({ id: this.query.invoiceId }).then((res) => {
