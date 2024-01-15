@@ -39,7 +39,8 @@ export default {
   },
   methods: {
     hanldeInvoice(item, type, level) {
-      const path = level == '3' ? '/outputInvoice/waitConfirm' : '/redInvoice/infoTable';
+      debugger;
+      const path = level == '3' ? '/outputInvoice/waitConfirm' : '/outputInvoice/redInvoice/infoTable/Index';
       // 数电业务
       if (item.isDigital === 'Y') {
         this.$router.push({
@@ -60,14 +61,14 @@ export default {
         return;
       }
       // 税控业务
-      const resourceUrl = urlMap[type].url
-      this.$router.push({
-        path: '/iframe',
-        query: {
-          resourceUrl: resourceUrl,
-          nsrsbh: item.nsrsbh,
-        }
-      })
+      // const resourceUrl = urlMap[type].url
+      // this.$router.push({
+      //   path: '/iframe',
+      //   query: {
+      //     resourceUrl: resourceUrl,
+      //     nsrsbh: item.nsrsbh,
+      //   }
+      // })
       // this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
 
     }
