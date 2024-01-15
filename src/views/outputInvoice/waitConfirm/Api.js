@@ -1,9 +1,9 @@
 // 数据字典
 import { deleteOne, postJSON } from '@/utils/request';
-
+import { config } from "@/config"
 // 获取列表, 待我确认的 level: 2
 export const getList = data =>
-  postJSON(`/redInvoice/redInvoiceList`, {
+  postJSON(`${config.host}/redInvoice/redInvoiceList`, {
     ...data,
     level: '2',
     lrfsf: 0

@@ -3,7 +3,7 @@ import { deleteOne, postJSON, download } from '@/utils/request';
 import { config } from "@/config"
 // 获取列表, 我发出的 level: 0
 export const getList = data =>
-  postJSON(`/redInvoice/redInvoiceList`, {
+  postJSON(`${config.host}/redInvoice/redInvoiceList`, {
     ...data,
     level: '0'
   });
