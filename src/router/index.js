@@ -90,6 +90,13 @@ export const mainChildrenRoutes = [
     component: () =>
       import('@/views/custom/Detail'),
   },
+  {
+    path: '/redInvoice/redInfoConfirm',
+    name: 'redInfoConfirm',
+    meta: { title: '客户信息', tab: true},
+    component: () =>
+      import('@/views/outputInvoice/redInvoice/redInfoConfirm/Index.vue'),
+  },
 ]
 
 export function addDynamicRoute (routeParams, router) {
