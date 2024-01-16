@@ -128,7 +128,7 @@
         <div id="echart-col"></div>
       </div>
       <div class="echart-r">
-        <p class="echart-mo">2023-12</p>
+        <p class="echart-mo">{{ringMonth}}</p>
         <p class="proportion">占图比</p>
         <div id="echart-ring"></div>
       </div>
@@ -188,6 +188,21 @@ import cloneDeep from 'lodash/cloneDeep';
 export default {
   name: 'home',
   data() {
+    const defalutM = 12; // 默认查询进12个月的数据
+    const initX = [
+      '2023-01',
+      '2023-02',
+      '2023-03',
+      '2023-04',
+      '2023-05',
+      '2023-06',
+      '2023-07',
+      '2023-08',
+      '2023-09',
+      '2023-10',
+      '2023-11',
+      '2023-12',
+    ];
     return {
       regionOptions: [
         // 区域
@@ -221,15 +236,18 @@ export default {
       },
       echartFrom: {
         type: 1, // 1 发票数据分析 , 2 计税数据分析
-        month: 12, // 近3月，近6月，近12月
+        month: defalutM, // 近3月，近6月，近12月
       },
-      xMonth: 11, // 点击柱状的索引值
+      xMonth: defalutM - 1, // 点击柱状的索引值。默认展示最后一个月的数据
+      ringMonth: initX[defalutM - 1], // 环状图查询的日期
       filterText: '', // 快捷入口过滤关键词
       defaultProps: {
         children: 'children',
         label: 'name',
       },
+      xAxisData: initX, // 柱状图x轴底部日期数据
       seriesData: [
+        // 柱状图
         [320, 332, 301, 334, 390, 330, 320, 311, 324, 490, 130, 620], // 蓝字发票金额
         [120, 132, 101, 134, 90, 230, 210, 141, 234, 190, 130, 230], // 蓝字发票税额
         [220, 182, 191, 234, 290, 330, 310, 181, 214, 240, 310, 340], // 红字发票金额
@@ -304,8 +322,8 @@ export default {
       const _this = this;
       let chartDom = document.getElementById('echart-col');
       if (!chartDom) return;
-      myChart && myChart.dispose();
-      let myChart = echarts.init(chartDom);
+      this.barChart && this.barChart.dispose();
+      this.barChart = echarts.init(chartDom);
       let option;
 
       option = {
@@ -325,20 +343,7 @@ export default {
         xAxis: [
           {
             type: 'category',
-            data: [
-              '2023-01',
-              '2023-02',
-              '2023-03',
-              '2023-04',
-              '2023-05',
-              '2023-06',
-              '2023-07',
-              '2023-08',
-              '2023-09',
-              '2023-10',
-              '2023-11',
-              '2023-12',
-            ],
+            data: this.xAxisData,
             axisLabel: {
               interval: 0, // 强制显示所有标签
               rotate: 30, // 旋转角度，值为正则右旋，值为负则左旋
@@ -383,11 +388,12 @@ export default {
         ],
       };
 
-      option && myChart.setOption(option);
-      myChart.on('click', function (params) {
-        // console.log('--params--', params.dataIndex);
+      option && this.barChart.setOption(option);
+      this.barChart.on('click', function (params) {
+        console.log('--params--', params);
         if (_this.xMonth !== params.dataIndex) {
           _this.xMonth = params.dataIndex;
+          _this.ringMonth = params.name
           _this.initEchartRing();
         }
       });
@@ -398,8 +404,8 @@ export default {
       const { xMonth, seriesData } = this;
       let chartDom = document.getElementById('echart-ring');
       if (!chartDom) return;
-      myChart && myChart.dispose();
-      let myChart = echarts.init(chartDom);
+      this.ringChart && this.ringChart.dispose();
+      this.ringChart = echarts.init(chartDom);
       let option;
       let data = [];
 
@@ -413,7 +419,6 @@ export default {
         ];
       }
       // console.log('--data--', data, type);
-
       option = {
         series: [
           // https://echarts.apache.org/zh/option.html#series-pie.radius
@@ -443,8 +448,8 @@ export default {
               length2: 0,
               maxSurfaceAngle: 80,
             },
-            labelLayout: function (params) {
-              const isLeft = params.labelRect.x < myChart.getWidth() / 2;
+            labelLayout: (params) => {
+              const isLeft = params.labelRect.x < this.ringChart.getWidth() / 2;
               const points = params.labelLinePoints;
               // Update the end point.
               points[2][0] = isLeft ? params.labelRect.x : params.labelRect.x + params.labelRect.width;
@@ -457,7 +462,7 @@ export default {
         ],
       };
 
-      option && myChart.setOption(option);
+      option && this.ringChart.setOption(option);
     },
     // 初始化快捷入口弹窗菜单树
     initTree() {
@@ -700,6 +705,7 @@ p {
       display: flex;
       flex-direction: column;
       justify-content: center;
+      transition: all 0.3s cubic-bezier(0.39, 0.575, 0.565, 1);
       &:hover {
         cursor: pointer;
         color: $primaryGreenColor;
