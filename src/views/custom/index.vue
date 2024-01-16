@@ -1,5 +1,5 @@
 <template>
-  <div class="com-taxBody">
+  <div>
     <form-list :columns="columns" :searchKey="propsKey" :searchRow="searchList" :api="api" :param="param" :height="height"
       :firstLoading="false" v-loading="loading" @getSearchParam="getSearchParam" ref="list">
       <!-- 中间部分 -->
@@ -100,7 +100,7 @@
 
 <script>
 import FormList from '@/components/FormList.vue';
-import { listCascaderDict, selectYtList, delTaxBodyBatch, setIsDigital, getListAll, selectQyList, downLoadApplyList, exportTaxBodyInfo } from './Api.js';
+import { listCascaderDict, selectYtList, deleteBatch, setIsDigital, getListAll,getList, selectQyList, downLoadApplyList, exportTaxBodyInfo } from './Api.js';
 import Detail from './Detail.vue'
 export default {
   name: 'organizationTaxBody',
@@ -118,16 +118,16 @@ export default {
       columns: [
         { type: "selection", width: 50, fixed: 'left', },
         { title: '序号', type: "index", width: 50, fixed: 'left', },
+        // { title: "开票点名称", width: 160, dataIndex: "orgName", },
         { title: "客户名称", width: 160, dataIndex: "gmfMc", },
         { title: "纳税人识别号", width: 160, dataIndex: "gmfNsrsbh", },
-        { title: "开户行", width: 160, dataIndex: "bankname", },
+        { title: "开户行", width: 160, dataIndex: "yhzh", },
         { title: "账号", width: 160, dataIndex: "bankaccount", },
-        { title: "地址", width: 160, dataIndex: "address", },
-        { title: "电话", width: 160, dataIndex: "" },
-        { title: "联系人", width: 100, dataIndex: "", align: 'center' },
-        { title: "联系人手机", width: 140, dataIndex: "" },
+        { title: "地址", width: 160, dataIndex: "dzdh", },
+        { title: "电话", width: 160, dataIndex: "phone" },
+        { title: "联系人", width: 100, dataIndex: "username", align: 'center' },
+        { title: "联系人手机", width: 140, dataIndex: "revphone" },
         // { title: "黑名单", width: 100, dataIndex: "" },
-        { title: "黑名单", width: 100, dataIndex: "enable", slot: 'enable', align: 'center' },
         {
           title: "操作",
           key: "action",
@@ -139,9 +139,9 @@ export default {
       searchList: [
         {
           label: "客户名称",
-          key: "taxBodyId",
+          key: "gmfMc",
           val: "",
-          type: "select",
+          type: "input",
           placeholder: '请输入'
         },
         {
@@ -186,7 +186,7 @@ export default {
 
   },
   mounted() {
-    this.getListAll()
+    // this.getListAll()
     this.listCascaderDict();
     //this.selectYtList()
     //this.selectQyList()
@@ -216,14 +216,14 @@ export default {
     },
     // 获取纳税主体
     async getListAll() {
-      const { code = '', data = [] } = await getListAll({})
-      const index = this.searchList.findIndex((item) => item.key === 'taxBodyId');
+      const { code = '', data = [] } = await getList({})
+      const index = this.searchList.findIndex((item) => item.key === 'gmfMc');
       if (code === '0') {
         this.propsKey = data && data[0].id
         this.searchList[index].options = [{ value: "", label: "全部" }].concat(data.map((item) => {
           return {
             value: item.id,
-            label: `${item.nsrmc} ${item.nsrsbh}`
+            label: `${item.gmfMc} `
           }
         }))
       }
@@ -287,7 +287,8 @@ export default {
         const { code = '' } = await delOrg({ orgIds });
         if (code === '0') {
           this.$message.success('删除成功');
-          this.getList();
+          console.log(this.queryParam,1111)
+          this.$refs.list && this.$refs.list.reload(this.queryParam)
         }
       }).catch((res => { }))
     },
@@ -329,7 +330,7 @@ export default {
     //       console.warn('this.data is empty or not defined!');
     //       return;
     //     }
-    //     delTaxBodyBatch()
+    //     deleteBatch()
         
     //   } else {
     //     if (this.selections.length == 0 && ['batchEnable'].includes(type)) {
@@ -352,26 +353,26 @@ export default {
         this.dialogVisible = true
         return;
       }
-      this.delTaxBodyBatch(type);
+      this.deleteBatch(type);
     },
     // 删除企业
-    delTaxBodyBatch(type) {
+    deleteBatch(type) {
       let tipTxt = ''; 
       let apiFn = '';
       let switchType = null;
       switch (type) {
         case 'batchDel' :
           tipTxt = '是否确定删除当前企业';
-          apiFn = delTaxBodyBatch;
+          apiFn = deleteBatch;
           break;
         case 1:
           tipTxt = '是否确定将当前企业标记黑名单';
-          apiFn = delTaxBodyBatch;
+          apiFn = deleteBatch;
           switchType = 1;
           break;
         case 2:
           tipTxt = '是否确定将当前企业移除黑名单';
-          apiFn = delTaxBodyBatch;
+          apiFn = deleteBatch;
           switchType = 2;
           break;
       }
@@ -426,11 +427,12 @@ export default {
     //   })
     // },
     hanldeEnter(operateType, data = {}) {
-      this.detailVisible = true;
       this.detailInfo = {
         operateType,
         id: data.id
       }
+      this.detailVisible = true;
+
       // if (operateType === 'add') {
       //   sessionStorage.setItem('clearTaxBody', 1)
       // }

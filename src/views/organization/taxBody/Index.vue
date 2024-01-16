@@ -1,5 +1,5 @@
 <template>
-  <div class="com-taxBody">
+  <div>
     <form-list :columns="columns" :searchKey="propsKey" :searchRow="searchList" :api="api" :param="param" :firstLoading="false" v-loading="loading" @getSearchParam="getSearchParam" ref="list">
       <!-- 中间部分 -->
       <template #topTool>

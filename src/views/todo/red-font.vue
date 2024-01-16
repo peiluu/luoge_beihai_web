@@ -1,8 +1,5 @@
 <template>
-  <div>待确认红字</div>
-</template>
-<template>
-  <div>
+  <div class="main-content">
     <form-list :key="level" :columns="columns" :searchRow="[]" :api="api" :param="param" :height="height" :showSearch="false" ref="list">
       <template #lrfsf="row"> {{ row.data.lrfsf == 0 ? "销售方" : "购买方" }}</template>
 

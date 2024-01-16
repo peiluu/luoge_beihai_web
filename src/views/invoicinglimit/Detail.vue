@@ -3,37 +3,39 @@
     <div class="main-content">
       <el-form :inline="true" :model="form" :rules="rules" ref="ruleForm" :disabled="operateType === 'detail'">
         <div class="content-title">客户信息</div>
-        <el-form-item label="所属开票点" prop="orgid">
+        <el-form-item label="请选择纳税主体" prop="orgid">
           <el-select v-model="form.orgid" placeholder="请选择" filterable clearable multiple>
             <el-option v-for="item in taxBodyList" :key="index" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="纳税人识别号" prop="gmfNsrsbh">
-          <el-input v-model="form.gmfNsrsbh" placeholder="请输入" maxlength="20" />
-        </el-form-item>
-        <el-form-item label="客户名称" prop="gmfMc">
-          <el-input v-model="form.nsrmc" placeholder="请输入" maxlength="100" />
+        <el-form-item label="请选择限制的税率">
+            <el-select v-model="form.qyzbs" placeholder="全部">
+              <el-option label="免税" value="1"></el-option>
+              <el-option label="不征税" value="2"></el-option>
+              <el-option label="0%" value="3"></el-option>
+              <el-option label="1%" value="4"></el-option>
+              <el-option label="3%" value="5"></el-option>
+              <el-option label="5%" value="6"></el-option>
+              <el-option label="6%" value="7"></el-option>
+              <el-option label="9%" value="8"></el-option>
+              <el-option label="11%" value="9"></el-option>
+              <el-option label="13%" value="10"></el-option>
+            </el-select>
+          </el-form-item>
+        <el-form-item label="限制约束" prop="gmfMc">
+          <el-input v-model="form.nsrmc" placeholder="不得开具" maxlength="100" :disabled="true"/>
         </el-form-item>
 
-        <el-form-item label="地址" prop="dzdh">
-          <el-input v-model="form.dzdh" placeholder="请输入" maxlength="80" />
+        <el-form-item label="请选择限制结果" prop="dzdh">
+          <el-select v-model="form.dzdh" placeholder="请选择" maxlength="80" />
         </el-form-item>
-        <el-form-item label="电话" prop="phone">
-          <el-input v-model="form.phone" placeholder="请输入" maxlength="13" />
+        <el-form-item label="请选择发票类型" prop="dzdh">
+          <el-select v-model="form.dzdh" placeholder="请选择" maxlength="80" />
         </el-form-item>
-        <el-form-item label="开户行" prop="yhzh">
-          <el-input v-model="form.yhzh" placeholder="请输入" maxlength="13" />
-        </el-form-item>
-        <el-form-item label="账号" prop="bankaccount">
-          <el-input v-model="form.bankaccount" placeholder="请输入" maxlength="90" />
-        </el-form-item>
-        <el-form-item label="联系人" prop="username">
-          <el-input v-model="form.username" placeholder="请输入" maxlength="90" />
-        </el-form-item>
-        <el-form-item label="联系人手机" prop="revphone">
-          <el-input v-model="form.revphone" placeholder="请输入" maxlength="90" />
-        </el-form-item>
+        <!-- <el-descriptions class="margin-top" :size="size">
+        <el-descriptions-item label="限制提示">不得开具</el-descriptions-item>
+      </el-descriptions> -->
       </el-form>
       <!-- 扩展信息 -->
       <!-- <ExtendInfo :nsrsbh="form.nsrsbh" v-if="form.isDigital === 'Y' && operateType == 'detail'" /> -->
@@ -103,6 +105,19 @@ export default {
   },
   data() {
     return {
+      taxRate: {
+        1:  '免税' ,
+        2: '不征税',
+        3: '0%',
+        4: '1%',
+        5: '3%',
+        6: '5%',
+        7: '6%',
+        8:'9%',
+        9:'11%',
+        10:'13%'
+      },
+      size: '',
       taxBodyList: [],
       form: { isDigital: 'N' },
       districts: [],
