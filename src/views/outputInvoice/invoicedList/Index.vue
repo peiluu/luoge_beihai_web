@@ -299,7 +299,7 @@ export default {
             { value: "0", label: "下载" },
             { value: "1", label: "手工开具" },
             { value: "2", label: "接口传入" },
-            { value: "3", label: "文件导入" },
+            // { value: "3", label: "文件导入" },
           ],
         },
       ],

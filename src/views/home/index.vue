@@ -16,8 +16,9 @@
         <p class="title"><span class="iconfont icon-lanzifapiao blue"></span>蓝字发票开具金额</p>
         <p class="money">123,123,12元<span>（共40张）</span></p>
         <div class="subtitle">
-          <p class="blue">专用发票：12张（122元）</p>
-          <p class="blue">普通发票：12张（122元）</p>
+          <p>专用发票：<span class="blue">12张（122元）</span></p>
+          <p>普通发票：<span class="blue">12张（122元）</span></p>
+          <!-- <p class="blue">普通发票：12张（122元）</p> -->
           <p class="last-moon">较上月：+3%</p>
         </div>
       </div>
@@ -25,8 +26,8 @@
         <p class="title"><span class="iconfont icon-hongzifapiao red"></span>红字发票开具金额</p>
         <p class="money">123,123,12元<span>（共40张）</span></p>
         <div class="subtitle">
-          <p class="red">专用发票：12张（122元）</p>
-          <p class="red">普通发票：12张（122元）</p>
+          <p>专用发票：<span class="red">12张（122元）</span></p>
+          <p>普通发票：<span class="red">12张（122元）</span></p>
           <p class="last-moon">较上月：+3%</p>
         </div>
       </div>
@@ -35,8 +36,8 @@
         <p class="title"><span class="iconfont icon-jinxiaoshuie darkBlue"></span>进销税额</p>
         <p class="money">123,123,12元<span>（共40张）</span></p>
         <div class="subtitle">
-          <p class="darkBlue">进项税额：12张（122元）</p>
-          <p class="darkBlue">销项税额：12张（122元）</p>
+          <p>进项税额：<span class="darkBlue">12张（122元）</span></p>
+          <p>销项税额：<span class="darkBlue">12张（122元）</span></p>
           <p class="last-moon">较上月：+3%</p>
         </div>
       </div>
@@ -44,9 +45,9 @@
         <p class="title"><span class="iconfont icon-qiyenashui green"></span>企业纳税数据</p>
         <p class="money">123,123,12元<span>（共40张）</span></p>
         <div class="subtitle">
-          <p class="green">增值税应纳税额：12张（122元）</p>
-          <p class="green">其他应纳税额：12张（122元）</p>
-          <p class="green">企业所得税应纳税额：12张（122元）</p>
+          <p>增值税应纳税额：<span class="green">12张（122元）</span></p>
+          <p>其他应纳税额：<span class="green">12张（122元）</span></p>
+          <p>企业所得税应纳税额：<span class="green">12张（122元）</span></p>
           <p class="last-moon">较上月：+3%</p>
         </div>
       </div>
@@ -84,6 +85,7 @@
                 :prop="item.dataIndex"
                 :label="item.title"
                 :min-width="item.width"
+                :show-overflow-tooltip="item.showTooltip"
                 :key="item.id"
               >
               </el-table-column>
@@ -94,38 +96,17 @@
       </div>
       <div class="tasks-r">
         <div class="tasks-head shortcut-head">
-          快捷入口 <el-button class="shortcut-manage" type="text" size="small">管理</el-button>
+          快捷入口
+          <el-button class="shortcut-manage" type="text" size="small" @click="handleManage">管理</el-button>
         </div>
         <div class="shortcut-list tasks-border">
-          <div class="li">
+          <div class="li" v-for="item in shortcutMenus" :key="item.id" @click="gotoRouteHandle(item.id)">
             <p>
-              <i class="li-icon el-icon-reading"></i>
+              <svg class="li-icon icon-svg aui-sidebar__menu-icon" aria-hidden="true">
+                <use :xlink:href="`#${item.icon}`"></use>
+              </svg>
             </p>
-            <p>蓝字发票开具</p>
-          </div>
-          <div class="li">
-            <p>
-              <i class="li-icon el-icon-reading"></i>
-            </p>
-            <p>蓝字发票开具</p>
-          </div>
-          <div class="li">
-            <p>
-              <i class="li-icon el-icon-reading"></i>
-            </p>
-            <p>蓝字发票开具</p>
-          </div>
-          <div class="li">
-            <p>
-              <i class="li-icon el-icon-reading"></i>
-            </p>
-            <p>蓝字发票开具</p>
-          </div>
-          <div class="li">
-            <p>
-              <i class="li-icon el-icon-reading"></i>
-            </p>
-            <p>蓝字发票开具</p>
+            <p>{{ item.name }}</p>
           </div>
         </div>
       </div>
@@ -152,11 +133,58 @@
         <div id="echart-ring"></div>
       </div>
     </div>
+    <el-dialog
+      v-if="dialogVisible"
+      title="快捷入口选择"
+      :visible.sync="dialogVisible"
+      width="70"
+      :before-close="handleClose"
+      class="dialog-shortcut"
+    >
+      <div class="dialog-warpper">
+        <div class="dialog-left">
+          <el-input placeholder="输入关键字进行过滤" v-model="filterText"> </el-input>
+          <el-tree
+            class="filter-tree"
+            :data="menuList"
+            :props="defaultProps"
+            default-expand-all
+            :filter-node-method="filterNode"
+            show-checkbox
+            check-on-click-node
+            highlight-current
+            check-strictly
+            :expand-on-click-node="false"
+            ref="tree"
+            @check-change="treeChange"
+            node-key="id"
+            :default-checked-keys="treeKeys"
+          >
+          </el-tree>
+        </div>
+        <div class="dialog-right">
+          <el-card class="box-card" shadow="never">
+            <div slot="header" class="clearfix">
+              <span>已选&nbsp;3/6</span>
+              <el-button type="text">清空</el-button>
+            </div>
+            <p v-for="o in selectMenus" :key="o.id" class="item">
+              {{ o.name }}
+            </p>
+          </el-card>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="handleClose">取 消</el-button>
+        <el-button type="primary" @click="saveShortcut" :loading="saveLoading">确 定</el-button>
+      </span>
+    </el-dialog>
   </el-card>
 </template>
 <script>
-import debounce from 'lodash/debounce';
 import * as echarts from 'echarts';
+import cloneDeep from 'lodash/cloneDeep';
+
 export default {
   name: 'home',
   data() {
@@ -178,7 +206,7 @@ export default {
         { title: '待办编号', dataIndex: 'code', align: 'center' },
         { title: '待办模块', dataIndex: 'module', align: 'center' },
         { title: '提交人', dataIndex: 'presenter', align: 'center' },
-        { title: '提交时间', dataIndex: 'time', align: 'center' },
+        { title: '提交时间', dataIndex: 'time', align: 'center', width: 140, showTooltip: true },
         { title: '操作', type: 'action', align: 'center', width: 80, slot: 'action' },
       ],
       tableData: [
@@ -195,23 +223,83 @@ export default {
         type: 1, // 1 发票数据分析 , 2 计税数据分析
         month: 12, // 近3月，近6月，近12月
       },
-      xMonth: 11,
+      xMonth: 11, // 点击柱状的索引值
+      filterText: '', // 快捷入口过滤关键词
+      defaultProps: {
+        children: 'children',
+        label: 'name',
+      },
       seriesData: [
         [320, 332, 301, 334, 390, 330, 320, 311, 324, 490, 130, 620], // 蓝字发票金额
         [120, 132, 101, 134, 90, 230, 210, 141, 234, 190, 130, 230], // 蓝字发票税额
         [220, 182, 191, 234, 290, 330, 310, 181, 214, 240, 310, 340], // 红字发票金额
         [150, 232, 201, 154, 190, 330, 410, 231, 164, 200, 360, 440], // 红字发票税额
       ],
+      dialogVisible: false,
+      treeKeys: ['1744884803519438849', '1744930298874880002'],
+      selectMenus: [
+        {
+          id: '1744884803519438849',
+          name: '蓝字发票开具',
+          icon: 'icon-file-text',
+          url: 'outputInvoice/blueInvoice/Index',
+        },
+        {
+          id: '1744930298874880002',
+          name: '红字发票开具',
+          icon: 'icon-file-zip',
+          url: 'outputInvoice/redInvoice/enterpriseList/index',
+        },
+      ],
+      shortcutMenus: [
+        {
+          id: '1744884803519438849',
+          name: '蓝字发票开具',
+          icon: 'icon-file-text',
+          url: 'outputInvoice/blueInvoice/Index',
+        },
+        {
+          id: '1744930298874880002',
+          name: '红字发票开具',
+          icon: 'icon-file-zip',
+          url: 'outputInvoice/redInvoice/enterpriseList/index',
+        },
+        {
+          icon: 'icon-addteam',
+          id: '1744932031495725057',
+          name: '企业信息维护',
+          url: '/organization/index',
+        },
+        {
+          id: '1744958909396869122',
+          name: '开票额度预警',
+          url: '/creditlimit/index',
+          icon: 'icon-alert',
+        },
+        {
+          id: '1745971490001551362',
+          name: '商品项目信息',
+          url: '/commodity/index',
+          icon: 'icon-flag',
+        },
+        {
+          id: '1744930764186771458',
+          name: '已开票查询',
+          url: 'outputInvoice/invoicedList/Index',
+          icon: 'icon-filesearch',
+        },
+      ],
+      menuList: [],
+      saveLoading: false,
     };
   },
   mounted() {
     this.initEchart();
     this.initEchartRing();
+    this.initTree();
   },
   methods: {
-    handleClick(row) {
-      console.log('--row--', row);
-    },
+    // 初始化柱状图
     initEchart() {
       const _this = this;
       let chartDom = document.getElementById('echart-col');
@@ -297,19 +385,14 @@ export default {
 
       option && myChart.setOption(option);
       myChart.on('click', function (params) {
-        console.log('--params--', params.dataIndex);
+        // console.log('--params--', params.dataIndex);
         if (_this.xMonth !== params.dataIndex) {
           _this.xMonth = params.dataIndex;
           _this.initEchartRing();
         }
-
-        // myChart.dispatchAction({
-        //   type: 'dataZoom',
-        //   startValue: dataAxis[Math.max(params.dataIndex - zoomSize / 2, 0)],
-        //   endValue: dataAxis[Math.min(params.dataIndex + zoomSize / 2, data.length - 1)],
-        // });
       });
     },
+    // 初始化环状图
     initEchartRing() {
       const { type } = this.echartFrom;
       const { xMonth, seriesData } = this;
@@ -329,18 +412,9 @@ export default {
           { name: '红字发票开具金额', value: v2.toFixed(2) },
         ];
       }
-      console.log('--data--', data, type);
+      // console.log('--data--', data, type);
 
       option = {
-        // title: {
-        //   text: '',
-        //   left: 'center',
-        //   textStyle: {
-        //     color: '#999',
-        //     fontWeight: 'normal',
-        //     fontSize: 14,
-        //   },
-        // },
         series: [
           // https://echarts.apache.org/zh/option.html#series-pie.radius
           {
@@ -385,10 +459,107 @@ export default {
 
       option && myChart.setOption(option);
     },
+    // 初始化快捷入口弹窗菜单树
+    initTree() {
+      let ml = cloneDeep(this.$store.state.sidebarMenuList);
+      (function mapTree(tree) {
+        tree.map((item) => {
+          if (item.children && item.children.length > 0) {
+            item.disabled = true;
+            mapTree(item.children);
+          }
+        });
+      })(ml);
+      this.menuList = ml;
+      this.initSelectMenus();
+    },
+    // 初始化快捷入口弹窗默认选中值
+    initSelectMenus() {
+      let keys = [];
+      let ms = [];
+      this.shortcutMenus.forEach((item) => {
+        keys.push(item.id);
+        ms.push({ ...item });
+      });
+      this.treeKeys = keys;
+      this.selectMenus = ms;
+    },
+    // 快捷入口弹窗选中取消事件
+    treeChange(data) {
+      // console.log(data);
+      const { selectMenus } = this;
+      if (selectMenus.length >= 6) {
+        this.$message.error('最多可设置6个快捷入口');
+        return;
+      }
+      let newMenus = this.selectMenus.find((item) => data.id === item.id);
+      if (newMenus) {
+        this.selectMenus = this.selectMenus.filter((item) => item.id !== data.id);
+      } else {
+        this.selectMenus = [...this.selectMenus, { id: data.id, name: data.name, icon: data.icon, url: data.url }];
+      }
+    },
+    // 快捷入口跳转
+    gotoRouteHandle(menuId) {
+      var route = window.SITE_CONFIG['dynamicMenuRoutes'].filter((item) => item.meta.menuId === menuId)[0];
+      if (route) {
+        this.$router.push({ name: route.name });
+      }
+    },
+    // 关闭快捷入口弹窗
+    handleClose() {
+      this.selectMenus = [];
+      this.dialogVisible = false;
+      // console.log('--this.selectMenus--', this.selectMenus);
+    },
+    // 保存快捷入口
+    async saveShortcut() {
+      // console.log('--保存--', this.selectMenus);
+      const fn = () => {
+        return new Promise((res, rej) => {
+          setTimeout(() => {
+            res({ code: '0', msg: '设置成功' });
+          }, 1000);
+        });
+      };
+      try {
+        this.saveLoading = true;
+        const res = await fn();
+        if (res.code === '0') {
+          this.$message.success(res.msg);
+          this.shortcutMenus = cloneDeep(this.selectMenus);
+        }
+      } catch (error) {
+        this.$message.error(error.msg || '设置失败');
+      } finally {
+        this.saveLoading = false;
+        this.dialogVisible = false;
+      }
+    },
+    // 过滤菜单选择
+    filterNode(value, data) {
+      if (!value) return true;
+      return data.label.indexOf(value) !== -1;
+    },
+    // 展示快捷入口弹窗
+    handleManage() {
+      this.dialogVisible = true;
+      this.initSelectMenus();
+    },
+    // 处理待办任务
+    handleClick(row) {
+      console.log('--row--', row);
+    },
+  },
+  watch: {
+    filterText(val) {
+      this.$refs.tree.filter(val);
+    },
   },
 };
 </script>
 <style lang="scss" scoped>
+@import '../../styles/variables.scss';
 .head-search {
   display: flex;
   justify-content: flex-end;
@@ -412,8 +583,13 @@ p {
     padding: 15px;
     position: relative;
     margin-right: 20px;
+    transition: all 0.3s cubic-bezier(0.39, 0.575, 0.565, 1);
     &:last-child {
       margin-right: 0;
+    }
+    &:hover {
+      box-shadow: 0 0 5px 0 $primaryGreenColor;
+      color: $primaryGreenColor;
     }
     .c-title {
       font-size: 18px;
@@ -426,12 +602,15 @@ p {
       left: 0;
     }
     .title {
-      margin: top;
-      font-size: 20px;
+      margin: -15px -15px 0 -15px;
+      padding: 0 10px;
+      line-height: 40px;
+      font-size: 18px;
+      background: #f9f9f9;
       color: #333;
       .iconfont {
-        font-size: 22px;
-        margin-right: 15px;
+        font-size: 18px;
+        margin-right: 10px;
       }
     }
     .money {
@@ -453,6 +632,7 @@ p {
     justify-content: flex-end;
     > p {
       margin-bottom: 5px;
+      color: #666;
     }
   }
   .last-moon {
@@ -486,8 +666,8 @@ p {
     flex-shrink: 1;
   }
   .tasks-head {
-    height: 50px;
-    line-height: 50px;
+    height: 40px;
+    line-height: 40px;
     background-color: #f9f9f9;
     padding: 0 15px;
     border: 1px solid #e9e9e9;
@@ -522,6 +702,7 @@ p {
       justify-content: center;
       &:hover {
         cursor: pointer;
+        color: $primaryGreenColor;
       }
       .li-icon {
         font-size: 28px;
@@ -577,6 +758,48 @@ p {
     font-size: 16px;
     font-weight: bold;
     line-height: 20px;
+  }
+}
+.dialog-shortcut {
+  .dialog-warpper {
+    display: flex;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  }
+  .dialog-left {
+    flex: 1;
+    /deep/ .el-input__inner {
+      line-height: 38px;
+      height: 40px;
+    }
+    /deep/ .el-tree {
+      height: 300px;
+      overflow: hidden;
+      overflow-y: auto;
+    }
+  }
+  .dialog-left,
+  .dialog-right {
+    height: 340px;
+  }
+  .dialog-right {
+    width: 260px;
+    .el-card {
+      height: 100%;
+      /deep/ .el-card__header {
+        padding: 0 20px;
+        height: 40px;
+        line-height: 38px;
+      }
+      /deep/ .el-button {
+        line-height: 38px;
+        padding: 0 10px;
+        float: right;
+      }
+    }
+    .item {
+      line-height: 30px;
+      color: $primaryGreenColor;
+    }
   }
 }
 </style>
