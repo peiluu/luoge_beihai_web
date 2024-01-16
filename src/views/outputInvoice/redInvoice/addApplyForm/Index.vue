@@ -1,6 +1,6 @@
 <template>
   <div class="main-content" :style="'min-height: ' + contentHeight + 'px;'">
-    <BackBtn path="/redInvoice/infoTable" :query="$route.query" />
+    <BackBtn path="/outputInvoice/redInvoice/infoTable/Index" :query="$route.query" />
     <div class="content-header">
       <Step :stepData="{ current: 1, total: 3, title: '查询发票信息' }" />
     </div>
