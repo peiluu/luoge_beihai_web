@@ -57,33 +57,6 @@ export const moduleRoutes = {
 
 export const mainChildrenRoutes = [
   {
-    path: '/organization/TaxBodyImport',
-    name: 'TaxBodyImport',
-    meta: { title: '纳税主体信息导入', tab: true},
-    component: () =>
-      import(
-        '@/views/organization/taxBody/TaxBodyImport'
-      ),
-  },
-  {
-    path: '/organization/invoiceOrganizationImport',
-    name: 'InvoiceOrganizationImport',
-    meta: { title: '开票点组织信息导入', tab: true },
-    component: () =>
-      import(
-        '@/views/organization/invoicingOrganization/InvoiceOrganizationImport'
-      ),
-  },
-  {
-    path: '/organization/acceptOrganizationImport',
-    name: 'AcceptOrganizationImport',
-    meta: { title: '受票点组织信息导入', tab: true },
-    component: () =>
-      import(
-        '@/views/organization/acceptOrganization/AcceptOrganizationImport'
-      ),
-  },
-  {
     path: '/custom/Detail',
     name: 'customDetail',
     meta: { title: '客户信息', tab: true},

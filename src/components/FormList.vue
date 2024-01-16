@@ -17,7 +17,7 @@
         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
         :span-method="spanMethod"
         v-loading="loading"
-
+        class="table-body-warpper"
         :row-class-name="tableSelectedRow"
         @selection-change="handleSelection"
       >

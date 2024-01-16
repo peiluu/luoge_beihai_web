@@ -15,19 +15,19 @@ export const getOrgList = data => postJSON(`${config.host}/orgnization/getOrgLis
  * @description 【组织管理】新增受票组织
  */
 export const saveReceiveOrg = data =>
-  postJSON(`${config.host}/orgnization/saveReceiveOrg`, data, null, true);
+  postJSON(`${config.host}/orgnization/saveReceiveOrg`, data);
 
 /**
  * @description 【组织管理】修改受票组织
  */
 export const updateReceiveOrg = data =>
-  postJSON(`${config.host}/orgnization/updateReceiveOrg`, data, null, true);
+  postJSON(`${config.host}/orgnization/updateReceiveOrg`, data);
 
 /**
  * @description 【组织管理】获取详情
  */
 export const loadOrgDetail = data =>
-  postJSON(`${config.host}/orgnization/loadOrgDetail`, data, null, true);
+  postJSON(`${config.host}/orgnization/loadOrgDetail`, data);
 
 /**
  * @description 根据用户获取有权限的所有主体（不分页）
