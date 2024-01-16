@@ -459,7 +459,7 @@ export default {
      */
     editInvoice(row) {
       this.$router.push({
-        path: '/buleInvoice/BlueInvoiceForm',
+        path: '/outputInvoice/blueInvoice/Index',
         query: {
           invoiceId: row.id,
           isFormInvoiced: 'N'

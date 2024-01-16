@@ -2009,7 +2009,7 @@ export default {
         this.$store.dispatch("app/removeTab", this.$store.getters.activeTab);
       } else if (this.query.isFormInvoiced == "N") {
         this.$router.push({
-          path: "/outputInvoice/noInvoice/Index",
+          path: "/outputInvoice/notInvoice/Index",
         });
         this.$store.dispatch("app/removeTab", this.$store.getters.activeTab);
       }

@@ -105,7 +105,6 @@ export const urlMapEnv = {
     },
   },
 };
-
 /**
  * @description 台账配置
  *
@@ -204,25 +203,22 @@ export const outputFplxMap = {
   '01': '数电增值税专用发票',
   '02': '数电增值税普通发票',
 };
-
+const origin = window.location.origin
 export const dynamicUrlMap = {
   // 测试环境 - 本地地址
   development: {
     mtcLoginUrl: 'https://mtc-sit-k8s.mideazy.com/piaoeda-cloud/cas/',
-    frontUrl: 'https://192.168.1.24:8001/',
-    testUrl: 'https://mtc-sit-k8s.mideazy.com/ent-views/#/warningMessage/warningMessage_wb/',
+    frontUrl: origin,
   },
   // 测试环境 - 线上地址
   uat: {
     mtcLoginUrl: 'https://mtc-sit-k8s.mideazy.com/piaoeda-cloud/cas/',
-    frontUrl: 'https://mtclq-uat.mideazy.com/',
-    testUrl: 'https://mtc-sit-k8s.mideazy.com/ent-views/#/warningMessage/warningMessage_wb/',
+    frontUrl: origin,
   },
   // 测试环境 - 线上地址
   production: {
     mtcLoginUrl: 'https://mtc-sit-k8s.mideazy.com/piaoeda-cloud/cas/',
-    frontUrl: 'https://mtclq-uat.mideazy.com/',
-    testUrl: 'https://mtc-sit-k8s.mideazy.com/ent-views/#/warningMessage/warningMessage_wb/',
+    frontUrl: origin,
   },
 };
 
