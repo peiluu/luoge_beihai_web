@@ -225,11 +225,17 @@ export default {
     /**
      * @description 授信额度更新
      */
-    async updateCredit() {
-      const { code = '' } = await updateCredit({ nsrsbh: this.form.nsrsbh })
-      if (code === '0') {
-        this.$message.success('额度更新成功');
-      }
+    updateCredit() {
+      updateCredit({ nsrsbh: this.form.nsrsbh }).then(res=>{
+        debugger
+        console.log(res)
+        if (res.code === '0') {
+          this.$message.success('额度更新成功');
+        }else {
+          this.$message.console.error(res.msg);
+        }
+      })
+      
     },
     // 获取数据
     getInfo() {

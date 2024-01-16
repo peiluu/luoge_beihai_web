@@ -10,25 +10,27 @@
           </el-select>
         </el-form-item>
         <el-form-item label="请选择限制的税率">
-            <el-select v-model="form.qyzbs" placeholder="全部">
-              <el-option label="免税" value="1"></el-option>
-              <el-option label="不征税" value="2"></el-option>
-              <el-option label="0%" value="3"></el-option>
-              <el-option label="1%" value="4"></el-option>
-              <el-option label="3%" value="5"></el-option>
-              <el-option label="5%" value="6"></el-option>
-              <el-option label="6%" value="7"></el-option>
-              <el-option label="9%" value="8"></el-option>
-              <el-option label="11%" value="9"></el-option>
-              <el-option label="13%" value="10"></el-option>
-            </el-select>
-          </el-form-item>
-        <el-form-item label="限制约束" prop="gmfMc">
-          <el-input v-model="form.nsrmc" placeholder="不得开具" maxlength="100" :disabled="true"/>
+          <el-select v-model="form.qyzbs" placeholder="请选择">
+            <el-option label="免税" value="1"></el-option>
+            <el-option label="不征税" value="2"></el-option>
+            <el-option label="0%" value="3"></el-option>
+            <el-option label="1%" value="4"></el-option>
+            <el-option label="3%" value="5"></el-option>
+            <el-option label="5%" value="6"></el-option>
+            <el-option label="6%" value="7"></el-option>
+            <el-option label="9%" value="8"></el-option>
+            <el-option label="11%" value="9"></el-option>
+            <el-option label="13%" value="10"></el-option>
+          </el-select>
         </el-form-item>
-
-        <el-form-item label="请选择限制结果" prop="dzdh">
-          <el-select v-model="form.dzdh" placeholder="请选择" maxlength="80" />
+        <el-form-item label="限制约束" prop="gmfMc">
+          <el-input v-model="form.nsrmc" placeholder="不得开具" maxlength="100" :disabled="true" />
+        </el-form-item>
+        <el-form-item label="请选择限制结果">
+          <el-select v-model="form.qyzbs" placeholder="请选择">
+            <el-option label="提醒" value="11"></el-option>
+          <el-option label="拒绝" value="12"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="请选择发票类型" prop="dzdh">
           <el-select v-model="form.dzdh" placeholder="请选择" maxlength="80" />
@@ -93,7 +95,7 @@
 import { regCollection } from '@/config/constant.js';
 import { rgionEnum, cityEnum, provincesEnmu, areaEnum } from '@/config/regionEnums.js';
 // import ExtendInfo from './ExtendInfo'
-import {  getDetailById, getAllZt, selectYtList, selectQyList, addTaxBody, getZgsList, getTaxArea, updateTaxBody } from "./Api";
+import { getDetailById, getAllZt, selectYtList, selectQyList, addTaxBody, getZgsList, getTaxArea, updateTaxBody } from "./Api";
 export default {
   name: "organizationTaxBodyDetail",
   components: {},
@@ -105,17 +107,25 @@ export default {
   },
   data() {
     return {
+      // value:'',
+      // value1:'',
+      // result:{
+      //   11:'提醒',
+      //   12:'拒绝'
+      // },
       taxRate: {
-        1:  '免税' ,
+        1: '免税',
         2: '不征税',
         3: '0%',
         4: '1%',
         5: '3%',
         6: '5%',
         7: '6%',
-        8:'9%',
-        9:'11%',
-        10:'13%'
+        8: '9%',
+        9: '11%',
+        10: '13%',
+        11:'提醒',
+        12:'拒绝'
       },
       size: '',
       taxBodyList: [],
@@ -189,18 +199,18 @@ export default {
     this.selectQyList();
     this.getZgsList();
     const { operateType = '', id = '' } = this.detailInfo;
-    console.log(this.detailInfo,111)
+    console.log(this.detailInfo, 111)
     this.operateType = operateType;
     if (id) {
       this.getDetailById(id);
       this.getAllZt(id)
     }
-    
+
   },
 
   methods: {
-        // 获取纳税主体
-        async getListAll() {
+    // 获取纳税主体
+    async getListAll() {
       const { code = '', data = [] } = await getListAll({})
       if (code === '0') {
         this.taxBodyList = data;
@@ -271,7 +281,7 @@ export default {
       this.$refs["ruleForm"].validate(async valid => {
         debugger;
         if (!valid) return;
-        
+
         const param = {
           ...this.form,
           dlscjybmList: this.dlscjybmList,
@@ -297,11 +307,11 @@ export default {
           this.$message.error(msg)
         }
       } catch (error) {
-          this.$message.error(error.msg || '操作失败')
+        this.$message.error(error.msg || '操作失败')
       } finally {
         this.saveLoading = false;
       }
-      
+
     },
 
     handleRemove(file, fileList) {
@@ -480,6 +490,7 @@ export default {
     padding-bottom: 4px;
   }
 }
+
 .footer {
   text-align: center;
 }
