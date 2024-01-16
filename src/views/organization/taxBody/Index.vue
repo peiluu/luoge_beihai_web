@@ -379,17 +379,6 @@ export default {
         operateType,
         id: data.id
       }
-      // if (operateType === 'add') {
-      //   sessionStorage.setItem('clearTaxBody', 1)
-      // }
-      // this.$router.push({
-      //   path: '/organization/taxBodyDetail',
-      //   query: {
-      //     operateType,
-      //     id: data.id
-      //   }
-      // })
-      // this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
 
     },
     // 维护开票点 / 受票点
@@ -403,8 +392,6 @@ export default {
     //导入
     handleImport() {
       this.importVisible = true;
-      // this.$router.push({ path: "/organization/TaxBodyImport" })
-      // this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
     },
     getSearchParam(param) {
       this.queryParam = param;

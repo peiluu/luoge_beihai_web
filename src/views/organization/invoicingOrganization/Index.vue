@@ -305,17 +305,6 @@ export default {
         operateType,
         id: data.id
       }
-      // if (operateType === 'add') {
-      //   sessionStorage.setItem('clearInvoicingOrganization', 1)
-      // }
-      // this.$router.push({
-      //   path: '/organization/invoicingOrganizationDeatil',
-      //   query: {
-      //     operateType,
-      //     id: data.id
-      //   }
-      // })
-      // this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
     },
     getList() {
       this.$refs.list && this.$refs.list.reload()
@@ -323,8 +312,6 @@ export default {
     // 导入
     handleImport() {
       this.importVisible = true;
-      // this.$router.push({ path: "/organization/invoiceOrganizationImport" })
-      // this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
     },
     getSearchParam(param) {
       this.queryParam = param;

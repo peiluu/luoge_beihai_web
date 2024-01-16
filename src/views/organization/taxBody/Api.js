@@ -31,7 +31,7 @@ export const getDetailById = (data) => postJSON(`${config.host}/taxBody/getDetai
  * @desption 【组织管理】保存纳税主体
  */
 export const addTaxBody = (data) =>
-  postJSON(`${config.host}/taxBody/addTaxBody`, data, null, true);
+  postJSON(`${config.host}/taxBody/addTaxBody`, data);
 
 /**
  * @desption 【组织管理】获取所有总公司
@@ -48,7 +48,7 @@ export const listCascaderDictTaxArea = (data) =>
  * @desption 【组织管理】更新纳税主体
  */
 export const updateTaxBody = (data) =>
-  postJSON(`${config.host}/taxBody/updateTaxBody`, data, null, true);
+  postJSON(`${config.host}/taxBody/updateTaxBody`, data);
 
 /**
  * @desption 【组织管理】 删除企业
@@ -79,7 +79,7 @@ export const getTaxPayerInfo = (data) =>
  * @desption 【组织管理】纳税主体列表Excel导出
  */
 export const exportTaxBodyInfo = (data) =>
-  download(`${config.host}/taxBody/exportTaxBodyInfo`, data, null, true);
+  download(`${config.host}/taxBody/exportTaxBodyInfo`, data);
 
 /**
  * @desption 【组织管理】纳税主体列表Excel导入

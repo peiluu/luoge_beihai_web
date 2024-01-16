@@ -15,13 +15,13 @@ export const getOrgList = data => postJSON(`${config.host}/orgnization/getOrgLis
  * @description 【组织管理】新增组织
  */
 export const saveOrg = data =>
-  postJSON(`${config.host}/orgnization/saveOrg`, data, null, true);
+  postJSON(`${config.host}/orgnization/saveOrg`, data);
 
 /**
  * @description 【组织管理】修改组织
  */
 export const updateOrg = data =>
-  postJSON(`${config.host}/orgnization/updateOrg`, data, null, true);
+  postJSON(`${config.host}/orgnization/updateOrg`, data);
 
 /**
  * @description 【组织管理】获取详情
@@ -71,7 +71,7 @@ export const queryInvoicingTerminal = data =>
 /**
  * @description 获取所有主体（不分页）
  */
-export const getListAll = data => postJSON(`${config.host}/taxBody/getListAll`, data, null, true);
+export const getListAll = data => postJSON(`${config.host}/taxBody/getListAll`, data);
 
 /**
  * @desption 下载excel模板
