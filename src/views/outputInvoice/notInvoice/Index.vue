@@ -113,7 +113,7 @@ export default {
         { title: "开票类型", dataIndex: "lzfpbz",align:"center", slot: 'lzfpbz' },
         { title: "发票种类", dataIndex: "fppz", slot: 'fppz' },
         { title: "开票状态", width: 90,align:"center", dataIndex: "status", slot: 'status' },
-        { title: "审核状态", width: 100, dataIndex: "shzt", slot: "shzt" },
+        // { title: "审核状态", width: 100, dataIndex: "shzt", slot: "shzt" },
         { title: "开票组织名称", width: 280, dataIndex: "orgName" },
         { title: "购买方名称", width: 180, dataIndex: "gmfmc", },
         { title: "购买方识别号/身份证号", width: 180, dataIndex: "gmfnsrsbh", },
