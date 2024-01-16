@@ -484,6 +484,7 @@ export default {
     // 查看红字确认单申请详情，查看 / 红冲 /
     async getRedInvoice(id) {
       const { code = '', data = {} } = await getRedInvoice({ id })
+      debugger;
       if (code === '0') {
         this.form = {
           ...this.form,
@@ -491,6 +492,7 @@ export default {
           lzkprq: dateFormat('YYYY-mm-dd', data.lzkprq),
           lzfptdyslxDm: data.lzfpTdyslxDm, // 蓝字发票特定要素类型代码
         };
+       
         // 当前身份，销方收到的购方发起的，购方收到的销方发起的
         this.lrfsf = data.lrfsf == '0' ? '1' : '0'
         this.hzqrdmxList = data?.hzqrdmxList ? data?.hzqrdmxList.map((item) => {
@@ -989,13 +991,13 @@ export default {
       const { level = '', isFormInvoiced = '', nsrmc = '', nsrsbh = '', taxBodyId = '', isFormTodoList } = this.query;
       // 从已开票进入的, 返回上一步直接返回已开票页面·
       if (isFormInvoiced == 'Y') {
-        this.$router.push({ path: '/outputInvoice/invoicedList' });
+        this.$router.push({ path: '/outputInvoice/invoicedList/Index' });
         this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
         return;
       }
       // 从待办事项页面进入的, 返回上一步直接返回待办事项页面·
       if (isFormTodoList == 'Y') {
-        this.$router.push({ path: '/home/todoList', query: { activeName: 2 } });
+        this.$router.push({ path: '/todo/red-font', query: { activeName: 2 } });
         this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
         return;
       }
@@ -1007,11 +1009,11 @@ export default {
         addRecord: '/redInvoice/addApplyForm',
         queryBlue: '/redInvoice/addApplyForm',
       }
-      const backWaitConfirmPath = level === 'output' ? '/outputInvoice/waitConfirm' : '/inputInvoice/waitConfirm';
+      //const backWaitConfirmPath = level === 'output' ? '/outputInvoice/waitConfirm/Index' : '/inputInvoice/waitConfirm/Index';
       // 返回进项/销项待确认红字列表
-      const path = ['output', 'input'].includes(level) ? backWaitConfirmPath : ['addRecord', 'queryBlue'].includes(this.operateType) ? '/redInvoice/addApplyForm' : '/redInvoice/infoTable';
+      //const path = ['output', 'input'].includes(level) ? backWaitConfirmPath : ['addRecord', 'queryBlue'].includes(this.operateType) ? '/redInvoice/addApplyForm' : '/redInvoice/infoTable';
       this.$router.push({
-        path,
+        path:'/outputInvoice/redInvoice/infoTable/Index',
         query: { nsrmc, nsrsbh, taxBodyId }
       });
       this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);

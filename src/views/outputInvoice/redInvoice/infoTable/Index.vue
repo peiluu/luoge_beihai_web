@@ -165,6 +165,7 @@ export default {
         { title: "开具状态", dataIndex: "ykjhzfpbz", align: "center", slot: "ykjhzfpbz" },
         { title: "操作", key: "action", fixed: "right", width: 80, scopedSlots: { customRender: "action" } }
       ],
+      
       searchList: [
         {
           label: "购/销方选择",

@@ -8,13 +8,10 @@
                 <el-input v-model="form.name">
                   <template slot="append"><i
                   class="el-icon-circle-plus-outline"
-                  @click="() => remove(node, data)"
+                  @click="() => handleAddClassification(1, null)"
                 ></i></template>
                 </el-input>
               </el-form-item>
-            
-           
-         
         </el-form>
       </article>
       <article class="tree_main">
@@ -47,13 +44,17 @@
         </el-tree>
       </article>
     </el-card>
+    <app-edite-name :visible.sync="nameVisible"></app-edite-name>
   </div>
 </template>
 
 <script>
+import AppEditeName from '../componetns/editeCommodityClassificationName/'
 export default {
   name: "rightListPage",
-  components: {},
+  components: {
+    AppEditeName
+  },
   data() {
     return {
       form: {},
@@ -119,11 +120,20 @@ export default {
           ],
         },
       ],
+      nameVisible:false,
     };
   },
   computed: {},
   watch: {},
-  methods: {},
+  methods: {
+   /**
+    * @description: 
+    * @return {*}
+    */   
+   handleAddClassification(type,node){
+    this.nameVisible = true;
+   }
+  },
   created() {},
   mounted() {},
   beforeCreate() {},
