@@ -128,7 +128,7 @@
         <div id="echart-col"></div>
       </div>
       <div class="echart-r">
-        <p class="echart-mo">{{ringMonth}}</p>
+        <p class="echart-mo">{{ ringMonth }}</p>
         <p class="proportion">占图比</p>
         <div id="echart-ring"></div>
       </div>
@@ -327,6 +327,8 @@ export default {
       let option;
 
       option = {
+        // https://echarts.apache.org/zh/option.html#color 默认色
+        color: ['#5470c6', '#91cc75', '#ee6666', '#fac858'],
         tooltip: {
           trigger: 'axis',
           axisPointer: {
@@ -393,7 +395,7 @@ export default {
         console.log('--params--', params);
         if (_this.xMonth !== params.dataIndex) {
           _this.xMonth = params.dataIndex;
-          _this.ringMonth = params.name
+          _this.ringMonth = params.name;
           _this.initEchartRing();
         }
       });
@@ -420,6 +422,7 @@ export default {
       }
       // console.log('--data--', data, type);
       option = {
+        color: ['#5470c6', '#ee6666'],
         series: [
           // https://echarts.apache.org/zh/option.html#series-pie.radius
           {
