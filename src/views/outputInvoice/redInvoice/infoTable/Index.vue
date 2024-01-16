@@ -1,7 +1,7 @@
 <template>
   <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
     <div class="content-header">
-      <BackBtn path="/redInvoice/index" align="left" />
+      <BackBtn path="/outputInvoice/redInvoice/enterpriseList/index" align="left" />
       <el-tabs class="custom-card-tabs" v-model="activeName" type="card">
         <el-tab-pane name="0" label="我发出的" />
         <el-tab-pane name="1" label="我收到的" />
