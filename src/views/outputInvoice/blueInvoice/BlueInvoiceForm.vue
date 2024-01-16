@@ -363,14 +363,14 @@
                   :disabled="!canEdit"
                   >重选发票种类</el-button
                 >
-                <el-button
+                <!-- <el-button
                   size="mini"
                   style="float: right; margin-right: 10px"
                   @click="handleUseTheme"
                   :disabled="!canEdit"
                   :loading="loading"
                   >引用模板</el-button
-                >
+                > -->
               </div>
               <div class="form-goods-gird">
                 <vxe-table
@@ -878,12 +878,14 @@
     </div>
     <div class="invoice-tools" v-show="canEdit">
       <div class="invoice_footer">
-        <div> <el-button @click="handleAddTheme" :loading="loading">生成模板</el-button></div>
+        <div style="width: 100px"> 
+          <!-- <el-button @click="handleAddTheme" :loading="loading">生成模板</el-button> -->
+        </div>
         <div>
           <el-button :disabled="saving" type="success" @click="saveInvoice(1)" :loading="loading">开票</el-button>
           <el-button :disabled="saving" @click="saveInvoice(0)" :loading="loading">保存</el-button>
           <el-button @click="preview" :loading="loading">预览</el-button></div>
-        <div>
+        <div style="width: 100px">
           <el-button @click="handleBack" :loading="loading">返回</el-button>
         </div>
       </div>

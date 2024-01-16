@@ -322,7 +322,20 @@ Vue.prototype.formatMoney = (data, notFixed) => {
   }) : '0.00'
 }
 
-
+//获取浏览器地址参数
+Vue.prototype.getUrlParam = (key =>{
+  var url = decodeURI(window.location.href);
+  var arr = url.split("?");
+  if(arr.length > 1){
+    var paramArr = arr[1].split("&");
+    for(var i = 0; i < paramArr.length; i++){
+      var param = paramArr[i];
+      if(param.split("=")[0] == key){
+        return param.split("=")[1];
+      }
+    }
+  }
+})
 
 
 

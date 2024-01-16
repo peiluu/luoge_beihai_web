@@ -175,9 +175,13 @@
         let url = this.getUrlParam("url");
         let fpqqlsh = this.getUrlParam("fpqqlsh");
         this.api.getInvoicePreview({"url": decodeURIComponent(url), "fpqqlsh":fpqqlsh}).then(res =>{
-          this.form = res.data;
-          this.jshj = Calc.Sub(res.data.jshj, res.data.hjse)
-          this.form.jshjCny = numToCny(this.form.jshj + "");
+          if(res.data){
+            this.form = res.data;
+            this.jshj = Calc.Sub(res.data.jshj, res.data.hjse)
+            this.form.jshjCny = numToCny(this.form.jshj + "");
+          } else {
+            this.$message.error('数据获取错误！')
+          }
         });
       },
       getFpmxJe(fpmx){

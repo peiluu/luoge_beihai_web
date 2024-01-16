@@ -328,3 +328,7 @@ export const zsxmMap = {
   // 6: '货物及劳务',
   // 7: '其中：销售不动产',
 };
+/**
+ * @description: 路由白名单, 无需登录即可访问
+ */
+export const routerWhitelist = /^(\/invoice\/preview)/

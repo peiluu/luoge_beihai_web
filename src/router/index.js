@@ -4,6 +4,7 @@ import http from '@/utils/request'
 import { getToken } from '@/utils'
 import { isURL } from '@/utils/validate'
 import store from '../store/index'
+import { routerWhitelist } from '@/config/constant'
 
 Vue.use(Router)
 
@@ -40,7 +41,8 @@ export const pageRoutes = [
       next()
     }
   },
-  { path: '/login', component: () => import('@/views/login/index'), name: 'login', meta: { title: '登录' } }
+  { path: '/login', component: () => import('@/views/login/index'), name: 'login', meta: { title: '登录' } },
+  { path: '/invoice/preview', component: () => import('@/views/invoice/Preview'), name: 'preview', meta: { title: '预览' } }
 ]
 
 // 模块路由(基于主入口布局页面)
@@ -122,8 +124,11 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  // 添加动态(菜单)路由
-  // 已添加或者当前路由为页面路由, 可直接访问
+  // 路由白名单：特殊访问地址不需要登录，可直接访问
+    // console.log('white---list', routerWhitelist.test(to.path), to.path, routerWhitelist)
+  if(routerWhitelist.test(to.path)){
+    return next()
+  }
   const token = getToken();
   // console.log('----token----', token)
   // console.log('----beforeEach to----', to)
