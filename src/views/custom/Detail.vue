@@ -3,19 +3,18 @@
     <div class="main-content">
       <el-form :inline="true" :model="form" :rules="rules" ref="ruleForm" :disabled="operateType === 'detail'">
         <div class="content-title">客户信息</div>
-        <el-form-item label="所属开票点" prop="orgid">
-          <el-select v-model="form.orgid" placeholder="请选择" filterable clearable multiple>
-            <el-option v-for="item in taxBodyList" :key="index" :label="item.label" :value="item.value">
+        <el-form-item label="所属开票点" prop="orgids">
+          <el-select v-model="form.orgids" placeholder="请选择" filterable clearable multiple>
+            <el-option v-for="(item, index) in taxBodyList" :key="index" :label="item.name" :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="纳税人识别号" prop="gmfNsrsbh">
+        <el-form-item label="客户名称" prop="gmfMc">
+          <el-input v-model="form.gmfMc" placeholder="请输入" maxlength="100" />
+        </el-form-item>
+        <el-form-item label="客户纳税人识别号" prop="gmfNsrsbh">
           <el-input v-model="form.gmfNsrsbh" placeholder="请输入" maxlength="20" />
         </el-form-item>
-        <el-form-item label="客户名称" prop="gmfMc">
-          <el-input v-model="form.nsrmc" placeholder="请输入" maxlength="100" />
-        </el-form-item>
-
         <el-form-item label="地址" prop="dzdh">
           <el-input v-model="form.dzdh" placeholder="请输入" maxlength="80" />
         </el-form-item>
@@ -35,307 +34,127 @@
           <el-input v-model="form.revphone" placeholder="请输入" maxlength="90" />
         </el-form-item>
       </el-form>
-      <!-- 扩展信息 -->
-      <!-- <ExtendInfo :nsrsbh="form.nsrsbh" v-if="form.isDigital === 'Y' && operateType == 'detail'" /> -->
     </div>
 
     <div class="footer">
       <el-button @click="cancel">取消</el-button>
       <el-button type="success" @click="submit" v-if="operateType !== 'detail'">保存</el-button>
     </div>
-
-    <el-dialog title="编辑独立生产经营部门" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
-      <div class="table-tools"><el-button @click="handleAddFun">新增</el-button></div>
-
-      <div class="custom-table">
-        <el-table stripe ref="table" :data="dlscjybmList" border :height="height" tooltip-effect="dark"
-          :cell-style="{ textAlign: 'center' }" :header-cell-style="{
-            fontWeight: 400,
-            borderTop: '1px solid #adb4bc',
-            background: '#f7f9fd',
-            color: '#333333',
-            textAlign: 'center'
-          }">
-          <el-table-column type="index" label="序号" width="60" />
-          <el-table-column label="经营部门名称" align="center">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.dlscjymc" placeholder="请输入" maxlength="100" />
-            </template>
-          </el-table-column>
-          <el-table-column label="关联账套" align="center">
-            <template slot-scope="scope">
-              <el-select v-model="scope.row.id" placeholder="请选择" filterable clearable
-                @change="(e) => handleSelect(e, scope.$index)">
-                <el-option v-for="item in allZtList" :key="item.id" :label="item.name" :value="item.id">
-                </el-option>
-              </el-select>
-            </template>
-          </el-table-column>
-          <el-table-column fixed="right" label="操作" width="100">
-            <template slot-scope="scope">
-              <el-button @click="handleDeletedLscjybmList(scope.$index)">删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="handleClose">取 消</el-button>
-        <el-button type="success" @click="saveDlscjybmList">保 存</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
 <script>
-import { regCollection } from '@/config/constant.js';
-import { rgionEnum, cityEnum, provincesEnmu, areaEnum } from '@/config/regionEnums.js';
-// import ExtendInfo from './ExtendInfo'
-import {  getDetailById, getAllZt, selectYtList, selectQyList, addTaxBody, getZgsList, getTaxArea, updateTaxBody } from "./Api";
+import { regCollection } from "@/config/constant.js";
+import { updateCustomer, getOrgList, addCustomer, getDetailById } from "./Api";
 export default {
   name: "organizationTaxBodyDetail",
   components: {},
   props: {
     detailInfo: {
       type: Object,
-      default: () => ({})
-    }
+      default: () => ({}),
+    },
   },
   data() {
     return {
       taxBodyList: [],
-      form: { isDigital: 'N' },
-      districts: [],
-      operateType: '',
-      ytList: [],
-      qyList: [],
-      zgsList: [],
-      taxAreaList: [],
-      dialogVisible: false,
-      allZtList: [],
-      dlscjybmList: [],
-      rgionEnum, // 所属区域
-      cityEnum, // 所属城市
-      provincesEnmu, // 所属省份
-      areaEnum, // 所属市区
+      form: {},
+      operateType: "",
       rules: {
-        taxBodyId: [{ required: true, message: "请输入", trigger: "blur" }],
-        nsrsbh: [{ required: true, message: "请输入", trigger: "blur" }, regCollection.nsrsbh],
-        nsrmc: [{ required: true, message: "请输入", trigger: "blur" }],
-        address: [{ required: true, message: "请输入", trigger: "blur" }],
-        phone: [{ required: true, message: "请输入", trigger: "blur" }, regCollection.phone],
-        bankAccount: [{ required: true, message: "请输入", trigger: "blur" }],
+        orgids: [{ required: true, message: "请选择", trigger: "blur" }],
+        gmfNsrsbh: [
+          { required: true, message: "请输入", trigger: "blur" },
+          regCollection.nsrsbh,
+        ],
+        gmfMc: [{ required: true, message: "请输入", trigger: "blur" }],
+        // address: [{ required: true, message: "请输入", trigger: "blur" }],
+        // phone: [{ required: true, message: "请输入", trigger: "blur" }, regCollection.phone],
+        // bankAccount: [{ required: true, message: "请输入", trigger: "blur" }],
       },
-      saveLoading: false
+      saveLoading: false,
     };
   },
-
-  computed: {
-    contentHeight() {
-      return window.innerHeight - 120
-    },
-    height() {
-      return window.innerHeight - 600
-    }
-  },
-  watch: {
-    'form.businessFormat'(newVal) {
-      if (newVal) {
-        this.selectQyList();
-      }
-    },
-  },
-
-  activated() {
-    if (sessionStorage.getItem('clearTaxBody') == 1) {
-      this.form = { isDigital: 'N' }
-      sessionStorage.setItem('clearTaxBody', 0)
-    }
-    this.getTaxArea();
-    this.selectYtList();
-    this.selectQyList();
-    this.getZgsList();
-
-    const { operateType = '', id = '' } = this.$route.query;
-    this.operateType = operateType;
-    if (id) {
-      this.getDetailById(id);
-      this.getAllZt(id)
-    }
-  },
   mounted() {
-    if (sessionStorage.getItem('clearTaxBody') == 1) {
-      this.form = { isDigital: 'N' }
-      sessionStorage.setItem('clearTaxBody', 0)
-    }
-    // this.listCascaderDict();
-    this.getTaxArea();
-    this.selectYtList();
-    this.selectQyList();
-    this.getZgsList();
-    const { operateType = '', id = '' } = this.detailInfo;
-    console.log(this.detailInfo,111)
-    this.operateType = operateType;
-    if (id) {
-      this.getDetailById(id);
-      this.getAllZt(id)
-    }
-    
+    this.getOrgLists();
+    // 编辑初始化值
+    this.initData();
   },
 
   methods: {
-        // 获取纳税主体
-        async getListAll() {
-      const { code = '', data = [] } = await getListAll({})
-      if (code === '0') {
-        this.taxBodyList = data;
-      }
-    },
-    // 获取省级税务局
-    async getTaxArea() {
-      const { code = '', data = [] } = await getTaxArea()
-      if (code === '0') {
-        this.taxAreaList = data
-      }
-    },
-    /**
-     * @desption 【组织管理】获取业态选择下拉
-     */
-    async selectYtList() {
-      const { code = '', data = [] } = await selectYtList()
-      if (code === '0') {
-        this.ytList = data
-      }
-    },
-    /**
-     * @desption 【组织管理】获取区域选择下拉
-     */
-    async selectQyList() {
-      const { code = '', data = [] } = await selectQyList({ yt: this.form.businessFormat || '' })
-      if (code === '0') {
-        this.qyList = data
-        console.log(data)
-      }
-    },
-    /**
-     * @desption 【组织管理】根据id获取纳税主体详情
-     */
-    async getDetailById(id) {
-      const { code = '', data = {} } = await getDetailById({ id })
-      if (code === '0') {
-        this.form = {
-          ...data,
-          isInstitution: data.isInstitution == 'Y' ? true : false,
-        }
-        this.dlscjybmList = data.dlscjybmList || []
+    async initData() {
+      const { detailInfo } = this
+      if (detailInfo.id) {
+        try {
+          const res = await getDetailById({ id: detailInfo.id })
+          if (res.code === '0') {
+            const { data } = res;
+            this.form = {
+              id: data.id,
+              orgids: data.orgids.map(item => String(item)),
+              gmfMc: data.gmfMc,
+              gmfNsrsbh: data.gmfNsrsbh,
+              dzdh: data.dzdh,
+              phone: data.phone,
+              yhzh: data.yhzh,
+              bankaccount: data.bankaccount,
+              username: data.username,
+              revphone: data.revphone,
+            };
+          }
 
+        } catch (error) {
+          console.log(error)
+        }
       }
     },
     /**
-     * @desption 【组织管理】获取所有总公司
+     * @desption 开票点
      */
-    async getZgsList() {
-      const { code = '', data = [] } = await getZgsList({})
-      if (code === '0') {
-        this.zgsList = data
-      }
-    },
-    /**
-     * @desption 【组织管理】获取所有账套
-   */
-    async getAllZt(id) {
-      const { code = '', data = [] } = await getAllZt({ id })
-      if (code === '0') {
-        this.allZtList = data
+    async getOrgLists() {
+      const { code = "", data = [] } = await getOrgList({});
+      if (code === "0") {
+        this.taxBodyList = data;
       }
     },
     /**
      * @description 提交表单，验证数据格式
      */
     async submit() {
-      this.$refs["ruleForm"].validate(async valid => {
+      this.$refs["ruleForm"].validate(async (valid) => {
         debugger;
         if (!valid) return;
-        
-        const param = {
-          ...this.form,
-          dlscjybmList: this.dlscjybmList,
-          isInstitution: this.form.isInstitution == true ? 'Y' : 'N',
-        }
-
-        this.saveTaxBody(param);
-      })
+        this.saveTaxBody();
+      });
     },
 
     /**
      * @desption 【组织管理】保存纳税主体
-    */
-    async saveTaxBody(param) {
+     */
+    async saveTaxBody() {
       try {
-        this.saveLoading = true
-        const api = param.id ? updateTaxBody : addTaxBody
-        const { code = '', data = [], msg = '操作失败' } = await api(param)
-        if (code === '0') {
-          this.$message.success('操作成功');
-          this.$emit('onOk')
+        this.saveLoading = true;
+        const api = this.form.id ? updateCustomer : addCustomer;
+        const { code = "", data = [], msg = "操作失败" } = await api(this.form);
+        if (code === "0") {
+          this.$message.success("操作成功");
+          this.$emit("onOk");
         } else {
-          this.$message.error(msg)
+          this.$message.error(msg);
         }
       } catch (error) {
-          this.$message.error(error.msg || '操作失败')
+        this.$message.error(error.msg || "操作失败");
       } finally {
         this.saveLoading = false;
       }
-      
-    },
-
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
-    },
-    beforeRemove(file, fileList) {
-      return this.$confirm(`确定移除 ${file.name}？`);
     },
     cancel() {
-      this.$emit('onClose')
-      // this.$router.push({
-      //   path: '/organization/index',
-      //   query: { activeName: '1' }
-      // })
-      // this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+      this.$emit("onClose");
     },
-    // 增加独立生产经营部门
-    addFunction() {
-      this.dialogVisible = true
-      this.dlscjybmList = [...this.form.dlscjybmList]
-    },
-    handleSelect(value, index) {
-      this.dlscjybmList[index].dlscjymc = this.allZtList.find((item) => item.id === value).name
-    },
-
-    handleClose() {
-      this.dialogVisible = false;
-      this.dlscjybmList = [...this.form.dlscjybmList]
-    },
-    saveDlscjybmList() {
-      if (this.dlscjybmList.find((item) => !item.dlscjymc || !item.id)) {
-        this.$message.warning('请补全信息')
-        return;
-      }
-      this.form.dlscjybmList = [...this.dlscjybmList]
-      this.dialogVisible = false
-
-    },
-    handleAddFun() {
-      this.dlscjybmList.push({ id: '', dlscjymc: '' })
-    },
-    handleDeletedLscjybmList(index) {
-      this.dlscjybmList.splice(index, 1)
-    }
-  }
-}
+  },
+};
 </script>
 <style lang="scss" scoped>
-@import '../../styles/variables.scss';
+@import "../../styles/variables.scss";
 
 .main-content {
   padding: 0 32px 16px;
@@ -357,13 +176,13 @@ export default {
     .el-date-editor,
     .el-input,
     .el-cascader {
-      width: 100%
+      width: 100%;
     }
   }
 
   .el-checkbox__input.is-checked+.el-checkbox__label,
   .el-radio__input.is-checked+.el-radio__label {
-    color: #606266
+    color: #606266;
   }
 
   &.flex-item {
@@ -414,7 +233,6 @@ export default {
   margin-left: -50%;
 }
 
-
 .company-info {
   display: flex;
 
@@ -428,7 +246,7 @@ export default {
     align-items: center;
 
     .el-input {
-      width: 60% !important
+      width: 60% !important;
     }
 
     .el-icon-plus {
@@ -456,7 +274,7 @@ export default {
 
   .el-input,
   .el-select {
-    width: 100%
+    width: 100%;
   }
 
   .table-tools {
@@ -465,8 +283,8 @@ export default {
     padding-bottom: 4px;
   }
 }
+
 .footer {
   text-align: center;
 }
 </style>
-
