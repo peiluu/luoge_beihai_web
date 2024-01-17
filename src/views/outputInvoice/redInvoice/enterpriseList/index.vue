@@ -39,8 +39,8 @@ export default {
   },
   methods: {
     hanldeInvoice(item, type, level) {
-      debugger;
-      const path = level == '3' ? '/outputInvoice/waitConfirm' : '/outputInvoice/redInvoice/infoTable/Index';
+      
+      const path = level == '3' ? '/todo/red-font' : '/outputInvoice/redInvoice/infoTable/Index';
       // 数电业务
       if (item.isDigital === 'Y') {
         this.$router.push({
