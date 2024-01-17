@@ -11,7 +11,7 @@
       <el-date-picker v-model="from.date" type="date" placeholder="选择日期"> </el-date-picker>
     </div>
     <div class="content">
-      <div class="invoice">
+      <div class="invoice invoice-bg1">
         <p class="c-title">发票数据</p>
         <p class="title"><span class="iconfont icon-lanzifapiao blue"></span>蓝字发票开具金额</p>
         <p class="money">123,123,12元<span>（共40张）</span></p>
@@ -22,7 +22,7 @@
           <p class="last-moon">较上月：+3%</p>
         </div>
       </div>
-      <div class="invoice">
+      <div class="invoice invoice-bg2">
         <p class="title"><span class="iconfont icon-hongzifapiao red"></span>红字发票开具金额</p>
         <p class="money">123,123,12元<span>（共40张）</span></p>
         <div class="subtitle">
@@ -31,7 +31,7 @@
           <p class="last-moon">较上月：+3%</p>
         </div>
       </div>
-      <div class="invoice">
+      <div class="invoice invoice-bg3">
         <p class="c-title">涉税数据</p>
         <p class="title"><span class="iconfont icon-jinxiaoshuie darkBlue"></span>进销税额</p>
         <p class="money">123,123,12元<span>（共40张）</span></p>
@@ -41,7 +41,7 @@
           <p class="last-moon">较上月：+3%</p>
         </div>
       </div>
-      <div class="invoice">
+      <div class="invoice invoice-bg4">
         <p class="title"><span class="iconfont icon-qiyenashui green"></span>企业纳税数据</p>
         <p class="money">123,123,12元<span>（共40张）</span></p>
         <div class="subtitle">
@@ -591,13 +591,14 @@ p {
     padding: 15px;
     position: relative;
     margin-right: 20px;
+    color: #fff;
     transition: all 0.3s cubic-bezier(0.39, 0.575, 0.565, 1);
     &:last-child {
       margin-right: 0;
     }
     &:hover {
       box-shadow: 0 0 5px 0 $primaryGreenColor;
-      color: $primaryGreenColor;
+      // color: $primaryGreenColor;
     }
     .c-title {
       font-size: 18px;
@@ -614,8 +615,8 @@ p {
       padding: 0 10px;
       line-height: 40px;
       font-size: 18px;
-      background: #f9f9f9;
-      color: #333;
+      // background: #f9f9f9;
+      // color: #333;
       .iconfont {
         font-size: 18px;
         margin-right: 10px;
@@ -623,7 +624,7 @@ p {
     }
     .money {
       font-size: 20px;
-      color: #333;
+      // color: #333;
       text-align: center;
       line-height: 40px;
       span {
@@ -632,7 +633,18 @@ p {
       }
     }
   }
-
+  .invoice-bg1 {
+    background-image: linear-gradient(to right, #4898d8, #3bc4ec);
+  }
+  .invoice-bg2 {
+    background-image: linear-gradient(to right, #ff6184, #ff9a96);
+  }
+  .invoice-bg3 {
+    background-image: linear-gradient(to right, #545e92, #83acce);
+  }
+  .invoice-bg4 {
+    background-image: linear-gradient(to right, #00baf2, #00f4bf);
+  }
   .subtitle {
     overflow: hidden;
     display: flex;
@@ -640,26 +652,26 @@ p {
     justify-content: flex-end;
     > p {
       margin-bottom: 5px;
-      color: #666;
+      color: #fff;
     }
   }
   .last-moon {
     font-size: 14px;
-    color: #666;
+    // color: #666;
     text-align: right;
   }
-  .blue {
-    color: #7ea6ff !important;
-  }
-  .red {
-    color: #fe5363 !important;
-  }
-  .darkBlue {
-    color: #000080 !important;
-  }
-  .green {
-    color: #008080 !important;
-  }
+  // .blue {
+  //   color: #7ea6ff !important;
+  // }
+  // .red {
+  //   color: #fe5363 !important;
+  // }
+  // .darkBlue {
+  //   color: #000080 !important;
+  // }
+  // .green {
+  //   color: #008080 !important;
+  // }
 }
 .tasks {
   margin-top: 25px;
