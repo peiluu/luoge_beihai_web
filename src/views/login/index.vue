@@ -142,12 +142,8 @@ export default {
             return;
           }
           this.$store.commit('saveSidebarMenuList', res.data || []);
-          try {
-            
-            fnAddDynamicMenuRoutes(res.data, [], this.$router);
-          } catch (error) {
-            
-          }
+          // 添加动态路由
+          fnAddDynamicMenuRoutes(res.data, [], this.$router);
           this.$router.replace({ name: 'home' });
         })
         .catch((e) => {
