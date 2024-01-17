@@ -14,6 +14,7 @@
       <el-card class="content-info">
         <div class="info-title">发票简要信息</div>
         <div class="info-list">
+          
           <div class="item">确认方名称 : {{ detail.lrfsf == '0' ? detail.gmfmc : detail.xsfmc }}</div>
           <div class="item">价税合计（元） : {{ formatMoney(detail.hzcxje + detail.hzcxse) }}</div>
           <div class="item">提交时间 : {{ dateFormat('YYYY-mm-dd', detail.lrrqq) }}</div>
@@ -43,9 +44,11 @@ export default {
       detail: {},
     };
   },
-  activated() {
+  mounted() {
     const { id = "" } = this.$route.query;
+    debugger;
     if (id) {
+      
       this.getRedInvoice(id);
     }
   },
@@ -62,6 +65,7 @@ export default {
     async getRedInvoice(id) {
       this.dataList = []
       const { code = "", data = {} } = await getRedInvoice({ id });
+      debugger;
       if (code === "0") {
         this.detail = data;
       }
