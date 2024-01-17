@@ -12,7 +12,7 @@
               :value="item.id">
           </el-option>
         </el-select>
-        <el-button  type="primary" @click="setPermission()">{{ $t('datapower.setdatapermission') }}</el-button>
+        <el-button  type="primary" @click="setPermission()" :loading="permissionLoading">{{ $t('datapower.setdatapermission') }}</el-button>
       </el-header>
       <el-main>
         <div  class="table-wrap">
@@ -62,7 +62,7 @@
 }
 .check-page-all {
   position: absolute;
-  top: 20px;
+  top: 15px;
   left: 11px;
   z-index: 100;
 }
@@ -70,7 +70,6 @@
 
 <script>
 import debounce from "lodash/debounce"
-import mixinViewModule from '@/mixins/view-module'
 export default {
   name: "data-permission-set",
   data () {
@@ -92,7 +91,8 @@ export default {
       //selectUserPermissionList:[],
       dataForm: {
         userid: ''
-      }
+      },
+      permissionLoading: false,
     }
   },
   computed: {
@@ -115,7 +115,7 @@ export default {
           //this.getInfo()
         }
       })
-      console.log("userid:",this.dataForm.userid);
+      // console.log("userid:",this.dataForm.userid);
       //this.initData();
     },
     // 数据初始化 绑定 pageCheck 属性
@@ -140,21 +140,22 @@ export default {
     //切换权限类型
     changePermissionType(e){
       this.selectionAllData=[];
-      console.log(e);
-      console.log("selected Permission Type:",this.selectpermissionid);
+      // console.log(e);
+      // console.log("selected Permission Type:",this.selectpermissionid);
       //要从permissionList中找到选中的权限类型列表，再通过接口去获取权限列表
       this.selectedPermissionObj=this.filterById(this.permissionlist, e);
-      console.log("selectedPermissionObj",this.selectedPermissionObj);
+      // console.log("selectedPermissionObj",this.selectedPermissionObj);
       this.getAPermissionList(this.selectedPermissionObj.url);
       //this.initData();
     },
     //提交授权
     setPermission(){
-      console.log("setPermission:",this.selectionAllData);
+      // console.log("setPermission:",this.selectionAllData);
+      this.permissionLoading = true;
       var permissionBody={"userid":this.dataForm.userid,"permissiontype":this.selectedPermissionObj.powertype,"permissionlist":this.selectionAllData}
-      console.log("permissionBody:",permissionBody);
+      // console.log("permissionBody:",permissionBody);
       this.$http["post"]('/sys/userdatapermission/setUserPermission', permissionBody).then(res => {
-
+        this.permissionLoading = false;
         if (res.code !== 0) {
           return this.$message.error(res.msg)
         }
@@ -167,7 +168,9 @@ export default {
             this.$emit('refreshDataList')
           }
         })
-      }).catch(() => {})
+      }).catch(() => {
+        this.permissionLoading = false;
+      })
     },
     // 点击全选
     checkPageAllEv (state) {
@@ -183,7 +186,7 @@ export default {
       checkAll(this.tableData, state)
       this.selectionAllData = []
       this.mapChecked(this.tableData)
-      console.log("selectionAllData", this.selectionAllData)
+      // console.log("selectionAllData", this.selectionAllData)
     },
     // 行点击
     pageCheckEv (scope) {
@@ -218,7 +221,7 @@ export default {
 
       this.selectionAllData = []
       this.mapChecked(this.tableData)
-      console.log("selectionAllData", this.selectionAllData)
+      // console.log("selectionAllData", this.selectionAllData)
     },
     // 获取选中的数据  使用该方法前需要将 selectionAllData 原有数据清空
     mapChecked (rows) {
@@ -289,7 +292,7 @@ export default {
           return this.$message.error(res.msg)
         }
         this.permissionlist = res.data.list
-        console.log("permissionlist:",this.permissionlist)
+        // console.log("permissionlist:",this.permissionlist)
         //if(this.dataForm.pstate==0)this.dataForm.pstate=fasle;else this.dataForm.pstate=true;
       }).catch(() => {})
     },
@@ -302,11 +305,11 @@ export default {
           return this.$message.error(res.msg)
         }
         this.tableData = res.data;
-        console.log("Apermissionlist:",this.tableData);
+        // console.log("Apermissionlist:",this.tableData);
         this.initData();
         //if(this.dataForm.pstate==0)this.dataForm.pstate=fasle;else this.dataForm.pstate=true;
       }).catch(() => {});
-        console.log("this.tableData:",this.tableData);
+        // console.log("this.tableData:",this.tableData);
     },
     isInPermissionList (arr, value){
       var len = arr.length, //数组长度

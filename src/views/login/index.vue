@@ -139,6 +139,7 @@ export default {
           }
           if (res.data.length === 0) {
             this.$message.error('当前帐户暂无访问权限，请联系管理员');
+            this.getCaptcha();
             return;
           }
           this.$store.commit('saveSidebarMenuList', res.data || []);
@@ -147,6 +148,7 @@ export default {
           this.$router.replace({ name: 'home' });
         })
         .catch((e) => {
+          this.getCaptcha();
           this.loading = false;
         });
     },
