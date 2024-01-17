@@ -487,7 +487,7 @@ export default {
     // 查看红字确认单申请详情，查看 / 红冲 /
     async getRedInvoice(id) {
       const { code = '', data = {} } = await getRedInvoice({ id })
-      debugger;
+      
       if (code === '0') {
         this.form = {
           ...this.form,
@@ -526,20 +526,20 @@ export default {
           lzfpdm: data.fpdm,
           lzkprq: dateFormat('YYYY-mm-dd', data.kprq),
           lzfptdyslxDm: data.tspz, // 蓝字发票特定要素类型代码
-          lzfppzDm: data.fplx, // 发票种类
+          lzfppzDm: data.fppz, // 发票种类
           invoiceId: id, // 蓝字发票id
           xsfmc: data.xsfmc,
           xsfnsrsbh: data.xsfnsrsbh,
           gmfmc: data.gmfmc,
           gmfnsrsbh: data.gmfnsrsbh,
-          orgid: data.orgId,
+          orgid: data.orgid,
           cezslxDm: data.zsfs, // 征税方式
           sfzzfpbz: 'N', // 纸质发票标志, N电子发票
         };
         // this.hzqrdmxList = data.invoiceDetailList || []
         const { detailList = [] } = data;
-        console.log(data)
-        debugger;
+        console.log(this.form,"formfuzhi")
+       
         // 商品列表，参数名称转化
         this.hzqrdmxList = detailList ? detailList?.map((item, index) => {
           return {
@@ -549,7 +549,7 @@ export default {
           }
         }) : [];
         console.log(this.hzqrdmxList,"09")
-        debugger;
+       
         this.$nextTick(() => {
           this.dealChyy();
         })
@@ -558,11 +558,11 @@ export default {
 
     // 转化蓝票参数与红票参数保持一致
     transformParam(resultItem, oldItem, xh) {
-      debugger;
+    
       // 货物或应税劳务、服务名称拼写
-      resultItem.hwhyslwfwmc = oldItem.xmmc;
+      resultItem.hwhyslwfwmc = oldItem.hwhyslwfwmc;
       // 项目名称
-      resultItem.xmmc = oldItem.ysxmmc;
+      resultItem.xmmc = oldItem.xmmc;
       // 商品服务简称
       resultItem.spfwjc = oldItem.spfwjc;
       // 税率
@@ -577,15 +577,15 @@ export default {
       // 税额（转化为负数）
       resultItem.se = -1 * oldItem.se;
       // 商品和服务税收分类合并编码
-      resultItem.taxclasscode = oldItem.spbm;
-      resultItem.sphfwssflhbbm = oldItem.spbm;
+      resultItem.taxclasscode = oldItem.sphfwssflhbbm;
+      resultItem.sphfwssflhbbm = oldItem.sphfwssflhbbm;
       // 对应蓝字发票明细序号
       resultItem.lzfpmxxh = oldItem.lzfpmxxh || xh;
       // 序号
       resultItem.xh = oldItem.mxxh || xh;
       resultItem.zzstsgl = oldItem.zzstsgl
       resultItem.lslbs = oldItem.lslbs
-      debugger;
+   
       return resultItem
     },
     // 蓝字发票金额和税额添加两位小数
@@ -666,15 +666,21 @@ export default {
     // 提交数据
     async submitData(type) {
       const api = type === "save" ? addRedInvoice : submitRedInvoice;
-      const { code = "", data = {}, msg = '' } = await api({
+      console.log(this.form,"form");
+      
+      let dataSource = {
         ...this.form,
         lrfsf: '0', // 购销方身份，目前只做为销方发起
-        // lzfppzDm: 'N', // 蓝字发票票种代码
+        lzfppzDm: this.form.fppz, // 蓝字发票票种代码
         hzqrdmxList: this.hzqrdmxList,
         hzcxje: this.hzcxje, // 红冲金额
         hzcxse: this.hzcxse, // 红冲税额
+        orgid: this.form.orgid || '',
+        xmmc:this.hzqrdmxList[0].xmmc
         // sfzzfpbz: 'Y', // 纸质发票标志
-      });
+      }
+    
+      const { code = "", data = {}, msg = '' } = await api(dataSource);
 
       if (code !== "0"){
         this.$message.error(msg);
@@ -682,7 +688,7 @@ export default {
       }else{
         const cousntMsg = type === "save" ? '保存成功' : '您提交的红字发票信息表，已成功申请';
         this.$message.success(cousntMsg);
-        const path = type === 'save' ? '/redInvoice/infoTable' : '/redInvoice/redApplySuccess';
+        const path = type === 'save' ? '/redInvoice/infoTable' : '/redApplySuccess';
         const { nsrmc = '', nsrsbh = '', taxBodyId = '' } = this.query;
 
         this.$router.push({
@@ -733,7 +739,7 @@ export default {
     },
     //商品金额计算
     calcGoodsPrice(row, rowIndex, column) {
-      debugger;
+      
       // column fpspsl, dj, je, sl1
       // 计算税额
       const getSe = (row) => {
@@ -849,7 +855,7 @@ export default {
       // 单价
       resultItem.fpspdj = oldItem.dj;
       // 商品和服务税收分类合并编码
-      resultItem.sphfwssflhbbm = oldItem.taxclasscode;
+      resultItem.sphfwssflhbbm = oldItem.sphfwssflhbbm;
       // 税率相关
 
       resultItem.taxclasscode = oldItem.taxclasscode;
@@ -858,11 +864,11 @@ export default {
       resultItem.zzstsgl = oldItem.zzstsgl
 
       // 项目名称
-      resultItem.xmmc = oldItem.name;
+      resultItem.xmmc = oldItem.xmmc;
       // 商品服务简称
-      resultItem.spfwjc = oldItem.taxclassjc;
+      resultItem.spfwjc = oldItem.spfwjc;
       // 货物或应税劳务、服务名称
-      resultItem.hwhyslwfwmc = "*" + oldItem.taxclassjc + "*" + oldItem.name;
+      resultItem.hwhyslwfwmc = "*" + oldItem.spfwjc + "*" + oldItem.xmmc;
       // 序号
       resultItem.xh = this.currentGoodsIndex + 1;
       // 数量

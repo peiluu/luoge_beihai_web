@@ -86,6 +86,13 @@ export const mainChildrenRoutes = [
     component: () =>
       import('@/views/outputInvoice/redInvoice/infoTable/Index.vue'),
   },
+  {
+    path: '/redApplySuccess',
+    name: 'infoTable',
+    meta: { title: '红票开票成功', tab: true},
+    component: () =>
+      import('@/views/outputInvoice/redInvoice/redApplySuccess/Index.vue'),
+  },
 ]
 
 export function addDynamicRoute (routeParams, router) {
