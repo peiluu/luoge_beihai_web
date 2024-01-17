@@ -1,4 +1,5 @@
 import { config } from "@/config"
+import { numberMap, slListMap } from '@/config/constant'
 const getUUID = function (len, radix) {
     const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
     let uuid = [], i;
@@ -246,7 +247,7 @@ const getCurrentSsq = () => {
     // 按季申报
     quarterValue: `${quarterYear}${InitialTime(whitchQuarter(quarterMonth))}`,
     formatQuarterValue: `${quarterYear}年${whitchQuarter(quarterMonth)}季度`,
-     // 单季度 （第一季度）
+      // 单季度 （第一季度）
     singleQuarter: `第${numberMap[whitchQuarter(month)].label}季度`,
   };
 };
@@ -290,6 +291,45 @@ const InitialTime = (val) => {
       // console.error('时间格式有误！');
   }
   return num;
+};
+/**
+ * @description 获取税率代码对应的计算税率
+ * @param slCode 税率代码 1 => 10% => 0.1
+ */
+export const geComputedSl = (slCode) => {
+  return parseFloat(slListMap[slCode].replace('%', '') / 100)
+};
+/**
+ * @description 根据输入的月份判断是哪一个季节
+ */
+export const whitchQuarter = (month) => {
+  let quarter = '';
+  month = Number(month);
+  switch (month) {
+    case 1:
+    case 2:
+    case 3:
+      quarter = '1';
+      break;
+    case 4:
+    case 5:
+    case 6:
+      quarter = '2';
+      break;
+    case 7:
+    case 8:
+    case 9:
+      quarter = '3';
+      break;
+    case 10:
+    case 11:
+    case 12:
+      quarter = '4';
+      break;
+    default:
+      // console.error('The entered time is incorrect');
+  }
+  return quarter;
 };
 export {
     getUUID,

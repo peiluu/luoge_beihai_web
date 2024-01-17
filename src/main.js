@@ -23,6 +23,8 @@ import VXETable from 'vxe-table';
 import 'vxe-table/lib/style.css';
 import './utils/dialogDrag.js'
 import '@/utils/calc.js'
+
+import { getCurrentSsq } from "@/utils/tool"
 Vue.config.productionTip = false
 
 Vue.use(Element, {
@@ -338,7 +340,15 @@ Vue.prototype.getUrlParam = (key =>{
   }
 })
 
-
+/**
+ * @description 判断是否是当前属期 从美的二期迁移过来需要找路姐确认
+ * @param preSsq 往前的属期
+ */
+Vue.prototype.judgeIsCurrentSq = (date, type, preSsq) => {
+  const { quarterValue, monthValue } = getCurrentSsq('', preSsq || 1, preSsq || 1)
+  // return  type == '月' ? monthValue == date : quarterValue == date
+  return true
+}
 
 
 
