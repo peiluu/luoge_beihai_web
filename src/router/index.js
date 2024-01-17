@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import http from '@/utils/request'
-import { getToken } from '@/utils'
-import { isURL } from '@/utils/validate'
+import { getToken, fnAddDynamicMenuRoutes } from '@/utils'
+// import { isURL } from '@/utils/validate'
 import store from '../store/index'
 import { routerWhitelist } from '@/config/constant'
+import { moduleRoutes } from './router.config'
 
 Vue.use(Router)
 
@@ -43,49 +44,6 @@ export const pageRoutes = [
   },
   { path: '/login', component: () => import('@/views/login/index'), name: 'login', meta: { title: '登录' } },
   { path: '/invoice/preview', component: () => import('@/views/invoice/Preview'), name: 'preview', meta: { title: '预览' } }
-]
-
-// 模块路由(基于主入口布局页面)
-export const moduleRoutes = {
-  path: '/',
-  component: () => import('@/views/main'),
-  name: 'main',
-  // redirect: { name: 'index' },
-  meta: { title: '主入口布局' },
-  children: [
-    // { path: '/index', component: () => import('@/views/index'), name: 'index', meta: { title: '首页', isTab: true } }
-  ]
-}
-
-export const mainChildrenRoutes = [
-  {
-    path: '/custom/Detail',
-    name: 'customDetail',
-    meta: { title: '客户信息', tab: true},
-    component: () =>
-      import('@/views/custom/Detail'),
-  },
-  {
-    path: '/redInvoice/redInfoConfirm',
-    name: 'redInfoConfirm',
-    meta: { title: '预填发票申请单', tab: true},
-    component: () =>
-      import('@/views/outputInvoice/redInvoice/redInfoConfirm/Index.vue'),
-  },
-  {
-    path: '/redInvoice/addApplyForm',
-    name: 'addApplyForm',
-    meta: { title: '新增红色信息表', tab: true},
-    component: () =>
-      import('@/views/outputInvoice/redInvoice/addApplyForm/Index.vue'),
-  },
-  {
-    path: '/outputInvoice/redInvoice/infoTable/Index',
-    name: 'infoTable',
-    meta: { title: '红票信息申请列表', tab: true},
-    component: () =>
-      import('@/views/outputInvoice/redInvoice/infoTable/Index.vue'),
-  },
 ]
 
 export function addDynamicRoute (routeParams, router) {
@@ -156,13 +114,14 @@ router.beforeEach((to, from, next) => {
       return next({ name: 'login' })
     }
     store.commit('saveSidebarMenuList', res.data || []);
-    fnAddDynamicMenuRoutes(res.data)
+    fnAddDynamicMenuRoutes(res.data,[], router)
     if(from.path === '/login'){
       next()
     }else{
       next({ ...to, replace: true })
     }
   }).catch((e) => {
+    console.log('---e---', e)
     next({ name: 'login' })
   })
 })
@@ -183,58 +142,6 @@ function fnCurrentRouteIsPageRoute (route, pageRoutes = []) {
     }
   }
   return temp.length >= 1 ? fnCurrentRouteIsPageRoute(route, temp) : false
-}
-
-/**
- * 添加动态(菜单)路由
- * @param {*} menuList 菜单列表
- * @param {*} routes 递归创建的动态(菜单)路由
- */
-function fnAddDynamicMenuRoutes (menuList = [], routes = []) {
-  var temp = []
-  for (var i = 0; i < menuList.length; i++) {
-    if (menuList[i].children && menuList[i].children.length >= 1) {
-      temp = temp.concat(menuList[i].children)
-      continue
-    }
-    // 组装路由
-    var route = {
-      path: '',
-      component: null,
-      name: '',
-      meta: {
-        ...window.SITE_CONFIG['contentTabDefault'],
-        menuId: menuList[i].id,
-        title: menuList[i].name
-      }
-    }
-    // eslint-disable-next-line
-    let URL = (menuList[i].url || '').replace(/{{([^}}]+)?}}/g, (s1, s2) => eval(s2)) // URL支持{{ window.xxx }}占位符变量
-    if (isURL(URL)) {
-      route['path'] = route['name'] = `i-${menuList[i].id}`
-      route['meta']['iframeURL'] = URL
-    } else {
-      URL = URL.replace(/^\//, '').replace(/_/g, '-')
-      // route['path'] = route['name'] = URL.replace(/\//g, '-')
-      route['path'] = URL ? `/${URL}` : URL
-      route['name'] = URL.replace(/\//g, '-')
-      route['component'] = () => import(`@/views/${URL}`)
-    }
-    routes.push(route)
-  }
-  if (temp.length >= 1) {
-    return fnAddDynamicMenuRoutes(temp, routes)
-  }
-  routes = [...routes, ...mainChildrenRoutes]
-  // 添加路由
-  router.addRoute({
-    ...moduleRoutes,
-    name: 'main-dynamic-menu',
-    children: routes
-  })
-  router.addRoute({ path: '*', redirect: { name: '404' } });
-  // console.log('----routes----', routes)
-  window.SITE_CONFIG['dynamicMenuRoutes'] = routes
 }
 
 export default router

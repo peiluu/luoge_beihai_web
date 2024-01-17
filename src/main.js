@@ -22,6 +22,7 @@ import VXETable from 'vxe-table';
 // import '../vxe-table-variables.scss'
 import 'vxe-table/lib/style.css';
 import './utils/dialogDrag.js'
+import '@/utils/calc.js'
 Vue.config.productionTip = false
 
 Vue.use(Element, {

@@ -64,11 +64,12 @@
             <div class="txt">发票税额 : {{ formatMoney(form.lzhjse) }}</div>
             <div class="txt">发票号码: {{ form.lzfphm }}</div>
             <div class="txt">发票代码: {{ form.lzfpdm }}</div>
-            <div class="txt">发票种类:
-              <!-- 查看确认单信息中，发票代码用ylppzdm -->
+             <!-- 查看确认单信息中，发票代码用ylppzdm -->
+            <!-- <div class="txt">发票种类:
+             
               <div v-if="['detail', 'edit', 'waitConfirm'].includes(operateType)"> {{ fplxMap[form.ylppzdm] }}</div>
               <div v-else> {{ fplxMap[form.lzfppzDm] }}</div>
-            </div>
+            </div> -->
 
           </div>
         </div>
@@ -150,9 +151,9 @@
             </vxe-column>
 
             <!-- 只有手工补录才能修改商品 -->
-            <vxe-column field="lzfpmxxh" min-width="130" title="原发票序号" :edit-render="{ autofocus: '.vxe-input--inner', enabled: isAddRecord }">
+            <vxe-column field="mxxh" min-width="130" title="原发票序号" :edit-render="{ autofocus: '.vxe-input--inner', enabled: isAddRecord }">
               <template #edit="{ row }">
-                <vxe-input v-model="row.lzfpmxxh" type="text" maxlength="8" />
+                <vxe-input v-model="row.mxxh" type="text" maxlength="8" />
               </template>
             </vxe-column>
 
@@ -184,9 +185,10 @@
                 <span v-else><el-tag type="danger">折扣</el-tag>{{ row.hwhyslwfwmc }}</span>
               </template>
             </vxe-column>
-
+            
             <vxe-column min-width="80" field="ggxh" title="规格型号">
               <template #edit="{ row }">
+                
                 <vxe-input v-model="row.ggxh" type="text"></vxe-input>
               </template>
             </vxe-column>
@@ -204,7 +206,7 @@
             <vxe-column min-width="80" field="fpspsl" title="数量" :edit-render="{ enabled: isAddRecord || (isInvoiceRed && ['02', '03'].includes(form.chyyDm) && form.tspz != '03') }" class-name="isred">
               <template #edit="{ row, rowIndex, $rowIndex }">
 
-                <vxe-input maxlength="31" type="text" v-model="row.fpspsl" @blur="calcGoodsPrice(row, $rowIndex, 'fpspsl')" :disabled="(isInvoiceRed && form.chyyDm == '02' && (row.fpspsl == null)) ? true : false" />
+                <vxe-input maxlength="31" type="text" v-model="row.fpspsl" @blur="calcGoodsPrice(row, $rowIndex, 'fpspsl')" :disabled="(isInvoiceRed && form.chyyDm == '02' && (row.sl == null)) ? true : false" />
               </template>
             </vxe-column>
 
@@ -217,10 +219,11 @@
             <!-- 手工补录 || 可以发起红冲时，服务中止03、销售折让04可以修改金额 -->
             <vxe-column min-width="120" field="je" :title="form.sfhs == 'Y' ? '金额(含税)' : '金额(不含税)'" :edit-render="{ enabled: isAddRecord || (isInvoiceRed && ['03', '04', '02'].includes(form.chyyDm)) }" class-name=" isred">
               <template #edit="{ row, rowIndex, $rowIndex }">
+                
                 <!-- 销货退回02，只允许修改数量，自动计算金额和税额，不能修改单价，不能直接修改金额；
               如蓝字发票没有数量仅有金额，则允许修改金额，税额自动计算，数量不能修改
               如蓝字发票有数量和金额，则只允许修改数量，税额自动计算，不能修改金额 -->
-                <vxe-input maxlength="21" v-model="row.je" type="text" @blur="calcGoodsPrice(row, $rowIndex, 'je')" :disabled="(isInvoiceRed && (form.chyyDm == '02' && row.je && row.fpspsl)) ? true : false"></vxe-input>
+                <vxe-input maxlength="21" v-model="row.je" type="text" @blur="calcGoodsPrice(row, $rowIndex, 'je')" :disabled="(isInvoiceRed && (form.chyyDm == '02' && row.je && row.sl)) ? true : false"></vxe-input>
               </template>
             </vxe-column>
 
@@ -484,7 +487,7 @@ export default {
     // 查看红字确认单申请详情，查看 / 红冲 /
     async getRedInvoice(id) {
       const { code = '', data = {} } = await getRedInvoice({ id })
-      debugger;
+      
       if (code === '0') {
         this.form = {
           ...this.form,
@@ -519,30 +522,34 @@ export default {
           ...data,
           lzhjse: data.hjse, // 蓝字合计税额
           lzhjje: data.hjje,  // 蓝字合计金额额
-          lzfphm: data.fpHm,
-          lzfpdm: data.fpDm,
+          lzfphm: data.fphm,
+          lzfpdm: data.fpdm,
           lzkprq: dateFormat('YYYY-mm-dd', data.kprq),
           lzfptdyslxDm: data.tspz, // 蓝字发票特定要素类型代码
-          lzfppzDm: data.fplx, // 发票种类
+          lzfppzDm: data.fppz, // 发票种类
           invoiceId: id, // 蓝字发票id
-          xsfmc: data.xsfMc,
-          xsfnsrsbh: data.xsfNsrsbh,
-          gmfmc: data.gmfMc,
-          gmfnsrsbh: data.gmfNsrsbh,
-          orgid: data.orgId,
+          xsfmc: data.xsfmc,
+          xsfnsrsbh: data.xsfnsrsbh,
+          gmfmc: data.gmfmc,
+          gmfnsrsbh: data.gmfnsrsbh,
+          orgid: data.orgid,
           cezslxDm: data.zsfs, // 征税方式
           sfzzfpbz: 'N', // 纸质发票标志, N电子发票
         };
         // this.hzqrdmxList = data.invoiceDetailList || []
-        const { einvoiceHisBList = [] } = data;
+        const { detailList = [] } = data;
+        console.log(this.form,"formfuzhi")
+       
         // 商品列表，参数名称转化
-        this.hzqrdmxList = einvoiceHisBList ? einvoiceHisBList?.map((item, index) => {
+        this.hzqrdmxList = detailList ? detailList?.map((item, index) => {
           return {
             ...item,
-            ...this.transformParam(item, einvoiceHisBList[index], index + 1),
+            ...this.transformParam(item, detailList[index], index + 1),
             bhsje: this.getBhsje(item, 'xmje')
           }
         }) : [];
+        console.log(this.hzqrdmxList,"09")
+       
         this.$nextTick(() => {
           this.dealChyy();
         })
@@ -551,33 +558,34 @@ export default {
 
     // 转化蓝票参数与红票参数保持一致
     transformParam(resultItem, oldItem, xh) {
+    
       // 货物或应税劳务、服务名称拼写
-      resultItem.hwhyslwfwmc = oldItem.xmmc;
+      resultItem.hwhyslwfwmc = oldItem.hwhyslwfwmc;
       // 项目名称
-      resultItem.xmmc = oldItem.ysxmmc;
+      resultItem.xmmc = oldItem.xmmc;
       // 商品服务简称
       resultItem.spfwjc = oldItem.spfwjc;
       // 税率
-      resultItem.sl1 = oldItem.sl;
+      resultItem.sl1 = oldItem.slv;
       // 数量 (转化为负数）
-      resultItem.fpspsl = oldItem.xmsl ? -1 * oldItem.xmsl : oldItem.xmsl
+      resultItem.fpspsl = oldItem.fpspsl ? -1 * oldItem.fpspsl : oldItem.fpspsl
       // 金额（转化为负数）
-      resultItem.je = oldItem.xmje ? -1 * oldItem.xmje : oldItem.xmje;
+      resultItem.je = oldItem.je ? -1 * oldItem.je : oldItem.je;
       // 单价（不需要转化为负数）
-      resultItem.fpspdj = oldItem.xmdj
+      resultItem.fpspdj = oldItem.fpspdj
       // resultItem.fpspdj = oldItem.xmdj ? -1 * oldItem.xmdj : oldItem.xmdj;
       // 税额（转化为负数）
       resultItem.se = -1 * oldItem.se;
       // 商品和服务税收分类合并编码
-      resultItem.taxclasscode = oldItem.spbm;
-      resultItem.sphfwssflhbbm = oldItem.spbm;
+      resultItem.taxclasscode = oldItem.sphfwssflhbbm;
+      resultItem.sphfwssflhbbm = oldItem.sphfwssflhbbm;
       // 对应蓝字发票明细序号
       resultItem.lzfpmxxh = oldItem.lzfpmxxh || xh;
       // 序号
       resultItem.xh = oldItem.mxxh || xh;
       resultItem.zzstsgl = oldItem.zzstsgl
       resultItem.lslbs = oldItem.lslbs
-
+   
       return resultItem
     },
     // 蓝字发票金额和税额添加两位小数
@@ -658,30 +666,41 @@ export default {
     // 提交数据
     async submitData(type) {
       const api = type === "save" ? addRedInvoice : submitRedInvoice;
-      const { code = "", data = {} } = await api({
+      console.log(this.form,"form");
+      
+      let dataSource = {
         ...this.form,
         lrfsf: '0', // 购销方身份，目前只做为销方发起
-        // lzfppzDm: 'N', // 蓝字发票票种代码
+        lzfppzDm: this.form.fppz, // 蓝字发票票种代码
         hzqrdmxList: this.hzqrdmxList,
         hzcxje: this.hzcxje, // 红冲金额
         hzcxse: this.hzcxse, // 红冲税额
+        orgid: this.form.orgid || '',
+        xmmc:this.hzqrdmxList[0].xmmc
         // sfzzfpbz: 'Y', // 纸质发票标志
-      });
+      }
+    
+      const { code = "", data = {}, msg = '' } = await api(dataSource);
 
-      if (code !== "0") return;
-      const msg = type === "save" ? '保存成功' : '您提交的红字发票信息表，已成功申请';
-      this.$message.success(msg);
-      const path = type === 'save' ? '/redInvoice/infoTable' : '/redInvoice/redApplySuccess';
-      const { nsrmc = '', nsrsbh = '', taxBodyId = '' } = this.query;
+      if (code !== "0"){
+        this.$message.error(msg);
+        
+      }else{
+        const cousntMsg = type === "save" ? '保存成功' : '您提交的红字发票信息表，已成功申请';
+        this.$message.success(cousntMsg);
+        const path = type === 'save' ? '/redInvoice/infoTable' : '/redApplySuccess';
+        const { nsrmc = '', nsrsbh = '', taxBodyId = '' } = this.query;
 
-      this.$router.push({
-        path,
-        query: {
-          nsrmc, nsrsbh, taxBodyId,
-          id: data.id
-        }
-      });
-      this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+        this.$router.push({
+          path,
+          query: {
+            nsrmc, nsrsbh, taxBodyId,
+            id: data.id
+          }
+        });
+        this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+      }
+      
     },
     handleSubmitProduct(row) {
       this.goodsDlgVisible = false;
@@ -720,6 +739,7 @@ export default {
     },
     //商品金额计算
     calcGoodsPrice(row, rowIndex, column) {
+      
       // column fpspsl, dj, je, sl1
       // 计算税额
       const getSe = (row) => {
@@ -835,7 +855,7 @@ export default {
       // 单价
       resultItem.fpspdj = oldItem.dj;
       // 商品和服务税收分类合并编码
-      resultItem.sphfwssflhbbm = oldItem.taxclasscode;
+      resultItem.sphfwssflhbbm = oldItem.sphfwssflhbbm;
       // 税率相关
 
       resultItem.taxclasscode = oldItem.taxclasscode;
@@ -844,11 +864,11 @@ export default {
       resultItem.zzstsgl = oldItem.zzstsgl
 
       // 项目名称
-      resultItem.xmmc = oldItem.name;
+      resultItem.xmmc = oldItem.xmmc;
       // 商品服务简称
-      resultItem.spfwjc = oldItem.taxclassjc;
+      resultItem.spfwjc = oldItem.spfwjc;
       // 货物或应税劳务、服务名称
-      resultItem.hwhyslwfwmc = "*" + oldItem.taxclassjc + "*" + oldItem.name;
+      resultItem.hwhyslwfwmc = "*" + oldItem.spfwjc + "*" + oldItem.xmmc;
       // 序号
       resultItem.xh = this.currentGoodsIndex + 1;
       // 数量

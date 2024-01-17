@@ -50,7 +50,7 @@
             </div>
           </div>
         </el-popover>
-        <el-input v-model="dataForm.icon" v-popover:iconListPopover :readonly="true" :placeholder="$t('menu.icon')"></el-input>
+        <el-input v-model="dataForm.icon" v-popover:iconListPopover :readonly="true" :placeholder="$t('menu.icon')"><el-button slot="append" icon="el-icon-circle-close" @click="handleClearInput"></el-button></el-input>
       </el-form-item>
     </el-form>
     <template slot="footer">
@@ -154,6 +154,11 @@ export default {
     // 图标, 选中
     iconListCurrentChangeHandle (icon) {
       this.dataForm.icon = icon
+      this.iconListVisible = false
+    },
+    // 清空icon
+    handleClearInput () {
+      this.dataForm.icon = '';
       this.iconListVisible = false
     },
     // 表单提交
