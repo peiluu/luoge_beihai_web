@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="main-content">
     <form-list :columns="columns" :searchRow="searchList" :api="api" :param="param" :height="height" :firstLoading="false"
       v-loading="loading" @getSearchParam="getSearchParam" ref="list">
       <!-- 中间部分 -->
