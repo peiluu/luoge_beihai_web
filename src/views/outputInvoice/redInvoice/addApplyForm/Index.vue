@@ -65,7 +65,7 @@ export default {
       // ],
       columns: [
         { title: '序号', type: "index", width: 70, align: 'center' },
-        { title: "开票点", dataIndex: "orgname", width: 120, },
+        { title: "开票点", dataIndex: "orgName", width: 120, },
         { title: "销售方名称", dataIndex: "xsfmc", width: 120, },
         { title: "购买方名称", width: 100, dataIndex: "gmfmc", slot: "orgName" },
         { title: "蓝字发票号码", dataIndex: "fphm",align:"center", width: 100, slot: 'kprq' },
@@ -150,6 +150,7 @@ export default {
     },
     // 检查蓝票是否可以红冲
     async invoiceUsedStatus(row, query) {
+      console.log(row,"rowId")
     debugger;
       if (!row.orgid) {
         this.$message.warning('请到已开票页面维护开票组织');
@@ -188,6 +189,7 @@ export default {
         ...this.$route.query,
         operateType
       }
+      debugger;
       if (operateType === 'queryBlue') {
         this.invoiceUsedStatus(row, query)
         return

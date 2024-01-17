@@ -46,10 +46,6 @@ export const pageRoutes = [
   { path: '/invoice/preview', component: () => import('@/views/invoice/Preview'), name: 'preview', meta: { title: '预览' } }
 ]
 
-
-
-
-
 export function addDynamicRoute (routeParams, router) {
   // 组装路由名称, 并判断是否已添加, 如是: 则直接跳转
   var routeName = routeParams.routeName
