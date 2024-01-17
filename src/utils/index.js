@@ -1,6 +1,7 @@
 import Cookies from 'js-cookie'
 import store from '@/store'
-
+import { isURL } from './validate'
+import { mainChildrenRoutes, moduleRoutes } from '../router/router.config.js'
 /**
  * 权限
  * @param {*} key
@@ -116,4 +117,56 @@ export function getArrayName (array, value){
     }
   }
   return '';
+}
+/**
+ * 添加动态(菜单)路由
+ * @param {*} menuList 菜单列表
+ * @param {*} routes 递归创建的动态(菜单)路由
+ */
+export function fnAddDynamicMenuRoutes (menuList = [], routes = [], router) {
+  var temp = []
+  for (var i = 0; i < menuList.length; i++) {
+    if (menuList[i].children && menuList[i].children.length >= 1) {
+      temp = temp.concat(menuList[i].children)
+      continue
+    }
+    // 组装路由
+    var route = {
+      path: '',
+      component: null,
+      name: '',
+      meta: {
+        ...window.SITE_CONFIG['contentTabDefault'],
+        menuId: menuList[i].id,
+        title: menuList[i].name
+      }
+    }
+    // eslint-disable-next-line
+    // let URL = (menuList[i].url || '')//.replace(/{{([^}}]+)?}}/g, (s1, s2) => eval(s2)) // URL支持{{ window.xxx }}占位符变量
+    let URL = (menuList[i].url || '').replace(/VUE_APP_APIURL/, s1=> process.env[s1])
+    if (isURL(URL)) {
+      route['path'] = route['name'] = `i-${menuList[i].id}`
+      route['meta']['iframeURL'] = URL
+    } else {
+      URL = URL.replace(/^\//, '').replace(/_/g, '-')
+      // route['path'] = route['name'] = URL.replace(/\//g, '-')
+      route['path'] = URL ? `/${URL}` : URL
+      route['name'] = URL.replace(/\//g, '-')
+      route['component'] = () => import(`@/views/${URL}`)
+    }
+    routes.push(route)
+  }
+  if (temp.length >= 1) {
+    return fnAddDynamicMenuRoutes(temp, routes, router)
+  }
+  routes = [...routes, ...mainChildrenRoutes]
+  // 添加路由
+  router.addRoute({
+    ...moduleRoutes,
+    name: 'main-dynamic-menu',
+    children: routes
+  })
+  router.addRoute({ path: '*', redirect: { name: '404' } });
+  // console.log('----routes----', routes)
+  window.SITE_CONFIG['dynamicMenuRoutes'] = routes
 }

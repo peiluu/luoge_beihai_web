@@ -60,9 +60,9 @@
 <script>
 import Cookies from 'js-cookie';
 import debounce from 'lodash/debounce';
-import { getUUID } from '@/utils';
+import { getUUID, fnAddDynamicMenuRoutes } from '@/utils';
 import { isURL } from '@/utils/validate';
-import { mainChildrenRoutes } from '@/router'
+import { mainChildrenRoutes } from '@/router';
 export default {
   data() {
     return {
@@ -104,7 +104,7 @@ export default {
           this.loading = true;
           this.$http
             .post('/login', this.dataForm)
-            .then( res => {
+            .then((res) => {
               if (res.code !== 0) {
                 this.loading = false;
                 this.getCaptcha();
@@ -120,7 +120,8 @@ export default {
             .catch((e) => {
               console.log(e);
               this.loading = false;
-              this.$message.error(e.msg || '登录失败')
+              this.$message.error(e.msg || '登录失败');
+              this.getCaptcha();
             });
         });
       },
@@ -131,17 +132,22 @@ export default {
     getMenus(roleList) {
       this.$http
         .get('/sys/menu/nav')
-        .then(res => {
+        .then((res) => {
           this.loading = false;
           if (res.code !== 0) {
             this.$message.error(res.msg);
           }
-          if(res.data.length === 0){
-            this.$message.error('当前帐户暂无访问权限，请联系管理员')
-            return
+          if (res.data.length === 0) {
+            this.$message.error('当前帐户暂无访问权限，请联系管理员');
+            return;
           }
           this.$store.commit('saveSidebarMenuList', res.data || []);
-          this.fnAddDynamicMenuRoutes(res.data);
+          try {
+            
+            fnAddDynamicMenuRoutes(res.data, [], this.$router);
+          } catch (error) {
+            
+          }
           this.$router.replace({ name: 'home' });
         })
         .catch((e) => {
@@ -152,63 +158,13 @@ export default {
     getDicts() {
       this.$http
         .get('/sys/dict/type/all')
-        .then(res => {
+        .then((res) => {
           if (res.code !== 0) {
             return;
           }
-          this.$store.commit('app/saveDictList', res.data || [])
+          this.$store.commit('app/saveDictList', res.data || []);
         })
         .catch(() => {});
-    },
-    fnAddDynamicMenuRoutes(menuList = [], routes = []) {
-      var temp = [];
-      for (var i = 0; i < menuList.length; i++) {
-        if (menuList[i].children && menuList[i].children.length >= 1) {
-          temp = temp.concat(menuList[i].children);
-          continue;
-        }
-        // 组装路由
-        var route = {
-          path: '',
-          component: null,
-          name: '',
-          meta: {
-            ...window.SITE_CONFIG['contentTabDefault'],
-            menuId: menuList[i].id,
-            title: menuList[i].name,
-          },
-        };
-        // eslint-disable-next-line
-        let URL = (menuList[i].url || '').replace(/{{([^}}]+)?}}/g, (s1, s2) => eval(s2)); // URL支持{{ window.xxx }}占位符变量
-        if (isURL(URL)) {
-          route['path'] = route['name'] = `i-${menuList[i].id}`;
-          route['meta']['iframeURL'] = URL;
-        } else {
-          URL = URL.replace(/^\//, '').replace(/_/g, '-');
-          // route['path'] = route['name'] = URL.replace(/\//g, '-');
-          route['path'] = URL ? `/${URL}` : URL
-          route['name'] = URL.replace(/\//g, '-')
-          route['component'] = () => import(`@/views//${URL}`);
-        }
-        routes.push(route);
-      }
-      if (temp.length >= 1) {
-        return this.fnAddDynamicMenuRoutes(temp, routes);
-      }
-
-      routes = [...routes, ...mainChildrenRoutes]
-      // 添加路由
-      this.$router.addRoute({
-        path: '/',
-        component: () => import('@/views/main'),
-        name: 'main',
-        redirect: { name: 'home' },
-        meta: { title: '主入口布局' },
-        name: 'main-dynamic-menu',
-        children: routes,
-      });
-      this.$router.addRoute({ path: '*', redirect: { name: '404' } });
-      window.SITE_CONFIG['dynamicMenuRoutes'] = routes;
     },
   },
 };
