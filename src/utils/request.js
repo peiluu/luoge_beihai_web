@@ -275,9 +275,10 @@ export function download(url, params, extendParamNames = null, showLoading = fal
   })
 }
 export function postOne(url, id, params, extendParamNames = null) {
+ 
   dealExtendParamNames(extendParamNames);
   return new Promise((resolve, reject) => {
-      request.post(`${url}`, params, {
+    http.post(`${url}`, params, {
           headers: {
               'Content-Type': 'application/json; charset=utf-8',
           },

@@ -688,7 +688,7 @@ export default {
       }else{
         const cousntMsg = type === "save" ? '保存成功' : '您提交的红字发票信息表，已成功申请';
         this.$message.success(cousntMsg);
-        const path = type === 'save' ? '/redInvoice/infoTable' : '/redApplySuccess';
+        const path = type === 'save' ? '/outputInvoice/redInvoice/infoTable/Index' : '/redApplySuccess';
         const { nsrmc = '', nsrsbh = '', taxBodyId = '' } = this.query;
 
         this.$router.push({
