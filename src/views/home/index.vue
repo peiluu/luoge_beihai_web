@@ -13,7 +13,7 @@
     <div class="content">
       <div class="invoice invoice-bg1">
         <p class="c-title">发票数据</p>
-        <p class="title"><span class="iconfont icon-lanzifapiao blue"></span>蓝字发票开具金额</p>
+        <p class="title"><span class="iconfont icon-lanzifapiao"></span>蓝字发票开具金额</p>
         <p class="money">123,123,12元<span>（共40张）</span></p>
         <div class="subtitle">
           <p>专用发票：<span class="blue">12张（122元）</span></p>
@@ -23,7 +23,7 @@
         </div>
       </div>
       <div class="invoice invoice-bg2">
-        <p class="title"><span class="iconfont icon-hongzifapiao red"></span>红字发票开具金额</p>
+        <p class="title"><span class="iconfont icon-hongzifapiao"></span>红字发票开具金额</p>
         <p class="money">123,123,12元<span>（共40张）</span></p>
         <div class="subtitle">
           <p>专用发票：<span class="red">12张（122元）</span></p>
@@ -33,7 +33,7 @@
       </div>
       <div class="invoice invoice-bg3">
         <p class="c-title">涉税数据</p>
-        <p class="title"><span class="iconfont icon-jinxiaoshuie darkBlue"></span>进销税额</p>
+        <p class="title"><span class="iconfont icon-jinxiaoshuie"></span>进销税额</p>
         <p class="money">123,123,12元<span>（共40张）</span></p>
         <div class="subtitle">
           <p>进项税额：<span class="darkBlue">12张（122元）</span></p>
@@ -42,7 +42,7 @@
         </div>
       </div>
       <div class="invoice invoice-bg4">
-        <p class="title"><span class="iconfont icon-qiyenashui green"></span>企业纳税数据</p>
+        <p class="title"><span class="iconfont icon-qiyenashui"></span>企业纳税数据</p>
         <p class="money">123,123,12元<span>（共40张）</span></p>
         <div class="subtitle">
           <p>增值税应纳税额：<span class="green">12张（122元）</span></p>
@@ -597,8 +597,7 @@ p {
       margin-right: 0;
     }
     &:hover {
-      box-shadow: 0 0 5px 0 $primaryGreenColor;
-      // color: $primaryGreenColor;
+      background-color: #e9e9e9;
     }
     .c-title {
       font-size: 18px;
@@ -615,8 +614,9 @@ p {
       padding: 0 10px;
       line-height: 40px;
       font-size: 18px;
-      // background: #f9f9f9;
-      // color: #333;
+      font-weight: bold;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
       .iconfont {
         font-size: 18px;
         margin-right: 10px;
@@ -624,9 +624,10 @@ p {
     }
     .money {
       font-size: 20px;
-      // color: #333;
+      color: #333;
       text-align: center;
-      line-height: 40px;
+      line-height: 50px;
+      font-weight: bold;
       span {
         font-size: 12px;
         font-weight: 400;
@@ -634,16 +635,24 @@ p {
     }
   }
   .invoice-bg1 {
-    background-image: linear-gradient(to right, #4898d8, #3bc4ec);
+    .title {
+      background-image: linear-gradient(to right, #4898d8, #3bc4ec);
+    }
   }
   .invoice-bg2 {
-    background-image: linear-gradient(to right, #ff6184, #ff9a96);
+    .title {
+      background-image: linear-gradient(to right, #ff6184, #ff9a96);
+    }
   }
   .invoice-bg3 {
-    background-image: linear-gradient(to right, #545e92, #83acce);
+    .title {
+      background-image: linear-gradient(to right, #545e92, #83acce);
+    }
   }
   .invoice-bg4 {
-    background-image: linear-gradient(to right, #00baf2, #00f4bf);
+    .title {
+      background-image: linear-gradient(to right, #00baf2, #00f4bf);
+    }
   }
   .subtitle {
     overflow: hidden;
@@ -652,7 +661,7 @@ p {
     justify-content: flex-end;
     > p {
       margin-bottom: 5px;
-      color: #fff;
+      color: #666;
     }
   }
   .last-moon {
@@ -660,18 +669,22 @@ p {
     // color: #666;
     text-align: right;
   }
-  // .blue {
-  //   color: #7ea6ff !important;
-  // }
-  // .red {
-  //   color: #fe5363 !important;
-  // }
-  // .darkBlue {
-  //   color: #000080 !important;
-  // }
-  // .green {
-  //   color: #008080 !important;
-  // }
+  .blue {
+    color: #7ea6ff !important;
+    font-weight: bold;
+  }
+  .red {
+    color: #fe5363 !important;
+    font-weight: bold;
+  }
+  .darkBlue {
+    color: #000080 !important;
+    font-weight: bold;
+  }
+  .green {
+    color: #008080 !important;
+    font-weight: bold;
+  }
 }
 .tasks {
   margin-top: 25px;
