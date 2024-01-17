@@ -6,6 +6,8 @@ import qs from 'qs'
 import { clearLoginInfo } from '@/utils'
 import isPlainObject from 'lodash/isPlainObject'
 
+const CancelToken = axios.CancelToken
+const source = CancelToken.source()
 const http = axios.create({
   baseURL: process.env.VUE_APP_APIURL,
   timeout: 60000,
@@ -55,17 +57,18 @@ http.interceptors.request.use(config => {
  * 响应拦截
  */
 http.interceptors.response.use(response => {
-  if (response.data.code === 401 || response.data.code === 10001 || response.data.code === '5') {
+  const res = response.data;
+  if (res.code === 401 || res.code === '5') {
+    Message.error(res.msg);
     goLogin()
-    return Promise.reject(response.data)
   }
-  // console.log('--response--', response)
-  if(response.data.code === 0 || response.data.code === '0'){
-    return response.data
-  } else {
-    // console.log("异常", response.data);
-    return Promise.reject(response.data);
+  if (res && res.code && res.code != 0) {
+    if (res.msg && res.msg.length > 0) {
+        Message.error(res.msg)
+    }
+    source.cancel('Operation canceled.')
   }
+  return res
 }, error => {
   // 处理全局错误
   if (error) {
