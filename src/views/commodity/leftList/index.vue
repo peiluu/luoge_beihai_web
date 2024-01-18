@@ -1,10 +1,10 @@
 <template>
   <div class="">
-    <el-card shadow="never">
-      <article v-loading="loading">
+    <el-card shadow="never" v-loading="loading">
+      <article >
         <h3>项目商品分类名称</h3>
         <el-form ref="form" :model="form" label-width="80px">
-          <el-form-item label="活动名称">
+          <el-form-item label="商品名称">
             <el-input v-model="form.name">
               <template slot="append">
                 <div @click="() => handleAddClassification('', '', 1)">
@@ -62,13 +62,15 @@
       :active-id="activeId"
       :is-edite = "isEdite"
       :edite-name = "editeName"
+      :parent-id = "parentId"
+      @handleDone = "handleDoneSuccess"
     ></app-edite-name>
   </div>
 </template>
 
 <script>
 import AppEditeName from '../componetns/editeCommodityClassificationName/';
-import {getcommondityTreeList,delectcommonditySingle} from '../api.js'
+import {getcommondityTreeList,delectcommonditySingle,postcommondityAddSingle} from '../api.js'
 export default {
   name: "rightListPage",
   components: {
@@ -83,6 +85,7 @@ export default {
       loading: false,
       isEdite: false,
       editeName: '',
+      parentId: null,
     };
   },
   computed: {},
@@ -94,31 +97,57 @@ export default {
     * postcommondityAddSingle
     */   
    handleAddClassification(node,data,type){
+    this.activeId = type === 1 ? 0 : data?.id;
     this.isEdite = false;
-    this.activeId = type === 1 ? 0 : data.id;
-    
-    this.nameVisible = true;
+    this.editeName = '';
+    if(type === 1){
+      let params = {
+        pid:0,
+        name:this.form.name
+      }
+      
+      this.handleSumbit(params);
+    }else{
+      this.nameVisible = true;
+    }
    },
+    /* Add 提交 */
+    handleSumbit(data){
+        if((this.form.name??'') === '') return this.$message.warning('商品名称不能为空！')
+        this.loading = true;
+        postcommondityAddSingle(data).then(res=>{
+            if(res.code === '0'){
+              this.$message.success('新增成功!');
+              this.form.name = '';
+              this.handlerGetList()
+            }
+        }).catch(e=>{
+            this.$message.error(e.msg)
+        }).finally(()=>{
+            this.loading = false;
+        })
+    },
    /* 删除确认 */
    handleConfirm(node,data){
     if(data?.id){
-      
+      this.loading = true;
       delectcommonditySingle({id:data.id || null}).then(res=>{
-        console.log(res)
         if(res.code === '0'){
-          this.$message.success(res.msg);
+          this.$message.success('删除成功!');
+          this.loading = false;
+          this.handlerGetList();
         }
-      }).fianlly(()=>{
-
+      }).catch(()=>{
+        this.loading = false;
       })
     }
    },
    /* 编辑 */
    handleEdit(node,data){
-  
     this.isEdite = true;
     this.activeId = data.id || null;
-    this.editeName = data.name || ''
+    this.editeName = data.name || '';
+    this.parentId = data.pid
     this.nameVisible = true;
    },
    handlerInit(){
@@ -126,23 +155,28 @@ export default {
    },
    /* 获取数据 */
    handlerGetList(){
-    this.loading = false;
+    this.loading = true;
+    console.log(getcommondityTreeList())
     getcommondityTreeList().then(res=>{
-      console.log(res)
       if(res.code === '0'){
-        console.log(res.data)
+       
         this.treeData = res.data.childList;
         console.log(this.handlerPrsoneData(this.treeData),"data")
       }else{
         this.$message.error(res.msg);
       }
-    }).catch((e)=>{
-      this.$message.error(e.msg);
-    }).fianlly(()=>{
-      this.loading = false;
+      this.loading = false
+    }).catch(()=>{
+      this.loading = false
     })
    },
 
+   /* 回调成功刷新 */
+   handleDoneSuccess(val){
+    if(val){
+      this.handlerGetList();
+    }
+   },
    
    /* 递归整理数据 */
    handlerPrsoneData(data){
@@ -189,5 +223,8 @@ export default {
 }
 .el-icon-circle-plus-outline {
   cursor: pointer;
+}
+::v-deep .tree_main{
+    overflow: hidden auto;
 }
 </style>
