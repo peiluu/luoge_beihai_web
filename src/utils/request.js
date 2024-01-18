@@ -289,4 +289,39 @@ export function postOne(url, id, params, extendParamNames = null) {
       })
   })
 }
+
+export function getJSON(url, params, extendParamNames = null) {
+  dealExtendParamNames(extendParamNames);
+  return new Promise((resolve, reject) => {
+      http.get(url, {
+          headers: {
+              'Content-Type': 'application/json; charset=utf-8'
+          },
+          params: params
+      }).then(res => {
+          resolve(res)
+      }).catch(err => {
+          reject(err)
+      })
+  })
+}
+/**
+ * @description 下载文件
+ */
+export function openFile(url, params, extendParamNames = null, showLoading = false) {
+  dealExtendParamNames(extendParamNames);
+  return new Promise((resolve, reject) => {
+    http.post(url, params, {
+      headers: {'Content-Type': 'application/json; charset=utf-8'}
+      ,responseType: 'blob'
+    }).then(res => {
+
+      resolve(res)
+    }).catch(err => {
+
+      reject(err)
+
+    })
+  })
+}
 export default http
