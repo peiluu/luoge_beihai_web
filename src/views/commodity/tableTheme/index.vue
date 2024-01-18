@@ -27,8 +27,8 @@
         </el-table-column>
         <el-table-column prop="address" label="操作" width="140" fixed="right">
             <template :slot-scope="{scope}">
-                <el-button  type="primary" size="small" @click="handlerEdite">编辑</el-button>
-                <el-button type="danger" size="small">删除</el-button>
+                <el-button  type="text" size="small" @click="handlerEdite">编辑</el-button>
+                <el-button type="text" size="small"><span style="color:red">删除</span></el-button>
             </template>
         </el-table-column>
       </el-table>

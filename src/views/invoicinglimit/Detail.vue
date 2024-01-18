@@ -27,7 +27,7 @@
           <el-input v-model="form.nsrmc" placeholder="不得开具" maxlength="100" :disabled="true" />
         </el-form-item>
         <el-form-item label="请选择限制结果">
-          <el-select v-model="form.qyzbs" placeholder="请选择">
+          <el-select v-model="form.result" placeholder="请选择">
             <el-option label="提醒" value="11"></el-option>
           <el-option label="拒绝" value="12"></el-option>
           </el-select>
@@ -35,12 +35,7 @@
         <el-form-item label="请选择发票类型" prop="dzdh">
           <el-select v-model="form.dzdh" placeholder="请选择" maxlength="80" />
         </el-form-item>
-        <!-- <el-descriptions class="margin-top" :size="size">
-        <el-descriptions-item label="限制提示">不得开具</el-descriptions-item>
-      </el-descriptions> -->
       </el-form>
-      <!-- 扩展信息 -->
-      <!-- <ExtendInfo :nsrsbh="form.nsrsbh" v-if="form.isDigital === 'Y' && operateType == 'detail'" /> -->
     </div>
 
     <div class="footer">
@@ -113,6 +108,9 @@ export default {
       //   11:'提醒',
       //   12:'拒绝'
       // },
+      form:{
+        qyzbs:""
+      },
       taxRate: {
         1: '免税',
         2: '不征税',
@@ -355,7 +353,29 @@ export default {
     },
     handleDeletedLscjybmList(index) {
       this.dlscjybmList.splice(index, 1)
+    },
+    save() {
+      if (this.form.qyzbs === "3") {
+        this.$confirm("您选择的商品税率为3%，不符合开具标准，是否继续开具？", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(() => {
+            // 用户点击了确定按钮，执行保存操作
+            this.saveData();
+          })
+          .catch(() => {
+            // 用户点击了取消按钮
+          });
+      } else {
+        // 其他税率的情况，直接执行保存操作
+        this.saveData();
+      }
+    },
+    saveData() {
     }
+  
   }
 }
 </script>
