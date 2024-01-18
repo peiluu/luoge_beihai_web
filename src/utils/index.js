@@ -170,3 +170,15 @@ export function fnAddDynamicMenuRoutes (menuList = [], routes = [], router) {
   // console.log('----routes----', routes)
   window.SITE_CONFIG['dynamicMenuRoutes'] = routes
 }
+
+/**
+   * 获取字符串长度
+   * string.length的坑：console.log('𠮷'.length) // 2
+   * @param {目标字符串} s 
+   * @returns 目标字符串的长度，number类型
+   */
+export const getStringLen = ( s ) => {
+  if(typeof s !== "string")return new TypeError('参数不合法');
+  const spRegexp = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g;
+  return s.replace(spRegexp,'_').length
+}
