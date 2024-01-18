@@ -5,7 +5,7 @@ import { getToken, fnAddDynamicMenuRoutes } from '@/utils'
 // import { isURL } from '@/utils/validate'
 import store from '../store/index'
 import { routerWhitelist } from '@/config/constant'
-import { moduleRoutes } from './router.config'
+import { moduleRoutes, pageRoutes } from './router.config'
 
 Vue.use(Router)
 
@@ -26,25 +26,7 @@ Router.prototype.replace = function replace(location, onResolve, onReject) {
     return originalReplace.call(this, location).catch(err => err);
 };
 
-// 页面路由(独立页面)
-export const pageRoutes = [
-  {
-    path: '/404',
-    component: () => import('@/views/404'),
-    name: '404',
-    meta: { title: '404未找到' },
-    beforeEnter (to, from, next) {
-      // 拦截处理特殊业务场景
-      // 如果, 重定向路由包含__双下划线, 为临时添加路由
-      if (/__.*/.test(to.redirectedFrom)) {
-        return next(to.redirectedFrom.replace(/__.*/, ''))
-      }
-      next()
-    }
-  },
-  { path: '/login', component: () => import('@/views/login/index'), name: 'login', meta: { title: '登录' } },
-  { path: '/invoice/preview', component: () => import('@/views/invoice/Preview'), name: 'preview', meta: { title: '预览' } }
-]
+
 
 export function addDynamicRoute (routeParams, router) {
   // 组装路由名称, 并判断是否已添加, 如是: 则直接跳转
