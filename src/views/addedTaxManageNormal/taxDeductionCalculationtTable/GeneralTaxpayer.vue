@@ -298,9 +298,9 @@ export default {
 }
 
 .delete-icon:hover {
-  span {
-    // display: none;
-  }
+  // span {
+  //   display: none;
+  // }
 
   .el-icon-remove-outline {
     display: block

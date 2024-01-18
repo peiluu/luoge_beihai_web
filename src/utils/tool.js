@@ -331,6 +331,27 @@ export const whitchQuarter = (month) => {
   }
   return quarter;
 };
+/**
+ * @description 获取当前年份倒数n年的年份
+ * @param n 倒数的年份, 默认值为5
+ */
+export const getPreYearList = (nowYear, n) => {
+
+  const yearNumber = n || 5;
+  let now = new Date(nowYear);
+  let year = now.getFullYear() -1 ;
+  const list = [];
+  let index = 1;
+  for (let i = year; i > year - yearNumber; i--) {
+
+    list.push({
+      label: `前${numberMap[index].label}年度（${i}年）`,
+      propsKey: numberMap[index].propsKey
+    });
+    index ++
+  }
+  return list;
+};
 export {
     getUUID,
     getFontFamily,

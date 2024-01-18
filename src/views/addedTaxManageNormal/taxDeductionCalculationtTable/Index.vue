@@ -172,6 +172,6 @@ export default {
   }
 }
 
-.vxe-body--row {}
+// .vxe-body--row {}
 </style>
 
