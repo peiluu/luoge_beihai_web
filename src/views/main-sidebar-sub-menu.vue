@@ -6,7 +6,7 @@
     </template>
     <sub-menu v-for="item in menu.children" :key="item.id" :menu="item"></sub-menu>
   </el-submenu>
-  <el-menu-item v-else :index="menu.id" @click="gotoRouteHandle(menu.id)">
+  <el-menu-item v-else :index="menu.id" @click="gotoRouteHandle(menu.id)" :class="getExceedName(menu)">
     <svg v-if="menu.icon" class="icon-svg aui-sidebar__menu-icon" aria-hidden="true"><use :xlink:href="`#${menu.icon}`"></use></svg>
     <span>{{ menu.name }}</span>
   </el-menu-item>
@@ -14,6 +14,7 @@
 
 <script>
 import SubMenu from './main-sidebar-sub-menu'
+import { getStringLen } from '@/utils'
 export default {
   name: 'sub-menu',
   props: {
@@ -32,7 +33,16 @@ export default {
       if (route) {
         this.$router.push({ name: route.name })
       }
+    },
+    getExceedName (menu) {
+      const len = getStringLen(menu.name);
+      return len >= 14 ? 'exceedName' : ''
     }
   }
 }
 </script>
+<style lang="scss" scoped>
+.exceedName {
+  font-size: 12px;
+}
+</style>
