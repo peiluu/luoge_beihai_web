@@ -5,10 +5,10 @@
         :visible="visible"
         :width="width"
         @update:visible="updateVisible"
-        v-loading="loading"
+       
         :before-close="handleClose">
            <article>
-            <el-form ref="treeForm"  :model="treeForm" :rules="treeRules" label-width="80px">
+            <el-form  v-loading="loading" ref="treeForm"  :model="treeForm" :rules="treeRules" label-width="80px">
                 <el-form-item label="名称：" prop="name">
                     <el-input v-model="treeForm.name"></el-input>
                 </el-form-item>
@@ -55,6 +55,11 @@ export default {
         editeName: {
             type: String,
             default: ''
+        },
+
+        parentId:{
+            type:[String,Number],
+            default: null
         }
     },
     components: {},
@@ -81,6 +86,9 @@ export default {
         },
         useEditeName(){
             return this.editeName || ''
+        },
+        usepActiveId(){
+            return this.parentId || null
         }
     },
     watch: {},
@@ -121,7 +129,8 @@ export default {
             }
             postcommondityAddSingle(data).then(res=>{
                 if(res.code === '0'){
-                     this.$message.success(res.msg);
+                     this.$message.success('新增成功!');
+                     this.handleDoneSuccess(true);
                     this.updateVisible(false);
                 }else{
                     // this.$message.error(res.msg)
@@ -137,16 +146,27 @@ export default {
 
         /* edit 提交 */
         handleSumbitEdit(){
+            this.loading = true;
             let data = {
                 id:this.useActiveId,
                 name:this.treeForm.name,
+                pid:this.usepActiveId,
             }
+           
             updateCommonditySingle(data).then(res=>{
                 if(res.code === '0'){
-                    this.$message.success(res.msg)
+                    this.$message.success('修改成功！');
+                    this.handleDoneSuccess(true);
                     this.updateVisible(false);
                 }
+            }).finally(()=>{
+                this.loading = false;
             })
+        },
+        /* 操作成功后返回 */
+        handleDoneSuccess(value){
+            this.treeForm.name = '';
+            this.$emit('handleDone',value)
         }
     },
     created() {},
