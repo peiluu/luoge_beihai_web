@@ -178,9 +178,7 @@
           this.$message.error('只能支持xlsx格式的文件')
           return;
         }
-        console.log('----file----',file)
         LuckyExcel.transformExcelToLucky(file, function(exportJson, luckysheetfile){
-          console.log('---file---', exportJson, file)
           if(exportJson.sheets==null || exportJson.sheets.length==0){
             that.$message.error('加载文件失败')
             return;
@@ -256,6 +254,7 @@
                 that.handleOk();
                 that.dlgLoading = false;
                 that.dlgVisible = false;
+                this.dlgForm = {};
               }
             })
           }
