@@ -1,7 +1,7 @@
 <template>
     <div class="main">
         <transition :name="useAnimate?'fade-transform':''" mode="out-in">
-            <router-view v-if="(editRoutes.contains($route.name)&&$route.query.opt=='add') || importRoutes.contains($route.name)"/>
+            <router-view v-if="(editRoutes.includes($route.name)&&$route.query.opt=='add') || importRoutes.includes($route.name)"/>
             <keep-alive v-else>
                 <router-view />
             </keep-alive>
@@ -10,20 +10,6 @@
 </template>
 
 <script>
-
-Array.prototype.contains = function (fn) {
-    var arr = this, //数组本身
-        len = arr.length, //数组长度
-        arg = arguments[0] || window,
-        item;
-    for (var i = 0; i < len; i++) {
-        item = JSON.parse(JSON.stringify(arr[i]))
-        if(item==arg){
-            return true;
-        }
-    }
-    return false;
-}
 export default {
     name: 'Main',
     data () {

@@ -60,4 +60,17 @@ export const pageRoutes = [
     meta: { redirect: true, name: '发票预览' },
     component: () => import('@/views/invoice/Preview.vue'),
   },
+  {
+    path: '/expTemplateDetail',
+    name: 'expTemplateDetail',
+    meta: { redirect: true, name: '模板编辑' },
+    component: () =>
+      import('@/views/reportTools/templateMng/ExpTemplateDetail.vue'),
+  },
+  {
+    path: '/declareSource',
+    name: 'declareSource',
+    meta: { redirect: true, name: '申报表配置' },
+    component: () => import('@/views/reportTools/DeclareSource.vue'),
+  },
 ];

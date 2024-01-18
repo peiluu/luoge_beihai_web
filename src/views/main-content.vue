@@ -23,7 +23,7 @@
           </template>
           <iframe v-if="tabIsIframe(item.iframeURL)" :src="item.iframeURL" width="100%" height="100%" frameborder="0" scrolling="yes"></iframe>
           <template v-else>
-              <template v-if="(editRoutes.contains($route.name)&&$route.query.opt=='add') || importRoutes.contains($route.name)">
+              <template v-if="(editRoutes.includes($route.name)&&$route.query.opt=='add') || importRoutes.includes($route.name)">
                 <router-view v-if="item.name==$store.state.contentTabsActiveName"/>
               </template>
               <template v-else>
@@ -35,7 +35,7 @@
     </template>
     <!-- 其他方式, 展示内容 -->
     <!--<template v-else>
-      <router-view v-if="(editRoutes.contains($route.name)&&$route.query.opt=='add') || importRoutes.contains($route.name)"/>
+      <router-view v-if="(editRoutes.includes($route.name)&&$route.query.opt=='add') || importRoutes.includes($route.name)"/>
       <keep-alive v-else>
         <router-view />
       </keep-alive>
@@ -44,19 +44,6 @@
 </template>
 
 <script>
-  Array.prototype.contains = function (fn) {
-    var arr = this, //数组本身
-            len = arr.length, //数组长度
-            arg = arguments[0] || window,
-            item;
-    for (var i = 0; i < len; i++) {
-      item = JSON.parse(JSON.stringify(arr[i]))
-      if(item==arg){
-        return true;
-      }
-    }
-    return false;
-  }
 
 import { isURL } from '@/utils/validate'
 export default {

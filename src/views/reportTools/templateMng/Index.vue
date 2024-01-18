@@ -90,9 +90,9 @@
             </el-form-item>
           </el-form>
         </el-main>
-        <el-main v-if="dlgForm.id" style="height: 650px;">
+        <div v-if="dlgForm.id" style="height: 650px;">
           <iframe ref="templateIframe" :src="templateIframe+'/#/expTemplateDetail?templateId='+dlgForm.id" style="height: 100%" width="100%" frameborder="0"></iframe>
-        </el-main>
+        </div>
         <el-footer style="text-align: right;height: 40px;padding-top: 10px;">
           <el-button @click="handleClose">取 消</el-button>
           <el-button type="success" @click="handleSubmit">确 定</el-button>
@@ -178,7 +178,9 @@
           this.$message.error('只能支持xlsx格式的文件')
           return;
         }
+        console.log('----file----',file)
         LuckyExcel.transformExcelToLucky(file, function(exportJson, luckysheetfile){
+          console.log('---file---', exportJson, file)
           if(exportJson.sheets==null || exportJson.sheets.length==0){
             that.$message.error('加载文件失败')
             return;
@@ -211,6 +213,7 @@
         this.dlgVisible = true;
       },
       changeTemplate(param){
+        console.log('----param----', param);
         let suffixArr = param.name.split("."), name = suffixArr[0];
         this.dlgForm.templateName = name;
         this.dlgForm.file = param.raw
