@@ -24,7 +24,7 @@ import 'vxe-table/lib/style.css';
 import './utils/dialogDrag.js'
 import '@/utils/calc.js'
 
-import { getCurrentSsq } from "@/utils/tool"
+import { getCurrentSsq, getCurrentDate } from "@/utils/tool"
 Vue.config.productionTip = false
 
 Vue.use(Element, {
@@ -350,8 +350,15 @@ Vue.prototype.judgeIsCurrentSq = (date, type, preSsq) => {
   return true
 }
 
-
-
+/**
+ * @description 格式化时间，支持返回月份或是季度
+ * @param date 时间
+ * @param returnType 返回类型
+ */
+Vue.prototype.formatAllDate = (date, returnType) => {
+  const { formatQuarterValue = '', formatMonthValue = '' } = getCurrentDate(date)
+  return returnType == '月' ? formatMonthValue : formatQuarterValue
+}
 
 
 

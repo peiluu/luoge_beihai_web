@@ -93,7 +93,7 @@ export default {
       const { code = '', data = [] } = await getListByUser({})
       if (code === '0') {
         this.taxBodyList = data;
-        if (!this.$route.query.nsrsbh) {
+        if (!this.$route.query.nsrsbh && data.length) {
           this.initForm();
         }
       }
@@ -133,7 +133,7 @@ export default {
 
     },
     initForm() {
-      const nsrsbh = this.taxBodyList ? this.taxBodyList[0].nsrsbh : '';
+      const nsrsbh = ( this.taxBodyList && this.taxBodyList.length > 0 ) ? this.taxBodyList[0].nsrsbh : '';
       this.form.nsrsbh = nsrsbh;
       this.handleSearch();
       this.initDate(nsrsbh)

@@ -1,5 +1,7 @@
 import { config } from "@/config"
 import { numberMap, slListMap } from '@/config/constant'
+import moment from 'moment';
+
 const getUUID = function (len, radix) {
     const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
     let uuid = [], i;

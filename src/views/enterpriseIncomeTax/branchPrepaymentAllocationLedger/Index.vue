@@ -37,7 +37,7 @@
     <div class="top-tool">
       <div class="toolbar-left" />
       <div class="toolbar-right">
-        <el-button @click="fetchPrepaidShare" type="primary" :disabled="querySbStatus">取数</el-button>
+        <el-button @click="fetchPrepaidShare" type="primary" :disabled="querySbStatus" :loading='loading'>取数</el-button>
         <el-button @click="handleExport">导出</el-button>
       </div>
     </div>
@@ -100,7 +100,8 @@ export default {
         disabledDate(time) {
           return time.getTime() > Date.now();
         },
-      }
+      },
+      loading: false,
     };
   },
   mounted() {
@@ -224,11 +225,13 @@ export default {
     },
     // 取数
     async fetchPrepaidShare() {
+      this.loading = true;
       const { code = '' } = await fetchPrepaidShare(this.form)
       if (code === '0') {
         this.$message.success('操作成功');
         this.handleSearch()
       }
+      this.loading = false;
     },
     // 导出
     async handleExport() {
@@ -255,6 +258,7 @@ export default {
 };
 </script>
 <style scoped lang="scss">
+@import '../../../styles/variables.scss';
 /deep/ .el-dialog__body {
   .el-form-item:nth-of-type(4) {
     .el-form-item__label::before {
@@ -286,6 +290,62 @@ export default {
     }
 
   }
+}
+.custom-query-form {
+  padding-top: 12px;
+  display: flex;
+  justify-content: space-between;
+
+  .el-form {
+    flex: 1;
+  }
+
+  .search-btns {
+    margin-bottom: 4px;
+  }
+
+  /deep/ .el-form-item {
+    width: calc(33.3% - 10px);
+    margin-bottom: 4px !important;
+
+    .el-form-item__label {
+      width: 120px;
+      font-size: 12px;
+      color: $mainTextColor;
+    }
+
+    .el-form-item__content {
+      width: calc(100% - 120px);
+
+      .el-select,
+      .el-date-editor,
+      .el-cascader,
+      .el-input {
+        width: 100% !important;
+      }
+    }
+  }
+
+  .more {
+    transform: rotate(90deg);
+  }
+
+  .more-down {
+    transform: rotate(-90deg);
+    transition-duration: 300ms;
+  }
+
+  ::v-deep .el-select__tags {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex-wrap: nowrap;
+  }
+}
+.top-tool {
+  display: flex;
+  justify-content: flex-end;
+  margin: 8px 0;
 }
 </style>
 
