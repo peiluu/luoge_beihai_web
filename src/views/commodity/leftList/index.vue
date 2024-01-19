@@ -22,7 +22,7 @@
       <article class="tree_main">
         <el-tree
           :data="treeData"
-          :node-key="!useMode?'id':'sphfwssflhbbm'"
+          :node-key="!useMode?'id':'id'"
           :default-expand-all="useMode?false:true"
           :props="defaultProps"
           :expand-on-click-node="false"
@@ -101,7 +101,8 @@ export default {
         children: 'childList',
         label: this.mode ? 'sphfwmc' : 'name',
         value: this.mode ?'sphfwssflhbbm':'id'
-      }
+      },
+      
     };
   },
   computed: {},
@@ -179,13 +180,15 @@ export default {
    /* 获取数据 */
    async handlerGetList(){
     this.loading = true;
-    console.log(getcommondityAddTreeList())
+    
     const res = (this.useMode??'') ==='' ? await getcommondityTreeList() :  await getcommondityAddTreeList()
     this.treeData = [];
     if(res.code === '0'){
       this.treeData = this.useMode? res.data : res.data.childList;
-      console.log(this.handlerPrsoneData(this.treeData),"data")
-      debugger;
+      if((this.useMode??'') ===''){
+        this.$emit('handleNodeClick',this.handlerPrsoneData(this.treeData))
+      }
+      
     }else{
       this.$message.error(res.msg);
       this.loading = false
@@ -204,19 +207,28 @@ export default {
     console.log(data,node,item);
     this.$emit('handleNodeClick',data)
    }, 
-   /* 递归整理数据 */
-   handlerPrsoneData(data){
-    if(data && data.length > 0){
-      data.forEach(item=>{
-        item.label = this.useMode ?item.sphfwmc : item.name;
-        item.value = item.id;
-        if(item.childList && item.childList.length > 0){
-          this.handlerPrsoneData(item.childList)
+   /* 递归返回数据 */
+   handlerPrsoneData(data) {
+      let firstId = null; // 保存最底层的第一个非空子列表中的第一个元素的 id
+
+      // 帮助函数来进行递归搜索
+      function findFirstId(nodes) {
+        for (let i = 0; i < nodes.length && firstId === null; i++) {
+          const item = nodes[i];
+          if (item.childList && item.childList.length > 0) {
+            // 继续递归搜索子列表
+            findFirstId(item.childList);
+          } else {
+            // 设置 firstId 并停止搜索
+            firstId = item;
+            break; // 找到最底层的第一个元素，不需要继续循环
+          }
         }
-      })
+      }
+
+      findFirstId(data); // 开始递归搜索
+      return firstId; // 返回找到的第一个最底层的 id
     }
-    return data
-   }
   },
   created() {},
   mounted() {

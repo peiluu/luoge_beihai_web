@@ -2,9 +2,9 @@
   <div>
     <div class="main-content">
       <el-form :inline="true" :model="form" :rules="rules" ref="ruleForm" :disabled="operateType === 'detail'">
-        <div class="content-title">客户信息</div>
+        <div class="content-title"></div>
         <el-form-item label="请选择纳税主体" prop="nsrsbh">
-          <el-select v-model="form.nsrsbh" placeholder="请选择" filterable clearable multiple>
+          <el-select v-model="form.nsrsbh" placeholder="请选择" filterable clearable multiple :disabled="detailInfo.id">
             <el-option v-for="(item, index) in taxBodyList" :key="index" :label="item.nsrmc" :value="item.nsrsbh">
             </el-option>
           </el-select>
@@ -15,7 +15,9 @@
           </el-select>
         </el-form-item>
         <el-form-item label="限制约束" prop="ysxz">
-          <el-input v-model="form.ysxz" placeholder="不得开具" maxlength="100" :disabled="true" />
+          <el-select v-model="form.ysxz" placeholder="请选择" maxlength="80" disabled>
+            <el-option label="不得开具" :value="1"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="请选择发票类型" prop="type">
           <el-select v-model="form.type" placeholder="请选择" maxlength="80">
@@ -25,12 +27,12 @@
         </el-form-item>
         <el-form-item label="请选择限制结果" prop="xzjg">
           <el-select v-model="form.xzjg" placeholder="请选择" maxlength="80">
-            <el-option label="提醒" value="1"></el-option>
-            <el-option label="拒绝" value="2"></el-option>
+            <el-option label="提醒" :value="1"></el-option>
+            <el-option label="拒绝" :value="2"></el-option>
           </el-select>
         </el-form-item>
         <div v-if="form.xzjg === '1'">
-          <span>您开具的商品税率存在3%的税率，不符合开具标准，是否继续开具？</span>
+          <span class="text">您开具的商品税率存在3%的税率，不符合开具标准，是否继续开具？</span>
         </div>
         <div v-else-if="form.xzjg === '2'">
           <span>不得开具税率为3%的发票，若需要开具请联系区域经理</span>
@@ -61,7 +63,8 @@ export default {
     return {
       taxBodyList: [],
       form: {
-        qyzbs: ""
+        qyzbs: "",
+        ysxz: 1
       },
       // type: {
       //   '01': '蓝字专用发票',
@@ -125,15 +128,12 @@ export default {
             const { data } = res;
             this.form = {
               id: data.id,
-              nsrsbh: data.nsrsbh.map(item => String(item)),
+              nsrsbh: [data.nsrsbh],
               ysxz: data.ysxz,
-              gmfNsrsbh: data.gmfNsrsbh,
-              dzdh: data.dzdh,
-              phone: data.phone,
-              yhzh: data.yhzh,
-              bankaccount: data.bankaccount,
-              username: data.username,
-              revphone: data.revphone,
+              slv: data.slv.split(','),
+              type: data.type,
+              xzjg: data.xzjg,
+
             };
           }
 
@@ -330,5 +330,9 @@ export default {
 
 .footer {
   text-align: center;
+}
+.text{
+  padding-left: 80px;
+  font-size: 12px;
 }
 </style>
