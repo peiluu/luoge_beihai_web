@@ -197,12 +197,12 @@ export default {
   * @desption 查询商品表头
   */
     async queryColumn() {
-      const { code = '', data = [] } = await queryColumn({
+      /*const { code = '', data = [] } = await queryColumn({
         type: 32
       })
       if (code === '0') {
-        // this.tableColumns = data;
-      }
+        this.tableColumns = data;
+      }*/
     },
 
     handleClose() {

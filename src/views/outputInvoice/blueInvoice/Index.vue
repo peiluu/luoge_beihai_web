@@ -294,7 +294,7 @@ export default {
     // }
   },
   mounted() {
-    console.log(this.$route, "00988");
+    // console.log(this.$route, "00988");
     this.handlerInit();
   },
 };
