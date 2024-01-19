@@ -29,6 +29,17 @@ export const getUnitList = data=> postJSON(`${config.host}/dicDw/list`,data);
 /* 获取税率单位下拉 */
 export const delTableRowSingle = data=> postJSON(`${config.host}/material/delete`,data);
 
+/* 获取所属开票点下拉 */
+export const getallBilling = data=> postJSON(`${config.host}/orgnization/getOrgList`,data);
+
+/* 获取商品详情 */
+export const getCommodityDes = data=> postJSON(`${config.host}/invoiceTaxCode/detail`,data);
+
+export const updateCommondityRow = data=> postJSON(`${config.host}/material/update`,data); 
+
+/* 获取编辑详情 */
+export const getCommondityDes = data=> postJSON(`${config.host}/material/detail`,data);
+
 
 //   /**
 //  * @desption 获取当前用户可以开票的开票点（不分页）
