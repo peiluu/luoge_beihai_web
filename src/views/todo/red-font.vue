@@ -1,15 +1,22 @@
 <template>
   <div class="main-content">
-    <form-list :key="level" :columns="columns" :searchRow="[]" :api="api" :param="param" :height="height" :showSearch="false" ref="list">
+    <el-tabs v-model="activeName" type="card" @tab-click="handleClick" class="custom-card-tabs">
+      <el-tab-pane label="待确认红字信息确认单" name="/"></el-tab-pane>
+      <el-tab-pane label="已确认红字信息确认单" name="04"></el-tab-pane>
+    </el-tabs>
+    <form-list :key="level" :columns="dynamicsColumns" :searchRow="searchList" :api="api" :param="param" :height="height"
+      :showSearch="true" ref="list">
       <template #lrfsf="row"> {{ row.data.lrfsf == 0 ? "销售方" : "购买方" }}</template>
 
       <template #ykjhzfpbz="row">{{ row.data.ykjhzfpbz === 'Y' ? '已开具' : '未开具' }}</template>
       <template #shzt="row">
-        <span :class="row.data.shzt != null ? examineStatusMap[row.data.shzt].class : ''"> {{ row.data.shzt != null ? examineStatusMap[row.data.shzt].label : '-' }}</span>
+        <span :class="row.data.shzt != null ? examineStatusMap[row.data.shzt].class : ''"> {{ row.data.shzt != null ?
+          examineStatusMap[row.data.shzt].label : '-' }}</span>
       </template>
       <!-- （当审核状态为待审核时，用-表示） -->
       <template #hzqrxxztDm="row">
-        <span :class="row.data.hzqrxxztDm != null ? confirmStatusMap[row.data.hzqrxxztDm].class : ''"> {{ row.data.hzqrxxztDm != null ? confirmStatusMap[row.data.hzqrxxztDm].label : '-' }}</span>
+        <span :class="row.data.hzqrxxztDm != null ? confirmStatusMap[row.data.hzqrxxztDm].class : ''"> {{
+          row.data.hzqrxxztDm != null ? confirmStatusMap[row.data.hzqrxxztDm].label : '-' }}</span>
       </template>
 
       <template #chyyDm="row">{{ chyyDmMap[row.data.chyyDm] }}</template>
@@ -75,7 +82,8 @@ export default {
         { title: "税额", dataIndex: "hzcxse", slot: 'hzcxse', align: 'right', width: 100 },
         { title: "冲红原因", dataIndex: "chyyDm", slot: "chyyDm", width: 100, },
         { title: "确认单状态", width: 170, dataIndex: "hzqrxxztDm", slot: "hzqrxxztDm" },
-
+      ],
+      columnsOpts: [
         {
           title: "操作",
           key: "action",
@@ -83,7 +91,21 @@ export default {
           width: 80,
           scopedSlots: { customRender: "action" }
         }
-      ]
+      ],
+      activeName: '0',
+      searchList: [
+        {
+          label: "购销身份",
+          key: "lrfsf",
+          val: '',
+          type: "select",
+          options: [
+            { value: "", label: "全部" },
+            { value: "1", label: "购买方" },
+            { value: "0", label: "销售方" }]
+        },
+
+      ],
     };
   },
   mounted() {
@@ -92,6 +114,13 @@ export default {
 
   // 同一页面切换会触发更新
   computed: {
+    dynamicsColumns() {
+      let newCol = [...this.columns];
+      if (this.activeName !== '04') {
+        newCol = newCol.concat(this.columnsOpts)
+      }
+      return newCol
+    },
     height() {
       return window.innerHeight - 280;
 
@@ -141,6 +170,11 @@ export default {
         }
       });
       this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+    },
+    handleClick(tab) {
+      console.log(tab.name);
+      this.activeName = tab.name;
+      this.$refs.list.reload({ type: tab.name });
     }
   }
 };

@@ -5,7 +5,6 @@
         :visible="visible"
         :width="width"
         @update:visible="updateVisible"
-       
         :before-close="handleClose">
            <article>
             <el-form  v-loading="loading" ref="treeForm"  :model="treeForm" :rules="treeRules" label-width="80px">

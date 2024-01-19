@@ -164,7 +164,7 @@ export default {
     //  按钮操作
     // 删除
     handleDelete(type, data) {
-      this.$confirm(`是否确定删除当前组织`, '请确认', {
+      this.$confirm(`是否确定删除当前客户`, '请确认', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
