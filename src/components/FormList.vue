@@ -11,7 +11,11 @@
       <el-table
         row-key="id"
         :reserve-selection="true"
-        ref="table" :data="data" border stripe @row-click="rowClcik"
+        ref="table" 
+        :data="data"
+        :border="border" 
+        stripe 
+        @row-click="rowClcik"
         :header-cell-style="{fontWeight: 400,borderTop: '1px solid #adb4bc',background: '#f7f9fd',color: '#333333',padding: '7px 0'}"
         tooltip-effect="dark"
         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
@@ -62,8 +66,8 @@
       <TableCounter ref="tableCounter" :totalEntity="totalEntity" v-if="tableCounterShow" :tableCounterConfig="tableCounterConfig"/>
 
       <div class="pagination" v-if="showPagination">
-        <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.pageNo" :page-sizes="[10, 20, 30, 40, 50, 100, 500, 1000]" :page-size="pagination.pageSize"
-          layout="total, sizes, prev, pager, next, jumper" :total="pagination.total">
+        <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.pageNo" :page-sizes="pageSizes" :page-size="pagination.pageSize"
+          :layout="pageLayout" :total="pagination.total">
         </el-pagination>
       </div>
     </div>
@@ -80,37 +84,53 @@ export default {
     TableCounter
   },
   props: {
+    border: {
+      type: Boolean,
+      default: true
+    },
+    pageSize: {
+      type: Number,
+      default: 10,
+    },
+    pageSizes: {
+      type: Array,
+      default: ()=>[10, 20, 30, 40, 50, 100, 500, 1000],
+    },
+    pageLayout: {
+      type: String,
+      default: "total, sizes, prev, pager, next, jumper"
+    },
     switchLabel: {
-      String,
+      type: String,
       default: ""
     },
     checkLockM: {
-      Boolean,
+      type: Boolean,
       default: false
     },
     exportLabel: {
-      String,
+      type: String,
       default: ""
     },
     mergeCell: {
-      Boolean,
+      type: Boolean,
       default: false
     },
     kjywrid: {
-      Number,
+      type: Number,
       default: null,
     },
     reset: {
-      Number,
+      type: Number,
       default: null,
     },
     columns: {
       type: Array,
-      default: new Array(),
+      default: ()=>[],
     },
     searchRow: {
       type: Array,
-      default: new Array(),
+      default: ()=>[],
     },
     backpath: {
       type: String,
@@ -146,7 +166,7 @@ export default {
     param: {
       // 列表传参
       type: Object,
-      default: new Object(),
+      default: ()=>({}),
     },
     buildFunction: {
       // 列表数据处理方法
@@ -208,7 +228,7 @@ export default {
       searchParam: {},
       pagination: {
         pageNo: 1,
-        pageSize: 10,
+        pageSize: this.pageSize,
         total: 0,
         showQuickJumper: true,
         showTotal: (total) => `共${total}条`,
