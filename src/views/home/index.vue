@@ -147,14 +147,17 @@
             <el-radio-button :label="12">近12个月</el-radio-button>
           </el-radio-group>
         </div>
-        <div id="echart-col"></div>
+        <div class="no-echart" v-if="Object.keys(seriesDataObj).length === 0">暂无数据</div>
+        <div id="echart-col" v-else></div>
       </div>
       <div class="echart-r">
         <p class="echart-mo">{{ ringMonth }}</p>
         <p class="proportion">占图比</p>
-        <div id="echart-ring"></div>
+        <div class="no-echart" v-if="Object.keys(seriesDataObj).length === 0">暂无数据</div>
+        <div id="echart-ring" v-else></div>
       </div>
     </div>
+    
     <el-dialog
       v-if="dialogVisible"
       title="快捷入口选择"
@@ -285,13 +288,6 @@ export default {
       },
       xAxisData: initX, // 柱状图x轴底部日期数据
       seriesDataObj: {},
-      seriesData: [
-        // 柱状图
-        [320, 332, 301, 334, 390, 330, 320, 311, 324, 490, 130, 620], // 蓝字发票金额
-        [120, 132, 101, 134, 90, 230, 210, 141, 234, 190, 130, 230], // 蓝字发票税额
-        [220, 182, 191, 234, 290, 330, 310, 181, 214, 240, 310, 340], // 红字发票金额
-        [150, 232, 201, 154, 190, 330, 410, 231, 164, 200, 360, 440], // 红字发票税额
-      ],
       dialogVisible: false,
       treeKeys: [],
       selectMenus: [],
@@ -997,6 +993,12 @@ p {
 }
 .deving {
   text-align: center;
+  line-height: 100px;
+}
+.no-echart {
+  color: #999;
+  text-align: center;
+  width: 100%;
   line-height: 100px;
 }
 </style>
