@@ -8,32 +8,37 @@
         :modal-append-to-body="false"
         @update:visible="updateVisible"
         @open="handleOpen"
+        @closed="handleClose"
         :show-close="false"
         :wrapper-closable="false"
-        :before-close="handleClose">
+       >
         <template v-slot:title>
             <article class="header" >
                 <div class="title">{{ title }}</div>
                 <div>
                     <el-button @click="updateVisible(false)">关闭</el-button>
-                    <el-button type="primary" @click="handleAddSingle">保存</el-button>
+                    <el-button type="primary" @click="handleAddSingle" :loading="loading">保存</el-button>
                 </div>
             </article>
         </template>
            <article class="drawer_content">
                 <el-row :gutter="20">
                     <el-col :span="10">
-                        <app-left-list v-if="isShow" :mode="mode" @handleNodeClick="handleNodeClick" />
+                        <app-left-list  :mode="mode" @handleNodeClick="handleNodeClick" />
                     </el-col>
                     <el-col :span="14">
                         <el-card shadow="never" :body-style="{height:'100%', height: 'calc(100vh - 116px)',overflow: 'auto'}"> 
                             <el-form :model="addForm" :rules="ruleAddForm" ref="ruleAddForm" label-width="200px" class="demo-ruleForm">
                                 <el-row :gutter="20" >
                                     <el-col :span="24">
+                                        <el-form-item label="当前商品和服务税收分类编码" prop="orgids">
+                                          <span style="">{{ isActiveName }}</span>
+                                        </el-form-item>
                                         <el-form-item label="所属开票点" prop="orgids">
-                                            <el-select style="width:100%" v-model="addForm.orgids" placeholder="请选择">
+                                            <el-select style="width:100%" v-model="addForm.orgids" filterable 
+                                            placeholder="请选择" multiple @change="handlerOrgidsChange" @remove-tag="handlerRemoveTag">
                                                 <el-option
-                                                v-for="item in []"
+                                                v-for="item in buillingOptions"
                                                 :key="item.value"
                                                 :label="item.label"
                                                 :value="item.value">
@@ -54,6 +59,7 @@
                                     <el-col :span="24">
                                         <el-form-item label="商品和服务税收分类名称" prop="sphfwmc" >
                                             <el-input v-model="addForm.sphfwmc" disabled ></el-input>
+                                            <span v-if="addForm.sm">说明:<span style="color:#333;font-size:12px">{{`${addForm.sm}`}}</span></span>
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="24">
@@ -63,7 +69,7 @@
                                     </el-col>
                                     <el-col :span="24">
                                         <el-form-item label="优惠政策及简易计税" prop="xsyhzc">
-                                            <el-radio-group v-model="addForm.xsyhzc">
+                                            <el-radio-group v-model="addForm.xsyhzc" @input="handleRadioinput">
                                             <el-radio label="Y" >是</el-radio>
                                             <el-radio label="N" >否</el-radio>
                                             </el-radio-group>
@@ -71,9 +77,10 @@
                                     </el-col>
                                     <el-col :span="24">
                                         <el-form-item label="优惠政策及简易计税类型" prop="zzstsgl">
-                                            <el-select style="width:100%" v-model="addForm.zzstsgl" placeholder="请选择">
+                                            <el-select style="width:100%" :disabled="addForm.xsyhzc === 'N'" 
+                                            v-model="addForm.zzstsgl" placeholder="请选择" @change="handlertaxAess">
                                                 <el-option
-                                                v-for="item in []"
+                                                v-for="item in taxAssOptions"
                                                 :key="item.value"
                                                 :label="item.label"
                                                 :value="item.value">
@@ -85,10 +92,10 @@
                                         <el-form-item label="税率/征收率" prop="sl">
                                             <el-select style="width:100%" v-model="addForm.sl" placeholder="请选择">
                                                 <el-option
-                                                v-for="item in []"
+                                                v-for="item in taxRateOption"
                                                 :key="item.value"
                                                 :label="item.label"
-                                                :value="item.value">
+                                                :value="item.slv">
                                                 </el-option>
                                             </el-select>
                                         </el-form-item>
@@ -106,6 +113,7 @@
                                             style="width:100%"
                                             filterable
                                             v-model="addForm.dw"
+                                            row-key="id"
                                             placeholder="请选择或添加单位">
                                             <el-option
                                             v-for="item in dwOptions"
@@ -135,7 +143,7 @@
 
 <script>
 import AppLeftList from '../../leftList';
-import {addCommonditySingle,getUnitList} from '../../api.js';
+import {addCommonditySingle,getUnitList,getallBilling,getCommodityDes,getCommondityDes,updateCommondityRow} from '../../api.js';
 export default {
     name:'addcommodityPage',
     props:{
@@ -153,14 +161,39 @@ export default {
             type: String,
             default: '30%'
         },
+
+        dataLs: {
+            type: [],
+            default: ()=> []
+        },
+
+        commodityActiveId:{
+            type: [String,Number],
+            default:null
+        },
+
+        rowData:{
+            type:Object,
+            default: ()=> {}
+        }
     },  
     components: {AppLeftList},
     data() {
         return {
-            mode:null,
+            mode:1,
             isShow: false,
-            addForm:{},
-            ruleAddForm:{},
+            addForm:{
+                
+                xsyhzc:'N',
+                classid: this.commodityActiveId,
+                
+            },
+            ruleAddForm:{
+                name:[{ required: true, message: '项目商品名称', trigger: 'blur' },],
+                xsyhzc:[{ required: true, message: '请选择优惠政策及简易计税', trigger: 'blur' },],
+                //zzstsgl:[{ required: this.addForm.xsyhzc === 'Y'?true:false, message: '请选择优惠政策及简易计税类型', trigger: 'blur' },],
+                sl:[{ required: true, message: '请选择税率', trigger: 'blur' },]
+            },
             dwOptions:[
                 {
                     label:'分',
@@ -191,55 +224,170 @@ export default {
                     value:'两'
                 },
                 
-            ]
+            ],
+            buillingOptions:[],
+            taxAssOptions:[
+                {lable:'免税',value:'免税'}
+            ],
+            taxRateOption:[...this.dataLs],
+            
+            addActiveId:this.commodityActiveId || null,
+            loading:false,
+            isActiveName:''
         };
     },
     computed: {},
-    watch: {},
+    watch: {
+        dataLs:{
+            handler(val){
+                this.taxRateOption = [...val];
+            }
+        },
+        commodityActiveId:{
+            handler(val){
+                this.addActiveId = val || null;
+                this.classid = val;
+            }
+        },
+        rowData:{
+            handler(val){
+                if(Object.keys(val).length > 0){
+                    this.handlerEditDes(val)
+                }
+            },
+            deep:true
+        }
+    },
     methods: {
-
+       /* 编辑详情 */
+       handlerEditDes(data){
+        getCommondityDes(data).then(res=>{
+            if(res.code === '0'){
+                this.addForm = {...res.data,taxclasscode:res.data.sphfwssflhbbm}
+                this.addForm.orgids = this.addForm.orgids.map(k=> `${k}`);
+                if(this.xsyhzc === 'N'){
+                    this.addForm.zzstsgl = null;
+                    this.addForm.ls = '';
+                }
+                if(this.addForm.orgids === '0'){
+                    this.buillingOptions = this.buillingOptions.map(k=> {return {...k,disabled:true}})
+                }
+                
+            }
+        })
+       },
         /* save */
         handleAddSingle(){
             this.handlerSubmit();
         },
         /* 提交 */
-       async handlerSubmit(){
-        let data = {...this.addForm}
-           const res = await  addCommonditySingle(data)
-           console.log(res);
+        handlerSubmit(){
+            this.loading = false;
+        let data = {...this.addForm};
+        this.$refs.ruleAddForm.validate(async (valid) => {
+            if(valid){
+                this.loading = true;
+                const res = Object.keys(this.rowData).length <=0? await  addCommonditySingle(data) : await updateCommondityRow(data)
+                if(res.code === '0'){
+                    this.$message.success("操作成功！")
+                }
+                this.loading = false;
+            }
+        })
+          
+          
         },
         /* 点击回调 */
         handleNodeClick(val){
-            console.log(val)
+           
             if(val.sfhzx === '是') return
-            const {id,sphfwssflhbbm,sphfwmc,sphfwfljc} = val || {}
-            this.addForm ={
-                ...this.addForm,
-                classid: id,
-                taxclasscode:sphfwssflhbbm,
-                sphfwmc,
-                sphfwfljc
-            }
+            this.isActiveName = val.sphfwmc || ''
+            this.handleGetCommodiyDes(val)
+            this.addForm.xsyhzc = 'N';
+            this.addForm.zzstsgl = null;
+            this.addForm.sl = '';
         },
-        
+        /* 获取商品服务详情信息 */
+        handleGetCommodiyDes(data){
+            getCommodityDes(data).then(res=>{
+                debugger;
+                if(res.code === '0'){
+                    const {id,sphfwssflhbbm,sphfwmc,sphfwfljc,zzstsgl,sm} = res.data || {};
+                    this.addForm ={
+                            ...this.addForm,
+                            sm:sm,
+                            taxclasscode:sphfwssflhbbm,
+                            sphfwmc,
+                            sphfwfljc
+                        }
+                    
+                   
+                    if((zzstsgl??'') !==''){
+                        let arr = zzstsgl.split('、');
+                        this.taxAssOptions = arr.map(i=> {return {lable:i,value:i}})
+                        console.log(zzstsgl.split(','))
+                    }
+                }
+            })
+        },
         /* 打开 */
         handleOpen(){
-            this.mode = 1;
-            this.isShow = true;
+          
         },
-
+        /* 获取开票点 */
+        handlerGetBuilingList(){
+            getallBilling({}).then(res=>{
+                console.log(res,"2")
+                if(res.code === '0'){
+                    this.buillingOptions = res.data.map(k=> {return {...k,label:k.nsrmc,value:k.id}});
+                    this.buillingOptions.unshift({label:'全部',value:'0'})
+                }
+            })
+        },
         /* 单位字典下拉获取 */
         handleUnitDictList(){
             getUnitList().then(res=>{
                 if(res.code === '0'){
-                    this.dwOptions = [...res.data];
+                    this.dwOptions = [...res.data.map(k=> {return {...k,label:k.name,value:k.name}})];
                 }
                
             })
         },
+        /* 单选变化 */
+        handleRadioinput(val){
+            this.addForm.zzstsgl = null;
+            this.addForm.sl = ''; 
+           
+        },
+        /* 变化 */
+        handlertaxAess(val){
+            console.log(val)
+            if(val === '免税'){
+                this.taxRateOption = this.taxRateOption.filter(k=> k.mc === '免税')
+                
+            }else if(val === '免征税'){
+                this.taxRateOption = this.taxRateOption.filter(k=> k.mc !== '免征税')
+            }else{
+                this.taxRateOption = this.taxRateOption.filter(k=> k.mc !== '免税' && k.mc !== '不征税')
+            }
+        },
+        /* 开票点变化事件 */
+        handlerOrgidsChange(val){
+            if(val.includes('0')){
+                this.addForm.orgids = this.buillingOptions.map(k=> k.value); 
+            }else if(!val.includes('0') && this.addForm.orgids.length === this.buillingOptions.filter(k=> k.value !=='0').length){
+                this.addForm.orgids = [];
+            }
+        },
+        /* 移除 */
+        handlerRemoveTag(val){
+            if(val === '0'){
+                this.addForm.orgids = [];
+            }
+        },
         /*关闭前 */
         handleClose(){
-            this.updateVisible(false);
+           // this.updateVisible(false);
         },
 
         /* 关闭 */
@@ -247,9 +395,18 @@ export default {
             this.$emit('update:visible', value);
         },
     },
-    created() {},
+    created() {
+        
+        this.mode = 1;
+    },
     mounted() {
-        this.handleUnitDictList()
+        
+        this.handlerGetBuilingList();
+        this.handleUnitDictList();
+        if(Object.keys(this.rowData).length > 0){
+            // this.addForm={...this.rowData}
+            this.handlerEditDes(this.rowData)
+        }
     },
     beforeCreate() {},
     beforeMount() {},
