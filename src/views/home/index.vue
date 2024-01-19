@@ -147,17 +147,15 @@
             <el-radio-button :label="12">近12个月</el-radio-button>
           </el-radio-group>
         </div>
-        <div class="no-echart" v-if="Object.keys(seriesDataObj).length === 0">暂无数据</div>
-        <div id="echart-col" v-else></div>
+        <div id="echart-col"><div class="no-echart" v-if="Object.keys(seriesDataObj).length === 0">暂无数据</div></div>
       </div>
       <div class="echart-r">
         <p class="echart-mo">{{ ringMonth }}</p>
         <p class="proportion">占图比</p>
-        <div class="no-echart" v-if="Object.keys(seriesDataObj).length === 0">暂无数据</div>
-        <div id="echart-ring" v-else></div>
+        <div id="echart-ring"><div class="no-echart" v-if="Object.keys(seriesDataObj).length === 0">暂无数据</div></div>
       </div>
     </div>
-    
+
     <el-dialog
       v-if="dialogVisible"
       title="快捷入口选择"
