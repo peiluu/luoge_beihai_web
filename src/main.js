@@ -23,6 +23,7 @@ import VXETable from 'vxe-table';
 import 'vxe-table/lib/style.css';
 import './utils/dialogDrag.js'
 import '@/utils/calc.js'
+import moment from 'moment'
 Vue.config.productionTip = false
 
 Vue.use(Element, {
@@ -338,6 +339,14 @@ Vue.prototype.getUrlParam = (key =>{
   }
 })
 
+/**
+ * @description 格式化时间 ，返回属期月份
+ * @param fmt 需要的格式
+ * @param val 时间
+ */
+Vue.prototype.formatDate = (fmt, val) => {
+  return moment(val).format(fmt)
+}
 
 
 
