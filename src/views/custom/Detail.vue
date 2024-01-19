@@ -3,7 +3,7 @@
     <div class="main-content">
       <el-form :inline="true" :model="form" :rules="rules" ref="ruleForm" :disabled="operateType === 'detail'">
         <div class="content-title">客户信息</div>
-        <el-form-item label="所属开票点" prop="orgids">
+        <el-form-item label="所属开票点" prop="orgids" class="form-orgids">
           <el-select v-model="form.orgids" placeholder="请选择" filterable clearable multiple @change="handleChange">
             <el-option :class="`li-all ${selectedAll ? 'selected' : ''}`" :value="0"><span class="s-all"
                 @click.stop="handleClick">全选</span></el-option>
@@ -344,5 +344,17 @@ export default {
   display: block;
   padding: 0 20px;
   height: 100%;
+}
+
+.form-orgids {
+  /deep/ .el-select__tags {
+    max-height: 100px;
+    overflow: hidden;
+    overflow-y: auto;
+  }
+
+  /deep/ .el-input {
+    max-height: 100px;
+  }
 }
 </style>

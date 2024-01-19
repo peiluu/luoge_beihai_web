@@ -61,7 +61,7 @@ export const  hmdCustomer  = (data) => postJSON(`${config.host}/Customer/hmd`, d
 /**
  * @desption 新增客户信息
  */
-export const  getDetailById  = (data) => postJSON(`${config.host}/Customer/getDetail`, data);
+export const  getDetailById  = (data) => postJSON(`${config.host}/invoice-kpxz/getDetail`, data);
 /**
  * @desption 获取税率list
  */

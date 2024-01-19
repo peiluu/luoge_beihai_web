@@ -161,7 +161,7 @@ export default {
       //   } else { arr.push(newRes[i]) }
       // }
       // console.log('---arr---',arr)
-      return res.split(',').map(item => (item !== '免税' && item !== '不征税' && item.indexOf('%') === -1) ? item * 100 + '%' : item).join(',')
+      return res && res.split(',').map(item => (item !== '免税' && item !== '不征税' && item.indexOf('%') === -1) ? item * 100 + '%' : item).join(',')
     }
   },
   methods: {
