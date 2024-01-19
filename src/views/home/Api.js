@@ -29,4 +29,9 @@ export const saveMenu  = data => postJSON(`${config.host}/home/saveMenu `, data)
 /**
  * @description 保存快捷列表
  */
-export const getEchartData  = data => postJSON(`${config.host}/home/queryMenu `, data);
+export const getEchartData = data => postJSON(`${config.host}/home/queryMenu `, data);
+
+/**
+ * @description 保存快捷列表
+ */
+export const getBillStatistics  = data => postJSON(`${config.host}/home/billStatistics/${data}`);
