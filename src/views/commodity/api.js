@@ -11,6 +11,25 @@ export const postcommondityAddSingle = data=> postJSON(`${config.host}/materialC
 export const delectcommonditySingle = data=> postJSON(`${config.host}/materialClass/delete`,data);
 
 export const updateCommonditySingle = data=> postJSON(`${config.host}/materialClass/update`,data);
+/**
+ * @desption 商品添加分类树形左边
+ */
+export const getcommondityAddTreeList = data => postJSON(`${config.host}/invoiceTaxCode/tree`, data);
+
+export const addCommonditySingle = data=> postJSON(`${config.host}/material/add`,data); 
+
+export const getTableSourceList = data=> postJSON(`${config.host}/material/page`,data);
+
+/* 获取税率下拉 */
+export const getTaxrateList = data=> postJSON(`${config.host}/dicZzsSl/list`,data);
+
+/* 获取税率单位下拉 */
+export const getUnitList = data=> postJSON(`${config.host}/dicDw/list`,data);
+
+/* 获取税率单位下拉 */
+export const delTableRowSingle = data=> postJSON(`${config.host}/material/delete`,data);
+
+
 //   /**
 //  * @desption 获取当前用户可以开票的开票点（不分页）
 //  */
