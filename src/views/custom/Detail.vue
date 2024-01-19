@@ -34,6 +34,9 @@
         <el-form-item label="联系人手机" prop="revphone">
           <el-input v-model="form.revphone" placeholder="请输入" maxlength="90" />
         </el-form-item>
+        <el-form-item label="邮箱" prop="revemail">
+          <el-input v-model="form.revemail" placeholder="请输入" maxlength="90" />
+        </el-form-item>
         <!-- <el-form-item  prop="hmd">
         <el-switch v-model="form.hmd" active-text="标记黑名单" inactive-text="移除黑名单">
         </el-switch> -->
@@ -72,6 +75,7 @@ export default {
           regCollection.nsrsbh,
         ],
         gmfMc: [{ required: true, message: "请输入", trigger: "blur" }],
+        revemail: [{ validator: this.verify_email, message: "邮箱格式不正确", trigger: "blur" }],
         // address: [{ required: true, message: "请输入", trigger: "blur" }],
         // phone: [{ required: true, message: "请输入", trigger: "blur" }, regCollection.phone],
         // bankAccount: [{ required: true, message: "请输入", trigger: "blur" }],
@@ -132,6 +136,7 @@ export default {
               bankaccount: data.bankaccount,
               username: data.username,
               revphone: data.revphone,
+              revemail: data.revemail,
             };
           }
 
