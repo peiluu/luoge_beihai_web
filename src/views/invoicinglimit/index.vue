@@ -20,6 +20,11 @@
           {{ data.ysxz == 1 ? '不得开具' : '是' }}
         </span>
       </template>
+      <template #slv="{ data }">
+        <span>
+          {{ data.slv | changeSlv }}
+        </span>
+      </template>
       <template #xzjg="{ data }">
         <span>
           {{ data.xzjg == 1 ? '提醒' : '拒绝' }}
@@ -27,7 +32,7 @@
       </template>
       <template #type="{ data }">
         <span>
-          {{ data.type ==  '01' ? '蓝字专用发票' : '蓝字普通发票' }}
+          {{ data.type == '01' ? '蓝字专用发票' : '蓝字普通发票' }}
         </span>
       </template>
       <template #myscope="{ data }">
@@ -88,10 +93,10 @@ export default {
       columns: [
         { title: '序号', type: "index", width: 70, fixed: 'left', },
         { title: "主体名称", width: 160, dataIndex: "nsrsbh", },
-        { title: "开票类型", width: 160, dataIndex: "type",slot: "type" },
-        { title: "限制税率", width: 160, dataIndex: "slv", },
-        { title: "限制约束", width: 160, dataIndex: "ysxz",slot: "ysxz" },
-        { title: "限制结果", width: 160, dataIndex: "xzjg",slot: "xzjg" },
+        { title: "开票类型", width: 160, dataIndex: "type", slot: "type" },
+        { title: "限制税率", width: 160, dataIndex: "slv", slot: "slv", showTooltip: true },
+        { title: "限制约束", width: 160, dataIndex: "ysxz", slot: "ysxz" },
+        { title: "限制结果", width: 160, dataIndex: "xzjg", slot: "xzjg" },
         {
           title: "操作",
           key: "action",
@@ -145,7 +150,20 @@ export default {
       return this.$refs.list.getSelections()
     }
   },
-
+  filters: {
+    changeSlv(res) {
+      // console.log(newRes)
+      // let arr = [];
+      // for (var i = 0; i < newRes.length; i++) {
+      //   // console.log(newRes[i]);
+      //   if (newRes[i] !== '免税' && newRes[i] !== '不征税'&& newRes[i].indexOf('%')===-1) {
+      //     arr.push(newRes[i] * 100 + '%')
+      //   } else { arr.push(newRes[i]) }
+      // }
+      // console.log('---arr---',arr)
+      return res.split(',').map(item => (item !== '免税' && item !== '不征税' && item.indexOf('%') === -1) ? item * 100 + '%' : item).join(',')
+    }
+  },
   methods: {
     onClose() {
       this.detailVisible = false;

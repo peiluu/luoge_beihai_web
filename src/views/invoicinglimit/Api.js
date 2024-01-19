@@ -47,7 +47,7 @@ export const deleteBatch = (data) =>
 /**
  * @desption 修改客户信息
  */
-export const updateCustomer = (data) => postJSON(`${config.host}/Customer/update`, data);
+export const updateInvoicekpxz = (data) => postJSON(`${config.host}/invoice-kpxz/update`, data);
 
 /**
  * @desption 新增客户信息
@@ -62,3 +62,7 @@ export const  hmdCustomer  = (data) => postJSON(`${config.host}/Customer/hmd`, d
  * @desption 新增客户信息
  */
 export const  getDetailById  = (data) => postJSON(`${config.host}/Customer/getDetail`, data);
+/**
+ * @desption 获取税率list
+ */
+export const  getDicZzsSl  = (data) => postJSON(`${config.host}/dicZzsSl/list`, data);

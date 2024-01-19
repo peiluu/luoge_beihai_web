@@ -5,31 +5,23 @@
         <div class="content-title">客户信息</div>
         <el-form-item label="请选择纳税主体" prop="nsrsbh">
           <el-select v-model="form.nsrsbh" placeholder="请选择" filterable clearable multiple>
-            <el-option v-for="(item, index) in taxBodyList" :key="index" :label="item.label" :value="item.value">
+            <el-option v-for="(item, index) in taxBodyList" :key="index" :label="item.nsrmc" :value="item.nsrsbh">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="请选择限制的税率" prop="slv">
           <el-select v-model="form.slv" placeholder="请选择" multiple>
-            <el-option label="免税" value="1"></el-option>
-            <el-option label="不征税" value="2"></el-option>
-            <el-option label="0%" value="3"></el-option>
-            <el-option label="1%" value="4"></el-option>
-            <el-option label="3%" value="5"></el-option>
-            <el-option label="5%" value="6"></el-option>
-            <el-option label="6%" value="7"></el-option>
-            <el-option label="9%" value="8"></el-option>
-            <el-option label="11%" value="9"></el-option>
-            <el-option label="13%" value="10"></el-option>
+            <el-option v-for="item in slList" :label="item.mc" :value="item.slzf" :key="item.mc"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="限制约束" prop="ysxz">
           <el-input v-model="form.ysxz" placeholder="不得开具" maxlength="100" :disabled="true" />
         </el-form-item>
         <el-form-item label="请选择发票类型" prop="type">
-          <el-select v-model="form.type" placeholder="请选择" maxlength="80" multiple />
-          <el-option label="蓝字专用发票" value="1"></el-option>
-            <el-option label="蓝字普通发票" value="2"></el-option>
+          <el-select v-model="form.type" placeholder="请选择" maxlength="80">
+            <el-option label="蓝字专用发票" value="01"></el-option>
+            <el-option label="蓝字普通发票" value="02"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="请选择限制结果" prop="xzjg">
           <el-select v-model="form.xzjg" placeholder="请选择" maxlength="80">
@@ -55,7 +47,7 @@
 
 <script>
 import { regCollection } from "@/config/constant.js";
-import { updateCustomer, getListall, addInvoicekpxz, getDetailById } from "./Api";
+import { updateInvoicekpxz, getListall, addInvoicekpxz, getDetailById, getDicZzsSl } from "./Api";
 export default {
   name: "organizationTaxBodyDetail",
   components: {},
@@ -71,27 +63,27 @@ export default {
       form: {
         qyzbs: ""
       },
-      type:{
-        1:'蓝字专用发票',
-        2:'蓝字普通发票'
-      },
-      xzjg: {
-        1: '提醒',
-        2: '拒绝'
-      },
-      slv: {
-        1: '免税',
-        2: '不征税',
-        3: '0%',
-        4: '1%',
-        5: '3%',
-        6: '5%',
-        7: '6%',
-        8: '9%',
-        9: '11%',
-        10: '13%',
+      // type: {
+      //   '01': '蓝字专用发票',
+      //   '02': '蓝字普通发票'
+      // },
+      // xzjg: {
+      //   1: '提醒',
+      //   2: '拒绝'
+      // },
+      // slv: {
+      //   1: '免税',
+      //   2: '不征税',
+      //   3: '0%',
+      //   4: '1%',
+      //   5: '3%',
+      //   6: '5%',
+      //   7: '6%',
+      //   8: '9%',
+      //   9: '11%',
+      //   10: '13%',
 
-      },
+      // },
       operateType: "",
       rules: {
         nsrsbh: [{ required: true, message: "请选择", trigger: "blur" }],
@@ -105,15 +97,25 @@ export default {
         xzjg: [{ required: true, message: "请输入", trigger: "blur" }],
       },
       saveLoading: false,
+      slList: []
     };
   },
   mounted() {
     this.getListall();
     // 编辑初始化值
     this.initData();
+    this.getSlList();
   },
 
   methods: {
+    async getSlList() {
+      try {
+        const { data } = await getDicZzsSl()
+        this.slList = data
+      } catch (error) {
+
+      }
+    },
     async initData() {
       const { detailInfo } = this
       if (detailInfo.id) {
@@ -154,7 +156,6 @@ export default {
      */
     async submit() {
       this.$refs["ruleForm"].validate(async (valid) => {
-        debugger;
         if (!valid) return;
         this.saveTaxBody();
       });
@@ -166,8 +167,17 @@ export default {
     async saveTaxBody() {
       try {
         this.saveLoading = true;
-        const api = this.form.id ? updateCustomer : addInvoicekpxz;
-        const { code = "", data = [], msg = "操作失败" } = await api(this.form);
+
+        const api = this.form.id ? updateInvoicekpxz : addInvoicekpxz;
+        const { nsrsbh, ...rest } = this.form
+        const requestData = {
+          ...rest,
+          slv: this.form.slv.join(","),
+          nsrsbhList: nsrsbh
+        };
+        // console.log('---this.form--',requestData)
+        // return
+        const { code = "", data = [], msg = "操作失败" } = await api(requestData);
         if (code === "0") {
           this.$message.success("操作成功");
           this.$emit("onOk");
@@ -175,6 +185,7 @@ export default {
           this.$message.error(msg);
         }
       } catch (error) {
+        console.log('--error--', error)
         this.$message.error(error.msg || "操作失败");
       } finally {
         this.saveLoading = false;
