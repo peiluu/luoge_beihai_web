@@ -11,7 +11,7 @@
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="增值税税率">
-                          <el-select style="width:100%" v-model="where.ls" placeholder="请选择增值税税率">
+                          <el-select style="width:100%" v-model="where.slzf" placeholder="请选择增值税税率">
                               <el-option
                                 v-for="item in taxOption"
                                 :key="item.value"
@@ -32,11 +32,16 @@
           </article>
           <article class="top_margin_common">
             <el-card shadow="never">
-                <article class="btn_list">
+             <article class="table_header">
+              <article>
+                <span style="font-size:12px">当前项目商品分类名称:<span style="font-weight:bold;font-size:14px">{{ commodityName }}</span></span>
+              </article>
+                <article >
                     <el-button type="primary" @click="handleAddCommondity">新增</el-button>
                     <!-- <el-button type="primary">导入</el-button>
                     <el-button type="primary">导出</el-button> -->
                 </article>
+             </article>
             </el-card>
           </article>
           <el-card shadow="never">
@@ -100,7 +105,10 @@
               </el-pagination>
             </article>
           </el-card>
-    <app-add-commodity  :visible.sync="addVisible" :title="title"  width="75%" ></app-add-commodity>
+    <app-add-commodity v-if="addVisible" :commodity-active-id="activeId"  
+    :data-ls="taxOption" :visible.sync="addVisible" 
+    :title="title" :row-data="rowData"  
+    width="75%" ></app-add-commodity>
   </div>
 </template>
 
@@ -109,7 +117,7 @@ import AppAddCommodity from '../componetns/dataAddDrawer/index.vue';
 import {getTableSourceList,getTaxrateList,delTableRowSingle} from '../api.js';
 const RESET_FORM = {
   name:'',
-  sl:null
+  slzf:null
 }
 export default {
   name: "tableThemePage",
@@ -117,6 +125,10 @@ export default {
     currentId:{
       type:[String,Number],
       default:null
+    },
+    currentName:{
+      type:[String,Number],
+      default:''
     }
   },
   components: {AppAddCommodity},
@@ -134,7 +146,9 @@ export default {
       where:{},
       activeId: this.currentId || null,
       taxOption:[],
-      loading:false
+      loading:false,
+      commodityName:this.currentName,
+      rowData: {},
     };
   },
   computed: {
@@ -145,9 +159,14 @@ export default {
   watch: {
     currentId:{
       handler(val){
-        debugger;
+        
         this.activeId = val;
-        this.getTableSourceList()
+        this.handleGetList()
+      }
+    },
+    currentName:{
+      handler(val){
+        this.commodityName = val;
       }
     }
   },
@@ -199,8 +218,11 @@ export default {
       this.multipleSelection = val;
     },
     //编辑
-    handlerEdite(row){
-        console.log(row)
+    handlerEdite(scope){
+      this.title = '商品编辑';
+      this.rowData = {...scope.row};
+      this.addVisible = true;
+        console.log(scope.row)
     },
     /* Del */
     handleDel(scope){
@@ -224,7 +246,8 @@ export default {
     },
     /* 新增商品 */
     handleAddCommondity(){
-      this.title = '商品编辑'
+      this.rowData = {};
+      this.title = '商品添加'
       this.addVisible = true;
       
     },
@@ -249,7 +272,7 @@ export default {
       getTaxrateList().then(res=>{
         console.log(res)
         if(res.code === '0'){
-          this.taxOption = res.data.map(k=> {return {...k,label:k.mc,value:k.id}});
+          this.taxOption = res.data.map(k=> {return {...k,label:k.mc,value:k.slzf}});
         }
       })
     }
@@ -284,5 +307,11 @@ export default {
 }
 .btn_list{
     text-align: right;
+}
+.table_header{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>

@@ -8,7 +8,7 @@
         <el-col :span="18">
          
           <article class="table_main">
-            <app-right-table ref="rightTable" :current-id="currentId"></app-right-table>
+            <app-right-table ref="rightTable" :current-id="currentId" :current-name="currentName"></app-right-table>
            
           </article>
         </el-col>
@@ -29,13 +29,20 @@ export default {
   data() {
     return {
       currentId: null,
+      currentName:''
     };
   },
   computed: {},
   watch: {},
   methods: {
     handleNodeClick(val){
-      this.currentId = val.id;
+     
+      if(val.childList && val.childList.length <= 0){
+        this.currentId = val.id;
+        this.currentName = val.name;
+      }
+     
+      
       //this.$refs.rightTable.handleGetList(val?.id);
     }
   },

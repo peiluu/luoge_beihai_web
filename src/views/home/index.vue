@@ -136,12 +136,12 @@
     <div class="echart">
       <div class="echart-l">
         <div class="echart-search">
-          <el-radio-group v-model="echartForm.type" @change="handleRadio">
+          <el-radio-group v-model="echartForm.type" @change="refreshEchart">
             <el-radio-button :label="1">发票数据分析</el-radio-button>
-            <el-radio-button :label="2">计税数据分析</el-radio-button>
+            <!-- <el-radio-button :label="2">计税数据分析</el-radio-button> -->
           </el-radio-group>
 
-          <el-radio-group v-model="echartForm.month">
+          <el-radio-group v-model="echartForm.month" @change="refreshEchart">
             <el-radio-button :label="3">近3个月</el-radio-button>
             <el-radio-button :label="6">近6个月</el-radio-button>
             <el-radio-button :label="12">近12个月</el-radio-button>
@@ -187,7 +187,7 @@
         <div class="dialog-right">
           <el-card class="box-card" shadow="never">
             <div slot="header" class="clearfix">
-              <span>已选&nbsp;3/6</span>
+              <span>已选&nbsp;{{ selectMenus.length }}/6</span>
               <el-button type="text">清空</el-button>
             </div>
             <p v-for="o in selectMenus" :key="o.menuId" class="item">
@@ -206,9 +206,31 @@
 <script>
 import * as echarts from 'echarts';
 import cloneDeep from 'lodash/cloneDeep';
-import { getInvoiceData, getListByUser, getQueryMenu, saveMenu, getEchartData } from './Api';
+import { getInvoiceData, getListByUser, getQueryMenu, saveMenu, getBillStatistics } from './Api';
 import moment from 'moment';
 import FormList from '@/components/FormList.vue';
+
+function getMonths() {
+  // 获取当前月份
+  let d = new Date();
+  let currentMonth = d.getMonth() + 1;
+  let currentYear = d.getFullYear();
+  let flag = true;
+  // 获取最近12个月份
+  let months = [];
+  for (let i = 0; i < 12; i++) {
+    let month = currentMonth - i;
+    if (month <= 0) {
+      if (flag) {
+        flag = false;
+        currentYear--;
+      }
+      month += 12;
+    }
+    months.unshift(`${currentYear}年${month < 10 ? '0' + month : month}月`);
+  }
+  return months;
+}
 export default {
   name: 'home',
   components: {
@@ -216,20 +238,7 @@ export default {
   },
   data() {
     const defalutM = 12; // 默认查询进12个月的数据
-    const initX = [
-      '2023-01',
-      '2023-02',
-      '2023-03',
-      '2023-04',
-      '2023-05',
-      '2023-06',
-      '2023-07',
-      '2023-08',
-      '2023-09',
-      '2023-10',
-      '2023-11',
-      '2023-12',
-    ];
+    const initX = getMonths();
     return {
       api: require('./Api'),
       mod: {
@@ -275,6 +284,7 @@ export default {
         label: 'name',
       },
       xAxisData: initX, // 柱状图x轴底部日期数据
+      seriesDataObj: {},
       seriesData: [
         // 柱状图
         [320, 332, 301, 334, 390, 330, 320, 311, 324, 490, 130, 620], // 蓝字发票金额
@@ -326,8 +336,7 @@ export default {
     this.getList(); // 获取纳税主体 ， 开票数据，涉税数据
     this.geApplyList(); // 获取待办事项
     this.getShortcutList();
-    this.initEchart();
-    this.initEchartRing();
+    this.getEchartData();
     this.initTree();
   },
   methods: {
@@ -382,15 +391,30 @@ export default {
       this.$refs.list && this.$refs.list.reload();
     },
     // 获取柱状图数据
-    // async getEchartData(){
-    //   try {
-        
-    //     const {data} = await getEchartData(echartForm);
-
-    //   } catch (error) {
-        
-    //   }
-    // },
+    async getEchartData() {
+      try {
+        const { data } = await getBillStatistics(this.echartForm.month);
+        if (data && data.outputAndIncomeList) {
+          let newObj = {};
+          let bottomX = [];
+          data.outputAndIncomeList.forEach((item, index) => {
+            bottomX.push(item.ssq);
+            for (let k in item) {
+              if (k !== 'ssq') {
+                !newObj[k] && (newObj[k] = []);
+                // newObj[k].push(Math.abs(item[k]));
+                newObj[k].push(item[k]);
+              }
+            }
+          });
+          this.xAxisData = bottomX;
+          this.ringMonth = bottomX[this.echartForm.month - 1];
+          this.seriesDataObj = newObj;
+          this.initEchart();
+          this.initEchartRing();
+        }
+      } catch (error) {}
+    },
     // 初始化柱状图
     initEchart() {
       const _this = this;
@@ -429,6 +453,7 @@ export default {
         ],
         yAxis: [
           {
+            // type: 'log',
             type: 'value',
           },
         ],
@@ -438,28 +463,28 @@ export default {
             type: 'bar',
             stack: 'Ad',
             barMaxWidth: '40',
-            data: this.seriesData[0],
+            data: this.seriesDataObj.lzfpje || [],
           },
           {
             name: '蓝字发票税额',
             type: 'bar',
             stack: 'Ad',
             barMaxWidth: '40',
-            data: this.seriesData[1],
+            data: this.seriesDataObj.lzfpse || [],
           },
           {
             name: '红字发票金额',
             type: 'bar',
             stack: 'Ad',
             barMaxWidth: '40',
-            data: this.seriesData[2],
+            data: this.seriesDataObj.hzfpje || [],
           },
           {
             name: '红字发票税额',
             type: 'bar',
             stack: 'Ad',
             barMaxWidth: '40',
-            data: this.seriesData[3],
+            data: this.seriesDataObj.hzfpse || [],
           },
         ],
       };
@@ -477,7 +502,7 @@ export default {
     // 初始化环状图
     initEchartRing() {
       const { type } = this.echartForm;
-      const { xMonth, seriesData } = this;
+      const { xMonth, seriesDataObj } = this;
       let chartDom = document.getElementById('echart-ring');
       if (!chartDom) return;
       this.ringChart && this.ringChart.dispose();
@@ -486,8 +511,8 @@ export default {
       let data = [];
 
       if (type === 1) {
-        const stotal = seriesData[0][xMonth] + seriesData[2][xMonth];
-        const v1 = (seriesData[0][xMonth] / stotal) * 100;
+        const stotal = seriesDataObj.lzfpje[xMonth] + Math.abs(seriesDataObj.hzfpje[xMonth]);
+        const v1 = (seriesDataObj.lzfpje[xMonth] / stotal) * 100;
         const v2 = 100 - v1;
         data = [
           { name: '蓝字发票开具金额', value: v1.toFixed(2) },
@@ -587,7 +612,7 @@ export default {
     // 快捷入口跳转
     gotoRouteHandle(menuId) {
       // console.log('---menuId---', menuId);
-      console.log(this.shortcutMenus)
+      console.log(this.shortcutMenus);
       var route = this.shortcutMenus.filter((item) => item.menuId === menuId)[0];
       // var route = window.SITE_CONFIG['dynamicMenuRoutes'].filter((item) => item.meta.menuId === menuId)[0];
       if (route) {
@@ -598,6 +623,14 @@ export default {
     refreshData() {
       this.$nextTick(() => {
         this.initData();
+      });
+    },
+    // 刷新echart
+    refreshEchart() {
+      this.xMonth = this.echartForm.month - 1;
+      console.log('--this.xm', this.xMonth);
+      this.$nextTick(() => {
+        this.getEchartData();
       });
     },
     // 关闭快捷入口弹窗
@@ -611,7 +644,7 @@ export default {
       // console.log('--保存--', this.selectMenus);
       try {
         this.saveLoading = true;
-        const res = await saveMenu({userMenuList: this.selectMenus});
+        const res = await saveMenu({ userMenuList: this.selectMenus });
         if (res.code === '0') {
           this.$message.success(res.msg);
           this.shortcutMenus = cloneDeep(this.selectMenus);
@@ -637,14 +670,14 @@ export default {
     handleClick(row) {
       console.log('--row--', row);
       this.$router.push({
-        path: "/redInvoice/redInfoConfirm",
+        path: '/redInvoice/redInfoConfirm',
         query: {
           ...this.$route.query,
           id: row.id,
           level: 'input',
           isFormTodoList: 'Y',
-          operateType: 'waitConfirm'
-        }
+          operateType: 'waitConfirm',
+        },
       });
     },
   },
@@ -685,9 +718,7 @@ p {
     &:last-child {
       margin-right: 0;
     }
-    &:hover {
-      background-color: #e9e9e9;
-    }
+
     .c-title {
       font-size: 18px;
       color: #333;
@@ -724,23 +755,35 @@ p {
     }
   }
   .invoice-bg1 {
+    &:hover {
+      box-shadow: 0 0 10px 2px #3bc4ec;
+    }
     // .title {
-      background-image: linear-gradient(to right, #4898d8, #3bc4ec);
+    background-image: linear-gradient(to right, #4898d8, #3bc4ec);
     // }
   }
   .invoice-bg2 {
+    &:hover {
+      box-shadow: 0 0 10px 2px #ff9a96;
+    }
     // .title {
-      background-image: linear-gradient(to right, #ff6184, #ff9a96);
+    background-image: linear-gradient(to right, #ff6184, #ff9a96);
     // }
   }
   .invoice-bg3 {
+    &:hover {
+      box-shadow: 0 0 10px 2px #83acce;
+    }
     // .title {
-      background-image: linear-gradient(to right, #545e92, #83acce);
+    background-image: linear-gradient(to right, #545e92, #83acce);
     // }
   }
   .invoice-bg4 {
+    &:hover {
+      box-shadow: 0 0 10px 2px #08c49b;
+    }
     // .title {
-      background-image: linear-gradient(to right, #00baf2, #08c49b);
+    background-image: linear-gradient(to right, #00baf2, #08c49b);
     // }
   }
   .subtitle {
@@ -818,11 +861,15 @@ p {
     .li {
       width: 100%;
       padding: 0 15px;
-      line-height: 33px;
+      line-height: 32px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       transition: all 0.3s cubic-bezier(0.39, 0.575, 0.565, 1);
+      border-bottom: 1px solid #e9e9e9;
+      &:last-child {
+        border-bottom: none;
+      }
       &:hover {
         cursor: pointer;
         background-color: #ecf5ff;
