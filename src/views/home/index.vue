@@ -81,7 +81,7 @@
     </div>
     <div class="tasks">
       <div class="tasks-l">
-        <div class="tasks-head">待办任务<span>共10条</span></div>
+        <div class="tasks-head">待办任务<span>共{{pageInfo.totalCount}}条</span></div>
         <FormList
           :columns="columns"
           :api="api"
@@ -92,6 +92,7 @@
           class="home-form-list"
           :border="false"
           :pageSize="3"
+          @callback="callback"
         >
           <template #hzqrxxztDm="{ data }">
             {{ mod[data.hzqrxxztDm] || '-' }}
@@ -323,6 +324,7 @@ export default {
         pageSize: 3,
         pageNo: 1,
         totalPages: 1,
+        totalCount:0
       },
     };
   },
@@ -383,6 +385,13 @@ export default {
     // 获取待办列表
     async geApplyList() {
       this.$refs.list && this.$refs.list.reload();
+    },
+    // 接受待办列表formlist组件值
+    callback(res){
+      // console.log('----res----', res);
+      if(res){
+        this.pageInfo.totalCount = res.totalCount || 0
+      }
     },
     // 获取柱状图数据
     async getEchartData() {
