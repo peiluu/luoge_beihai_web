@@ -1,10 +1,10 @@
 <template>
   <div class="main-content">
-    <el-tabs v-model="activeName" type="card" @tab-click="handleClick" class="custom-card-tabs">
-      <el-tab-pane label="待确认红字信息确认单" name="/"></el-tab-pane>
-      <el-tab-pane label="已确认红字信息确认单" name="04"></el-tab-pane>
+    <el-tabs v-model="otherParam.type" type="card" @tab-click="handleClick" class="custom-card-tabs">
+      <el-tab-pane label="待确认红字信息确认单" name="1"></el-tab-pane>
+      <el-tab-pane label="已确认红字信息确认单" name="2"></el-tab-pane>
     </el-tabs>
-    <form-list :key="level" :columns="dynamicsColumns" :searchRow="searchList" :api="api" :param="param" :height="height"
+    <form-list :key="level" :columns="dynamicsColumns" :searchRow="searchList" :api="api" :param="param" :otherParam="otherParam" :height="height"
       :showSearch="true" ref="list">
       <template #lrfsf="row"> {{ row.data.lrfsf == 0 ? "销售方" : "购买方" }}</template>
 
@@ -57,11 +57,12 @@ export default {
     FormList,
     ConfirnModal
   },
+
   data() {
     return {
-      form: {},
       api: require("./Api"),
-      param: {},
+      otherParam: {type: '1'},
+      param: { 'gxfsf': '1'},
       lrfsf: '',
       // 待处理的发票数量
       confirmStatusMap,
@@ -81,7 +82,7 @@ export default {
         { title: "不含税金额", dataIndex: "hzcxje", slot: 'hzcxje', align: 'right', width: 100 },
         { title: "税额", dataIndex: "hzcxse", slot: 'hzcxse', align: 'right', width: 100 },
         { title: "冲红原因", dataIndex: "chyyDm", slot: "chyyDm", width: 100, },
-        { title: "确认单状态", width: 170, dataIndex: "hzqrxxztDm", slot: "hzqrxxztDm" },
+        { title: "确认单状态", width: 170, dataIndex: "hzqrxxztDm", slot: "hzqrxxztDm", formatter: "statusFormatter" },
       ],
       columnsOpts: [
         {
@@ -92,15 +93,13 @@ export default {
           scopedSlots: { customRender: "action" }
         }
       ],
-      activeName: '0',
       searchList: [
         {
           label: "购销身份",
-          key: "lrfsf",
+          key: "gxfsf",
           val: '',
           type: "select",
           options: [
-            { value: "", label: "全部" },
             { value: "1", label: "购买方" },
             { value: "0", label: "销售方" }]
         },
@@ -116,7 +115,7 @@ export default {
   computed: {
     dynamicsColumns() {
       let newCol = [...this.columns];
-      if (this.activeName !== '04') {
+      if (this.otherParam.type !== '1') {
         newCol = newCol.concat(this.columnsOpts)
       }
       return newCol
@@ -135,6 +134,18 @@ export default {
   },
 
   methods: {
+    statusFormatter(row) {
+      const status = row.status;
+      if (status == '02') {
+        return "销方录入待购方确认";
+      } else if (status == '03') {
+        return "购方录入待销方确认";
+      } else if (status == '04') {
+        return "购销双方已确认";
+      }
+    },
+
+
     dateFormat,
     handleOk() {
       this.$refs.list.reload()
@@ -173,7 +184,7 @@ export default {
     },
     handleClick(tab) {
       console.log(tab.name);
-      this.activeName = tab.name;
+      this.otherParam.type = tab.name;
       this.$refs.list.reload({ type: tab.name });
     }
   }

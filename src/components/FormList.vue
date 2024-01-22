@@ -5,7 +5,7 @@
       <form-search :searchKey="searchKey" :rebulidForm="rebulidForm" ref="search" :exportLabel="exportLabel" :resetSearch="reset" :param="param" :searchList="searchRow" @handleExport="handleExport" :switchLabel="switchLabel" :showSearchBtn="showSearchBtn"
         @handleSwitch="handleSwitch" :checkLockM="checkLockM" @search="handleSearch" @reset="handleReset" :backpath="backpath" :notSearchContract="notSearchContract" @getNextList="getNextList" :resetAll="resetAll"></form-search>
     </template>
-
+    
     <div class="custom-table">
       <slot name="topTool"></slot>
       <el-table
@@ -206,6 +206,10 @@ export default {
     defaultRadioValue: {
       type:[String,Number],
       default: '' ,
+    },
+    otherParam: {
+      type: Object,
+      default: ()=>({}),
     }
   },
   watch: {
@@ -277,20 +281,20 @@ export default {
     },
     async handleGetData(obj, args, keepSelections) {
       // this.keepSelections = false;
-      this.searchParam = obj;
+            this.searchParam = obj;
       let param = {};
       Object.keys(obj).map(key => {
-        if (obj[key] != null) {
-          // 用obj[key].length > 0 只能判断字符串，会过滤掉数字
-          // if (obj[key].length > 0) {
-          //   param[key] = obj[key];
-          // }
-          if (obj && obj[key]) {
-            param[key] = obj[key];
-          }
+      if (obj[key] != null) {
+      // 用obj[key].length > 0 只能判断字符串，会过滤掉数字
+      // if (obj[key].length > 0) {
+      //   param[key] = obj[key];
+      // }
+      if (obj && obj[key]) {
+      param[key] = obj[key];
+      }
         }
       });
-
+      
       let res;
       const vm = this;
       let data = [];
@@ -299,7 +303,9 @@ export default {
       for (var field in args) {
         param[field] = args[field];
       }
-
+      if(Object.keys(this.otherParam).length !== 0){
+        param = {...param, ...this.otherParam}
+      }
       try {
         res = await this.api.getList({
           // startNumber: startNumber,
@@ -347,7 +353,7 @@ export default {
     },
     // 搜索
     handleSearch(val, type) {
-      let param = this.param
+            let param = this.param
       // 不需要添加多余的参数
       if (this.resetAll || type == 'reset') {
         this.handleGetData(val);
