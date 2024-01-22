@@ -354,6 +354,37 @@ export const getPreYearList = (nowYear, n) => {
   }
   return list;
 };
+/**
+ * @description 获取当前月份的属期的xx： 格式比如： 2023年7月
+//  * @param next 当前属期的后next月，默认值0
+ */
+export const getCurrentMonthSsq = () => {
+  // 1月的属期的是上年度12月
+  let now = new Date();
+  let currentYear = now.getFullYear();
+  let currentMonth = now.getMonth() + 1
+  const month = currentMonth == 1 ? 12 : currentMonth;
+  const year = currentMonth == 1 ? currentYear - 1 : currentYear;
+  return {
+    dateValue: `${year}${month < 10 ? '0' + month : month}`,
+    dateValueLine: `${year}${month < 10 ? '-0' + month : '-' + month}`,
+    dateLabel: `${year}年${month}月`,
+  };
+};
+/**
+ * @description 获取当前年份倒数n年的年份列表
+ * @param n 倒数的年份, 默认值为5
+ */
+export const getCurrentYearList = (n) => {
+  const yearNumber = n || 5;
+  let now = new Date();
+  let year = now.getFullYear();
+  const list = [];
+  for (let i = year; i > year - yearNumber; i--) {
+    list.push(i);
+  }
+  return list;
+};
 export {
     getUUID,
     getFontFamily,
