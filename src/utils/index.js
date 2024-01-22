@@ -151,8 +151,8 @@ export function fnAddDynamicMenuRoutes (menuList = [], routes = [], router) {
       URL = URL.replace(/^\//, '').replace(/_/g, '-')
       // route['path'] = route['name'] = URL.replace(/\//g, '-')
       route['path'] = `/${URL}`
-      route['name'] = URL.replace(/\//g, '-')
       let componentUrl = URL.indexOf('?') ? URL.split('?')[0] : URL;
+      route['name'] = componentUrl.replace(/\//g, '-')
       route['component'] = () => import(`@/views/${componentUrl}`)
     }
     routes.push(route)
