@@ -312,6 +312,9 @@ export default {
           // 向父组件传递参数
           this.$emit('getSearchParam', param)
           this.$emit('getTableData', res.data)
+          if(this.$listeners.callback && typeof this.$listeners.callback === 'function'){
+            this.$listeners.callback(res)
+          }
           // 在切换页面时不清空选中的数据
           if (!keepSelections) {
             this.$refs.table.clearSelection();
