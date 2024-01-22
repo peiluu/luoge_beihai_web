@@ -36,11 +36,11 @@ export default {
   watch: {},
   methods: {
     handleNodeClick(val){
-     
-      if(val.childList && val.childList.length <= 0){
-        this.currentId = val.id;
+      this.currentId = val.id;
         this.currentName = val.name;
-      }
+      // if(val.childList && val.childList.length <= 0){
+       
+      // }
      
       
       //this.$refs.rightTable.handleGetList(val?.id);
