@@ -5,15 +5,15 @@ export const defaultHeader = {
   versions: 'customVersion',
   tableWidth: '100%',
   theadArr: [
-    {
-      id: 'set-spbm',
-      field: 'marCode',
-      columnZh: '商品编码',
-      isDisable: true,
-      isChecked: true,
-      isClick: false,
-      width: '10%'
-    },
+    // {
+    //   id: 'set-spbm',
+    //   field: 'marCode',
+    //   columnZh: '商品编码',
+    //   isDisable: true,
+    //   isChecked: true,
+    //   isClick: false,
+    //   width: '10%'
+    // },
     {
       id: 'set-spmc',
       field: 'name',
@@ -23,15 +23,15 @@ export const defaultHeader = {
       isClick: false,
       width: '10%'
     },
-    {
-      id: 'set-jm',
-      field: 'brevitycode',
-      columnZh: '简码',
-      isDisable: true,
-      isChecked: true,
-      isClick: false,
-      width: '10%'
-    },
+    // {
+    //   id: 'set-jm',
+    //   field: 'brevitycode',
+    //   columnZh: '简码',
+    //   isDisable: true,
+    //   isChecked: true,
+    //   isClick: false,
+    //   width: '10%'
+    // },
     {
       id: 'set-ssflbm',
       field: 'taxclasscode',
@@ -66,7 +66,7 @@ export const defaultHeader = {
       isDisable: true,
       isChecked: true,
       isClick: false,
-      width: '7%'
+      width: '180px'
     },
     {
       id: 'set-sl',
