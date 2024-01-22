@@ -3,10 +3,11 @@
     <div class="main-content">
       <el-form :inline="true" :model="form" :rules="rules" ref="ruleForm" :disabled="operateType === 'detail'">
         <div class="content-title">客户信息</div>
-        <el-form-item label="所属开票点" prop="orgids">
-          <el-select v-model="form.orgids" placeholder="请选择" filterable clearable multiple>
-            <el-option v-for="(item, index) in taxBodyList" :key="index" :label="item.name" :value="item.id">
-            </el-option>
+        <el-form-item label="所属开票点" prop="orgids" class="form-orgids">
+          <el-select v-model="form.orgids" placeholder="请选择" filterable clearable multiple @change="handleChange">
+            <el-option :class="`li-all ${selectedAll ? 'selected' : ''}`" :value="0"><span class="s-all"
+                @click.stop="handleClick">全选</span></el-option>
+            <el-option v-for="(item, index) in taxBodyList" :key="index" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="客户名称" prop="gmfMc">
@@ -33,6 +34,13 @@
         <el-form-item label="联系人手机" prop="revphone">
           <el-input v-model="form.revphone" placeholder="请输入" maxlength="90" />
         </el-form-item>
+        <el-form-item label="邮箱" prop="revemail">
+          <el-input v-model="form.revemail" placeholder="请输入" maxlength="90" />
+        </el-form-item>
+        <!-- <el-form-item  prop="hmd">
+        <el-switch v-model="form.hmd" active-text="标记黑名单" inactive-text="移除黑名单">
+        </el-switch> -->
+        <!-- </el-form-item> -->
       </el-form>
     </div>
 
@@ -67,20 +75,40 @@ export default {
           regCollection.nsrsbh,
         ],
         gmfMc: [{ required: true, message: "请输入", trigger: "blur" }],
+        revemail: [{ validator: this.verify_email, message: "邮箱格式不正确", trigger: "blur" }],
         // address: [{ required: true, message: "请输入", trigger: "blur" }],
         // phone: [{ required: true, message: "请输入", trigger: "blur" }, regCollection.phone],
         // bankAccount: [{ required: true, message: "请输入", trigger: "blur" }],
       },
       saveLoading: false,
+      // 是否全选
+      selectedAll: false,
     };
   },
   mounted() {
     this.getOrgLists();
-    // 编辑初始化值
-    this.initData();
+
   },
 
   methods: {
+    handleClick() {
+      this.selectedAll = !this.selectedAll;
+      if (this.selectedAll) {
+        const ids = this.taxBodyList.map(item => item.id)
+        this.$set(this.form, 'orgids', ids)
+      } else {
+        this.$set(this.form, 'orgids', [])
+      }
+    },
+    handleChange() {
+      this.selectedAll = this.form.orgids.length === this.taxBodyList.length
+    },
+    //     editTaxBody() {
+    //   const selectedIds = this.form.orgids;
+    //   this.form.orgids = selectedIds;
+    //   this.selectedAll = selectedIds === this.taxBodyList;
+    // },
+
     async initData() {
       const { detailInfo } = this
       if (detailInfo.id) {
@@ -88,9 +116,18 @@ export default {
           const res = await getDetailById({ id: detailInfo.id })
           if (res.code === '0') {
             const { data } = res;
+            let ids = [];
+            if (data.orgids.length === 1 && data.orgids[0] === 0) {
+              ids = this.taxBodyList.map((x) => x.id);
+              this.selectedAll = true;
+            } else {
+              ids = data.orgids.map(item => String(item));
+              this.selectedAll = false;
+            }
+
             this.form = {
               id: data.id,
-              orgids: data.orgids.map(item => String(item)),
+              orgids: ids,
               gmfMc: data.gmfMc,
               gmfNsrsbh: data.gmfNsrsbh,
               dzdh: data.dzdh,
@@ -99,6 +136,7 @@ export default {
               bankaccount: data.bankaccount,
               username: data.username,
               revphone: data.revphone,
+              revemail: data.revemail,
             };
           }
 
@@ -114,6 +152,8 @@ export default {
       const { code = "", data = [] } = await getOrgList({});
       if (code === "0") {
         this.taxBodyList = data;
+        // 编辑初始化值
+        this.initData();
       }
     },
     /**
@@ -134,7 +174,11 @@ export default {
       try {
         this.saveLoading = true;
         const api = this.form.id ? updateCustomer : addCustomer;
-        const { code = "", data = [], msg = "操作失败" } = await api(this.form);
+        let params = {
+          ...this.form,
+          orgids: this.selectedAll ? [0] : this.form.orgids
+        }
+        const { code = "", data = [], msg = "操作失败" } = await api(params);
         if (code === "0") {
           this.$message.success("操作成功");
           this.$emit("onOk");
@@ -286,5 +330,31 @@ export default {
 
 .footer {
   text-align: center;
+}
+
+.li-all {
+  padding: 0 !important;
+
+  &::after {
+    top: 0;
+  }
+}
+
+.s-all {
+  display: block;
+  padding: 0 20px;
+  height: 100%;
+}
+
+.form-orgids {
+  /deep/ .el-select__tags {
+    max-height: 100px;
+    overflow: hidden;
+    overflow-y: auto;
+  }
+
+  /deep/ .el-input {
+    max-height: 100px;
+  }
 }
 </style>

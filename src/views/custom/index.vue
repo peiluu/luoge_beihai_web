@@ -86,6 +86,7 @@ export default {
         { title: "电话", width: 160, dataIndex: "phone" },
         { title: "联系人", width: 100, dataIndex: "username", align: 'center' },
         { title: "联系人手机", width: 140, dataIndex: "revphone" },
+        { title: "邮箱", width: 160, dataIndex: "revemail" },
         { title: "黑名单", width: 100, dataIndex: "hmd", slot: "hmd" },
         {
           title: "操作",
@@ -164,7 +165,7 @@ export default {
     //  按钮操作
     // 删除
     handleDelete(type, data) {
-      this.$confirm(`是否确定删除当前组织`, '请确认', {
+      this.$confirm(`是否确定删除当前客户`, '请确认', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',

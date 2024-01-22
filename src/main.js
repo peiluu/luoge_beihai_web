@@ -23,8 +23,8 @@ import VXETable from 'vxe-table';
 import 'vxe-table/lib/style.css';
 import './utils/dialogDrag.js'
 import '@/utils/calc.js'
-
 import { getCurrentSsq, getCurrentDate } from "@/utils/tool"
+import moment from 'moment'
 Vue.config.productionTip = false
 
 Vue.use(Element, {
@@ -348,6 +348,14 @@ Vue.prototype.judgeIsCurrentSq = (date, type, preSsq) => {
   const { quarterValue, monthValue } = getCurrentSsq('', preSsq || 1, preSsq || 1)
   // return  type == '月' ? monthValue == date : quarterValue == date
   return true
+}
+/**
+ * @description 格式化时间 ，返回属期月份
+ * @param fmt 需要的格式
+ * @param val 时间
+ */
+Vue.prototype.formatDate = (fmt, val) => {
+  return moment(val).format(fmt)
 }
 
 /**

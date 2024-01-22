@@ -62,13 +62,23 @@ http.interceptors.response.use(response => {
     Message.error(res.msg);
     goLogin()
   }
-  if (res && res.code && res.code != 0) {
-    if (res.msg && res.msg.length > 0) {
-        Message.error(res.msg)
-    }
-    source.cancel('Operation canceled.')
+  // 兼容部分业务接口调用有的判断code，有的没有判断code
+  // 注意登录和权限走的是同一个服务器，返回code=0为正常
+  // 业务接口走的是另外一个服务器，返回code='0'为正常，因此此处只需要判断值
+  if(res && res.code == 0){ 
+    return res
+  } else {
+    Message.error(res.msg);
+    source.cancel('Operation canceled.');
+    return Promise.reject(response.data);
   }
-  return res
+  // if (res && res.code && res.code != 0) {
+  //   if (res.msg && res.msg.length > 0) {
+  //       Message.error(res.msg)
+  //   }
+  //   source.cancel('Operation canceled.')
+  // }
+  // return res
 }, error => {
   // 处理全局错误
   if (error) {

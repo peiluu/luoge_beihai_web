@@ -1,36 +1,60 @@
 <template>
-  <div>
-    <form-list :columns="columns" :searchKey="propsKey" :searchRow="searchList" :api="api" :param="param" :height="height"
-      :firstLoading="false" v-loading="loading" @getSearchParam="getSearchParam" ref="list">
+  <div class="main-content">
+    <form-list :columns="columns" :searchRow="searchList" :api="api" :param="param" :height="height" :firstLoading="false"
+      v-loading="loading" @getSearchParam="getSearchParam" ref="list">
       <!-- 中间部分 -->
       <template #topTool>
         <div class="toolbar">
           <div class="toolbar-left">
           </div>
           <div class="toolbar-right">
-            <!-- <el-button @click="openDigitalBatch('Y')">开通数电</el-button> -->
-            <el-button type="success" @click="hanldeEnter('add')">维护</el-button>
+            <el-button type="success" @click="hanldeEnter()">维护</el-button>
+            <!-- <el-button @click="batchOperate('batchDel',data)">删除</el-button>
+            <el-button @click="batchOperate(1)">标记黑名单</el-button>
+            <el-button @click="batchOperate(0)">移除黑名单</el-button> -->
           </div>
         </div>
+      </template>
+      <template #ysxz="{ data }">
+        <span>
+          {{ data.ysxz == 1 ? '不得开具' : '是' }}
+        </span>
+      </template>
+      <template #slv="{ data }">
+        <span>
+          {{ data.slv | changeSlv }}
+        </span>
+      </template>
+      <template #xzjg="{ data }">
+        <span>
+          {{ data.xzjg == 1 ? '提醒' : '拒绝' }}
+        </span>
+      </template>
+      <template #type="{ data }">
+        <span>
+          {{ data.type == '01' ? '蓝字专用发票' : '蓝字普通发票' }}
+        </span>
       </template>
       <template #myscope="{ data }">
         <el-popover placement="left" trigger="hover" popper-class="customPopper">
           <template>
-            <el-button @click.stop="hanldeEnter('edit', data)" type="info">编辑</el-button>
+            <el-button @click.stop="hanldeEnter(data)" type="info">编辑</el-button>
             <el-button @click.stop="handleDelete('delete', data)" type="danger">删除</el-button>
           </template>
           <el-button slot="reference">操作</el-button>
         </el-popover>
       </template>
     </form-list>
+
+    <!-- dialog  启停 -->
     <el-dialog :title="batchOperateTypeMap[batchOperateType]" :visible.sync="dialogVisible" width="40%"
       :before-close="handleClose">
       <el-form :inline="true" :model="form" :rules="rules" ref="ruleForm" class="dialog-form">
         <template>
           <el-form-item label="是否为黑名单" prop="enable">
             <el-select v-model="form.enable" placeholder="请选择">
-              <el-option label="是" value="Y" />
-              <el-option label="否" value="N" />
+              <el-option label="是" value="1" />
+              <el-option label="否" value="0" />
             </el-select>
           </el-form-item>
         </template>
@@ -41,23 +65,17 @@
         <el-button type="success" @click="submit">保 存</el-button>
       </span>
     </el-dialog>
-
-    <el-dialog
-      v-if="detailVisible"
-      :visible.sync="detailVisible"
-      width="80%"
-      :before-close="onClose"
-      class="detail-dialog"
-      destroy-on-close
-    >
-      <Detail :detailInfo="detailInfo" @onOk="onOk" @onClose="onClose"/>
+    <el-dialog v-if="detailVisible" :visible.sync="detailVisible" width="80%" :before-close="onClose"
+      class="detail-dialog" destroy-on-close>
+      <Detail :detailInfo="detailInfo" @onOk="onOk" @onClose="onClose" />
     </el-dialog>
   </div>
 </template>
 
+
 <script>
 import FormList from '@/components/FormList.vue';
-import { listCascaderDict, selectYtList, deleteBatch, setIsDigital, getListAll,getList, selectQyList, downLoadApplyList, exportTaxBodyInfo } from './Api.js';
+import { deleteBatch, getList, hmdCustomer } from './Api.js';
 import Detail from './Detail.vue'
 export default {
   name: 'organizationTaxBody',
@@ -74,10 +92,11 @@ export default {
       propKey: '',
       columns: [
         { title: '序号', type: "index", width: 70, fixed: 'left', },
-        { title: "主体名称", width: 160, dataIndex: "gmfMc", },
-        { title: "限制税率", width: 160, dataIndex: "gmfNsrsbh", },
-        { title: "限制约束", width: 160, dataIndex: "yhzh", },
-        { title: "限制结果", width: 160, dataIndex: "bankaccount", },
+        { title: "主体名称", width: 160, dataIndex: "nsrsbh", },
+        { title: "开票类型", width: 160, dataIndex: "type", slot: "type" },
+        { title: "限制税率", width: 160, dataIndex: "slv", slot: "slv", showTooltip: true },
+        { title: "限制约束", width: 160, dataIndex: "ysxz", slot: "ysxz" },
+        { title: "限制结果", width: 160, dataIndex: "xzjg", slot: "xzjg" },
         {
           title: "操作",
           key: "action",
@@ -89,7 +108,7 @@ export default {
       searchList: [
         {
           label: "纳税主体",
-          key: "gmfMc",
+          key: "nsrsbh",
           val: "",
           type: "input",
           placeholder: '请输入'
@@ -98,10 +117,7 @@ export default {
       ],
       detailVisible: false,
       dialogVisible: false,
-      districts: [],
-      qyList: [],
       batchOperateType: '',
-      propsKey: '',
       taxBodyList: [],
       queryParam: {},
       rules: {
@@ -118,16 +134,12 @@ export default {
         id: null,
       },
       exportLoading: false,
-      detailInfo: {
-        operateType: '',
-        id: null
-      },
+      detailInfo: {},
     };
 
   },
   mounted() {
-    this.listCascaderDict();
-
+    this.getList()
 
   },
   computed: {
@@ -138,151 +150,66 @@ export default {
       return this.$refs.list.getSelections()
     }
   },
-
+  filters: {
+    changeSlv(res) {
+      // console.log(newRes)
+      // let arr = [];
+      // for (var i = 0; i < newRes.length; i++) {
+      //   // console.log(newRes[i]);
+      //   if (newRes[i] !== '免税' && newRes[i] !== '不征税'&& newRes[i].indexOf('%')===-1) {
+      //     arr.push(newRes[i] * 100 + '%')
+      //   } else { arr.push(newRes[i]) }
+      // }
+      // console.log('---arr---',arr)
+      return res && res.split(',').map(item => (item !== '免税' && item !== '不征税' && item.indexOf('%') === -1) ? item * 100 + '%' : item).join(',')
+    }
+  },
   methods: {
     onClose() {
       this.detailVisible = false;
-      this.detailInfo = {
-        operateType: '',
-        id: null,
-      }
+      this.detailInfo = {}
     },
-    onOk(){
+    onOk() {
       this.getList()
       this.onClose()
-    },
-    // 获取纳税主体
-    async getListAll() {
-      const { code = '', data = [] } = await getList({})
-      const index = this.searchList.findIndex((item) => item.key === 'gmfMc');
-      if (code === '0') {
-        this.propsKey = data && data[0].id
-        this.searchList[index].options = [{ value: "", label: "全部" }].concat(data.map((item) => {
-          return {
-            value: item.id,
-            label: `${item.gmfMc} `
-          }
-        }))
-      }
-    },
-    // 获取区域
-    async listCascaderDict() {
-      const { code = '', data = [] } = await listCascaderDict()
-      // if (code === '0') {
-      //   const index = this.searchList.findIndex((item) => item.key === 'areaList');
-      //   this.searchList[index].options = data
-      // }
-    },
-    /**
-    * @desption 【组织管理】获取区域选择下拉
-    */
-    async selectQyList() {
-      const { code = '', data = [] } = await selectQyList({})
-      if (code === '0') {
-        const index = this.searchList.findIndex((item) => item.key === 'region');
-        debugger;
-        if (index !== -1) {
-          this.searchList[index].options = [{ value: "", label: "全部" }].concat(data.map((item) => {
-            return {
-              value: item,
-              label: item
-            }
-          }))
-        }
-
-      }
-    },
-    /**
-     * @desption 【组织管理】获取业态选择下拉
-     */
-    async selectYtList() {
-      const { code = '', data = [] } = await selectYtList()
-      if (code === '0') {
-        const index = this.searchList.findIndex((item) => item.key === 'businessFormat');
-        this.searchList[index].options = [{ value: "", label: "全部" }].concat(data.map((item) => {
-          return {
-            value: item,
-            label: item
-          }
-        }))
-      }
     },
 
     //  按钮操作
     // 删除
     handleDelete(type, data) {
-      if (this.selections.length == 0 && type == 'batchDel') {
-        this.$message.warning("未选择组织，请选择组织");
-        return;
-      }
       this.$confirm(`是否确定删除当前组织`, '请确认', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
-      }).then(async () => {
-        const orgIds = type === 'delete' ? [data.id] : this.selections.map((item) => item.id)
-        const { code = '' } = await delOrg({ orgIds });
-        if (code === '0') {
-          this.$message.success('删除成功');
-          console.log(this.queryParam,1111)
-          this.$refs.list && this.$refs.list.reload(this.queryParam)
+        type: 'warning',
+        beforeClose: async (action, instance, done) => {
+          if (action === 'confirm') {
+            instance.confirmButtonLoading = true;
+            instance.confirmButtonText = '执行中...';
+            const { code = '' } = await deleteBatch({ id: data.id });
+            if (code === '0') {
+              this.$message.success('删除成功');
+              console.log(this.queryParam, 1111)
+              this.$refs.list && this.$refs.list.reload(this.queryParam)
+            }
+            instance.confirmButtonLoading = false;
+            done();
+          } else {
+            instance.confirmButtonLoading = false;
+            done();
+          }
         }
-      }).catch((res => { }))
-    },
+      }).then(async () => {
 
-    openDigitalBatch(isDigital) {
-      if (this.selections.length == 0) {
-        this.$message.warning("未选择客户，请选择客户");
-        return;
-      }
-      if (!this.selections.every((item) => item.lqid && item.secretkey)) {
-        this.$message.warning("乐企ID和乐企密钥不能为空");
-        return;
-      }
-      this.$confirm(`确定要开通数电吗`, '请确认', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(async () => {
-        const ids = this.selections.map((item) => item.id);
-        const { code = '' } = await this.api.openDigitalBatchApi({ ids, "isDigital": isDigital });
-        if (code === '0') {
-          this.$message.success('操作成功');
-          this.getList();
-        }
-      }).catch((res => { }))
+      }).catch((res => {
+
+      }))
     },
 
     // 批量操作
-    // batchOperate(type, data = {}) {
-     
-    //   console.log(this.selections,"=")
-    //   this.batchOperateType = type;
-    //   this.form = {
-    //     ...data,
-    //     taxBodyId: data && data.taxBodyId && data.taxBodyId.toString()
-    //   }
-    //   if (type === 'batchDel') {
-    //     if (!this.data || this.data.length === 0) {
-    //       console.warn('this.data is empty or not defined!');
-    //       return;
-    //     }
-    //     deleteBatch()
-        
-    //   } else {
-    //     if (this.selections.length == 0 && ['batchEnable'].includes(type)) {
-    //       this.$message.warning("未选择组织，请选择组织");
-    //       return;
-    //     } else {
-    //       this.dialogVisible = true
-    //     }
-
-    //   }
-    // },
     batchOperate(type, data = {}) {
       this.batchOperateType = type
       if (this.selections.length == 0 && type === 'batchDel') {
-        this.$message.warning("未选择企业，请选择企业");
+        this.$message.warning("未选择客户，请选择客户");
         return;
       }
       this.form = data
@@ -294,23 +221,23 @@ export default {
     },
     // 删除企业
     deleteBatch(type) {
-      let tipTxt = ''; 
+      let tipTxt = '';
       let apiFn = '';
-      let switchType = null;
+      let hmd = null;
       switch (type) {
-        case 'batchDel' :
-          tipTxt = '是否确定删除当前企业';
+        case 'batchDel':
+          tipTxt = '是否确定删除当前客户';
           apiFn = deleteBatch;
           break;
         case 1:
-          tipTxt = '是否确定将当前企业标记黑名单';
-          apiFn = deleteBatch;
-          switchType = 1;
+          tipTxt = '是否确定将当前客户标记黑名单';
+          apiFn = hmdCustomer;
+          hmd = 1;
           break;
-        case 2:
-          tipTxt = '是否确定将当前企业移除黑名单';
-          apiFn = deleteBatch;
-          switchType = 2;
+        case 0:
+          tipTxt = '是否确定将当前客户移除黑名单';
+          apiFn = hmdCustomer;
+          hmd = 0;
           break;
       }
       this.$confirm(tipTxt, '请确认', {
@@ -320,18 +247,18 @@ export default {
       }).then(async () => {
 
         const ids = this.batchOperateType === 'delete' ? [this.form.id] : this.selections.map((item) => item.id)
-        
+
         let params = {
           ids
         }
-        switchType !== null && (params.switchType=switchType);
-        console.log('----ids----',ids, params)
+        hmd !== null && (params.hmd = hmd);
+        console.log('----ids----', ids, params)
         const { code = '' } = await apiFn(params);
         if (code === '0') {
           this.$message.success('操作成功');
           this.getList();
         }
-      }).catch(err=>{
+      }).catch(err => {
         this.$message.error(err.msg || '操作失败')
       })
 
@@ -351,40 +278,13 @@ export default {
         }
       })
     },
-    // 切换数电开通
-    // async setIsDigital() {
-    //   this.$refs["ruleForm"].validate(async valid => {
-    //     if (!valid) return;
-    //     const { code = '' } = await setIsDigital(this.form);
-    //     if (code === '0') {
-    //       this.$message.success('操作成功');
-    //       this.dialogVisible = false
-    //       this.getList();
-    //     }
-    //   })
-    // },
-    hanldeEnter(operateType, data = {}) {
-      this.detailInfo = {
-        operateType,
-        id: data.id
-      }
+    hanldeEnter(data = {}) {
+      this.detailInfo = data;
       this.detailVisible = true;
-
-      // if (operateType === 'add') {
-      //   sessionStorage.setItem('clearTaxBody', 1)
-      // }
-      // this.$router.push({
-      //   path: '/custom/Detail',
-      //   query: {
-      //     operateType,
-      //     id: data.id
-      //   }
-      // })
-      // this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
 
     },
     getList() {
-      console.log('--111--',111)
+      console.log('--111--', 111)
       this.$refs.list && this.$refs.list.reload()
     },
     getSearchParam(param) {
@@ -396,7 +296,7 @@ export default {
       this.form = {}
     },
     // 表格选择返回
-    handleSelection(val){
+    handleSelection(val) {
       console.log(val)
     }
   }

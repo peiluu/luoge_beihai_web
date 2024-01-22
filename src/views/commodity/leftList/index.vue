@@ -2,13 +2,17 @@
   <div class="">
     <el-card shadow="never" v-loading="loading">
       <article >
-        <h3>项目商品分类名称</h3>
-        <el-form ref="form" :model="form" label-width="80px">
-          <el-form-item label="商品名称">
+        <h3>{{useMode?'商品和服务税收分类编码':'项目商品分类名称'}}</h3>
+        <el-form ref="form" :model="form" :label-width="useMode?'0px':'80px'">
+          <el-form-item :label="useMode?'':'商品名称'">
             <el-input v-model="form.name">
+              {{ useMode }}
               <template slot="append">
-                <div @click="() => handleAddClassification('', '', 1)">
-                  <i class="el-icon-circle-plus-outline"></i>
+                <div v-if="!useMode" @click="() => handleAddClassification('', '', 1)">
+                  <i  class="el-icon-circle-plus-outline"></i>
+                </div>
+                <div v-else @click="() => handleAddClassification('', '', 1)">
+                  <i  class="el-icon-zoom-in"></i>
                 </div>
               </template>
             </el-input>
@@ -18,15 +22,15 @@
       <article class="tree_main">
         <el-tree
           :data="treeData"
-          node-key="id"
-          default-expand-all
-          :props="{ children: 'childList' }"
+          :node-key="!useMode?'id':'id'"
+          :default-expand-all="useMode?false:true"
+          :props="defaultProps"
           :expand-on-click-node="false"
-          style = "overflow: auto;"
-        >
-          <span class="custom-tree-node" slot-scope="{ node, data }">
+          style = "overflow: auto;" 
+          @node-click="handlerNodeClick">
+          <span class="custom-tree-node" slot-scope="{ node, data }" >
             <span>{{ node.label }}</span>
-            <span>
+            <span v-if="!useMode">
               <span class="tree_right_icon" title="添加子级">
                 <i
                   class="el-icon-circle-plus-outline"
@@ -70,9 +74,15 @@
 
 <script>
 import AppEditeName from '../componetns/editeCommodityClassificationName/';
-import {getcommondityTreeList,delectcommonditySingle,postcommondityAddSingle} from '../api.js'
+import {getcommondityTreeList,delectcommonditySingle,postcommondityAddSingle,getcommondityAddTreeList} from '../api.js'
 export default {
   name: "rightListPage",
+  props:{
+    mode: {
+      type: [String,Number],
+      default: null
+    }
+  },
   components: {
     AppEditeName
   },
@@ -86,10 +96,24 @@ export default {
       isEdite: false,
       editeName: '',
       parentId: null,
+      useMode:this.mode,
+      defaultProps:{ 
+        children: 'childList',
+        label: this.mode ? 'sphfwmc' : 'name',
+        value: this.mode ?'sphfwssflhbbm':'id'
+      },
+      
     };
   },
   computed: {},
-  watch: {},
+  watch: {
+    handler:{
+      mode(val){
+        this.useMode = val;
+        
+      }
+    }
+  },
   methods: {
    /**
     * @description: 添加数据
@@ -154,21 +178,22 @@ export default {
     this.handlerGetList()
    },
    /* 获取数据 */
-   handlerGetList(){
+   async handlerGetList(){
     this.loading = true;
-    console.log(getcommondityTreeList())
-    getcommondityTreeList().then(res=>{
-      if(res.code === '0'){
-       
-        this.treeData = res.data.childList;
-        console.log(this.handlerPrsoneData(this.treeData),"data")
-      }else{
-        this.$message.error(res.msg);
+    
+    const res = (this.useMode??'') ==='' ? await getcommondityTreeList() :  await getcommondityAddTreeList()
+    this.treeData = [];
+    if(res.code === '0'){
+      this.treeData = this.useMode? res.data : res.data.childList;
+      if((this.useMode??'') ===''){
+        this.$emit('handleNodeClick',this.handlerPrsoneData(this.treeData))
       }
+      
+    }else{
+      this.$message.error(res.msg);
       this.loading = false
-    }).catch(()=>{
-      this.loading = false
-    })
+    }
+    this.loading = false
    },
 
    /* 回调成功刷新 */
@@ -177,20 +202,33 @@ export default {
       this.handlerGetList();
     }
    },
-   
-   /* 递归整理数据 */
-   handlerPrsoneData(data){
-    if(data && data.length > 0){
-      data.forEach(item=>{
-        item.label = item.name;
-        item.value = item.id;
-        if(item.childList && item.childList.length > 0){
-          this.handlerPrsoneData(item.childList)
+   /* 点击返回 */
+   handlerNodeClick(data,node,item){
+    console.log(data,node,item);
+    this.$emit('handleNodeClick',data)
+   }, 
+   /* 递归返回数据 */
+   handlerPrsoneData(data) {
+      let firstId = null; // 保存最底层的第一个非空子列表中的第一个元素的 id
+
+      // 帮助函数来进行递归搜索
+      function findFirstId(nodes) {
+        for (let i = 0; i < nodes.length && firstId === null; i++) {
+          const item = nodes[i];
+          if (item.childList && item.childList.length > 0) {
+            // 继续递归搜索子列表
+            findFirstId(item.childList);
+          } else {
+            // 设置 firstId 并停止搜索
+            firstId = item;
+            break; // 找到最底层的第一个元素，不需要继续循环
+          }
         }
-      })
+      }
+
+      findFirstId(data); // 开始递归搜索
+      return firstId; // 返回找到的第一个最底层的 id
     }
-    return data
-   }
   },
   created() {},
   mounted() {

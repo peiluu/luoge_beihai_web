@@ -154,6 +154,7 @@
 
 <script>
   import { numToCny } from '@/utils/tool'
+  import { Calc } from '@/utils/calc'
   export default {
     name: "Preview",
     components: {

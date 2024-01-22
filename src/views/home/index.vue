@@ -1,138 +1,161 @@
 <template>
   <el-card shadow="never" class="sjy-home">
     <div class="head-search">
-      <el-select v-model="from.region" placeholder="请选择" class="mr-space">
+      <!-- <el-select v-model="form.region" placeholder="请选择" class="mr-space">
         <el-option v-for="item in regionOptions" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-      </el-select>
-      <el-select v-model="from.taxpayer" placeholder="请选择" class="mr-space">
-        <el-option v-for="item in taxpayerOptions" :key="item.value" :label="item.label" :value="item.value">
+      </el-select> -->
+      <el-select
+        v-model="form.nsrsbh"
+        filterable
+        placeholder="请选择"
+        class="mr-space"
+        @change="refreshData"
+        style="width: 280px"
+      >
+        <el-option v-for="item in taxpayerOptions" :key="item.nsrsbh" :label="item.nsrmc" :value="item.nsrsbh">
         </el-option>
       </el-select>
-      <el-date-picker v-model="from.date" type="date" placeholder="选择日期"> </el-date-picker>
+      <el-date-picker
+        v-model="form.ssq"
+        type="month"
+        placeholder="选择月份"
+        value-format="yyyy-MM"
+        @change="refreshData"
+      >
+      </el-date-picker>
     </div>
-    <div class="content">
+    <div class="content" v-loading="loading">
       <div class="invoice invoice-bg1">
         <p class="c-title">发票数据</p>
         <p class="title"><span class="iconfont icon-lanzifapiao"></span>蓝字发票开具金额</p>
-        <p class="money">123,123,12元<span>（共40张）</span></p>
+        <p class="money">
+          {{ fpsj.lzfpkjje }}元<span>（共{{ fpsj.lzfpkjzs }}张）</span>
+        </p>
         <div class="subtitle">
-          <p>专用发票：<span class="blue">12张（122元）</span></p>
-          <p>普通发票：<span class="blue">12张（122元）</span></p>
-          <!-- <p class="blue">普通发票：12张（122元）</p> -->
-          <p class="last-moon">较上月：+3%</p>
+          <p>
+            专用发票：<span class="blue">{{ fpsj.lzpp }}张（{{ fpsj.lzppje }}元）</span>
+          </p>
+          <p>
+            普通发票：<span class="blue">{{ fpsj.lzzp }}张（{{ fpsj.lzzpje }}元）</span>
+          </p>
+          <p class="last-moon">较上月：{{ fpsj.lzppbl }}</p>
         </div>
       </div>
       <div class="invoice invoice-bg2">
         <p class="title"><span class="iconfont icon-hongzifapiao"></span>红字发票开具金额</p>
-        <p class="money">123,123,12元<span>（共40张）</span></p>
+        <p class="money">
+          {{ fpsj.hzfpkjje }}元<span>（共{{ fpsj.hzfpkjzs }}张）</span>
+        </p>
         <div class="subtitle">
-          <p>专用发票：<span class="red">12张（122元）</span></p>
-          <p>普通发票：<span class="red">12张（122元）</span></p>
-          <p class="last-moon">较上月：+3%</p>
+          <p>
+            专用发票：<span class="blue">{{ fpsj.hzpp }}张（{{ fpsj.hzppje }}元）</span>
+          </p>
+          <p>
+            普通发票：<span class="blue">{{ fpsj.hzzp }}张（{{ fpsj.hzzpje }}元）</span>
+          </p>
+          <p class="last-moon">较上月：{{ fpsj.hzppbl }}</p>
         </div>
       </div>
       <div class="invoice invoice-bg3">
         <p class="c-title">涉税数据</p>
         <p class="title"><span class="iconfont icon-jinxiaoshuie"></span>进销税额</p>
-        <p class="money">123,123,12元<span>（共40张）</span></p>
+        <!-- <p class="money">123,123,12元<span>（共40张）</span></p>
         <div class="subtitle">
           <p>进项税额：<span class="darkBlue">12张（122元）</span></p>
           <p>销项税额：<span class="darkBlue">12张（122元）</span></p>
           <p class="last-moon">较上月：+3%</p>
-        </div>
+        </div> -->
+        <div class="deving">敬请期待</div>
       </div>
       <div class="invoice invoice-bg4">
         <p class="title"><span class="iconfont icon-qiyenashui"></span>企业纳税数据</p>
-        <p class="money">123,123,12元<span>（共40张）</span></p>
+        <!-- <p class="money">123,123,12元<span>（共40张）</span></p>
         <div class="subtitle">
           <p>增值税应纳税额：<span class="green">12张（122元）</span></p>
           <p>其他应纳税额：<span class="green">12张（122元）</span></p>
           <p>企业所得税应纳税额：<span class="green">12张（122元）</span></p>
           <p class="last-moon">较上月：+3%</p>
-        </div>
+        </div> -->
+        <div class="deving">敬请期待</div>
       </div>
     </div>
     <div class="tasks">
       <div class="tasks-l">
         <div class="tasks-head">待办任务<span>共10条</span></div>
-        <div class="tasks-border">
-          <el-table :data="tableData">
-            <template v-for="(item, index) in columns">
-              <el-table-column
-                v-if="item.type === 'index'"
-                type="index"
-                :label="item.title"
-                :min-width="item.width"
-                :key="index"
-                :align="item.align"
-              >
-              </el-table-column>
-              <el-table-column
-                v-else-if="item.type === 'action'"
-                :prop="item.dataIndex"
-                :label="item.title"
-                :min-width="item.width"
-                :key="item.id"
-                :align="item.align"
-              >
-                <template slot-scope="scope">
-                  <el-button @click="handleClick(scope.row)" type="text" size="small">立即处理</el-button>
-                </template>
-              </el-table-column>
-              <el-table-column
-                v-else
-                :align="item.align"
-                :prop="item.dataIndex"
-                :label="item.title"
-                :min-width="item.width"
-                :show-overflow-tooltip="item.showTooltip"
-                :key="item.id"
-              >
-              </el-table-column>
-            </template>
-          </el-table>
-          <el-pagination background layout="prev, pager, next" :total="10" :page-size="3"> </el-pagination>
-        </div>
+        <FormList
+          :columns="columns"
+          :api="api"
+          :firstLoading="false"
+          ref="list"
+          :showSearch="false"
+          pageLayout="total, prev, pager, next"
+          class="home-form-list"
+          :border="false"
+          :pageSize="3"
+        >
+          <template #hzqrxxztDm="{ data }">
+            {{ mod[data.hzqrxxztDm] || '-' }}
+          </template>
+          <template #lrrqq="{ data }"> {{ formatDate('yyyy-MM-DD hh:mm:ss', data.lrrqq) }} </template>
+          <template #myscope="{ data }">
+            <el-button @click="handleClick(data)" type="text" size="small">立即处理</el-button>
+          </template>
+        </FormList>
       </div>
-      <div class="tasks-r">
+      <div class="tasks-r" v-loading="shortcutLoading">
         <div class="tasks-head shortcut-head">
           快捷入口
           <el-button class="shortcut-manage" type="text" size="small" @click="handleManage">管理</el-button>
         </div>
         <div class="shortcut-list tasks-border">
-          <div class="li" v-for="item in shortcutMenus" :key="item.id" @click="gotoRouteHandle(item.id)">
-            <p>
-              <svg class="li-icon icon-svg aui-sidebar__menu-icon" aria-hidden="true">
-                <use :xlink:href="`#${item.icon}`"></use>
-              </svg>
-            </p>
-            <p>{{ item.name }}</p>
-          </div>
+          <template v-if="shortcutMenus === null">
+            <div class="no-set-shortcut">
+              <p>暂无数据</p>
+            </div>
+          </template>
+          <template v-else>
+            <template v-if="shortcutMenus && shortcutMenus.length > 0">
+              <div class="li" v-for="item in shortcutMenus" :key="item.menuId" @click="gotoRouteHandle(item.menuId)">
+                <!-- <p>
+                  <svg class="li-icon icon-svg aui-sidebar__menu-icon" aria-hidden="true">
+                    <use :xlink:href="`#${item.icon}`"></use>
+                  </svg>
+                </p> -->
+                <p>{{ item.name }}</p>
+                <i class="el-icon-arrow-right el-icon--right"></i>
+              </div>
+            </template>
+            <div class="no-set-shortcut" v-else>
+              <p>您当前暂未设置快捷入口</p>
+              <el-button class="shortcut-manage" type="text" size="big" @click="handleManage">去设置</el-button>
+            </div>
+          </template>
         </div>
       </div>
     </div>
     <div class="echart">
       <div class="echart-l">
         <div class="echart-search">
-          <el-radio-group v-model="echartFrom.type">
+          <el-radio-group v-model="echartForm.type" @change="refreshEchart">
             <el-radio-button :label="1">发票数据分析</el-radio-button>
-            <el-radio-button :label="2">计税数据分析</el-radio-button>
+            <!-- <el-radio-button :label="2">计税数据分析</el-radio-button> -->
           </el-radio-group>
 
-          <el-radio-group v-model="echartFrom.month">
+          <el-radio-group v-model="echartForm.month" @change="refreshEchart">
             <el-radio-button :label="3">近3个月</el-radio-button>
             <el-radio-button :label="6">近6个月</el-radio-button>
             <el-radio-button :label="12">近12个月</el-radio-button>
           </el-radio-group>
         </div>
-        <div id="echart-col"></div>
+        <div id="echart-col"><div class="no-echart" v-if="Object.keys(seriesDataObj).length === 0">暂无数据</div></div>
       </div>
       <div class="echart-r">
         <p class="echart-mo">{{ ringMonth }}</p>
         <p class="proportion">占图比</p>
-        <div id="echart-ring"></div>
+        <div id="echart-ring"><div class="no-echart" v-if="Object.keys(seriesDataObj).length === 0">暂无数据</div></div>
       </div>
     </div>
+
     <el-dialog
       v-if="dialogVisible"
       title="快捷入口选择"
@@ -165,10 +188,10 @@
         <div class="dialog-right">
           <el-card class="box-card" shadow="never">
             <div slot="header" class="clearfix">
-              <span>已选&nbsp;3/6</span>
+              <span>已选&nbsp;{{ selectMenus.length }}/6</span>
               <el-button type="text">清空</el-button>
             </div>
-            <p v-for="o in selectMenus" :key="o.id" class="item">
+            <p v-for="o in selectMenus" :key="o.menuId" class="item">
               {{ o.name }}
             </p>
           </el-card>
@@ -184,57 +207,73 @@
 <script>
 import * as echarts from 'echarts';
 import cloneDeep from 'lodash/cloneDeep';
+import { getInvoiceData, getListByUser, getQueryMenu, saveMenu, getBillStatistics } from './Api';
+import moment from 'moment';
+import FormList from '@/components/FormList.vue';
 
+function getMonths() {
+  // 获取当前月份
+  let d = new Date();
+  let currentMonth = d.getMonth() + 1;
+  let currentYear = d.getFullYear();
+  let flag = true;
+  // 获取最近12个月份
+  let months = [];
+  for (let i = 0; i < 12; i++) {
+    let month = currentMonth - i;
+    if (month <= 0) {
+      if (flag) {
+        flag = false;
+        currentYear--;
+      }
+      month += 12;
+    }
+    months.unshift(`${currentYear}年${month < 10 ? '0' + month : month}月`);
+  }
+  return months;
+}
 export default {
   name: 'home',
+  components: {
+    FormList,
+  },
   data() {
     const defalutM = 12; // 默认查询进12个月的数据
-    const initX = [
-      '2023-01',
-      '2023-02',
-      '2023-03',
-      '2023-04',
-      '2023-05',
-      '2023-06',
-      '2023-07',
-      '2023-08',
-      '2023-09',
-      '2023-10',
-      '2023-11',
-      '2023-12',
-    ];
+    const initX = getMonths();
     return {
+      api: require('./Api'),
+      mod: {
+        '03': '销项待确认红字申请单',
+        '02': '进项待确认红字申请单',
+      },
+      // 区域
       regionOptions: [
-        // 区域
         { value: '1', label: '华北区' },
         { value: '2', label: '华南区' },
         { value: '3', label: '华中区' },
       ],
-      taxpayerOptions: [
-        // 纳税主体
-        { value: '1', label: '纳税企业1' },
-        { value: '2', label: '纳税企业2' },
-        { value: '3', label: '纳税企业3' },
-      ],
+      // 纳税主体
+      taxpayerOptions: [],
       columns: [
-        { title: '序号', type: 'index', width: 50, align: 'center' },
-        { title: '待办编号', dataIndex: 'code', align: 'center' },
-        { title: '待办模块', dataIndex: 'module', align: 'center' },
-        { title: '提交人', dataIndex: 'presenter', align: 'center' },
-        { title: '提交时间', dataIndex: 'time', align: 'center', width: 140, showTooltip: true },
-        { title: '操作', type: 'action', align: 'center', width: 80, slot: 'action' },
+        { title: '序号', type: 'index', width: 70, align: 'center' },
+        { title: '待办编号', dataIndex: 'id', align: 'center' },
+        { title: '待办模块', dataIndex: 'hzqrxxztDm', slot: 'hzqrxxztDm', align: 'center' },
+        { title: '开票人', dataIndex: 'kpr', align: 'center' },
+        { title: '提交时间', dataIndex: 'lrrqq', align: 'center', slot: 'lrrqq', width: 140, showTooltip: true },
+        {
+          title: '操作',
+          key: 'action',
+          width: 80,
+          scopedSlots: { customRender: 'action' },
+        },
       ],
-      tableData: [
-        { id: 1, code: '282828', module: '红字确认单0', presenter: '系统', time: '2023-10-22 11:11:11' },
-        { id: 12, code: '282828', module: '红字确认单9', presenter: '系统', time: '2023-10-22 11:11:11' },
-        { id: 13, code: '282828', module: '红字确认单8', presenter: '系统', time: '2023-10-22 11:11:11' },
-      ],
-      from: {
-        region: '1', // 选中的区域值
-        taxpayer: null, // 选中的纳税主体值
-        date: null, // 选中的时间
+      tableData: [],
+      form: {
+        // region: '1', // 选中的区域值
+        nsrsbh: null, // 选中的纳税主体值
+        ssq: moment(new Date()).format('yyyy-MM'), // 选中的时间
       },
-      echartFrom: {
+      echartForm: {
         type: 1, // 1 发票数据分析 , 2 计税数据分析
         month: defalutM, // 近3月，近6月，近12月
       },
@@ -246,77 +285,130 @@ export default {
         label: 'name',
       },
       xAxisData: initX, // 柱状图x轴底部日期数据
-      seriesData: [
-        // 柱状图
-        [320, 332, 301, 334, 390, 330, 320, 311, 324, 490, 130, 620], // 蓝字发票金额
-        [120, 132, 101, 134, 90, 230, 210, 141, 234, 190, 130, 230], // 蓝字发票税额
-        [220, 182, 191, 234, 290, 330, 310, 181, 214, 240, 310, 340], // 红字发票金额
-        [150, 232, 201, 154, 190, 330, 410, 231, 164, 200, 360, 440], // 红字发票税额
-      ],
+      seriesDataObj: {},
       dialogVisible: false,
-      treeKeys: ['1744884803519438849', '1744930298874880002'],
-      selectMenus: [
-        {
-          id: '1744884803519438849',
-          name: '蓝字发票开具',
-          icon: 'icon-file-text',
-          url: 'outputInvoice/blueInvoice/Index',
-        },
-        {
-          id: '1744930298874880002',
-          name: '红字发票开具',
-          icon: 'icon-file-zip',
-          url: 'outputInvoice/redInvoice/enterpriseList/index',
-        },
-      ],
-      shortcutMenus: [
-        {
-          id: '1744884803519438849',
-          name: '蓝字发票开具',
-          icon: 'icon-file-text',
-          url: 'outputInvoice/blueInvoice/Index',
-        },
-        {
-          id: '1744930298874880002',
-          name: '红字发票开具',
-          icon: 'icon-file-zip',
-          url: 'outputInvoice/redInvoice/enterpriseList/index',
-        },
-        {
-          icon: 'icon-addteam',
-          id: '1744932031495725057',
-          name: '企业信息维护',
-          url: '/organization/index',
-        },
-        {
-          id: '1744958909396869122',
-          name: '开票额度预警',
-          url: '/creditlimit/index',
-          icon: 'icon-alert',
-        },
-        {
-          id: '1745971490001551362',
-          name: '商品项目信息',
-          url: '/commodity/index',
-          icon: 'icon-flag',
-        },
-        {
-          id: '1744930764186771458',
-          name: '已开票查询',
-          url: 'outputInvoice/invoicedList/Index',
-          icon: 'icon-filesearch',
-        },
-      ],
+      treeKeys: [],
+      selectMenus: [],
+      shortcutMenus: null, // 初始化null，接口返回数据后是数组，如下。
+      // shortcutMenus: [
+      // {
+      //   menuId: '1744884803519438849',
+      //   name: '蓝字发票开具',
+      //   url: 'outputInvoice/blueInvoice/Index',
+      // },
+      // ],
       menuList: [],
+      // 发票数据
+      fpsj: {
+        hzfpkjje: '-', // 红字发票金额
+        hzpp: '-', // 红字普通票
+        hzppje: '-', // 红字普通票金额
+        hzzp: '-', // 红字专票
+        hzzpje: '-', // 红字专票金额
+        hzfpkjzs: '-', // 红字发票开具张数
+        hzppbl: '-', // 红字交上月比例
+        lzfpkjje: '-', // 蓝字发票金额
+        lzpp: '-', // 蓝字普通票
+        lzppje: '-', // 蓝字普通票金额
+        lzzp: '-', // 蓝字专票
+        lzzpje: '-', // 蓝字专票金额
+        lzfpkjzs: '-', // 蓝字发票开具张数
+        lzppbl: '-', // 蓝字交上月比例
+      },
       saveLoading: false,
+      shortcutLoading: false,
+      loading: false,
+      // 待办分页参数
+      pageInfo: {
+        pageSize: 3,
+        pageNo: 1,
+        totalPages: 1,
+      },
     };
   },
   mounted() {
-    this.initEchart();
-    this.initEchartRing();
+    this.getList(); // 获取纳税主体 ， 开票数据，涉税数据
+    this.geApplyList(); // 获取待办事项
+    this.getShortcutList();
+    this.getEchartData();
     this.initTree();
   },
   methods: {
+    // 数据初始化
+    initData() {
+      this.getInvoice();
+    },
+    // 获取快捷入口
+    async getShortcutList() {
+      try {
+        this.shortcutLoading = true;
+        const { data } = await getQueryMenu();
+        this.shortcutMenus = data;
+      } catch (error) {
+        // console.log('-error-', error);
+        this.$message.error(error.msg || '获取快捷入口失败');
+      } finally {
+        this.shortcutLoading = false;
+      }
+    },
+    // 获取纳税人主体
+    async getList() {
+      try {
+        const { data } = await getListByUser({});
+        if (data.length) {
+          this.taxpayerOptions = data;
+          this.$set(this.form, 'nsrsbh', data[0].nsrsbh);
+          this.getInvoice();
+        }
+      } catch (error) {
+        console.log('-error-', error);
+        this.$message.error(error.msg || '获取纳税人主体失败');
+      }
+    },
+    // 获取发票数据
+    async getInvoice() {
+      try {
+        const { nsrsbh, ssq } = this.form;
+        this.loading = true;
+        const { data } = await getInvoiceData({ nsrsbh, ssq });
+        // console.log('--data--', data);
+        this.fpsj = data;
+      } catch (error) {
+        // console.log('-error-', error);
+        this.$message.error(error.msg || '获取发票数据失败');
+      } finally {
+        this.loading = false;
+      }
+    },
+    // 获取待办列表
+    async geApplyList() {
+      this.$refs.list && this.$refs.list.reload();
+    },
+    // 获取柱状图数据
+    async getEchartData() {
+      try {
+        const { data } = await getBillStatistics(this.echartForm.month);
+        if (data && data.outputAndIncomeList) {
+          let newObj = {};
+          let bottomX = [];
+          data.outputAndIncomeList.forEach((item, index) => {
+            bottomX.push(item.ssq);
+            for (let k in item) {
+              if (k !== 'ssq') {
+                !newObj[k] && (newObj[k] = []);
+                // newObj[k].push(Math.abs(item[k]));
+                newObj[k].push(item[k]);
+              }
+            }
+          });
+          this.xAxisData = bottomX;
+          this.ringMonth = bottomX[this.echartForm.month - 1];
+          this.seriesDataObj = newObj;
+          this.initEchart();
+          this.initEchartRing();
+        }
+      } catch (error) {}
+    },
     // 初始化柱状图
     initEchart() {
       const _this = this;
@@ -355,6 +447,7 @@ export default {
         ],
         yAxis: [
           {
+            // type: 'log',
             type: 'value',
           },
         ],
@@ -364,28 +457,28 @@ export default {
             type: 'bar',
             stack: 'Ad',
             barMaxWidth: '40',
-            data: this.seriesData[0],
+            data: this.seriesDataObj.lzfpje || [],
           },
           {
             name: '蓝字发票税额',
             type: 'bar',
             stack: 'Ad',
             barMaxWidth: '40',
-            data: this.seriesData[1],
+            data: this.seriesDataObj.lzfpse || [],
           },
           {
             name: '红字发票金额',
             type: 'bar',
             stack: 'Ad',
             barMaxWidth: '40',
-            data: this.seriesData[2],
+            data: this.seriesDataObj.hzfpje || [],
           },
           {
             name: '红字发票税额',
             type: 'bar',
             stack: 'Ad',
             barMaxWidth: '40',
-            data: this.seriesData[3],
+            data: this.seriesDataObj.hzfpse || [],
           },
         ],
       };
@@ -402,8 +495,8 @@ export default {
     },
     // 初始化环状图
     initEchartRing() {
-      const { type } = this.echartFrom;
-      const { xMonth, seriesData } = this;
+      const { type } = this.echartForm;
+      const { xMonth, seriesDataObj } = this;
       let chartDom = document.getElementById('echart-ring');
       if (!chartDom) return;
       this.ringChart && this.ringChart.dispose();
@@ -412,8 +505,8 @@ export default {
       let data = [];
 
       if (type === 1) {
-        const stotal = seriesData[0][xMonth] + seriesData[2][xMonth];
-        const v1 = (seriesData[0][xMonth] / stotal) * 100;
+        const stotal = seriesDataObj.lzfpje[xMonth] + Math.abs(seriesDataObj.hzfpje[xMonth]);
+        const v1 = (seriesDataObj.lzfpje[xMonth] / stotal) * 100;
         const v2 = 100 - v1;
         data = [
           { name: '蓝字发票开具金额', value: v1.toFixed(2) },
@@ -483,36 +576,56 @@ export default {
     },
     // 初始化快捷入口弹窗默认选中值
     initSelectMenus() {
-      let keys = [];
-      let ms = [];
-      this.shortcutMenus.forEach((item) => {
-        keys.push(item.id);
-        ms.push({ ...item });
-      });
-      this.treeKeys = keys;
-      this.selectMenus = ms;
+      if (this.shortcutMenus && this.shortcutMenus.length) {
+        let keys = [];
+        let ms = [];
+        this.shortcutMenus.forEach((item) => {
+          keys.push(item.menuId);
+          ms.push({ ...item });
+        });
+        this.treeKeys = keys;
+        this.selectMenus = ms;
+      }
     },
     // 快捷入口弹窗选中取消事件
     treeChange(data) {
       // console.log(data);
       const { selectMenus } = this;
-      if (selectMenus.length >= 6) {
-        this.$message.error('最多可设置6个快捷入口');
-        return;
-      }
-      let newMenus = this.selectMenus.find((item) => data.id === item.id);
+      let newMenus = selectMenus.find((item) => data.id === item.menuId);
       if (newMenus) {
-        this.selectMenus = this.selectMenus.filter((item) => item.id !== data.id);
+        this.selectMenus = selectMenus.filter((item) => item.menuId !== data.id);
       } else {
-        this.selectMenus = [...this.selectMenus, { id: data.id, name: data.name, icon: data.icon, url: data.url }];
+        if (selectMenus.length >= 6) {
+          this.$message.error('最多可设置6个快捷入口');
+          this.$refs.tree.setCheckedKeys(selectMenus.map((item) => item.menuId));
+          return;
+        }
+        this.selectMenus = [...selectMenus, { menuId: data.id, name: data.name, icon: data.icon, url: data.url }];
       }
     },
     // 快捷入口跳转
     gotoRouteHandle(menuId) {
-      var route = window.SITE_CONFIG['dynamicMenuRoutes'].filter((item) => item.meta.menuId === menuId)[0];
+      // console.log('---menuId---', menuId);
+      console.log(this.shortcutMenus);
+      var route = this.shortcutMenus.filter((item) => item.menuId === menuId)[0];
+      // var route = window.SITE_CONFIG['dynamicMenuRoutes'].filter((item) => item.meta.menuId === menuId)[0];
       if (route) {
-        this.$router.push({ name: route.name });
+        this.$router.push(route.url);
       }
+    },
+    // 选择月份、选择主体 刷新数据
+    refreshData() {
+      this.$nextTick(() => {
+        this.initData();
+      });
+    },
+    // 刷新echart
+    refreshEchart() {
+      this.xMonth = this.echartForm.month - 1;
+      console.log('--this.xm', this.xMonth);
+      this.$nextTick(() => {
+        this.getEchartData();
+      });
     },
     // 关闭快捷入口弹窗
     handleClose() {
@@ -523,16 +636,9 @@ export default {
     // 保存快捷入口
     async saveShortcut() {
       // console.log('--保存--', this.selectMenus);
-      const fn = () => {
-        return new Promise((res, rej) => {
-          setTimeout(() => {
-            res({ code: '0', msg: '设置成功' });
-          }, 1000);
-        });
-      };
       try {
         this.saveLoading = true;
-        const res = await fn();
+        const res = await saveMenu({ userMenuList: this.selectMenus });
         if (res.code === '0') {
           this.$message.success(res.msg);
           this.shortcutMenus = cloneDeep(this.selectMenus);
@@ -557,6 +663,16 @@ export default {
     // 处理待办任务
     handleClick(row) {
       console.log('--row--', row);
+      this.$router.push({
+        path: '/redInvoice/redInfoConfirm',
+        query: {
+          ...this.$route.query,
+          id: row.id,
+          level: 'input',
+          isFormTodoList: 'Y',
+          operateType: 'waitConfirm',
+        },
+      });
     },
   },
   watch: {
@@ -586,7 +702,7 @@ p {
   .invoice {
     flex: 1;
     margin-top: 40px;
-    border: 1px solid #e9e9e9;
+    // border: 1px solid #e9e9e9;
     border-radius: 8px;
     padding: 15px;
     position: relative;
@@ -596,9 +712,7 @@ p {
     &:last-child {
       margin-right: 0;
     }
-    &:hover {
-      background-color: #e9e9e9;
-    }
+
     .c-title {
       font-size: 18px;
       color: #333;
@@ -624,7 +738,7 @@ p {
     }
     .money {
       font-size: 20px;
-      color: #333;
+      // color: #333;
       text-align: center;
       line-height: 50px;
       font-weight: bold;
@@ -635,24 +749,36 @@ p {
     }
   }
   .invoice-bg1 {
-    .title {
-      background-image: linear-gradient(to right, #4898d8, #3bc4ec);
+    &:hover {
+      box-shadow: 0 0 10px 2px #3bc4ec;
     }
+    // .title {
+    background-image: linear-gradient(to right, #4898d8, #3bc4ec);
+    // }
   }
   .invoice-bg2 {
-    .title {
-      background-image: linear-gradient(to right, #ff6184, #ff9a96);
+    &:hover {
+      box-shadow: 0 0 10px 2px #ff9a96;
     }
+    // .title {
+    background-image: linear-gradient(to right, #ff6184, #ff9a96);
+    // }
   }
   .invoice-bg3 {
-    .title {
-      background-image: linear-gradient(to right, #545e92, #83acce);
+    &:hover {
+      box-shadow: 0 0 10px 2px #83acce;
     }
+    // .title {
+    background-image: linear-gradient(to right, #545e92, #83acce);
+    // }
   }
   .invoice-bg4 {
-    .title {
-      background-image: linear-gradient(to right, #00baf2, #00f4bf);
+    &:hover {
+      box-shadow: 0 0 10px 2px #08c49b;
     }
+    // .title {
+    background-image: linear-gradient(to right, #00baf2, #08c49b);
+    // }
   }
   .subtitle {
     overflow: hidden;
@@ -661,28 +787,29 @@ p {
     justify-content: flex-end;
     > p {
       margin-bottom: 5px;
-      color: #666;
+      // color: #666;
     }
   }
   .last-moon {
+    font-weight: 700;
     font-size: 14px;
     // color: #666;
     text-align: right;
   }
   .blue {
-    color: #7ea6ff !important;
+    // color: #7ea6ff !important;
     font-weight: bold;
   }
   .red {
-    color: #fe5363 !important;
+    // color: #fe5363 !important;
     font-weight: bold;
   }
   .darkBlue {
-    color: #000080 !important;
+    // color: #000080 !important;
     font-weight: bold;
   }
   .green {
-    color: #008080 !important;
+    // color: #008080 !important;
     font-weight: bold;
   }
 }
@@ -695,7 +822,7 @@ p {
   }
   .tasks-r {
     margin-left: 20px;
-    width: 388px;
+    width: 288px;
     flex-shrink: 1;
   }
   .tasks-head {
@@ -724,18 +851,22 @@ p {
   .shortcut-list {
     width: 100%;
     height: 198px;
-    display: flex;
-    flex-wrap: wrap;
+    overflow: hidden;
     .li {
-      width: 33.3333%;
-      text-align: center;
-      height: 99px;
+      width: 100%;
+      padding: 0 15px;
+      line-height: 32px;
       display: flex;
-      flex-direction: column;
-      justify-content: center;
+      justify-content: space-between;
+      align-items: center;
       transition: all 0.3s cubic-bezier(0.39, 0.575, 0.565, 1);
+      border-bottom: 1px solid #e9e9e9;
+      &:last-child {
+        border-bottom: none;
+      }
       &:hover {
         cursor: pointer;
+        background-color: #ecf5ff;
         color: $primaryGreenColor;
       }
       .li-icon {
@@ -750,14 +881,6 @@ p {
   border-top: none;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
-}
-/deep/ .el-table {
-  th {
-    background-color: #fff;
-  }
-}
-/deep/ .el-pagination {
-  margin: 10px auto;
 }
 .echart {
   display: flex;
@@ -835,5 +958,45 @@ p {
       color: $primaryGreenColor;
     }
   }
+}
+.home-form-list {
+  border: 1px solid #e9e9e9;
+  padding-top: 0;
+  border-top: none;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  /deep/ .el-table__body-wrapper {
+    height: 110px;
+    min-height: initial !important;
+  }
+  /deep/ .el-table__empty-text {
+    line-height: 14px;
+  }
+  /deep/ .pagination {
+    margin-top: 0;
+  }
+  /deep/ .el-pagination {
+    margin: 8px auto;
+  }
+}
+.no-set-shortcut {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  > p {
+    color: #999;
+  }
+}
+.deving {
+  text-align: center;
+  line-height: 100px;
+}
+.no-echart {
+  color: #999;
+  text-align: center;
+  width: 100%;
+  line-height: 100px;
 }
 </style>
