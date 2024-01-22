@@ -11,7 +11,7 @@
                 <div v-if="!useMode" @click="() => handleAddClassification('', '', 1)">
                   <i  class="el-icon-circle-plus-outline"></i>
                 </div>
-                <div v-else @click="() => handleAddClassification('', '', 1)">
+                <div v-else @click="() => handleSearchClassification('', '', 1)">
                   <i  class="el-icon-zoom-in"></i>
                 </div>
               </template>
@@ -207,6 +207,10 @@ export default {
     console.log(data,node,item);
     this.$emit('handleNodeClick',data)
    }, 
+   /* 搜索 */
+   handleSearchClassification(){
+
+   },
    /* 递归返回数据 */
    handlerPrsoneData(data) {
       let firstId = null; // 保存最底层的第一个非空子列表中的第一个元素的 id

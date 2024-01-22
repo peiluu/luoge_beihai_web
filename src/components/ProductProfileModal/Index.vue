@@ -20,7 +20,8 @@
     <div class="content-right">
       <vxe-toolbar ref="buyerToolbar">
         <template #buttons>
-          <vxe-input @keyup.enter.native="queryProductProfile({}, 'search')" @clear="queryProductProfile({}, 'search')" style="width: 400px;" v-model="customerQuery.keyword" placeholder="请输入商品名称/简码/商品编码/税收分类编码" clearable>
+          <vxe-input @keyup.enter.native="queryProductProfile({}, 'search')" @clear="queryProductProfile({}, 'search')" 
+          style="width: 400px;" v-model="customerQuery.keyword" placeholder="请输入商品名称/简码/商品编码/税收分类编码" clearable>
             <template #prefix>
               <i style="cursor: pointer;color: #00b390;font-size: 16px;" class="vxe-icon-search" @click="queryProductProfile({}, 'search')"></i>
             </template>
@@ -33,12 +34,16 @@
         <vxe-column type="radio" min-width="40"></vxe-column>
         <template v-for="(item, index) in tableColumns">
           <!-- 对税率特殊处理 -->
-          <vxe-column v-if="item.field === 'sl'" :min-width="item.columnZh.length * 30" :title="item.columnZh" :key="index">
+          <vxe-column v-if="item.field === 'sl'"  :width="item.width" :min-width="item.columnZh.length * 30" :title="item.columnZh" :key="index">
             <template slot-scope="{ row }">
               {{ getTaxDesc(row) }}
             </template>
           </vxe-column>
-          <!-- 特定要素 -->
+          <vxe-column v-else-if="item.field === 'dj'"  
+          :field="item.field" :min-width="item.width" 
+          :formatter="timeFormat" :title="item.columnZh" 
+          :key="index" />
+          <!-- 特定要素 :formatter="(val)=> val.toFixed(2)"-->
           <!-- <vxe-column v-else-if="item.field === 'tdys'" :min-width="item.columnZh.length * 30" :title="item.columnZh" :key="index">
             <template slot-scope="{ row }">
               {{ row.tdys == '06' ? '不动产经营租赁' : row.tdys == '05' ? '不动产销售' : row.tdys == '03' ? '建筑服务' : row.tdys == '00' ? '通用' : '' }}
@@ -224,6 +229,15 @@ export default {
           (row.lslbs == 1 ?
             '免税' :
             row.sl * 100 + '%'))
+    },
+
+    timeFormat(row){
+    
+      if((row.cellValue??'') !==''){
+        return Number(row.cellValue).toFixed(2)
+      }else{
+        return row.cellValue
+      }
     }
   }
 };
