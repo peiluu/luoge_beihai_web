@@ -221,3 +221,8 @@
     flex-wrap: nowrap;
   }
 }
+.top-tool {
+  display: flex;
+  justify-content: flex-end;
+  margin: 8px 0;
+}
