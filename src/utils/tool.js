@@ -385,6 +385,21 @@ export const getCurrentYearList = (n) => {
   }
   return list;
 };
+/**
+ * @description 获取属期数组
+ */
+export const getssqArr = (ssq, tbzq) => {
+  // 按月
+  const formatSsq = moment(ssq).format('YYYY-MM');
+  if (tbzq == '月') {
+    return [formatSsq, formatSsq]
+  } else {
+    // 按季度，起始月份往前推2月
+    const ssqStart = moment(ssq).subtract(2, "months").format("YYYY-MM");
+    return [ssqStart, formatSsq]
+  // 按季度
+  }
+};
 export {
     getUUID,
     getFontFamily,
