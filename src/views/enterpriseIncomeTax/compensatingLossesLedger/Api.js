@@ -16,10 +16,10 @@ export const queryLedgerSdsMbks = data => postJSON(`${config.host}/ledgerSdsMbks
 /**
  * @description 企业所得税弥补亏损台账 保存
  */
-export const saveLedgerSdsMbks = data => postJSON(`${config.host}ledgerSdsMbks/save`, data);
+export const saveLedgerSdsMbks = data => postJSON(`${config.host}/ledgerSdsMbks/save`, data);
 
 /**
  * @description 企业所得税弥补亏损台账 保存
  */
-export const update = data => postJSON(`${config.host}ledgerSdsMbks/save`, data);
+export const update = data => postJSON(`${config.host}/ledgerSdsMbks/save`, data);
 
