@@ -1,15 +1,16 @@
 // 发票下载记录
 import { postJSON } from '@/utils/request';
+import { config } from '@/config';
 
 
 // 获取列表
 export const getList = data =>
-  postJSON(`/income/querySyncIncomeInvoiceDownload`, data);
+  postJSON(`${config.host}/income/querySyncIncomeInvoiceDownload`, data);
 
 /**
  * @description 根据用户获取有权限的所有主体（不分页）
  */
-export const getListByUser = data => postJSON(`/taxBody/getListByUser`, data);
+export const getListByUser = data => postJSON(`${config.host}/taxBody/getListByUser`, data);
 
 
 /**
@@ -17,4 +18,4 @@ export const getListByUser = data => postJSON(`/taxBody/getListByUser`, data);
  * @param url
  */
 export const batchInvoiceDownload = data =>
-  postJSON(`/income/batchInvoiceDownload`, data, null, true);
+  postJSON(`${config.host}/income/batchInvoiceDownload`, data, null, true);
