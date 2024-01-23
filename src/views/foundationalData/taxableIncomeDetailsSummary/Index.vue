@@ -7,7 +7,7 @@
         <div class="toolbar">
           <div class="toolbar-left" />
           <div class="toolbar-right">
-            <el-button @click="goToDetail">明细</el-button>
+            <!-- <el-button @click="goToDetail">明细</el-button> -->
             <el-button @click="fetchSummaryDetail" type="primary" :disabled="!queryParam.nsrsbh">取数</el-button>
             <el-button @click="handleExport">导出</el-button>
           </div>
@@ -23,13 +23,15 @@
       <template #srssq="{ data }"> {{ dateFormat('YYYY-MM', data.srssq) }} </template>
 
       <template #myscope="{ data }">
-        <el-popover placement="left" trigger="hover" popper-class="customPopper">
+
+        <el-button @click="update(data)" type="primary">调整</el-button>
+        <!-- <el-popover placement="left" trigger="hover" popper-class="customPopper">
           <template>
             <el-button @click="update(data)" type="primary">调整</el-button>
             <el-button @click="goToDetail(data)">明细</el-button>
           </template>
           <el-button slot="reference">操作</el-button>
-        </el-popover>
+        </el-popover> -->
       </template>
     </form-list>
 
