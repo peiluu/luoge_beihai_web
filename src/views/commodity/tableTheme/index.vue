@@ -227,7 +227,7 @@ export default {
     /* Del */
     handleDel(scope){
       if(scope.row.id){
-        this.handleDelSubmit()
+        this.handleDelSubmit([scope.row.id])
       }
     },
     /* 删除提交 */
@@ -237,7 +237,9 @@ export default {
         delTableRowSingle(data).then(res=>{
           console.log(res)
           if(res.code === '0'){
+            this.handleGetList();
             this.$message.success('删除成功！')
+            
           }
          
         }).finally(()=>{

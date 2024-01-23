@@ -57,12 +57,12 @@
         <!-- <el-form-item label="纳税主体" prop="nszt">
           <el-input v-model="editForm.nszt" placeholder="请输入" />
         </el-form-item> -->
-        <el-form-item label="纳税主体名称" prop="nszt">
+        <!-- <el-form-item label="纳税主体名称" prop="nszt">
           <el-select v-model="editForm.nszt" filterable placeholder="请选择">
             <el-option v-for="item in taxBodyList" :key="item.id" :label="`${item.nsrmc} ${item.nsrsbh}`" :value="item.nsrsbh">
             </el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="征税项目" prop="zsxm">
           <el-select v-model="editForm.zsxm" filterable placeholder="请选择">
             <el-option v-for="item in zsxmList" :key="item.value" :label="item.label" :value="item.value">

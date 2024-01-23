@@ -31,6 +31,6 @@ export const adjustAmountInfo = data => postJSON(`${config.host}/ledgerIncomeDet
   /**
  * @description 取数
  */
-export const fetchSummaryDetail = data => postJSON(`${config.host}ledgerIncomeDetail/fetchSummaryDetail`, data);
+export const fetchSummaryDetail = data => postJSON(`${config.host}/ledgerIncomeDetail/fetchSummaryDetail`, data);
 
 

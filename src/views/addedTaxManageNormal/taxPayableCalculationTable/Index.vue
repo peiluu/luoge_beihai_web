@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
+  <div class="main-content">
     <LedgerForm @search="handleSearch" :hideOrgid="true">
       <template #topTool v-if="queryParam.nsrlx != 2">
         <el-button @click="updateLedger" type="primary" :disabled="!canEdit">保存</el-button>
@@ -219,9 +219,6 @@ export default {
 
   },
   computed: {
-    contentHeight() {
-      return window.innerHeight - 132;
-    },
     canEdit() {
       return this.judgeIsCurrentSq(this.queryParam.srssq, this.queryParam.tbzq || '月') && !this.querySbStatus
     }

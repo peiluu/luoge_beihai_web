@@ -170,3 +170,59 @@
     }
   }
 }
+.custom-query-form {
+  padding-top: 12px;
+  display: flex;
+  justify-content: space-between;
+
+  .el-form {
+    flex: 1;
+  }
+
+  .search-btns {
+    margin-bottom: 4px;
+  }
+
+  /deep/ .el-form-item {
+    width: calc(33.3% - 10px);
+    margin-bottom: 4px !important;
+
+    .el-form-item__label {
+      width: 120px;
+      font-size: 12px;
+      color: $mainTextColor;
+    }
+
+    .el-form-item__content {
+      width: calc(100% - 120px);
+
+      .el-select,
+      .el-date-editor,
+      .el-cascader,
+      .el-input {
+        width: 100% !important;
+      }
+    }
+  }
+
+  .more {
+    transform: rotate(90deg);
+  }
+
+  .more-down {
+    transform: rotate(-90deg);
+    transition-duration: 300ms;
+  }
+
+  ::v-deep .el-select__tags {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex-wrap: nowrap;
+  }
+}
+.top-tool {
+  display: flex;
+  justify-content: flex-end;
+  margin: 8px 0;
+}

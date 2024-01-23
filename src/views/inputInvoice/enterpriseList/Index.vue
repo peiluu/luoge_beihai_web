@@ -52,7 +52,7 @@ export default {
             businessType: this.businessType
           }
         })
-        this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+        // this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
         return;
       }
       // 税控业务 3 - 勾选统计 4 - 勾选抵扣

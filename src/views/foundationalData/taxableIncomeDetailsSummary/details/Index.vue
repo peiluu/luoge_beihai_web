@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
+  <div class="main-content" >
     <div>
       <vxe-button icon="el-icon-back" size="mini" @click="handleBack">返回</vxe-button>
     </div>
@@ -46,9 +46,9 @@
     </div>
 
     <div class="custom-table">
-      <el-table border :data="tableData" :height="height" :header-cell-style="{ fontWeight: 400, borderTop: '1px solid #adb4bc', background: '#f7f9fd', color: '#333333', padding: '7px 0' }">
+      <el-table border :data="tableData"  :header-cell-style="{ fontWeight: 400, borderTop: '1px solid #adb4bc', background: '#f7f9fd', color: '#333333', padding: '7px 0' }">
         <el-table-column label="序号" type="index" min-width="50" />
-        <el-table-column label="纳税主体名称" prop="name" min-width="250" />
+        <!-- <el-table-column label="纳税主体名称" prop="name" min-width="250" /> -->
         <el-table-column show-overflow-tooltip label="会计主体名称" prop="orgName" min-width="210" />
         <el-table-column label="税款所属期" prop="srssq" align="center" min-width="100">
           <template slot-scope="{row}">{{ dateFormat('YYYY-MM', row.srssq) }} </template>
@@ -223,18 +223,18 @@ export default {
     },
     handleBack() {
       this.$router.push({
-        path: "/foundationaldata/taxableIncomeDetails"
+        path: "/foundationalData/taxableIncomeDetailsSummary/Index"
       })
-      this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+      // this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
     },
   },
   computed: {
-    contentHeight() {
-      return window.innerHeight - 132;
-    },
-    height() {
-      return window.innerHeight - 320;
-    },
+    // contentHeight() {
+    //   return window.innerHeight - 132;
+    // },
+    // height() {
+    //   return window.innerHeight - 320;
+    // },
     ssqReturnType() {
       return this.$refs.ledgerForm.zzstbzq
     }
