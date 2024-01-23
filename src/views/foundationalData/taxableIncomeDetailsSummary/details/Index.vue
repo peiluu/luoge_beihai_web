@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
+  <div class="main-content" >
     <div>
       <vxe-button icon="el-icon-back" size="mini" @click="handleBack">返回</vxe-button>
     </div>
@@ -223,9 +223,9 @@ export default {
     },
     handleBack() {
       this.$router.push({
-        path: "/foundationaldata/taxableIncomeDetails"
+        path: "/foundationalData/taxableIncomeDetailsSummary/Index"
       })
-      this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+      // this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
     },
   },
   computed: {

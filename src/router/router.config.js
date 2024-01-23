@@ -38,32 +38,32 @@ export const mainChildrenRoutes = [
   {
     path: '/inputInvoice/enterpriseList/Index',
     name: 'inputInvoiceEnterpriseList',
-    meta: { name: '选择企业' },
+    meta: { title: '选择企业', tab: true  },
     component: () => import('@/views/inputInvoice/enterpriseList/Index'),
   },
   {
     path: '/inputInvoice/choseDate',
     name: 'inputInvoiceChoseDate',
-    meta: { name: '属期选择' },
+    meta: { title: '属期选择', tab: true  },
     component: () => import('@/views/inputInvoice/choseDate/Index'),
   },
   {
     path: '/inputInvoice/waitConfirm',
     name: 'inputWaitConfirm',
-    meta: { name: '待确认进项红字发票' },
+    meta: { title: '待确认进项红字发票', tab: true  },
     component: () => import('@/views/inputInvoice/waitConfirm/Index'),
   },
   {
     path: '/inputInvoice/invoiceDeductionCheck',
     name: 'invoiceDeductionCheck',
-    meta: { name: '发票勾选抵扣' },
+    meta: { name: '发票勾选抵扣', tab: true  },
     component: () =>
       import('@/views/inputInvoice/invoiceDeductionCheck/Index'),
   },
   {
     path: '/inputInvoice/invoiceNotDeductionCheck',
     name: 'invoiceNotDeductionCheck',
-    meta: { name: '发票勾选不抵扣' },
+    meta: { title: '发票勾选不抵扣', tab: true  },
     component: () =>
       import('@/views/inputInvoice/invoiceNotDeductionCheck/Index'),
   },
@@ -72,7 +72,7 @@ export const mainChildrenRoutes = [
   {
     path: '/invoiceDownload/list',
     name: 'downLoadList',
-    meta: { name: '发票下载列表' },
+    meta: { title: '发票下载列表', tab: true  },
     component: () =>
       import('@/views/inputInvoice/invoiceDownload/list/Index'),
   },
@@ -80,7 +80,7 @@ export const mainChildrenRoutes = [
   {
     path: '/invoiceDownload/download',
     name: 'invoiceDownloadDownload',
-    meta: { name: '下载发票' },
+    meta: { name: '下载发票', tab: true  },
     component: () =>
       import('@/views/inputInvoice/invoiceDownload/download/Index'),
   },
@@ -88,7 +88,7 @@ export const mainChildrenRoutes = [
   {
     path: '/invoiceDownload/historyDetail',
     name: 'historyDetail',
-    meta: { name: '历史下载明细' },
+    meta: { title: '历史下载明细', tab: true  },
     component: () =>
       import('@/views/inputInvoice/invoiceDownload/list/Index'),
   },
@@ -97,7 +97,7 @@ export const mainChildrenRoutes = [
   {
     path: '/deductionStatistics/list',
     name: 'deductionStatisticsList',
-    meta: { name: '勾选抵扣统计' },
+    meta: { title: '勾选抵扣统计', tab: true  },
     component: () =>
       import('@/views/inputInvoice/deductionStatistics/list/Index'),
   },
@@ -105,7 +105,7 @@ export const mainChildrenRoutes = [
   {
     path: '/deductionStatistics/applyStatistics',
     // name: 'applyStatistics',
-    meta: { name: '抵扣统计表' },
+    meta: { name: '抵扣统计表', tab: true  },
     component: () =>
       import(
         '@/views/inputInvoice/deductionStatistics/applyStatistics/Index'
@@ -115,7 +115,7 @@ export const mainChildrenRoutes = [
   {
     path: '/deductionStatistics/historyStatistics',
     name: 'historyStatistics',
-    meta: { name: '历史抵扣统计与明细' },
+    meta: { title: '历史抵扣统计与明细', tab: true  },
     component: () =>
       import(
         '@/views/inputInvoice/deductionStatistics/historyStatistics/Index'
@@ -125,7 +125,7 @@ export const mainChildrenRoutes = [
   {
     path: '/deductionStatistics/statisticsTable',
     name: 'statisticsTable',
-    meta: { name: '抵扣统计表' },
+    meta: { title: '抵扣统计表', tab: true  },
     component: () =>
       import(
         '@/views/inputInvoice/deductionStatistics/applyStatistics/Index'
@@ -135,7 +135,7 @@ export const mainChildrenRoutes = [
   {
     path: '/deductionStatistics/statisticsDetails',
     name: 'statisticsDetails',
-    meta: { name: '抵扣统计明细' },
+    meta: { title: '抵扣统计明细', tab: true  },
     component: () =>
       import(
         '@/views/inputInvoice/deductionStatistics/statisticsDetails/Index'
@@ -146,8 +146,78 @@ export const mainChildrenRoutes = [
   {
     path: '/inputInvoice/approveInvoice',
     name: 'approveInvoice',
-    meta: { name: '发票查验' },
+    meta: { title: '发票查验', tab: true  },
     component: () => import('@/views/inputInvoice/approveInvoice/Index'),
+  },
+  {
+    path: '/foundationaldata/taxableIncomeDetailsSummary/details',
+    name: 'TaxableIncomeDetailsSummary',
+    meta: { title: '应税收入数据池', tab: true  },
+    component: () =>
+      import(
+        '@/views/foundationalData/taxableIncomeDetailsSummary/details/Index'
+      ),
+  },
+  {
+    path: '/foundationaldata/deemedSalesRevenueDetails',
+    name: 'DeemedSalesRevenueDetails',
+    meta: { title: '视同销售收入明细', tab: true  },
+    component: () =>
+      import('@/views/foundationalData/deemedSalesRevenueDetails/Index'),
+  },
+  {
+    path: '/foundationaldata/retiredSoldierCollectionDetails',
+    name: 'RetiredSoldierCollectionDetails',
+    meta: { name: '退役士兵采集明细', tab: true  },
+    component: () =>
+      import(
+        '@/views/foundationalData/retiredSoldierCollectionDetails/Index'
+      ),
+  },
+  {
+    path: '/retiredSoldierCollectionDetails/retiredSoldierImport',
+    name: 'RetiredSoldierImport',
+    meta: { title: '退役士兵导入', tab: true  },
+    component: () =>
+      import(
+        '@/views/foundationalData/retiredSoldierCollectionDetails/RetiredSoldierImport'
+      ),
+  },
+  {
+    path: '/foundationaldata/previousOffsetDetail',
+    name: 'RetiredSoldierpPreviousOffsetDetail',
+    meta: { title: '退役士兵抵减明细', tab: true  },
+    component: () =>
+      import(
+        '@/views/foundationalData/retiredSoldierCollectionDetails/previousOffsetDetail/Index'
+      ),
+  },
+  {
+    path: '/foundationaldata/keyPersonnelCollectionDetails',
+    name: 'KeyPersonnelCollectionDetails',
+    meta: { title: '重点人员采集', tab: true  },
+    component: () =>
+      import(
+        '@/views/foundationalData/keyPersonnelCollectionDetails/Index'
+      ),
+  },
+  {
+    path: '/keyPersonnelCollectionDetails/keyPersonnelImport',
+    name: 'KeyPersonnelImport',
+    meta: { title: '重点人员采集导入', tab: true  },
+    component: () =>
+      import(
+        '@/views/foundationalData/keyPersonnelCollectionDetails/KeyPersonnelImport'
+      ),
+  },
+  {
+    path: '/foundationaldata/keyPersonnelPreviousOffsetDetail',
+    name: 'KeyPersonnelPreviousOffsetDetail',
+    meta: { name: '重点人员抵减明细', tab: true  },
+    component: () =>
+      import(
+        '@/views/foundationalData/keyPersonnelCollectionDetails/previousOffsetDetail/Index'
+      ),
   },
 ];
 
