@@ -48,7 +48,7 @@
     <div class="custom-table">
       <el-table border :data="tableData" :height="height" :header-cell-style="{ fontWeight: 400, borderTop: '1px solid #adb4bc', background: '#f7f9fd', color: '#333333', padding: '7px 0' }">
         <el-table-column label="序号" type="index" min-width="50" />
-        <el-table-column label="纳税主体名称" prop="name" min-width="250" />
+        <!-- <el-table-column label="纳税主体名称" prop="name" min-width="250" /> -->
         <el-table-column show-overflow-tooltip label="会计主体名称" prop="orgName" min-width="210" />
         <el-table-column label="税款所属期" prop="srssq" align="center" min-width="100">
           <template slot-scope="{row}">{{ dateFormat('YYYY-MM', row.srssq) }} </template>
