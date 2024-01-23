@@ -46,7 +46,7 @@
     </div>
 
     <div class="custom-table">
-      <el-table border :data="tableData" :height="height" :header-cell-style="{ fontWeight: 400, borderTop: '1px solid #adb4bc', background: '#f7f9fd', color: '#333333', padding: '7px 0' }">
+      <el-table border :data="tableData"  :header-cell-style="{ fontWeight: 400, borderTop: '1px solid #adb4bc', background: '#f7f9fd', color: '#333333', padding: '7px 0' }">
         <el-table-column label="序号" type="index" min-width="50" />
         <!-- <el-table-column label="纳税主体名称" prop="name" min-width="250" /> -->
         <el-table-column show-overflow-tooltip label="会计主体名称" prop="orgName" min-width="210" />
@@ -229,12 +229,12 @@ export default {
     },
   },
   computed: {
-    contentHeight() {
-      return window.innerHeight - 132;
-    },
-    height() {
-      return window.innerHeight - 320;
-    },
+    // contentHeight() {
+    //   return window.innerHeight - 132;
+    // },
+    // height() {
+    //   return window.innerHeight - 320;
+    // },
     ssqReturnType() {
       return this.$refs.ledgerForm.zzstbzq
     }
