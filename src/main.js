@@ -368,6 +368,40 @@ Vue.prototype.formatAllDate = (date, returnType) => {
   return returnType == '月' ? formatMonthValue : formatQuarterValue
 }
 
+// 配置输入框失去焦点时显示千分位
+Vue.directive("thousands", {
+  inserted: function (el, binding) {
+    // debugger
+    // 获取input节点
+    if (el.tagName.toLocaleUpperCase() !== "INPUT") {
+      el = el.getElementsByTagName("input")[0];
+    }
 
+    setTimeout(() => {
+      el.value = el.value ? parseFloat(el.value).toLocaleString("zh", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }) : ''
+    }, 0)
+    // 千分位格式化
+    // 聚焦转化为数字格式（去除千分位）
+    el.onfocus = e => {
+      const a = el.value ? el.value.replace(/,/g, "") : ''; // 去除千分号的','
+      el.value = a ? parseFloat(a).toFixed(2) : ''
+    };
+    // 失去焦点重新格式化
+    el.onblur = e => {
+      setTimeout(() => {
+        // 恢复原始值
+        // 格式化为千分位
+        el.value = el.value ? parseFloat(el.value).toLocaleString("zh", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        }) : '0.00'
+      }, 0);
+    };
+  },
+
+});
 
 
