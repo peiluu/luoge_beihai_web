@@ -129,7 +129,7 @@ export default {
     },
     param: {
       type: Object,
-      default: () => { },
+      default: () => ({}),
     },
     backpath: {
       type: String,
