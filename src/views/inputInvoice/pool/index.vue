@@ -131,8 +131,8 @@
             </el-table-column>
           </el-table>
         </article>
-        <article>
-          金额总额224,181.03元 / 税额总额10,928.27元 / 价税合计总额235,109.30元
+        <article class="footer_text_main">
+          金额总额<span class="footer_sum"> 224,181.03</span> 元 / 税额总额 <span class="footer_sum"> 10,928.27 </span> 元 / 价税合计总额 <span class="footer_sum"> 235,109.30 </span>元
         </article>
         <article>
           <el-pagination
@@ -252,5 +252,13 @@ export default {
 /*@import url(); 引入公共css类*/
 .ele_body {
   padding: 15px;
+}
+.footer_text_main{
+  padding: 8px;
+  font-size: 14px;
+}
+.footer_sum{
+  color:#17B3A3;
+  font-weight: bold;
 }
 </style>
