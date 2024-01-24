@@ -14,25 +14,25 @@ export const mainChildrenRoutes = [
   {
     path: '/custom/Detail',
     name: 'customDetail',
-    meta: { title: '客户信息', tab: true },
+    meta: { title: '客户信息', isTab: true },
     component: () => import('@/views/custom/Detail'),
   },
   {
     path: '/redInvoice/redInfoConfirm',
     name: 'redInfoConfirm',
-    meta: { title: '预填发票申请单', tab: true },
+    meta: { title: '预填发票申请单', isTab: true },
     component: () => import('@/views/outputInvoice/redInvoice/redInfoConfirm/Index.vue'),
   },
   {
     path: '/redInvoice/addApplyForm',
     name: 'addApplyForm',
-    meta: { title: '新增红色信息表', tab: true },
+    meta: { title: '新增红色信息表', isTab: true },
     component: () => import('@/views/outputInvoice/redInvoice/addApplyForm/Index.vue'),
   },
   {
     path: '/outputInvoice/redInvoice/infoTable/Index',
     name: 'infoTable',
-    meta: { title: '红票信息申请列表', tab: true },
+    meta: { title: '红票信息申请列表', isTab: true, },
     component: () => import('@/views/outputInvoice/redInvoice/infoTable/Index.vue'),
   },
 ];

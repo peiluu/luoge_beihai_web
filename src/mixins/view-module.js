@@ -116,16 +116,16 @@ export default {
     },
     // 关闭当前窗口
     closeCurrentTab (data) {
-      var tabName = this.$store.state.contentTabsActiveName
-      this.$store.state.contentTabs = this.$store.state.contentTabs.filter(item => item.name !== tabName)
-      if (this.$store.state.contentTabs.length <= 0) {
+      var tabName = this.$store.state.app.contentTabsActiveName
+      this.$store.state.app.contentTabs = this.$store.state.app.contentTabs.filter(item => item.name !== tabName)
+      if (this.$store.state.app.contentTabs.length <= 0) {
 
-        this.$store.commit('saveSidebarMenuActiveName', 'home');
-        this.$store.commit('saveContentTabsActiveName', 'home');
+        this.$store.commit('app/saveSidebarMenuActiveName', 'home');
+        this.$store.commit('app/saveContentTabsActiveName', 'home');
         return false
       }
-      if (tabName === this.$store.state.contentTabsActiveName) {
-        this.$router.push({ name: this.$store.state.contentTabs[this.$store.state.contentTabs.length - 1].name })
+      if (tabName === this.$store.state.app.contentTabsActiveName) {
+        this.$router.push({ name: this.$store.state.app.contentTabs[this.$store.state.app.contentTabs.length - 1].name })
       }
     },
     // 删除

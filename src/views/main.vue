@@ -1,12 +1,12 @@
 <template>
   <div v-loading.fullscreen.lock="loading" :element-loading-text="$t('loading')" :class="['aui-wrapper', { 'aui-sidebar--fold': $store.state.sidebarFold }]">
-    <template v-if="!loading">
+    <!-- <template v-if="!loading"> -->
       <main-navbar />
       <main-sidebar />
       <div class="aui-content__wrapper">
         <main-content v-if="!$store.state.contentIsNeedRefresh" />
       </div>
-    </template>
+    <!-- </template> -->
   </div>
 </template>
 
@@ -63,10 +63,11 @@ export default {
       if (!route.meta.isTab) {
         return false
       }
-      this.$store.state.contentTabs.forEach(e=>{
+      // console.log('---this.$store.state.app---',this.$store.state)
+      this.$store.state.app.contentTabs.forEach(e=>{
         e.isShow = false
       });
-      var tab = this.$store.state.contentTabs.filter(item => item.name === route.name)[0]
+      var tab = this.$store.state.app.contentTabs.filter(item => item.name === route.name)[0]
       if (!tab) {
         tab = {
           ...window.SITE_CONFIG['contentTabDefault'],
@@ -78,14 +79,14 @@ export default {
         }
         let tabs = []
         if(tab.name === 'home'){
-          tabs = [tab, ...this.$store.state.contentTabs]
+          tabs = [tab, ...this.$store.state.app.contentTabs]
         } else {
-          tabs = [...this.$store.state.contentTabs, tab]
+          tabs = [...this.$store.state.app.contentTabs, tab]
         }
-        this.$store.commit('saveContentTabs', tabs)
+        this.$store.commit('app/saveContentTabs', tabs)
       }
-      this.$store.commit('saveSidebarMenuActiveName', tab.menuId);
-      this.$store.commit('saveContentTabsActiveName', tab.name);
+      this.$store.commit('app/saveSidebarMenuActiveName', tab.menuId);
+      this.$store.commit('app/saveContentTabsActiveName', tab.name);
     },
     // 获取当前管理员信息
     getUserInfo () {

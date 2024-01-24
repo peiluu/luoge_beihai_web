@@ -640,38 +640,38 @@ img {
       .el-loading-mask {
         z-index: 830;
       }
-      > .el-tab-pane {
-        min-height: calc(#{$content--fill-height-tabs});
-        > .aui-card--fill > .el-card__body {
-          min-height: calc(#{$content--fill-height-tabs} - 2px);
-        }
-        > .aui-card--fill > .el-card__header + .el-card__body {
-          min-height: calc(#{$content--fill-height-tabs} - #{$content--card-header-height} - 2px);
-        }
-        &.is-iframe {
-          height: calc(#{$content--fill-height-tabs} + #{$content--padding * 2});
-          margin: -$content--padding;
-          min-height: auto;
-          > .aui-card--fill {
-            background-color: transparent;
-          }
-          > .aui-card--fill > .el-card__header {
-            background-color: #fff;
-          }
-          > .aui-card--fill > .el-card__body {
-            height: calc(#{$content--fill-height-tabs} - 2px);
-            margin: $content--padding;
-            min-height: auto;
-            border: $--border-base;
-            border-color: $--border-color-lighter;
-            border-radius: $--border-radius-base;
-            background-color: #fff;
-          }
-          > .aui-card--fill > .el-card__header + .el-card__body {
-            height: calc(#{$content--fill-height-tabs} - #{$content--card-header-height} - 2px);
-          }
-        }
-      }
+      // > .el-tab-pane {
+      //   min-height: calc(#{$content--fill-height-tabs});
+      //   > .aui-card--fill > .el-card__body {
+      //     min-height: calc(#{$content--fill-height-tabs} - 2px);
+      //   }
+      //   > .aui-card--fill > .el-card__header + .el-card__body {
+      //     min-height: calc(#{$content--fill-height-tabs} - #{$content--card-header-height} - 2px);
+      //   }
+      //   &.is-iframe {
+      //     height: calc(#{$content--fill-height-tabs} + #{$content--padding * 2});
+      //     margin: -$content--padding;
+      //     min-height: auto;
+      //     > .aui-card--fill {
+      //       background-color: transparent;
+      //     }
+      //     > .aui-card--fill > .el-card__header {
+      //       background-color: #fff;
+      //     }
+      //     > .aui-card--fill > .el-card__body {
+      //       height: calc(#{$content--fill-height-tabs} - 2px);
+      //       margin: $content--padding;
+      //       min-height: auto;
+      //       border: $--border-base;
+      //       border-color: $--border-color-lighter;
+      //       border-radius: $--border-radius-base;
+      //       background-color: #fff;
+      //     }
+      //     > .aui-card--fill > .el-card__header + .el-card__body {
+      //       height: calc(#{$content--fill-height-tabs} - #{$content--card-header-height} - 2px);
+      //     }
+      //   }
+      // }
     }
   }
   // quill富文本编辑器

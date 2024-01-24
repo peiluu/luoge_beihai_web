@@ -76,7 +76,7 @@ router.beforeEach((to, from, next) => {
   if (!token && to.name !== 'login') { // 未登录且不是在登录页，重定向到登录页
     return next({ name: 'login' });
   }
-  if (store.state.sidebarMenuList.length || fnCurrentRouteIsPageRoute(to, pageRoutes)) {
+  if (store.state.app.sidebarMenuList.length || fnCurrentRouteIsPageRoute(to, pageRoutes)) {
     if(to.path === '/'){
       return next({name: 'home'})
     }
@@ -95,7 +95,7 @@ router.beforeEach((to, from, next) => {
       Vue.prototype.$message.error(res.msg)
       return next({ name: 'login' })
     }
-    store.commit('saveSidebarMenuList', res.data || []);
+    store.commit('app/saveSidebarMenuList', res.data || []);
     fnAddDynamicMenuRoutes(res.data,[], router)
     if(from.path === '/login'){
       next()

@@ -16,21 +16,9 @@ export default new Vuex.Store({
     sidebarLayoutSkin: 'dark',
     // 侧边栏, 折叠状态
     sidebarFold: false,
-    // 侧边栏, 菜单
-    sidebarMenuList: [],
-    sidebarMenuActiveName: '',
     // 内容, 是否需要刷新
     contentIsNeedRefresh: false,
-    // 内容, 标签页(默认取后端返回的第一个导航，即首页)
-    contentTabs: [
-      // {
-      //   ...window.SITE_CONFIG['contentTabDefault'],
-      //   'name': 'home',
-      //   'title': 'home',
-      //   'isShow': 'true',
-      // }
-    ],
-    contentTabsActiveName: 'home'
+   
   },
   modules: {
     app,
@@ -43,18 +31,6 @@ export default new Vuex.Store({
       Object.keys(state).forEach((key) => {
         state[key] = cloneDeep(window.SITE_CONFIG['storeState'][key])
       })
-    },
-    saveSidebarMenuList(state, data) {
-      state.sidebarMenuList = data
-    },
-    saveSidebarMenuActiveName(state, data) {
-      state.sidebarMenuActiveName = data
-    },
-    saveContentTabsActiveName(state, data) {
-      state.contentTabsActiveName = data
-    },
-    saveContentTabs(state, data){
-      state.contentTabs = data
     },
     updateContentIsNeedRefresh (state, status) {
       state.contentIsNeedRefresh = status

@@ -76,7 +76,7 @@
 <script>
 import TableCounter from './TableCounter.vue';
 import FormSearch from "./FormSearch.vue";
-
+import cloneDeep from 'lodash/cloneDeep';
 export default {
   name: "FormList",
   components: {
@@ -230,6 +230,7 @@ export default {
       loading: false,//加载状态
       tableSize: "medium", //表格大小 default | medium / small / mini
       searchParam: {},
+      formParams: cloneDeep(this.param),
       pagination: {
         pageNo: 1,
         pageSize: this.pageSize,
@@ -356,17 +357,18 @@ export default {
     },
     // 搜索
     handleSearch(val, type) {
-            let param = this.param
+        let param = this.formParams
       // 不需要添加多余的参数
       if (this.resetAll || type == 'reset') {
-        this.handleGetData(val);
+        this.formParams = {...val, ...this.param};
+        this.handleGetData(this.formParams);
 
       } else if (param) {
         param.pageNo = 1;
         this.pagination.pageNo = 1;
         // 修复重置问题
-        // Object.assign(param, val);
-        // this.param = param;
+        Object.assign(param, val);
+        this.formParams = param;
         this.handleGetData({...param, ...val});
       }
     },
@@ -378,7 +380,7 @@ export default {
     // 刷新
     reload(args) {
       
-      this.handleGetData(this.param, args);
+      this.handleGetData(this.formParams, args);
     },
     async deleteApi(id, param = {}) {
       let res;
@@ -476,7 +478,7 @@ export default {
   activated() {
     if (this.firstLoading) {
       this.$nextTick(() => {
-        this.handleGetData(this.param);
+        this.handleGetData(this.formParams);
       });
     }
   }
