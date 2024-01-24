@@ -35,9 +35,6 @@ export default {
         },
         tabs_del(state, tabName) {
             state.contentTabs = state.contentTabs.filter(item => item.name !== tabName)
-            state.contentTabs.forEach(e=>{
-                e.isShow = false
-            });
             if (state.contentTabs.length <= 0) {
                 state.sidebarMenuActiveName = 'home'
                 state.contentTabsActiveName = 'home'

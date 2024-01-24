@@ -71,14 +71,6 @@ export default {
     },
     // tabs, 选中tab
     tabSelectedHandle (tab) {
-      this.$store.state.app.contentTabs.forEach(e=>{
-        if(e.name === tab.name){
-          e.isShow = true;
-          tab = e;
-        }else {
-          e.isShow = false
-        }
-      });
       this.$router.push({
         'name': tab.name,
         'params': { ...tab.params },
@@ -91,9 +83,6 @@ export default {
         return false
       }
       this.$store.state.app.contentTabs = this.$store.state.app.contentTabs.filter(item => item.name !== tabName)
-      this.$store.state.app.contentTabs.forEach(e=>{
-        e.isShow = false
-      });
       if (this.$store.state.app.contentTabs.length <= 0) {
         this.$store.commit('app/saveSidebarMenuActiveName', 'home');
         this.$store.commit('app/saveContentTabsActiveName', 'home');
