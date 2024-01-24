@@ -552,7 +552,7 @@ export default {
         return;
       }
       this.$router.push({
-        path: '/outputInvoice/blueInvoice/Index',
+        path: '/outputInvoice/blueInvoice/BlueInvoiceForm',
         query: {
           invoiceId: row.id,
           isFormInvoiced: 'Y'

@@ -11,12 +11,13 @@
       </el-dropdown>
       <el-tabs class="custom-tabs" v-model="$store.state.app.contentTabsActiveName" @tab-click="tabSelectedHandle" @tab-remove="tabRemoveHandle">
         <el-tab-pane
-                v-for="item in $store.state.app.contentTabs"
-                :key="item.name"
-                :name="item.name"
-                :label="item.title"
-                :closable="item.name !== 'home'"
-                :class="{ 'is-iframe': tabIsIframe(item.iframeURL) }">
+          v-for="item in $store.state.app.contentTabs"
+          :key="item.name"
+          :name="item.name"
+          :label="item.title"
+          :value="JSON.stringify(item)"
+          :closable="item.name !== 'home'"
+          :class="{ 'is-iframe': tabIsIframe(item.iframeURL) }">
           <template v-if="item.name === 'home'">
             <svg slot="label" class="icon-svg aui-content--tabs-icon-nav" aria-hidden="true"><use xlink:href="#icon-home"></use></svg>
           </template>
@@ -71,10 +72,22 @@ export default {
     },
     // tabs, 选中tab
     tabSelectedHandle (tab) {
+      // console.log('---tab111---', tab.$attrs.value)
+      let value = {
+        params: {},
+        query: {}
+      }
+      if(tab.$attrs.value){
+        try {
+          value = {...value, ...JSON.parse(tab.$attrs.value)};
+        } catch (error) {
+          console.log(error)
+        }
+      }
       this.$router.push({
         'name': tab.name,
-        'params': { ...tab.params },
-        'query': { ...tab.query }
+        'params': { ...value.params },
+        'query': { ...value.query }
       })
     },
     // tabs, 删除tab

@@ -35,6 +35,12 @@ export const mainChildrenRoutes = [
     meta: { title: '红票信息申请列表', isTab: true, },
     component: () => import('@/views/outputInvoice/redInvoice/infoTable/Index.vue'),
   },
+  {
+    path: '/outputInvoice/blueInvoice/BlueInvoiceForm',
+    name: 'blueInvoiceForm',
+    meta: { title: '蓝字发票填写', isTab: true, },
+    component: () => import('@/views/outputInvoice/blueInvoice/BlueInvoiceForm.vue'),
+  },
 ];
 
 // 页面路由(独立页面), 无公共左侧菜单导航，无公共头部。如：登录页

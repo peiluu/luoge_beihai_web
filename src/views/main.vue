@@ -64,9 +64,9 @@ export default {
         return false
       }
       // console.log('---this.$store.state.app---',this.$store.state)
-      this.$store.state.app.contentTabs.forEach(e=>{
-        e.isShow = false
-      });
+      // this.$store.state.app.contentTabs.forEach(e=>{
+      //   e.isShow = false
+      // });
       var tab = this.$store.state.app.contentTabs.filter(item => item.name === route.name)[0]
       if (!tab) {
         tab = {
@@ -78,7 +78,7 @@ export default {
           'isShow': true,
         }
         let tabs = []
-        if(tab.name === 'home'){
+        if(tab.name === 'home'){ // 首页在第一位，且不可删除
           tabs = [tab, ...this.$store.state.app.contentTabs]
         } else {
           tabs = [...this.$store.state.app.contentTabs, tab]
