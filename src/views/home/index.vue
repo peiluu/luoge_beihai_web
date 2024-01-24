@@ -571,7 +571,7 @@ export default {
     },
     // 初始化快捷入口弹窗菜单树
     initTree() {
-      let ml = cloneDeep(this.$store.state.sidebarMenuList);
+      let ml = cloneDeep(this.$store.state.app.sidebarMenuList);
       (function mapTree(tree) {
         tree.map((item) => {
           if (item.children && item.children.length > 0) {
