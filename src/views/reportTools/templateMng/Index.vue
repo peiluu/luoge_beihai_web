@@ -28,7 +28,7 @@
       </template>
     </form-list>
 
-    <el-dialog v-loading="dlgLoading" :title="title" :visible.sync="dlgVisible" width="1300px" top="3vh" :before-close="handleClose">
+    <el-dialog v-if="dlgVisible" v-loading="dlgLoading" :title="title" :visible.sync="dlgVisible" width="1300px" top="3vh" :before-close="handleClose">
       <el-container>
         <el-main>
           <el-form ref="dlgForm" :model="dlgForm" :rules="dlgRules" :inline="true" size="small">
