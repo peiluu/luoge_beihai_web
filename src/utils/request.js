@@ -240,7 +240,8 @@ export function download(url, params, extendParamNames = null, showLoading = fal
       headers: {"Content-Type":"application/json","Data-Type":"json"},
       responseType: 'blob'
     }).then((res)=>{
-      const blob = new Blob([res.data])
+      const blob = new Blob([res],{ type: 'application/vnd.ms-excel' })
+     
       if ('download' in document.createElement('a')) {
         // 非IE下载
         const elink = document.createElement('a')
