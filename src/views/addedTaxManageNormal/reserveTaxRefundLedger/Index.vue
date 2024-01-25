@@ -1,7 +1,7 @@
 <template>
   <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
     <form-list :columns="columns" :searchKey="propskey" :key="propskey" :searchRow="searchList" :api="api" :param="param" :height="height" v-loading="loading" @getSearchParam="getSearchParam" :firstLoading="false"
-      :rebulidForm="true" :resetAll="true" ref="list">
+       ref="list">
       <!-- 中间部分 -->
       <template #topTool>
         <div class="toolbar">
@@ -186,6 +186,7 @@ export default {
       this.$refs.list && this.$refs.list.handleGetData(this.queryParam)
     },
     getSearchParam(param) {
+      debugger;
       this.queryParam = param;
       // this.queryStatus()
     },
