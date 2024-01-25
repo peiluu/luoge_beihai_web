@@ -32,6 +32,7 @@ export default {
       var route = window.SITE_CONFIG['dynamicMenuRoutes'].filter(item => item.meta.menuId === menuId)[0]
       if (route) {
         this.$router.push({ name: route.name })
+        this.$eventBus.$emit('removeCachePage', route.path)
       }
     },
     getExceedName (menu) {
