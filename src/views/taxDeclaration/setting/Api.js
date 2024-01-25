@@ -71,7 +71,7 @@ export const getReportSetting = data => getJSON(`${config.host}/reportSettings/g
 /**
  * @desption 【组织管理】获取所有总公司
  */
-export const getZgsList = (data) => postJSON(`${config.host}taxBody/getZgsList`, data);
+export const getZgsList = (data) => postJSON(`${config.host}/taxBody/getZgsList`, data);
 
 /**
  * @description 获取合并报表编码
