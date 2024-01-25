@@ -324,7 +324,8 @@ export default {
           }
           // 在切换页面时不清空选中的数据
           if (!keepSelections) {
-            this.$refs.table.clearSelection();
+            // console.log('--this.$refs.table--', this.$refs.table)
+            this.$refs.table && this.$refs.table.clearSelection();
           }
           if (vm.buildFunction) {
             data = vm.buildFunction(res.data);
