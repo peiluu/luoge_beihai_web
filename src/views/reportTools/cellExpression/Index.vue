@@ -168,7 +168,7 @@ export default {
       let that = this;
       that.templateApi.getTemplateDetailJson(templateId).then((res) => {
         if (res.data) {
-          that.loadExcelJson('luckysheet4', res.data);
+          that.loadExcelJson('luckysheet4', res.data.template);
         } else {
           if (templateId) {
             that.templateApi.loadTemplate(templateId).then((blob) => {

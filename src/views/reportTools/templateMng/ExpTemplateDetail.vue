@@ -45,7 +45,7 @@
             window.luckysheet.create({
               ...luckySetting,
               container: 'luckysheet5',
-              data: res.data,
+              data: res.data.template,
             });
           }else {
             if(templateId){
