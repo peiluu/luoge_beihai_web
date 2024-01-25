@@ -1,6 +1,6 @@
 <template>
   <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
-    <form-list :columns="columns" :key="propsKey" :searchKey="propsKey" :searchRow="searchList" :api="api" :param="param" :height="height" v-loading="loading" @getSearchParam="getSearchParam" @getNextList="getOrgList"
+    <form-list :columns="columns" :searchKey="propsKey" :searchRow="searchList" :api="api" :param="param" :height="height" v-loading="loading" @getSearchParam="getSearchParam" @getNextList="getOrgList"
       :firstLoading="false" ref="list">
       <!-- 中间部分 -->
       <template #topTool>
