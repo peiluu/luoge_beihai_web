@@ -7,6 +7,6 @@ export const config = {
     useAnimate: true,
     /*是否显示水印*/
     showWater: true,
-    host: process.env.VUE_APP_BUSINESSURL, // 业务逻辑api地址（根据环境变量配置），如需本地调试请在根目录.env.development中修改VUE_APP_BUSINESSURL值
-    // host: 'http://192.168.1.26:8003/mtclq-mtclqback',
+    //host: process.env.VUE_APP_BUSINESSURL, // 业务逻辑api地址（根据环境变量配置），如需本地调试请在根目录.env.development中修改VUE_APP_BUSINESSURL值
+    host: 'http://192.168.1.26:8003/mtclq-mtclqback',
 }
