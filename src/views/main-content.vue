@@ -29,7 +29,7 @@
             <router-view v-if="item.name==$store.state.app.contentTabsActiveName"/>
           </template> -->
           <!-- <template v-else> -->
-            <keep-alive ><router-view ref="routerView" :key="$route.path"/></keep-alive>
+            <keep-alive :exclude="$store.state.app.dynamicsCacheExcludePage"><router-view ref="routerView" :key="$route.path"/></keep-alive>
           <!-- </template> -->
       <!-- </template> -->
     <!-- 其他方式, 展示内容 -->

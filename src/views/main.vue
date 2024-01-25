@@ -63,6 +63,13 @@ export default {
       if (!route.meta.isTab) {
         return false
       }
+      if(/^\/reportTools\/cellExpression/.test(route.path)){
+        this.$store.commit("app/saveExcludePage", ['FillDeclaration']);
+      } else if (/^\/taxDeclaration\/fillDeclaration/.test(route.path)) {
+        this.$store.commit("app/saveExcludePage", ['CellExpression']);
+      } else {
+        this.$store.commit("app/saveExcludePage", []);
+      }
       // console.log('---this.$store.state.app---',this.$store.state)
       // this.$store.state.app.contentTabs.forEach(e=>{
       //   e.isShow = false
