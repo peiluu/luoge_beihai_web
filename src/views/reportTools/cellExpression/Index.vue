@@ -333,12 +333,14 @@ export default {
 <style lang="scss" scoped>
 @import '../../../assets/scss/variables.scss';
 .CellExpression {
+  position: relative;
   height: $content--fill-height-tabs;
   .cell-select {
     padding: 12px 15px;
     background-color: #fff;
   }
   #luckysheet4 {
+    position: relative;
     height: calc(100% - 56px);
   }
 }

@@ -150,11 +150,4 @@ export default {
   .main {
     background-color: #F0F2F5;
   }
- 
-  .custom-tabs {
-    /deep/ &.el-tabs{
-      height: 100%;
-    }
-    
-  }
 </style>

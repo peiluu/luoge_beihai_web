@@ -1,20 +1,17 @@
 <template>
-  <div>
-    <div style="position: fixed;top:0;left:300px;">
-      <div style="margin: 8px;font-size: 14px;">
-        <el-button v-show="searchParam.status==0||searchParam.status==1" :disabled="loading" type="primary" @click="calcDeclaration">计算</el-button>
-        <el-button v-show="searchParam.status==0||searchParam.status==1" :disabled="loading" type="primary" @click="saveDeclaration">保存</el-button>
-        <el-button v-show="searchParam.status==1" :disabled="loading" type="primary" @click="submitDeclaration">提交</el-button>
-        <el-button v-show="searchParam.status==2" :disabled="loading" type="primary" @click="undoDeclaration">撤销</el-button>
-        <el-button :disabled="loading" type="primary" @click="downloadExcel">下载</el-button>
-      </div>
+  <div class="FillDeclaration">
+    <div class="header-opt">
+      <el-button v-show="searchParam.status==0||searchParam.status==1" :disabled="loading" type="primary" @click="calcDeclaration">计算</el-button>
+      <el-button v-show="searchParam.status==0||searchParam.status==1" :disabled="loading" type="primary" @click="saveDeclaration">保存</el-button>
+      <el-button v-show="searchParam.status==1" :disabled="loading" type="primary" @click="submitDeclaration">提交</el-button>
+      <el-button v-show="searchParam.status==2" :disabled="loading" type="primary" @click="undoDeclaration">撤销</el-button>
+      <el-button :disabled="loading" type="primary" @click="downloadExcel">下载</el-button>
     </div>
     <div
       id="luckysheet3" v-loading="loading"
       :element-loading-text="loadingText"
       element-loading-spinner="el-icon-loading"
-      :style="'margin:0px;padding:0px;position:absolute;width:100%;left: ' + (this.$store.getters.collapsed ? 64 : 230) + 'px;top: 92px;bottom:0px;'"
-    ></div>
+      ></div>
   </div>
 </template>
 
@@ -476,5 +473,18 @@
   }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.FillDeclaration {
+  position: relative;
+  height: calc(100vh - 50px - 38px);
+  .header-opt {
+    padding: 8px;
+    font-size: 14px;
+    background-color: #fff;
+  }
+  #luckysheet3 {
+    position: relative;
+    height: calc(100% - 44px);
+  }
+}
 </style>
