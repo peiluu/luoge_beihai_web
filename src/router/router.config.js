@@ -228,8 +228,102 @@ export const mainChildrenRoutes = [
   {
     path: '/taxDeclaration/fillDeclaration',
     name: 'fillDeclaration',
-    meta: { title: '填写纳税申报表（新）', isTab: true, isIframe: true},
+    meta: { title: '填写纳税申报表（新）', isTab: true,},
     component: () => import('@/views/taxDeclaration/FillDeclaration'),
+  },
+  {
+    path: '/enterpriseIncomeTax/smallLowProfitEnterpriseLedger',
+    name: 'SmallLowProfitEnterpriseLedger',
+    meta: { title: '小型微利企业条件台账', isTab: true, },
+    component: () =>
+      import(
+        '@/views/enterpriseIncomeTax/smallLowProfitEnterpriseLedger/Index'
+      ),
+  },
+  {
+    path: '/enterpriseIncomeTax/attachedItemsLedger',
+    name: 'AttachedItemsLedger',
+    meta: { title: '附报事项台账', isTab: true, },
+    component: () =>
+      import('@/views/enterpriseIncomeTax/attachedItemsLedger/Index'),
+  },
+
+  {
+    path: '/enterpriseIncomeTax/specificTaxableIncomeLedger',
+    name: 'SpecificTaxableIncomeLedger',
+    meta: { title: '特定业务应纳税所得额台帐', isTab: true, },
+    component: () =>
+      import(
+        '@/views/enterpriseIncomeTax/specificTaxableIncomeLedger/Index'
+      ),
+  },
+  {
+    path: '/enterpriseIncomeTax/assetAcceleratedDepreciationLedger',
+    name: 'AssetAcceleratedDepreciationLedger',
+    meta: { title: '资产加速折旧、摊销台账', isTab: true, },
+    component: () =>
+      import(
+        '@/views/enterpriseIncomeTax/assetAcceleratedDepreciationLedger/Index'
+      ),
+  },
+  {
+    path: '/enterpriseIncomeTax/developExpensePlusDeductionLedger',
+    name: 'DevelopExpensePlusDeductionLedger',
+    meta: { title: '研发费用加计扣除台帐', isTab: true, },
+    component: () =>
+      import(
+        '@/views/enterpriseIncomeTax/developExpensePlusDeductionLedger/Index'
+      ),
+  },
+  {
+    path: '/enterpriseIncomeTax/compensatingLossesLedger',
+    name: 'CompensatingLossesLedger',
+    meta: { name: '弥补以前年度亏损台帐', isTab: true, },
+    component: () =>
+      import('@/views/enterpriseIncomeTax/compensatingLossesLedger/Index'),
+  },
+  {
+    path: '/enterpriseIncomeTax/branchPrepaymentAllocationLedger',
+    name: 'BranchPrepaymentAllocationLedger',
+    meta: { title: '企业所得税分支机构预缴分摊台账', isTab: true, },
+    component: () =>
+      import(
+        '@/views/enterpriseIncomeTax/branchPrepaymentAllocationLedger/Index'
+      ),
+  },
+  {
+    path: '/enterpriseIncomeTax/otherLedger',
+    name: 'OtherLedger',
+    meta: { title: '其他台账', isTab: true, },
+    component: () =>
+      import('@/views/enterpriseIncomeTax/otherLedger/Index'),
+  },
+  {
+    path: '/enterpriseIncomeTax/proportionalAllocationCalculationTable',
+    name: 'ProportionalAllocationCalculationTable',
+    meta: { title: '分支机构比例分摊计算表', isTab: true, },
+    component: () =>
+      import(
+        '@/views/enterpriseIncomeTax/proportionalAllocationCalculationTable/Index'
+      ),
+  },
+  {
+    path: '/enterpriseIncomeTax/incomeTaxReductionCalculationTable',
+    name: 'IncomeTaxReductionCalculationTable',
+    meta: { title: '减免所得税计算表', isTab: true, },
+    component: () =>
+      import(
+        '@/views/enterpriseIncomeTax/incomeTaxReductionCalculationTable/Index'
+      ),
+  },
+  {
+    path: '/enterpriseIncomeTax/incomeTaxPrepaymentCalculationTable',
+    name: 'IncomeTaxPrepaymentCalculationTable',
+    meta: { title: '所得税预缴计算表', isTab: true, },
+    component: () =>
+      import(
+        '@/views/enterpriseIncomeTax/incomeTaxPrepaymentCalculationTable/Index'
+      ),
   },
 ];
 
