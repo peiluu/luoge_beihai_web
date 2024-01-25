@@ -482,6 +482,9 @@ export default {
         this.handleGetData(this.formParams);
       });
     }
+  },
+  updated(){
+    this.$refs['table'].doLayout()
   }
 };
 </script>
