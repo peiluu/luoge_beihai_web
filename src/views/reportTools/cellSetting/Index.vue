@@ -231,7 +231,7 @@
       loadExcelJson(id, excelJson){
         let that = this;
         window.luckysheet.destroy();
-        this.$store.commit("app/saveExcludePage", ['FillDeclaration','CellExpression']);
+        // this.$store.commit("app/saveExcludePage", ['FillDeclaration','CellExpression']);
         window.luckysheet.create({
           ...luckySetting,
           container: id,

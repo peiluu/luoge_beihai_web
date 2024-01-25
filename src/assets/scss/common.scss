@@ -461,7 +461,7 @@ img {
   top: $navbar--height;
   left: 0;
   bottom: 0;
-  z-index: 1020;
+  z-index: 1000;
   width: $sidebar--width;
   background-color: #fff;
   box-shadow: 1px 0 2px 0 rgba(0, 0, 0, .05);
@@ -710,4 +710,7 @@ img {
       min-height: calc(100vh - #{$content--padding * 2} - #{$content--card-header-height} - 2px);
     }
   }
+}
+.vxe-modal--wrapper {
+  z-index: 9999 !important;
 }

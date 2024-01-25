@@ -228,7 +228,7 @@ export const mainChildrenRoutes = [
   {
     path: '/taxDeclaration/fillDeclaration',
     name: 'fillDeclaration',
-    meta: { title: '填写纳税申报表（新）', isTab: true, },
+    meta: { title: '填写纳税申报表（新）', isTab: true, isIframe: true},
     component: () => import('@/views/taxDeclaration/FillDeclaration'),
   },
 ];

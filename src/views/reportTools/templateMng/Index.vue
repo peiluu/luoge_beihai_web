@@ -303,6 +303,10 @@
 </script>
 
 <style lang="scss" scoped>
+/deep/ .el-table__body-wrapper, 
+/deep/ .el-table__fixed-body-wrapper {
+  min-height: initial;
+}
   /deep/ .el-form-item__label{
     width: 100px;
   }

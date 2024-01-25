@@ -72,10 +72,11 @@ export default {
         tab = {
           ...window.SITE_CONFIG['contentTabDefault'],
           ...route.meta,
-          'name': route.name,
-          'params': { ...route.params },
-          'query': { ...route.query },
-          'isShow': true,
+          name: route.name,
+          params: { ...route.params },
+          query: { ...route.query },
+          isShow: true,
+          path: route.path
         }
         let tabs = []
         if(tab.name === 'home'){ // 首页在第一位，且不可删除

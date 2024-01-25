@@ -49,7 +49,6 @@
         <el-table
           ref="expTable"
           :data="tableData"
-          height="500"
           style="width: 100%">
           <el-table-column prop="gsm" label="公式码" min-width="80"></el-table-column>
           <el-table-column prop="dsTypeView" label="数据源类型" min-width="80"></el-table-column>
