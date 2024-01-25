@@ -29,7 +29,7 @@
             <router-view v-if="item.name==$store.state.app.contentTabsActiveName"/>
           </template> -->
           <!-- <template v-else> -->
-            <keep-alive ><router-view /></keep-alive>
+            <keep-alive ><router-view ref="routerView" :key="$route.path"/></keep-alive>
           <!-- </template> -->
       <!-- </template> -->
     <!-- 其他方式, 展示内容 -->
@@ -51,8 +51,41 @@ export default {
       editRoutes: ['employeeEdit','obligoreAdd','salaryItemDetail'],
       importRoutes: ['obligorImport','employeeImport','incomeImport']
     }
+  },  
+  mounted(){
+    this.$nextTick(()=>{
+      this.setRemoveCachePage()
+    })
   },
   methods: {
+    setRemoveCachePage(){
+      this.$eventBus.$on('removeCachePage', key => {
+        try {
+          // console.log('----key----', key)
+          /**
+           * @param {Object} cache:类数组对象，存放缓冲的路由组件，键值对形，key为路由路径，value为路由组件Vnode
+           * @param {Array} keys:数组，存放缓冲的路由组件的key,即路由路径
+           * @param {String} key:字符串，路由组件的key，指定要删除的路由组件key值
+           */
+          if(this.$refs.routerView){
+            const { cache, keys } = this.$refs.routerView.$vnode.parent.componentInstance
+            // console.log('--setRemoveCachePage--', cache, keys)
+            if(keys.length){
+              Object.prototype.hasOwnProperty.call(cache, key) &&
+              (() => {
+                // 点击tab关闭页面，移除对应页面缓冲
+                delete cache[key]
+                keys.splice(keys.indexOf(key), 1)
+                console.log('%c 删除缓冲页面成功！', 'color:red')
+              })()
+            }
+          }
+          
+        } catch (error) {
+          console.log('--error--', error);
+        }
+      }) 
+    },
     // tabs, 是否通过iframe展示
     tabIsIframe (url) {
       return isURL(url)

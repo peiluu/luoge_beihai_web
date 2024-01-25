@@ -47,7 +47,7 @@
         let that = this;
         that.templateApi.getTemplateDetailJson(templateId).then(res=>{
           if(res.data){
-            that.loadExcelJson('luckysheet2', res.data)
+            that.loadExcelJson('luckysheet2', res.data.template)
           }else {
             that.templateApi.loadTemplate(templateId).then(blob =>{
               let excelFile = new File([blob], '申报表模板.xlsx');
