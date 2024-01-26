@@ -439,4 +439,10 @@ export default {
     color: green;
   }
 }
+
+</style>
+<style>
+.el-popover{
+  min-width: 85px !important;
+}
 </style>
