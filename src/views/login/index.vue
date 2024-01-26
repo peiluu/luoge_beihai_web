@@ -61,15 +61,13 @@
 import Cookies from 'js-cookie';
 import debounce from 'lodash/debounce';
 import { getUUID, fnAddDynamicMenuRoutes } from '@/utils';
-import { isURL } from '@/utils/validate';
-import { mainChildrenRoutes } from '@/router';
 export default {
   data() {
     return {
       captchaPath: '',
       dataForm: {
-        username: 'admin', // admin
-        password: 'admin', // admin
+        username: '', // admin
+        password: '', // admin
         uuid: '',
         captcha: '',
       },
