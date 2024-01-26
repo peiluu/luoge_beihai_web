@@ -680,6 +680,7 @@ export default {
           level: 'input',
           isFormTodoList: 'Y',
           operateType: 'waitConfirm',
+          origin:'home'
         },
       });
     },

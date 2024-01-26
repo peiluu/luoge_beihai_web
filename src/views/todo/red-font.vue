@@ -4,9 +4,9 @@
       <el-tab-pane label="待确认红字信息确认单" name="1"></el-tab-pane>
       <el-tab-pane label="已确认红字信息确认单" name="2"></el-tab-pane>
     </el-tabs>
-    <form-list :key="level" :columns="dynamicsColumns" :searchRow="searchList" :api="api" :param="param" :otherParam="otherParam" :height="height"
+    <form-list :key="level" :columns="columns" :searchRow="searchList" :api="api" :param="param" :otherParam="otherParam" :height="height"
       :showSearch="true" ref="list">
-      <template #gxfsf="row"> {{ row.data.gxfsf == 0 ? "销售方" : "购买方" }}{{ param.gxfsf }}</template>
+      <template #gxfsf="row"> {{ row.data.gxfsf == 0 ? "销售方" : "购买方" }}</template>
 
       <template #ykjhzfpbz="row">{{ row.data.ykjhzfpbz === 'Y' ? '已开具' : '未开具' }}</template>
       <template #shzt="row">
@@ -32,7 +32,7 @@
       </template>
       <!-- 中间部分 -->
       <template #topTool>
-        <div class="toolbar">
+        <div class="toolbar" :style="`visibility: ${otherParam.type === '1' ? 'visible': 'hidden'}`">
           <div class="toolbar-left" />
           <div class="toolbar-right">
             <el-button @click="confirm('Y')">通过</el-button>
@@ -83,8 +83,6 @@ export default {
         { title: "税额", dataIndex: "hzcxse", slot: 'hzcxse', align: 'right', width: 100 },
         { title: "冲红原因", dataIndex: "chyyDm", slot: "chyyDm", width: 100, },
         { title: "确认单状态", width: 170, dataIndex: "hzqrxxztDm", slot: "hzqrxxztDm", formatter: "statusFormatter" },
-      ],
-      columnsOpts: [
         {
           title: "操作",
           key: "action",
@@ -113,13 +111,6 @@ export default {
 
   // 同一页面切换会触发更新
   computed: {
-    dynamicsColumns() {
-      let newCol = [...this.columns];
-      if (this.otherParam.type !== '1') {
-        newCol = newCol.concat(this.columnsOpts)
-      }
-      return newCol
-    },
     height() {
       return window.innerHeight - 280;
 
@@ -177,7 +168,7 @@ export default {
           id: row.id,
           level: this.level,
           isFormTodoList: 'Y',
-          operateType: 'waitConfirm'
+          operateType: row.hzqrxxztDm === '03' ? 'waitConfirm' : 'confirmdetail'
         }
       });
       this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
