@@ -95,8 +95,8 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleClose">关 闭</el-button>
 
-        <el-button v-if="isUpdateInvoiceOrgId" type="success" @click="updateInvoiceOrgId">确 认</el-button>
-        <el-button v-else type="success" @click="sendPdf">确 认</el-button>
+        <el-button v-if="isUpdateInvoiceOrgId" type="success" :loading="saveLoading" @click="updateInvoiceOrgId">确 认</el-button>
+        <el-button v-else type="success"  :loading="saveLoading" @click="sendPdf">确 认</el-button>
       </span>
     </el-dialog>
   </div>
@@ -113,7 +113,7 @@ export default {
   data() {
     return {
       form: {},
-
+      saveLoading: false,
       param: {},
       scope: '2',
       loading: false,
@@ -435,13 +435,16 @@ export default {
       this.$refs["ruleForm"].validate(async valid => {
         if (!valid) return;
         const ids = this.selections.map((item) => item.id)
+        this.saveLoading = true
         const { code = '' } = await updateInvoiceOrgId({ ids, ...this.form })
         if (code === '0') {
           this.$refs.list.reload();
           this.handleClose()
           this.$message.success('操作成功');
         }
+        this.saveLoading = false
       })
+      
     },
 
     // 检查蓝票是否可以红冲
@@ -500,11 +503,13 @@ export default {
       this.$refs["ruleForm"].validate(async valid => {
         if (!valid) return;
         const ids = this.singleCurrentData ? [this.singleCurrentData.id] : this.selections.map((item) => item.id);
+        this.saveLoading = true
         const { code = '' } = await sendPdf({ email: this.form.email, ids })
         if (code === '0') {
           this.handleClose()
           this.$message.success('发送成功');
         }
+        this.saveLoading = false
       })
     },
 
@@ -547,7 +552,7 @@ export default {
         return;
       }
       this.$router.push({
-        path: '/outputInvoice/blueInvoice/Index',
+        path: '/outputInvoice/blueInvoice/BlueInvoiceForm',
         query: {
           invoiceId: row.id,
           isFormInvoiced: 'Y'

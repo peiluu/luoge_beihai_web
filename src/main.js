@@ -74,7 +74,10 @@ String.format = function() { //字符串中赋值变量
 new Vue({
   i18n,
   router,
-  store,
+  store, 
+  beforeCreate(){
+    Vue.prototype.$eventBus = this;
+  },
   render: h => h(App)
 }).$mount('#app')
 

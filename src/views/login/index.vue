@@ -142,7 +142,7 @@ export default {
             this.getCaptcha();
             return;
           }
-          this.$store.commit('saveSidebarMenuList', res.data || []);
+          this.$store.commit('app/saveSidebarMenuList', res.data || []);
           // 添加动态路由
           fnAddDynamicMenuRoutes(res.data, [], this.$router);
           this.$router.replace({ name: 'home' });

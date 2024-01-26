@@ -6,12 +6,16 @@ export default {
         collapsed: false,
         currentAppCode: null,
         useTab: config.useTab,
-        tabs: [],
-        activeTab: null,
         useAnimate: config.useAnimate,
         useWater: config.showWater,
         host: config.host,
-        dictList: [] // 字典数据
+        dictList: [], // 字典数据
+         // 侧边栏, 菜单
+        sidebarMenuList: [],
+        sidebarMenuActiveName: '',
+        // 内容, 标签页
+        contentTabs: [],
+        contentTabsActiveName: 'home'
     },
     mutations: {
         saveCollapsed(state, collapsed) {
@@ -29,50 +33,28 @@ export default {
         saveUseWater(state, useWater) {
             state.useWater = useWater
         },
-        saveActiveTab(state, tab) {
-            state.activeTab = tab
-        },
-        tabs_add(state, data) {
-            state.tabs.push(data)
-        },
-        tabs_del(state, key) {
-            for (let index = 0; index < state.tabs.length; index++) {
-                const item = state.tabs[index]
-                if (key === item.key) {
-                    state.tabs.splice(index, 1)
-                    break
-                }
-            }
-        },
-        tabs_clear(state) {
-            state.tabs = []
-        },
-        tabs_del_left(state, target) {
-            for (let index = 0; index < state.tabs.length; index++) {
-                const item = state.tabs[index]
-                if (item.key === target) {
-                    if (index > 0) {
-                        state.tabs.splice(0, index)
-                    }
-                    break
-                }
-            }
-        },
-        tabs_del_right(state, target) {
-            for (let index = 0; index < state.tabs.length; index++) {
-                const item = state.tabs[index]
-                if (item.key === target) {
-                    const dis = state.tabs.length - index
-                    if (dis > 0) {
-                        state.tabs.splice(index, dis)
-                    }
-                    break
-                }
+        tabs_del(state, tabName) {
+            state.contentTabs = state.contentTabs.filter(item => item.name !== tabName)
+            if (state.contentTabs.length <= 0) {
+                state.sidebarMenuActiveName = 'home'
+                state.contentTabsActiveName = 'home'
             }
         },
         saveDictList(state, data){
             state.dictList = data
-        }
+        },
+        saveSidebarMenuList(state, data) {
+          state.sidebarMenuList = data
+        },
+        saveSidebarMenuActiveName(state, data) {
+          state.sidebarMenuActiveName = data
+        },
+        saveContentTabsActiveName(state, data) {
+          state.contentTabsActiveName = data
+        },
+        saveContentTabs(state, data){
+          state.contentTabs = data
+        },
 
     },
     actions: {
@@ -94,20 +76,8 @@ export default {
         saveActiveTab(context, path) {
             context.commit('saveActiveTab', path)
         },
-        addTab(context, data) {
-            context.commit('tabs_add', data)
-        },
-        clearTabs(context) {
-            context.commit('tabs_clear')
-        },
         removeTab(context, key) {
             context.commit('tabs_del', key)
         },
-        removeLeftTabs(context, data) {
-            context.commit('tabs_del_left', data)
-        },
-        removeRightTabs(context, data) {
-            context.commit('tabs_del_right', data)
-        }
     }
 }

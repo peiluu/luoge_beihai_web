@@ -1403,7 +1403,7 @@ export default {
   props:{
     thirdData: {
       type: Object,
-      default: ()=>{}
+      default: ()=>({})
     }
   },
   components: {
@@ -1929,6 +1929,87 @@ export default {
     },
   },
   methods: {
+    init(){
+      this.getSellerInfoById(this.query.orgid);
+   
+      //初始化开票组织信息
+      this.initOrgInfos();
+      //初始化区域
+      this.initDistrictDict();
+      if (this.$refs.form) {
+        this.$refs.form.clearValidate();
+      }
+      if (this.$refs.ceForm) {
+        this.$refs.ceForm.clearValidate();
+      }
+      if (this.$refs.ceItemForm) {
+        this.$refs.ceItemForm.clearValidate();
+      }
+      this.loading = true;
+      console.log(this.query);
+      
+      if (this.query.isFormInvoiced == "Y") {
+        //复制开票
+        this.api.getCopyDetailById({ id: this.query.invoiceId }).then((res) => {
+          this.$refs.xTable.remove();
+          this.form = res.data;
+          delete this.form.id;
+          delete this.form.bdczldz;
+          this.mideaInfo.orgid = res.data.orgid + "";
+          this.$set(this.customerQuery, "orgid", this.form.orgid);
+          this.$set(this.frequentCustomerQuery, "orgid", this.form.orgid);
+          this.loadFpmxList();
+          this.loading = false;
+          //初始化差额开票数据
+          if (this.form.invoiceVariableLevy) {
+            this.ceForm = this.form.invoiceVariableLevy;
+            if (this.ceForm.invoiceVariableLevyDetailList) {
+              this.ceTableData = this.ceForm.invoiceVariableLevyDetailList;
+            }
+          }
+        });
+      } else if (this.query.isFormInvoiced == "N") {
+        //编辑发票
+        this.api
+          .getInvoiceDetailById({ id: this.query.invoiceId })
+          .then((res) => {
+            this.$refs.xTable.remove();
+            this.form = res.data;
+            delete this.form.bdczldz;
+            if (this.form.status != "02" && this.form.status != "04") {
+              this.canEdit = false;
+            }
+            this.mideaInfo.orgid = res.data.orgid + "";
+            this.$set(this.customerQuery, "orgid", this.form.orgid);
+            this.$set(this.frequentCustomerQuery, "orgid", this.form.orgid);
+            this.loadFpmxList();
+            this.loading = false;
+            //初始化差额开票数据
+            if (this.form.invoiceVariableLevy) {
+              this.ceForm = this.form.invoiceVariableLevy;
+              if (this.ceForm.invoiceVariableLevyDetailList) {
+                this.ceTableData = this.ceForm.invoiceVariableLevyDetailList;
+              }
+            }
+          });
+      } else {
+        //新增发票
+        if (sessionStorage.getItem("clearBlueInvoice") == 1) {
+          this.deleteInvoice();
+          sessionStorage.setItem("clearBlueInvoice", 0);
+        }
+        this.form = { ...this.form, ...this.query };
+        delete this.form.bdczldz;
+        this.$set(this.customerQuery, "orgid", this.query.orgid);
+        this.$set(this.frequentCustomerQuery, "orgid", this.query.orgid);
+        //  this.getTaxRates();
+        if (this.tableData.length <= 0) {
+          this.insertEvent(true);
+        }
+        this.mideaInfo.orgid = this.query.orgid;
+        this.loading = false;
+      }
+    },
     validateGoodsJe({ cellValue }) {
       if (parseFloat(cellValue) <= 0) {
         return new Error("明细金额需要大于0!");
@@ -3142,7 +3223,7 @@ export default {
   },
   computed: {
     query() {
-      return this.thirdData?.slotData || {} ;
+      return this.thirdData?.slotData || this.$route.query ;
     },
     contentHeight() {
       return window.innerHeight - 230;
@@ -3152,85 +3233,14 @@ export default {
     console.log(this.query,"3")
   },
   mounted() {
+    if(!this.$route.query.isFormInvoiced){
+      this.init()
+    }
     
-    this.getSellerInfoById(this.query.orgid);
-   
-    //初始化开票组织信息
-    this.initOrgInfos();
-    //初始化区域
-    this.initDistrictDict();
-    if (this.$refs.form) {
-      this.$refs.form.clearValidate();
-    }
-    if (this.$refs.ceForm) {
-      this.$refs.ceForm.clearValidate();
-    }
-    if (this.$refs.ceItemForm) {
-      this.$refs.ceItemForm.clearValidate();
-    }
-    this.loading = true;
-    console.log(this.query);
-    
-    if (this.query.isFormInvoiced == "Y") {
-      //复制开票
-      this.api.getCopyDetailById({ id: this.query.invoiceId }).then((res) => {
-        this.$refs.xTable.remove();
-        this.form = res.data;
-        delete this.form.id;
-        delete this.form.bdczldz;
-        this.mideaInfo.orgid = res.data.orgid + "";
-        this.$set(this.customerQuery, "orgid", this.form.orgid);
-        this.$set(this.frequentCustomerQuery, "orgid", this.form.orgid);
-        this.loadFpmxList();
-        this.loading = false;
-        //初始化差额开票数据
-        if (this.form.invoiceVariableLevy) {
-          this.ceForm = this.form.invoiceVariableLevy;
-          if (this.ceForm.invoiceVariableLevyDetailList) {
-            this.ceTableData = this.ceForm.invoiceVariableLevyDetailList;
-          }
-        }
-      });
-    } else if (this.query.isFormInvoiced == "N") {
-      //编辑发票
-      this.api
-        .getInvoiceDetailById({ id: this.query.invoiceId })
-        .then((res) => {
-          this.$refs.xTable.remove();
-          this.form = res.data;
-          delete this.form.bdczldz;
-          if (this.form.status != "02" && this.form.status != "04") {
-            this.canEdit = false;
-          }
-          this.mideaInfo.orgid = res.data.orgid + "";
-          this.$set(this.customerQuery, "orgid", this.form.orgid);
-          this.$set(this.frequentCustomerQuery, "orgid", this.form.orgid);
-          this.loadFpmxList();
-          this.loading = false;
-          //初始化差额开票数据
-          if (this.form.invoiceVariableLevy) {
-            this.ceForm = this.form.invoiceVariableLevy;
-            if (this.ceForm.invoiceVariableLevyDetailList) {
-              this.ceTableData = this.ceForm.invoiceVariableLevyDetailList;
-            }
-          }
-        });
-    } else {
-      //新增发票
-      if (sessionStorage.getItem("clearBlueInvoice") == 1) {
-        this.deleteInvoice();
-        sessionStorage.setItem("clearBlueInvoice", 0);
-      }
-      this.form = { ...this.form, ...this.query };
-      delete this.form.bdczldz;
-      this.$set(this.customerQuery, "orgid", this.query.orgid);
-      this.$set(this.frequentCustomerQuery, "orgid", this.query.orgid);
-      //  this.getTaxRates();
-      if (this.tableData.length <= 0) {
-        this.insertEvent(true);
-      }
-      this.mideaInfo.orgid = this.query.orgid;
-      this.loading = false;
+  },
+  activated() {
+    if(this.$route.query.isFormInvoiced){
+      this.init()
     }
   },
 };

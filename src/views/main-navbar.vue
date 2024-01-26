@@ -11,9 +11,9 @@
         <el-menu-item index="1" @click="$store.state.sidebarFold = !$store.state.sidebarFold">
           <svg class="icon-svg aui-navbar__icon-menu aui-navbar__icon-menu--switch" aria-hidden="true"><use xlink:href="#icon-outdent"></use></svg>
         </el-menu-item>
-        <!-- <el-menu-item index="2" @click="refresh()">
+        <el-menu-item index="2" @click="refresh()">
           <svg class="icon-svg aui-navbar__icon-menu aui-navbar__icon-menu--refresh" aria-hidden="true"><use xlink:href="#icon-sync"></use></svg>
-        </el-menu-item> -->
+        </el-menu-item>
       </el-menu>
       <el-menu class="aui-navbar__menu" mode="horizontal">
         <el-menu-item index="4" @click="fullscreenHandle()">

@@ -47,7 +47,7 @@ export const selectKpr = data => postJSON(`${config.host}/invoiceUpload/selectKp
 /**
  * @desption 更新发票orgid
  */
-export const updateInvoiceOrgId = data => postJSON('/invoiceUpload/updateInvoiceOrgId', data);
+export const updateInvoiceOrgId = data => postJSON(`${config.host}/invoiceUpload/updateInvoiceOrgId`, data);
 
 /**
  * @desption 导出
