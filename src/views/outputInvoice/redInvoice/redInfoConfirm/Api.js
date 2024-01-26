@@ -15,8 +15,11 @@ export const submitRedInvoice = data =>
 /**
  * @desption 蓝字发票详情查询 - 新增红字信息单入口
  */
-export const queryBlueInvoiceById = data =>
-  postJSON(`${config.host}/blueInvoice/queryBlueInvoiceById/${data.id}`, data);
+// export const queryBlueInvoiceById = data =>
+//   postJSON(`${config.host}/blueInvoice/queryBlueInvoiceById/${data.id}`, data);
+
+  export const queryBlueInvoiceById = data =>
+  postJSON(`${config.host}/invoiceUpload/invoiceInfo/${data.id}`, data);
 
 /**
  * @desption 蓝字发票详情查询 - 已开票红冲入口
