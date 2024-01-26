@@ -72,7 +72,7 @@ export default {
     },
     close() {
       this.$router.push({
-        path: '/redInvoice/infoTable',
+        path: '/outputInvoice/redInvoice/infoTable/Index',
         query: this.$route.query
       })
       this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);

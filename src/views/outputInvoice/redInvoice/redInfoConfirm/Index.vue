@@ -1020,7 +1020,7 @@ export default {
       //const backWaitConfirmPath = level === 'output' ? '/outputInvoice/waitConfirm/Index' : '/inputInvoice/waitConfirm/Index';
       // 返回进项/销项待确认红字列表
       //const path = ['output', 'input'].includes(level) ? backWaitConfirmPath : ['addRecord', 'queryBlue'].includes(this.operateType) ? '/redInvoice/addApplyForm' : '/redInvoice/infoTable';
-      const path =  ['addRecord', 'queryBlue'].includes(this.operateType) ? '/redInvoice/addApplyForm' : '/redInvoice/infoTable';
+      const path =  ['addRecord', 'queryBlue'].includes(this.operateType) ? '/redInvoice/addApplyForm' : '/outputInvoice/redInvoice/infoTable/Index';
       this.$router.push({
         path,
         query: { nsrmc, nsrsbh, taxBodyId }
