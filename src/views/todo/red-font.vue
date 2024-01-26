@@ -6,7 +6,7 @@
     </el-tabs>
     <form-list :key="level" :columns="dynamicsColumns" :searchRow="searchList" :api="api" :param="param" :otherParam="otherParam" :height="height"
       :showSearch="true" ref="list">
-      <template #lrfsf="row"> {{ row.data.lrfsf == 0 ? "销售方" : "购买方" }}</template>
+      <template #gxfsf="row"> {{ row.data.gxfsf == 0 ? "销售方" : "购买方" }}{{ param.gxfsf }}</template>
 
       <template #ykjhzfpbz="row">{{ row.data.ykjhzfpbz === 'Y' ? '已开具' : '未开具' }}</template>
       <template #shzt="row">
@@ -42,7 +42,7 @@
       </template>
     </form-list>
     <!-- 确认操作 -->
-    <ConfirnModal :lrfsf="this.lrfsf" @handleOk="handleOk" ref="confirnModal" />
+    <ConfirnModal :gxfsf="this.gxfsf" @handleOk="handleOk" ref="confirnModal" />
   </div>
 </template>
 
@@ -63,7 +63,7 @@ export default {
       api: require("./Api"),
       otherParam: {type: '1'},
       param: { 'gxfsf': '1'},
-      lrfsf: '',
+      gxfsf: '',
       // 待处理的发票数量
       confirmStatusMap,
       examineStatusMap,
@@ -71,7 +71,7 @@ export default {
       columns: [
         { type: "selection", width: 50 },
         { title: "序号", type: "index" },
-        { title: "当前登录人", dataIndex: "lrfsf", slot: "lrfsf", width: 130, },
+        { title: "当前登录人", dataIndex: "gxfsf", slot: "gxfsf", width: 130, },
         { title: "销售方名称", width: 130, dataIndex: "xsfmc" },
         { title: "销售方识别号/身份证号码", width: 200, dataIndex: "xsfnsrsbh" },
         { title: "购买方名称", width: 130, dataIndex: "gmfmc", },
@@ -157,12 +157,12 @@ export default {
         this.$message.warning('请至少选择一条数据')
         return;
       }
-      if (selections.find((item) => item.lrfsf == 0) && selections.find((item) => item.lrfsf == 1)) {
+      if (selections.find((item) => item.gxfsf == 0) && selections.find((item) => item.gxfsf == 1)) {
         this.$message.warning('请勿同时操作进项票和销项票')
         return;
       }
       // 操作的时候取反
-      this.lrfsf = selections[0].lrfsf == 0 ? '1' : '0'
+      this.gxfsf = selections[0].gxfsf == 0 ? '1' : '0'
       this.$refs.confirnModal.confirm(qrlx, data, selections);
       if (e) e.preventDefault();
     },

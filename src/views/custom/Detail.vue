@@ -161,7 +161,6 @@ export default {
      */
     async submit() {
       this.$refs["ruleForm"].validate(async (valid) => {
-        debugger;
         if (!valid) return;
         this.saveTaxBody();
       });

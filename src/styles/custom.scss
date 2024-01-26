@@ -211,7 +211,7 @@
   padding: 12px;
   width: calc(100% - 260px);
   text-align: center;
-  z-index: 1;
+  z-index: 999;
   right: 16px;
   
   .el-button{
