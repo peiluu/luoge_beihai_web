@@ -46,7 +46,7 @@ export default {
   },
   mounted() {
     const { id = "" } = this.$route.query;
-    debugger;
+    // debugger;
     if (id) {
       
       this.getRedInvoice(id);
@@ -65,7 +65,7 @@ export default {
     async getRedInvoice(id) {
       this.dataList = []
       const { code = "", data = {} } = await getRedInvoice({ id });
-      debugger;
+      // debugger;
       if (code === "0") {
         this.detail = data;
       }

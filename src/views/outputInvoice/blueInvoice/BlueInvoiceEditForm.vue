@@ -1802,7 +1802,7 @@ export default {
       return se && se != 0 ? parseFloat(se).toFixed(2) : "0.00";
     },
     getBhsje(row) {
-      debugger;
+      // debugger;
       let bhsje = "";
       // 如果是不含税的, 税额 = 税率 * 金额
       if (this.form.sfhs == 0 || this.form.sfhs == "N") {
@@ -1857,7 +1857,7 @@ export default {
           }
           break;
       }
-      debugger;
+      // debugger;
       row.je = row.je ? parseFloat(row.je).toFixed(2) : "";
       row.bhsje = this.getBhsje(row);
       row.se = this.getSe(row);

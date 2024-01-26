@@ -815,10 +815,10 @@
               <el-form-item label="开票人" prop="kpr">
                 <el-input :disabled="false" v-model="form.kpr"></el-input>
               </el-form-item>
-              <!-- <el-form-item label="邮箱" prop="email">
+              <el-form-item label="邮箱" prop="email">
                 <el-input v-model="form.email"></el-input>
               </el-form-item>
-              <el-form-item label="开票日期" prop="kprq">
+               <!--<el-form-item label="开票日期" prop="kprq">
                 <el-date-picker
                   type="date"
                   value-format="yyyy-MM-dd"
@@ -2904,6 +2904,7 @@ export default {
       let selectedRow =
         this.$refs.buyerTable.getRadioRecord() ||
         this.$refs.frequentTable.getRadioRecord();
+       
       this.buyerVisible = false;
       this.$set(this.form, "gmfmc", selectedRow.gmfMc);
       this.$set(this.form, "gmfnsrsbh", selectedRow.gmfNsrsbh);
@@ -2911,6 +2912,7 @@ export default {
       this.$set(this.form, "gmfdh", selectedRow.phone);
       this.$set(this.form, "gmfkhh", selectedRow.yhzh);
       this.$set(this.form, "gmfzh", selectedRow.bankaccount);
+      this.$set(this.form, "email", selectedRow.revemail);
 
       this.$refs.form.clearValidate();
     },
@@ -2972,6 +2974,7 @@ export default {
                 
                 if (type == 1) {
                
+                  that.loading = true;
                   //如果为开票请求，需要判断是否超出单张限额
                   that.api.checkOpenInvoice(that.form).then((result) => {
                     //如果超出单张限额，给出提示是否要继续开票
@@ -2993,7 +2996,6 @@ export default {
                           }
                         )
                           .then(() => {
-                            that.loading = true;
                             that.api.saveInvoice(that.form).then((res) => {
                              
                               if (res && res.code == "0") {
@@ -3019,12 +3021,13 @@ export default {
                                   type: "error",
                                 });
                               }
-                             
+                            })
+                            .finally(() => {
+                              that.loading = false;
                             });
-                          })
-                          .finally(() => {
+                          }).catch(e=>{
                             that.loading = false;
-                          });
+                          })
                       } else {
                        
                         that.loading = true;
@@ -3061,7 +3064,7 @@ export default {
                               message: e.msg,
                               type: "error",
                             });
-                          
+                          that.loading = false;
                         });
                       }
                     }else{
@@ -3069,8 +3072,9 @@ export default {
                         message: result.msg,
                         type: "error",
                       });
+                      that.loading = false;
                     }
-                  }).finally(()=>{
+                  }).catch((e)=>{
                     that.loading = false;
                   });
                 } else {

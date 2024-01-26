@@ -498,7 +498,7 @@ export default {
         };
        
         // 当前身份，销方收到的购方发起的，购方收到的销方发起的
-        this.lrfsf = data.lrfsf == '0' ? '1' : '0'
+        this.lrfsf = data.hzqrxxztDm == '03' ? '0' : '1'
         this.hzqrdmxList = data?.hzqrdmxList ? data?.hzqrdmxList.map((item) => {
           return {
             ...item,
@@ -689,7 +689,7 @@ export default {
       }else{
         const cousntMsg = type === "save" ? '保存成功' : '您提交的红字发票信息表，已成功申请';
         this.$message.success(cousntMsg);
-        const path = type === 'save' ? '/outputInvoice/redInvoice/infoTable/Index' : '/redApplySuccess';
+        const path = type === 'save' ? '/outputInvoice/redInvoice/infoTable/Index' : '/redInvoice/redApplySuccess';
         const { nsrmc = '', nsrsbh = '', taxBodyId = '' } = this.query;
 
         this.$router.push({
@@ -1009,7 +1009,13 @@ export default {
       this.form = { sfhs: 'N' }
       this.hzqrdmxList = [{}]
       // 返回上一步 || 回到列表页面
-      const { level = '', isFormInvoiced = '', nsrmc = '', nsrsbh = '', taxBodyId = '', isFormTodoList } = this.query;
+      const { level = '', isFormInvoiced = '', nsrmc = '', nsrsbh = '', taxBodyId = '', isFormTodoList, origin = '' } = this.query;
+      // 从已首页进入的, 返回上一步直接返回已首页·
+      if (origin == 'home') {
+        this.$router.push({ path: '/home' });
+        this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+        return;
+      }
       // 从已开票进入的, 返回上一步直接返回已开票页面·
       if (isFormInvoiced == 'Y') {
         this.$router.push({ path: '/outputInvoice/invoicedList/Index' });
@@ -1033,8 +1039,9 @@ export default {
       //const backWaitConfirmPath = level === 'output' ? '/outputInvoice/waitConfirm/Index' : '/inputInvoice/waitConfirm/Index';
       // 返回进项/销项待确认红字列表
       //const path = ['output', 'input'].includes(level) ? backWaitConfirmPath : ['addRecord', 'queryBlue'].includes(this.operateType) ? '/redInvoice/addApplyForm' : '/redInvoice/infoTable';
+      const path =  ['addRecord', 'queryBlue'].includes(this.operateType) ? '/redInvoice/addApplyForm' : '/redInvoice/infoTable';
       this.$router.push({
-        path:'/outputInvoice/redInvoice/infoTable/Index',
+        path,
         query: { nsrmc, nsrsbh, taxBodyId }
       });
       this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);

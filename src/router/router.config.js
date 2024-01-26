@@ -325,6 +325,35 @@ export const mainChildrenRoutes = [
         '@/views/enterpriseIncomeTax/incomeTaxPrepaymentCalculationTable/Index'
       ),
   },
+  // 红字发票开具 - 新增红字发票申请单 - 提交成功
+  {
+    path: '/redInvoice/redApplySuccess',
+    name: 'redApplySuccess',
+    meta: { title: '提交成功', isTab: true },
+    component: () =>
+      import('@/views/outputInvoice/redInvoice/redApplySuccess/Index'),
+  },
+  {
+    path: '/foundationaldata/accountMapping',
+    name: 'ccountMapping',
+    meta: { title: '科目税率维护', isTab: true },
+    component: () =>
+      import('@/views/foundationalData/accountMapping/Index'),
+  },
+  {
+    path: '/foundationaldata/outputInvoiceDetails',
+    name: 'OutputInvoiceDetails',
+    meta: { title: '销项发票明细', isTab: true },
+    component: () =>
+      import('@/views/foundationalData/outputInvoiceDetails/Index'),
+  },
+  {
+    path: '/foundationaldata/taxableIncomeDetails',
+    name: 'TaxableIncomeDetails',
+    meta: { title: '应税收入汇总明细', isTab: true },
+    component: () =>
+      import('@/views/foundationalData/taxableIncomeDetailsSummary/Index'),
+  },
 ];
 
 // 页面路由(独立页面), 无公共左侧菜单导航，无公共头部。如：登录页

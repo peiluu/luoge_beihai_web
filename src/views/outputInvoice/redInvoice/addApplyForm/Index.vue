@@ -63,18 +63,30 @@ export default {
       //   { title: "价税合计", dataIndex: "jshj", slot: 'jshj', align: 'right' },
       //   { title: "操作", key: "action", fixed: 'right', width: 80, scopedSlots: { customRender: "action" } },
       // ],
-      columns: [
+       columns: [
         { title: '序号', type: "index", width: 70, align: 'center' },
         { title: "开票点", dataIndex: "orgName", width: 120, },
         { title: "销售方名称", dataIndex: "xsfmc", width: 120, },
         { title: "购买方名称", width: 100, dataIndex: "gmfmc", slot: "orgName" },
-        { title: "蓝字发票号码", dataIndex: "fphm",align:"center", width: 100, slot: 'kprq' },
-        { title: "发票金额", dataIndex: "hjje",align:"center", slot: 'type' },
-        { title: "发票税额", dataIndex: "hjse", width: 120, },
-        { title: "开票时间", dataIndex: "kprq", slot: 'hjje', align: 'right' },
+        { title: "蓝字发票号码", dataIndex: "fphm",align:"center", width: 100,  },
+        { title: "发票金额", dataIndex: "hjje", slot: 'hjje', align: 'right' },
+        { title: "发票税额", dataIndex: "hjse", slot: 'hjse', align: 'right' },
         { title: "价税合计", dataIndex: "jshj", slot: 'jshj', align: 'right' },
+        { title: "开票日期", dataIndex: "kprq",align:"center", width: 100, slot: 'kprq' },
         { title: "操作", key: "action", fixed: 'right', width: 80, scopedSlots: { customRender: "action" } },
       ],
+      // columns: [
+      //   { title: '序号', type: "index", width: 70, align: 'center' },
+      //   { title: "开票点", dataIndex: "orgName", width: 120, },
+      //   { title: "销售方名称", dataIndex: "xsfmc", width: 120, },
+      //   { title: "购买方名称", width: 100, dataIndex: "gmfmc", slot: "orgName" },
+      //   { title: "蓝字发票号码", dataIndex: "fphm",align:"center", width: 100, slot: 'kprq' },
+      //   { title: "发票金额", dataIndex: "hjje",align:"center", slot: 'type' },
+      //   { title: "发票税额", dataIndex: "hjse", width: 120, },
+      //   { title: "开票时间", dataIndex: "kprq", slot: 'hjje', align: 'right' },
+      //   { title: "价税合计", dataIndex: "jshj", slot: 'jshj', align: 'right' },
+      //   { title: "操作", key: "action", fixed: 'right', width: 80, scopedSlots: { customRender: "action" } },
+      // ],
       searchList: [
         {
           label: "购/销方选择",
@@ -151,7 +163,7 @@ export default {
     // 检查蓝票是否可以红冲
     async invoiceUsedStatus(row, query) {
       console.log(row,"rowId")
-    debugger;
+    // debugger;
       if (!row.orgid) {
         this.$message.warning('请到已开票页面维护开票组织');
         return;
@@ -189,7 +201,7 @@ export default {
         ...this.$route.query,
         operateType
       }
-      debugger;
+      // debugger;
       if (operateType === 'queryBlue') {
         this.invoiceUsedStatus(row, query)
         return

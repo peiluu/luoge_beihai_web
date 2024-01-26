@@ -4,9 +4,9 @@
       <el-tab-pane label="待确认红字信息确认单" name="1"></el-tab-pane>
       <el-tab-pane label="已确认红字信息确认单" name="2"></el-tab-pane>
     </el-tabs>
-    <form-list :key="level" :columns="dynamicsColumns" :searchRow="searchList" :api="api" :param="param" :otherParam="otherParam" :height="height"
+    <form-list :key="level" :columns="columns" :searchRow="searchList" :api="api" :param="param" :otherParam="otherParam" :height="height"
       :showSearch="true" ref="list">
-      <template #lrfsf="row"> {{ row.data.lrfsf == 0 ? "销售方" : "购买方" }}</template>
+      <template #gxfsf="row"> {{ row.data.gxfsf == 0 ? "销售方" : "购买方" }}</template>
 
       <template #ykjhzfpbz="row">{{ row.data.ykjhzfpbz === 'Y' ? '已开具' : '未开具' }}</template>
       <template #shzt="row">
@@ -32,7 +32,7 @@
       </template>
       <!-- 中间部分 -->
       <template #topTool>
-        <div class="toolbar">
+        <div class="toolbar" :style="`visibility: ${otherParam.type === '1' ? 'visible': 'hidden'}`">
           <div class="toolbar-left" />
           <div class="toolbar-right">
             <el-button @click="confirm('Y')">通过</el-button>
@@ -42,7 +42,7 @@
       </template>
     </form-list>
     <!-- 确认操作 -->
-    <ConfirnModal :lrfsf="this.lrfsf" @handleOk="handleOk" ref="confirnModal" />
+    <ConfirnModal :gxfsf="this.gxfsf" @handleOk="handleOk" ref="confirnModal" />
   </div>
 </template>
 
@@ -63,7 +63,7 @@ export default {
       api: require("./Api"),
       otherParam: {type: '1'},
       param: { 'gxfsf': '1'},
-      lrfsf: '',
+      gxfsf: '',
       // 待处理的发票数量
       confirmStatusMap,
       examineStatusMap,
@@ -71,7 +71,7 @@ export default {
       columns: [
         { type: "selection", width: 50 },
         { title: "序号", type: "index" },
-        { title: "当前登录人", dataIndex: "lrfsf", slot: "lrfsf", width: 130, },
+        { title: "当前登录人", dataIndex: "gxfsf", slot: "gxfsf", width: 130, },
         { title: "销售方名称", width: 130, dataIndex: "xsfmc" },
         { title: "销售方识别号/身份证号码", width: 200, dataIndex: "xsfnsrsbh" },
         { title: "购买方名称", width: 130, dataIndex: "gmfmc", },
@@ -83,8 +83,6 @@ export default {
         { title: "税额", dataIndex: "hzcxse", slot: 'hzcxse', align: 'right', width: 100 },
         { title: "冲红原因", dataIndex: "chyyDm", slot: "chyyDm", width: 100, },
         { title: "确认单状态", width: 170, dataIndex: "hzqrxxztDm", slot: "hzqrxxztDm", formatter: "statusFormatter" },
-      ],
-      columnsOpts: [
         {
           title: "操作",
           key: "action",
@@ -113,13 +111,6 @@ export default {
 
   // 同一页面切换会触发更新
   computed: {
-    dynamicsColumns() {
-      let newCol = [...this.columns];
-      if (this.otherParam.type !== '1') {
-        newCol = newCol.concat(this.columnsOpts)
-      }
-      return newCol
-    },
     height() {
       return window.innerHeight - 280;
 
@@ -157,12 +148,12 @@ export default {
         this.$message.warning('请至少选择一条数据')
         return;
       }
-      if (selections.find((item) => item.lrfsf == 0) && selections.find((item) => item.lrfsf == 1)) {
+      if (selections.find((item) => item.gxfsf == 0) && selections.find((item) => item.gxfsf == 1)) {
         this.$message.warning('请勿同时操作进项票和销项票')
         return;
       }
       // 操作的时候取反
-      this.lrfsf = selections[0].lrfsf == 0 ? '1' : '0'
+      this.gxfsf = selections[0].gxfsf == 0 ? '1' : '0'
       this.$refs.confirnModal.confirm(qrlx, data, selections);
       if (e) e.preventDefault();
     },
@@ -177,7 +168,7 @@ export default {
           id: row.id,
           level: this.level,
           isFormTodoList: 'Y',
-          operateType: 'waitConfirm'
+          operateType: row.hzqrxxztDm === '03' ? 'waitConfirm' : 'confirmdetail'
         }
       });
       this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
