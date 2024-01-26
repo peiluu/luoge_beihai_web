@@ -567,6 +567,7 @@ export default {
       this.toDeclareForm();
     },
     closeDetailConfirm() {
+      this.curRow = {};
       this.detailConfirmVisible = false;
     },
     exportDeclaration() {

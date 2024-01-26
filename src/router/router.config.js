@@ -354,6 +354,49 @@ export const mainChildrenRoutes = [
     component: () =>
       import('@/views/foundationalData/taxableIncomeDetailsSummary/Index'),
   },
+  {
+    path: '/addedTaxManageNormal/taxableIncomeLedger',
+    name: 'TaxableIncomeLedger',
+    meta: { title: '应税收入台账', isTab: true },
+    component: () =>
+      import('@/views/addedTaxManageNormal/taxableIncomeLedger/Index'),
+  },
+  {
+    path: '/addedTaxManageNormal/taxExemptIncomeLedger',
+    name: 'TaxExemptIncomeLedger',
+    meta: { title: '免税收入台账', isTab: true },
+    component: () =>
+      import('@/views/addedTaxManageNormal/taxExemptIncomeLedger/Index'),
+  },
+  {
+    path: '/addedTaxManageNormal/inputTransferOutLedger',
+    name: 'InputTransferOutLedger',
+    meta: { title: '进项税额转出台账', isTab: true },
+    component: () =>
+      import('@/views/addedTaxManageNormal/inputTransferOutLedger/Index'),
+  },
+
+  {
+    path: '/addedTaxManageNormal/differenceTaxLedger',
+    name: 'DifferenceTaxLedger',
+    meta: { title: '差额征税台账', isTab: true },
+    component: () =>
+      import('@/views/addedTaxManageNormal/differenceTaxLedger/Index'),
+  },
+  {
+    path: '/addedTaxManageNormal/inputInvoiceLedger',
+    name: 'InputInvoiceLedger',
+    meta: { title: '进项发票台账', isTab: true },
+    component: () =>
+      import('@/views/addedTaxManageNormal/inputInvoiceLedger/Index'),
+  },
+  {
+    path: '/addedTaxManageNormal/taxPrepaymentLedger',
+    name: 'TaxPrepaymentLedger',
+    meta: { title: '增值税及附加税费预缴台账', isTab: true },
+    component: () =>
+      import('@/views/addedTaxManageNormal/taxPrepaymentLedger/Index'),
+  },
 ];
 
 // 页面路由(独立页面), 无公共左侧菜单导航，无公共头部。如：登录页

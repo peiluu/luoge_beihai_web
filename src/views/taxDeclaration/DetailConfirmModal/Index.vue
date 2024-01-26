@@ -69,15 +69,17 @@ export default {
   },
   watch: {
     'curRow.id'(newVal, oldVal){
-      this.sjlx = 0;
-      this.current = 1;
-      this.total = 3;
-      this.stepTitle = '申报明细数据确认';
-      this.listLegerConfirm(newVal, this.sjlx);
+      if(newVal){
+        this.sjlx = 0;
+        this.current = 1;
+        this.total = 3;
+        this.stepTitle = '申报明细数据确认';
+        this.listLegerConfirm(newVal, this.sjlx);
+      }
     },
-    sjlx(newVal, oldVal){
-      this.listLegerConfirm(this.curRow.id, newVal);
-    },
+    // sjlx(newVal, oldVal){
+    //   this.listLegerConfirm(this.curRow.id, newVal);
+    // },
     confirmInfos(){
       this.canNext = this.checkCanNext();
     }
@@ -109,7 +111,9 @@ export default {
         this.current = 2;
         this.total = 3;
         this.stepTitle = '申报台账数据确认';
-        this.$set(this, "sjlx", this.sjlx + 1);
+        const newSjlx = this.sjlx + 1
+        this.$set(this, "sjlx", newSjlx);
+        this.listLegerConfirm(this.curRow.id, newSjlx);
       }
     },
     checkCanNext(){
