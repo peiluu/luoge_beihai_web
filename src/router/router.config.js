@@ -41,6 +41,14 @@ export const mainChildrenRoutes = [
     meta: { title: '蓝字发票填写', isTab: true, },
     component: () => import('@/views/outputInvoice/blueInvoice/BlueInvoiceForm.vue'),
   },
+  // 红字发票开具 - 新增红字发票申请单 - 提交成功
+  {
+    path: '/redInvoice/redApplySuccess',
+    name: 'redApplySuccess',
+    meta: { title: '提交成功', isTab: true },
+    component: () =>
+      import('@/views/outputInvoice/redInvoice/redApplySuccess/Index'),
+  },
 ];
 
 // 页面路由(独立页面), 无公共左侧菜单导航，无公共头部。如：登录页

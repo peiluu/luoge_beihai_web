@@ -151,7 +151,7 @@ export default {
     // 检查蓝票是否可以红冲
     async invoiceUsedStatus(row, query) {
       console.log(row,"rowId")
-    debugger;
+    // debugger;
       if (!row.orgid) {
         this.$message.warning('请到已开票页面维护开票组织');
         return;
@@ -189,7 +189,7 @@ export default {
         ...this.$route.query,
         operateType
       }
-      debugger;
+      // debugger;
       if (operateType === 'queryBlue') {
         this.invoiceUsedStatus(row, query)
         return

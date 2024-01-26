@@ -689,7 +689,7 @@ export default {
       }else{
         const cousntMsg = type === "save" ? '保存成功' : '您提交的红字发票信息表，已成功申请';
         this.$message.success(cousntMsg);
-        const path = type === 'save' ? '/outputInvoice/redInvoice/infoTable/Index' : '/redApplySuccess';
+        const path = type === 'save' ? '/outputInvoice/redInvoice/infoTable/Index' : '/redInvoice/redApplySuccess';
         const { nsrmc = '', nsrsbh = '', taxBodyId = '' } = this.query;
 
         this.$router.push({
@@ -1039,8 +1039,9 @@ export default {
       //const backWaitConfirmPath = level === 'output' ? '/outputInvoice/waitConfirm/Index' : '/inputInvoice/waitConfirm/Index';
       // 返回进项/销项待确认红字列表
       //const path = ['output', 'input'].includes(level) ? backWaitConfirmPath : ['addRecord', 'queryBlue'].includes(this.operateType) ? '/redInvoice/addApplyForm' : '/redInvoice/infoTable';
+      const path =  ['addRecord', 'queryBlue'].includes(this.operateType) ? '/redInvoice/addApplyForm' : '/redInvoice/infoTable';
       this.$router.push({
-        path:'/outputInvoice/redInvoice/infoTable/Index',
+        path,
         query: { nsrmc, nsrsbh, taxBodyId }
       });
       this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
