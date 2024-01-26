@@ -1,7 +1,7 @@
 <template>
   <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
     <form-list :columns="columns" :searchKey="propskey" :searchRow="searchList" :api="api" :param="param" :height="height" v-loading="loading" @getSearchParam="getSearchParam" :firstLoading="false"
-      @getNextList="getNextList" :rebulidForm="true" ref="list" :resetAll="true">
+      @getNextList="getNextList" :rebulidForm="true" ref="list" >
       <template #topTool>
         <div class="toolbar">
           <div class="toolbar-left" />

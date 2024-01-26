@@ -1,7 +1,7 @@
 <template>
   <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
     <form-list :columns="columns" :searchKey="propskey" :searchRow="searchList" :api="api" :param="param" :height="height" v-loading="loading" @getSearchParam="getSearchParam" :firstLoading="false" :rebulidForm="true"
-      @getNextList="getNextList" :resetAll="true" ref="list">
+    @getNextList="getNextList" ref="list">
       <!-- 中间部分 -->
       <template #topTool>
         <div class="toolbar">
