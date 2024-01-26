@@ -815,10 +815,10 @@
               <el-form-item label="开票人" prop="kpr">
                 <el-input :disabled="false" v-model="form.kpr"></el-input>
               </el-form-item>
-              <!-- <el-form-item label="邮箱" prop="email">
+              <el-form-item label="邮箱" prop="email">
                 <el-input v-model="form.email"></el-input>
               </el-form-item>
-              <el-form-item label="开票日期" prop="kprq">
+               <!--<el-form-item label="开票日期" prop="kprq">
                 <el-date-picker
                   type="date"
                   value-format="yyyy-MM-dd"
@@ -2823,6 +2823,7 @@ export default {
       let selectedRow =
         this.$refs.buyerTable.getRadioRecord() ||
         this.$refs.frequentTable.getRadioRecord();
+       
       this.buyerVisible = false;
       this.$set(this.form, "gmfmc", selectedRow.gmfMc);
       this.$set(this.form, "gmfnsrsbh", selectedRow.gmfNsrsbh);
@@ -2830,6 +2831,7 @@ export default {
       this.$set(this.form, "gmfdh", selectedRow.phone);
       this.$set(this.form, "gmfkhh", selectedRow.yhzh);
       this.$set(this.form, "gmfzh", selectedRow.bankaccount);
+      this.$set(this.form, "email", selectedRow.revemail);
 
       this.$refs.form.clearValidate();
     },
