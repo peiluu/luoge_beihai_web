@@ -3,8 +3,8 @@
     <LedgerForm @search="handleSearch" ref="ledgerForm">
       <template #topTool>
         <el-button @click="updateDifferenceTax" type="primary" :disabled="!tableData.length || !queryParam.orgid || !canUpdate">保存</el-button>
-        <el-button @click="fetchDifferenceTax" type="primary" :disabled="!queryParam.nsrsbh || !queryParam.srssq || !canUpdate">取数</el-button>
-        <el-button @click="handleExport">导出</el-button>
+        <el-button @click="fetchDifferenceTax" type="primary" :disabled="!queryParam.nsrsbh || !queryParam.srssq || !canUpdate" :loading="qsLoading">取数</el-button>
+        <el-button @click="handleExport" :loading="exLoading">导出</el-button>
       </template>
       <template #customeTable>
         <vxe-table :key="nsrlx" :data="tableData" :height="height" align="center" border show-overflow keep-source ref="xTable"
@@ -139,7 +139,9 @@ export default {
         kcxmbqfse: [{ pattern: /^([-+])?\d+(\.[0-9]{1,2})?$/, message: '请输入最多2位小数的数字', }],
         kcqbhsxse: limitMoneyMsg,
         // kcqxxse: limitMoneyMsg,
-      }
+      },
+      qsLoading: false,
+      exLoading: false,
     };
   },
 
@@ -152,11 +154,19 @@ export default {
     async handleSearch(queryParam) {
       this.queryParam = queryParam;
       this.queryStatus()
-      const { code = "", data = {} } = await queryDifferenceTax(queryParam);
-      if (code === "0") {
-        this.tableData = data.list || []
-        this.nsrlx = data.nsrlx
+      this.loading = true;
+      try {
+        const { code = "", data = {} } = await queryDifferenceTax(queryParam);
+        if (code === "0") {
+          this.tableData = data.list || []
+          this.nsrlx = data.nsrlx
+        }
+      } catch (error) {
+        console.log(error)
+      } finally {
+        this.loading = false;
       }
+      
     },
     // 更新台账
     async updateDifferenceTax() {
@@ -190,10 +200,17 @@ export default {
     },
     // 取数
     async fetchDifferenceTax() {
-      const { code = '' } = await fetchDifferenceTax(this.queryParam)
-      if (code === '0') {
-        this.$message.success('操作成功');
-        this.handleSearch(this.queryParam)
+      try {
+        this.qsLoading = true
+        const { code = '' } = await fetchDifferenceTax(this.queryParam)
+        if (code === '0') {
+          this.$message.success('操作成功');
+          this.handleSearch(this.queryParam)
+        }
+      } catch (error) {
+        console.log('---error--', error)
+      } finally {
+        this.qsLoading = false
       }
     },
     saveData() {
@@ -295,11 +312,19 @@ export default {
 
     // 导出
     async handleExport() {
-      const fileName = `差额征税台账.xlsx`
-      await exportLedger({
-        reqData: { ...this.queryParam, pageNo: 1, pageSize: 99999 },
-        fileName
-      })
+      try {
+        this.exLoading = true;
+        const fileName = `差额征税台账.xlsx`
+        await exportLedger({
+          reqData: { ...this.queryParam, pageNo: 1, pageSize: 99999 },
+          fileName
+        })
+      } catch (error) {
+        
+      } finally {
+        this.exLoading = false;
+      }
+     
     },
     // 查询申报状态
     async queryStatus() {

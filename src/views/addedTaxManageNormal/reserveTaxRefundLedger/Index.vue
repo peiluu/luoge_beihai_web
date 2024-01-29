@@ -8,7 +8,7 @@
           <div class="toolbar-left" />
           <div class="toolbar-right">
             <el-button @click="fetchDrawback" type="primary" :disabled="!queryParam.nsrsbh">取数</el-button>
-            <el-button @click="handleExport">导出</el-button>
+            <el-button @click="handleExport" :loading="exLoading">导出</el-button>
           </div>
         </div>
       </template>
@@ -131,6 +131,7 @@ export default {
         ysqdclldtse: [{ required: true, message: "请输入", trigger: "blur" }, { pattern: /^([-+])?\d+(\.[0-9]{1,2})?$/, message: '请输入最多2位小数的数字' }],
         ysqdzlldtse: [{ required: true, message: "请输入", trigger: "blur" }, { pattern: /^([-+])?\d+(\.[0-9]{1,2})?$/, message: '请输入最多2位小数的数字' }],
       },
+      exLoading: false
     };
   },
   mounted() {
@@ -176,17 +177,25 @@ export default {
     },
     // 导出
     async handleExport() {
-      const fileName = `留底退税台账.xlsx`
-      await exportLedger({
-        reqData: { ...this.queryParam, pageNo: 1, pageSize: 99999 },
-        fileName
-      })
+      try {
+        this.exLoading = true;
+        const fileName = `留底退税台账.xlsx`
+        await exportLedger({
+          reqData: { ...this.queryParam, pageNo: 1, pageSize: 99999 },
+          fileName
+        })
+      } catch (error) {
+        
+      } finally {
+        this.exLoading = false;
+      }
+      
     },
     getList() {
       this.$refs.list && this.$refs.list.handleGetData(this.queryParam)
     },
     getSearchParam(param) {
-      debugger;
+      // debugger;
       this.queryParam = param;
       // this.queryStatus()
     },

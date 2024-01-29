@@ -3,7 +3,7 @@
     <LedgerForm @search="handleSearch" :showMore="true" ref="ledgerForm" :queryAll="true">
       <template #topTool>
         <el-button @click="addLine({}, 'add')" type="primary">新增</el-button>
-        <el-button @click="handleExport">导出</el-button>
+        <el-button @click="handleExport" :loading="exLoading">导出</el-button>
       </template>
       <template #customeTable>
         <vxe-table :height="height" border show-overflow keep-source ref="xTable" @checkbox-all="selectAllEvent" @checkbox-change="selectChangeEvent" :data="tableData"
@@ -152,7 +152,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleClose">取 消</el-button>
-        <el-button type="success" @click="saveData">保 存</el-button>
+        <el-button type="success" @click="saveData" :loading="saveLoading">保 存</el-button>
       </span>
     </el-dialog>
 
@@ -222,7 +222,9 @@ export default {
         disabledDate(time) {
           return time.getTime() > Date.now();
         },
-      }
+      },
+      saveLoading: false,
+      exLoading: false,
     };
   },
   methods: {
@@ -249,16 +251,23 @@ export default {
       }
     },
     async handleSearch(queryParam) {
+      try {
+        this.loading = true;
+        this.queryParam = queryParam
+        const res = await queryTaxAdvancePayment({
+          ...queryParam,
+          pageNo: this.pagination.pageNo || 1,
+          pageSize: this.pagination.pageSize || 10
+        })
 
-      this.queryParam = queryParam
-      const res = await queryTaxAdvancePayment({
-        ...queryParam,
-        pageNo: this.pagination.pageNo || 1,
-        pageSize: this.pagination.pageSize || 10
-      })
-
-      this.pagination = { ... { ...res, total: res.totalCount } }
-      this.tableData = res.data || [];
+        this.pagination = { ... { ...res, total: res.totalCount } }
+        this.tableData = res.data || [];
+      } catch (error) {
+        
+      } finally {
+        this.loading = false;
+      }
+      
     },
     handleSizeChange(size) {
       this.pagination.pageSize = size;
@@ -343,23 +352,39 @@ export default {
           return;
         }
         const api = this.operatorType === 'add' ? add : update
-        const { code = '' } = await api({
-          ...this.editForm,
-        })
-        if (code === '0') {
-          this.$message.success('操作成功')
-          this.handleClose()
-          this.handleSearch(this.queryParam)
+        try {
+          this.saveLoading = true
+          const { code = '' } = await api({
+            ...this.editForm,
+          })
+          if (code === '0') {
+            this.$message.success('操作成功')
+            this.handleClose()
+            this.handleSearch(this.queryParam)
+          }
+        } catch (error) {
+          
+        } finally {
+          this.saveLoading = false
         }
+        
       })
     },
     // 导出
     async handleExport() {
-      const fileName = `增值税及附加税费预缴台账.xlsx`
-      await exportLedger({
-        reqData: { ...this.queryParam, pageNo: 1, pageSize: 99999 },
-        fileName
-      })
+      try {
+        this.exLoading = true
+        const fileName = `增值税及附加税费预缴台账.xlsx`
+        await exportLedger({
+          reqData: { ...this.queryParam, pageNo: 1, pageSize: 99999 },
+          fileName
+        })
+      } catch (error) {
+        
+      } finally {
+        this.exLoading = false
+      }
+      
     },
   },
   computed: {

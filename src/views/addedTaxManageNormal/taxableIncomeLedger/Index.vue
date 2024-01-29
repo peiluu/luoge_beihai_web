@@ -3,12 +3,15 @@
     <LedgerForm @search="handleSearch">
       <template #topTool>
         <el-button @click="updateTaxableIncome" type="primary" :disabled="!tableData.length || !queryParam.orgid || !canUpdate">保存</el-button>
-        <el-button @click="fetchTaxableIncome" type="primary" :disabled="!queryParam.nsrsbh || !queryParam.srssq || !canUpdate">取数</el-button>
-        <el-button @click="handleExport">导出</el-button>
+        <el-button @click="fetchTaxableIncome" type="primary" :disabled="!queryParam.nsrsbh || !queryParam.srssq || !canUpdate" :loading="qsLoading">取数</el-button>
+        <el-button @click="handleExport" :loading="exLoading">导出</el-button>
       </template>
       <template #customeTable>
-        <SmallScaleTaxpayer ref="customeTable" v-if="nsrlx == 2" :canUpdate="canUpdate" :tableData="tableData" :queryParam="queryParam" />
-        <GeneralTaxpayer ref="customeTable" v-else :canUpdate="canUpdate" :tableData="tableData" :queryParam="queryParam" />
+        <div v-loading="loading">
+          <SmallScaleTaxpayer ref="customeTable" v-if="nsrlx == 2" :canUpdate="canUpdate" :tableData="tableData" :queryParam="queryParam"/>
+          <GeneralTaxpayer ref="customeTable" v-else :canUpdate="canUpdate" :tableData="tableData" :queryParam="queryParam" />
+        </div>
+        
       </template>
     </LedgerForm>
   </div>
@@ -42,22 +45,32 @@ export default {
         '3': '服务、不动产和无形资',
         '4': '货物及加工修理修配劳务',
       },
+      loading: false,
+      qsLoading: false,
+      exLoading: false,
     }
   },
   methods: {
     async handleSearch(queryParam) {
       this.queryParam = queryParam
-      const { code = '', data = {} } = await queryTaxableIncome(queryParam)
-      this.queryStatus()
-      if (code === '0') {
-        this.nsrlx = data.nsrlx;
-        this.tableData = (data.list || []).map((item) => {
-          return {
-            ...item,
-            // 初始值： 其中：即征即退销售额  - 其中：即征即退检查调整销售额
-            originHjjzjtxse: item.hjjzjtxse - item.nsjcjzjtxse
-          }
-        }) || []
+      this.loading = true
+      try {
+        const { code = '', data = {} } = await queryTaxableIncome(queryParam)
+        this.queryStatus()
+        if (code === '0') {
+          this.nsrlx = data.nsrlx;
+          this.tableData = (data.list || []).map((item) => {
+            return {
+              ...item,
+              // 初始值： 其中：即征即退销售额  - 其中：即征即退检查调整销售额
+              originHjjzjtxse: item.hjjzjtxse - item.nsjcjzjtxse
+            }
+          }) || []
+        }
+      } catch (error) {
+        console.log(error)
+      } finally {
+        this.loading = false;
       }
     },
     // 更新台账
@@ -77,19 +90,35 @@ export default {
     },
     // 取数
     async fetchTaxableIncome() {
-      const { code = '' } = await fetchTaxableIncome(this.queryParam)
-      if (code === '0') {
-        this.$message.success('操作成功');
-        this.handleSearch(this.queryParam)
+      try {
+        this.qsLoading = true;
+        const { code = '' } = await fetchTaxableIncome(this.queryParam)
+        if (code === '0') {
+          this.$message.success('操作成功');
+          this.handleSearch(this.queryParam)
+        }
+      } catch (error) {
+        console.log(error)
+      } finally {
+        this.qsLoading = false;
       }
+      
+      
     },
     // 导出
     async handleExport() {
-      const fileName = `应税收入台账.xlsx`
-      await exportLedger({
-        reqData: { ...this.queryParam, pageNo: 1, pageSize: 99999 },
-        fileName
-      })
+      try {
+        this.exLoading = true
+        const fileName = `应税收入台账.xlsx`
+        await exportLedger({
+          reqData: { ...this.queryParam, pageNo: 1, pageSize: 99999 },
+          fileName
+        })
+      } catch (error) {
+        
+      } finally {
+        this.exLoading = false
+      }
     },
     // 查询申报状态
     async queryStatus() {

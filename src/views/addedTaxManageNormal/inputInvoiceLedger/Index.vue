@@ -2,11 +2,11 @@
   <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
     <LedgerForm @search="handleSearch">
       <template #topTool>
-        <el-button @click="reStatisticsVoucher" type="primary" :disabled="!queryParam.nsrsbh || !queryParam.srssq || querySbStatus">取数</el-button>
-        <el-button @click="handleExport">导出</el-button>
+        <el-button @click="reStatisticsVoucher" type="primary" :disabled="!queryParam.nsrsbh || !queryParam.srssq || querySbStatus" :loading="qsLoading">取数</el-button>
+        <el-button @click="handleExport" :loading="exLoading">导出</el-button>
       </template>
       <template #customeTable>
-        <vxe-table :data="tableData" border align="center" show-footer :footer-method="footerMethod" :footer-span-method="footerColspanMethod">
+        <vxe-table :data="tableData" border align="center" show-footer :footer-method="footerMethod" :footer-span-method="footerColspanMethod" v-loading="loading">
 
           <vxe-column type="seq" width="80" title="序号" field="seq"></vxe-column>
           <vxe-colgroup title="票据分类" header-class-name="header-class">
@@ -115,16 +115,26 @@ export default {
       param: {},
       querySbStatus: false,
       queryParam: {},
+      qsLoading: false,
+      exLoading: false,
     };
   },
   methods: {
     async handleSearch(queryParam) {
-      this.queryParam = queryParam;
-      this.queryStatus();
-      const { code = '', data = [] } = await selectList(queryParam)
-      if (code === '0') {
-        this.tableData = data;
+      try {
+        this.loading = true
+        this.queryParam = queryParam;
+        this.queryStatus();
+        const { code = '', data = [] } = await selectList(queryParam)
+        if (code === '0') {
+          this.tableData = data;
+        }
+      } catch (error) {
+        console.log('----error----', error)
+      } finally {
+        this.loading = false
       }
+      
     },
     // 查询申报状态
     async queryStatus() {
@@ -135,20 +145,35 @@ export default {
       }
     },
     async reStatisticsVoucher() {
-      const { code = '' } = await reStatisticsVoucher(this.queryParam)
-      if (code === '0') {
-        this.$message.success('操作成功')
-        this.handleSearch(this.queryParam)
+      try {
+        this.qsLoading = true
+        const { code = '' } = await reStatisticsVoucher(this.queryParam)
+        if (code === '0') {
+          this.$message.success('操作成功')
+          this.handleSearch(this.queryParam)
+        }
+      } catch (error) {
+        console.log('--error--', error)
+      } finally {
+        this.qsLoading = false
       }
+      
     },
 
     // 导出
     async handleExport() {
-      const fileName = `进项发票台账.xlsx`
-      await exportLedger({
-        reqData: { ...this.queryParam, pageNo: 1, pageSize: 99999 },
-        fileName
-      })
+      try {
+        this.exLoading = true;
+        const fileName = `进项发票台账.xlsx`
+        await exportLedger({
+          reqData: { ...this.queryParam, pageNo: 1, pageSize: 99999 },
+          fileName
+        })
+      } catch (error) {
+        
+      } finally {
+        this.exLoading = false;
+      }
     },
     sumNum(list, field) {
       let count = 0

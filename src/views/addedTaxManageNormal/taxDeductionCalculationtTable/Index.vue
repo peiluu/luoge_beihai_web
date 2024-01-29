@@ -10,17 +10,19 @@
       </template>
       <template #topTool>
         <el-button @click="addLine" type="primary" v-if="activeName == 1" :disabled="!canUpdate || !tableData.length">新增</el-button>
-        <el-button @click="saveOrUpdateBatch" type="primary" v-if="activeName == 1" :disabled="!canUpdate || !tableData.length">保存</el-button>
-        <el-button @click="dataInitialization" type="primary" :disabled="!canUpdate">取数</el-button>
-        <el-button @click="handleExport">导出</el-button>
+        <el-button @click="saveOrUpdateBatch" type="primary" v-if="activeName == 1" :disabled="!canUpdate || !tableData.length" :loading="saveLoading">保存</el-button>
+        <el-button @click="dataInitialization" type="primary" :disabled="!canUpdate" :loading="qsLoading">取数</el-button>
+        <el-button @click="handleExport" :loading="exLoading">导出</el-button>
       </template>
 
       <template #customeTable>
-        <div class="custome-table-header">税额抵减（减免）计算表</div>
-        <!-- 税额抵减 -->
-        <GeneralTaxpayer v-if="activeName == 1" ref="customeTable" :tableData="tableData" :queryParam="queryParam" :canUpdate="canUpdate" :nsrlx="nsrlx" :totalAmount="totalAmount" @handleSearch="handleSearch" />
-        <!-- 加计抵减 -->
-        <GeneralTaxpayerAdd v-else :tableData="tableData" />
+        <div v-loading="loading">
+          <div class="custome-table-header">税额抵减（减免）计算表</div>
+          <!-- 税额抵减 -->
+          <GeneralTaxpayer v-if="activeName == 1" ref="customeTable" :tableData="tableData" :queryParam="queryParam" :canUpdate="canUpdate" :nsrlx="nsrlx" :totalAmount="totalAmount" @handleSearch="handleSearch" />
+          <!-- 加计抵减 -->
+          <GeneralTaxpayerAdd v-else :tableData="tableData" />
+        </div>
       </template>
     </LedgerForm>
 
@@ -46,7 +48,11 @@ export default {
       queryParam: {},
       totalAmount: 0,
       tableData: [],
-      querySbStatus: false
+      querySbStatus: false,
+      qsLoading: false,
+      loading: false,
+      saveLoading: false,
+      exLoading: false,
     };
   },
   computed: {
@@ -67,43 +73,68 @@ export default {
   },
   methods: {
     async handleSearch(queryParam) {
-      this.queryParam = queryParam
-      const api = this.activeName == 1 ? selectLedger : queryAmountDeduct;
-      this.queryStatus()
-      const { code = '', data = {} } = await api(queryParam)
-      if (code === '0') {
-        // 查询加计抵减
-        if (this.activeName == 2) {
-          this.tableData = data || []
-          return;
-        }
-        this.tableData = data.reductionSheetVOList || []
-        this.nsrlx = data.nsrlx || 1
-        this.totalAmount = data.totalAmount || 0
+      try {
+        this.loading = true;
+        this.queryParam = queryParam
+        const api = this.activeName == 1 ? selectLedger : queryAmountDeduct;
+        this.queryStatus()
+        const { code = '', data = {} } = await api(queryParam)
+        if (code === '0') {
+          // 查询加计抵减
+          if (this.activeName == 2) {
+            this.tableData = data || []
+            return;
+          }
+          this.tableData = data.reductionSheetVOList || []
+          this.nsrlx = data.nsrlx || 1
+          this.totalAmount = data.totalAmount || 0
 
+        }
+      } catch (error) {
+        
+      } finally {
+        this.loading = false;
       }
+      
     },
     // 更新台账
     async saveOrUpdateBatch() {
+      this.saveLoading = true;
       const errMap = await this.$refs.customeTable.$refs.xTable.fullValidate(true).catch(errMap => errMap)
-      if (errMap) return
-      const tableData = this.$refs.customeTable.data;
-      const { code = '' } = await saveOrUpdateBatch({
-        data: tableData
-      })
-      if (code === '0') {
-        this.$message.success('操作成功');
-        this.handleSearch(this.queryParam)
+      if (errMap) {
+        this.saveLoading  = false;
+        return
+      }
+      try {
+        const tableData = this.$refs.customeTable.data;
+        const { code = '' } = await saveOrUpdateBatch({
+          data: tableData
+        })
+        if (code === '0') {
+          this.$message.success('操作成功');
+          this.handleSearch(this.queryParam)
+        }
+      } catch (error) {
+        
+      } finally {
+        this.saveLoading = false;
       }
     },
 
     // 取数
     async dataInitialization() {
-      const api = this.activeName == 1 ? dataInitialization : fetchAmountDeduct;
-      const { code = '' } = await api(this.queryParam)
-      if (code === '0') {
-        this.$message.success('操作成功');
-        this.handleSearch(this.queryParam)
+      try {
+        this.qsLoading = true;
+        const api = this.activeName == 1 ? dataInitialization : fetchAmountDeduct;
+        const { code = '' } = await api(this.queryParam)
+        if (code === '0') {
+          this.$message.success('操作成功');
+          this.handleSearch(this.queryParam)
+        }
+      } catch (error) {
+        
+      } finally {
+        this.qsLoading = false;
       }
     },
 
@@ -114,10 +145,17 @@ export default {
     async handleExport() {
       const fileName = this.activeName == 1 ? `税额抵减计算表.xlsx` : `税额加计抵减计算表.xlsx`
       const api = this.activeName == 1 ? exportLedgerReductionSheet : downloadAmountDeduct
-      await api({
-        reqData: { ...this.queryParam, pageNo: 1, pageSize: 99999 },
-        fileName
-      })
+      try {
+        this.exLoading = true;
+        await api({
+          reqData: { ...this.queryParam, pageNo: 1, pageSize: 99999 },
+          fileName
+        })
+      } catch (error) {
+        
+      } finally {
+        this.exLoading = false;
+      }
     },
     // 查询申报状态
     async queryStatus() {

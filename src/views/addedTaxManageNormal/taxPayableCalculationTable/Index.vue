@@ -2,13 +2,13 @@
   <div class="main-content">
     <LedgerForm @search="handleSearch" :hideOrgid="true">
       <template #topTool v-if="queryParam.nsrlx != 2">
-        <el-button @click="updateLedger" type="primary" :disabled="!canEdit">保存</el-button>
-        <el-button @click="reStatistics" type="primary">取数</el-button>
-        <el-button @click="exportLedger">导出</el-button>
+        <el-button @click="updateLedger" type="primary" :disabled="!canEdit" :loading="saveLoading">保存</el-button>
+        <el-button @click="reStatistics" type="primary" :loading="qsLoading">取数</el-button>
+        <el-button @click="exportLedger" :loading="exLoading">导出</el-button>
       </template>
       <template #customeTable v-if="queryParam.nsrlx != 2">
         <el-form ref="editForm" :inline="true" :model="ybxm" :rules="rules">
-          <table border class="content-table">
+          <table border class="content-table" v-loading="loading">
             <thead>
               <tr>
                 <th colspan="5">应纳税额计算表</th>
@@ -151,18 +151,30 @@ export default {
         nsjcybjse: [{ pattern: /^([-+])?\d+(\.[0-9]{1,2})?$/, message: '请输入最多2位小数的数字', }],
         jyffjsnsjcybjse: [{ pattern: /^([-+])?\d+(\.[0-9]{1,2})?$/, message: '请输入最多2位小数的数字', }],
       },
+      loading: false,
+      qsLoading: false,
+      saveLoading: false,
+      exLoading: false,
     };
   },
   methods: {
     async handleSearch(queryParam) {
-      this.queryParam = queryParam
-      this.queryStatus()
-      const { code = '', data = {} } = await selectTaxPayable(this.queryParam)
-      if (code === '0') {
-        this.ybxm = data.ybxm || {}
-        this.jzjtxm = data.jzjtxm || {}
-        this.inputBlur();
+      try {
+        this.loading = true;
+        this.queryParam = queryParam
+        this.queryStatus()
+        const { code = '', data = {} } = await selectTaxPayable(this.queryParam)
+        if (code === '0') {
+          this.ybxm = data.ybxm || {}
+          this.jzjtxm = data.jzjtxm || {}
+          this.inputBlur();
+        }
+      } catch (error) {
+        
+      } finally {
+        this.loading = false;
       }
+      
     },
     inputBlur() {
       const eles = document.querySelectorAll(".edit-input > .el-input__inner")
@@ -173,20 +185,35 @@ export default {
     },
     // 取数
     async reStatistics() {
-      const { code = '', data = [] } = await reStatistics(this.queryParam)
-      if (code === '0') {
-        this.$message.success('更新操作成功成功')
-        this.handleSearch(this.queryParam)
+      try {
+        this.qsLoading = true;
+        const { code = '', data = [] } = await reStatistics(this.queryParam)
+        if (code === '0') {
+          this.$message.success('更新操作成功成功')
+          this.handleSearch(this.queryParam)
+        }
+      } catch (error) {
+        
+      } finally {
+        this.qsLoading = false;
       }
+      
     },
     // 更新台账
     async updateLedger() {
       this.$refs["editForm"].validate(async valid => {
         if (!valid) return;
-        const { code = '', } = await updateLedger(this.ybxm)
-        if (code === '0') {
-          this.$message.success('操作成功')
-          this.handleSearch(this.queryParam)
+        try {
+          this.saveLoading = true;
+          const { code = '', } = await updateLedger(this.ybxm)
+          if (code === '0') {
+            this.$message.success('操作成功')
+            this.handleSearch(this.queryParam)
+          }
+        } catch (error) {
+          
+        } finally {
+          this.saveLoading = false;
         }
       })
     },
@@ -202,11 +229,18 @@ export default {
     },
     // 导出
     async exportLedger() {
-      const fileName = `应纳税额计算表.xlsx`
-      await exportLedger({
-        reqData: { ...this.queryParam, pageNo: 1, pageSize: 99999 },
-        fileName
-      })
+      try {
+        this.exLoading = true;
+        const fileName = `应纳税额计算表.xlsx`
+        await exportLedger({
+          reqData: { ...this.queryParam, pageNo: 1, pageSize: 99999 },
+          fileName
+        })
+      } catch (error) {
+        
+      } finally {
+        this.exLoading = false;
+      }
     },
     // 查询申报状态
     async queryStatus() {

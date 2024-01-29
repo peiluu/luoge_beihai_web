@@ -2,8 +2,8 @@
   <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
     <LedgerForm @search="handleSearch" :queryAll="true" ref="ledgerForm">
       <template #topTool>
-        <el-button @click="dataInitialization" type="primary" :disabled="!queryParam.nsrsbh || !queryParam.srssq || !canUpdate">取数</el-button>
-        <el-button @click="handleExport">导出</el-button>
+        <el-button @click="dataInitialization" type="primary" :disabled="!queryParam.nsrsbh || !queryParam.srssq || !canUpdate" :loading="qsLoading">取数</el-button>
+        <el-button @click="handleExport" :loading="exLoading">导出</el-button>
       </template>
       <template #customeTable>
         <vxe-table :height="height" border show-overflow keep-source ref="xTable" :data="tableData" v-loading="loading">
@@ -148,6 +148,8 @@ export default {
         jmxzdmmc: [{ required: true, message: '请选择' }],
         ckmssfwkjfw: [{ required: true, message: '请选择' }],
       },
+      qsLoading: false,
+      exLoading: false,
     }
   },
   computed: {
@@ -177,15 +179,23 @@ export default {
       }
     },
     async handleSearch(queryParam) {
-      this.queryParam = queryParam
-      const res = await queryLedgerTaxFreeIncome({
-        ...queryParam,
-        pageNo: this.pagination.pageNo || 1,
-        pageSize: this.pagination.pageSize || 10
-      })
+      try {
+        this.loading = true;
+        this.queryParam = queryParam
+        const res = await queryLedgerTaxFreeIncome({
+          ...queryParam,
+          pageNo: this.pagination.pageNo || 1,
+          pageSize: this.pagination.pageSize || 10
+        })
 
-      this.pagination = { ... { ...res, total: res.totalCount } }
-      this.tableData = res.data || [];
+        this.pagination = { ... { ...res, total: res.totalCount } }
+        this.tableData = res.data || [];
+      } catch (error) {
+        console.log('--error--', error)
+      } finally {
+        this.loading = false
+      }
+      
     },
     handleSizeChange(size) {
       this.pagination.pageSize = size;
@@ -204,11 +214,20 @@ export default {
 
     // 免税收入台账数据初始化
     async dataInitialization() {
-      const { code = '', data = [] } = await dataInitialization(this.queryParam)
-      if (code === '0') {
-        this.$message.success('操作成功')
-        this.handleSearch(this.queryParam)
+      try {
+        this.qsLoading = true;
+        const { code = '', data = [] } = await dataInitialization(this.queryParam)
+        if (code === '0') {
+          this.$message.success('操作成功')
+          this.handleSearch(this.queryParam)
+        }
+      } catch (error) {
+        console.log(error)
+      } finally {
+        this.qsLoading = false;
       }
+      
+      
     },
     // 修改减免项目查询
     async queryDetail(row) {
@@ -311,11 +330,18 @@ export default {
     },
     // 导出
     async handleExport() {
-      const fileName = `免税收入台账.xlsx`
-      await exportLedger({
-        reqData: { ...this.queryParam, pageNo: 1, pageSize: 99999 },
-        fileName
-      })
+      try {
+        this.exLoading = true
+        const fileName = `免税收入台账.xlsx`
+        await exportLedger({
+          reqData: { ...this.queryParam, pageNo: 1, pageSize: 99999 },
+          fileName
+        })
+      } catch (error) {
+        
+      } finally {
+        this.exLoading = false
+      }
     },
     // 查询申报状态
     async queryStatus() {
