@@ -43,7 +43,7 @@
     </div>
 
     <div class="custom-table">
-      <el-table border :data="tableData" :height="height" :header-cell-style="{ fontWeight: 400, borderTop: '1px solid #adb4bc', background: '#f7f9fd', color: '#333333', padding: '7px 0' }">
+      <el-table border :data="tableData" v-loading="loading" :height="height" :header-cell-style="{ fontWeight: 400, borderTop: '1px solid #adb4bc', background: '#f7f9fd', color: '#333333', padding: '7px 0' }">
         <el-table-column label="序号" type="index" min-width="50" />
         <el-table-column label="分机构名称" prop="nsrmc" min-width="200" />
         <el-table-column label="分机构纳税识别号" prop="nsrsbh" min-width="180" />
@@ -169,15 +169,22 @@ export default {
     },
 
     async handleSearch() {
-      const res = await getList({
+      this.loading = true;
+      try{
+        const res = await getList({
         ...this.form,
-        pageNo: this.pagination.pageNo || 1,
-        pageSize: this.pagination.pageSize || 10
-      })
+          pageNo: this.pagination.pageNo || 1,
+          pageSize: this.pagination.pageSize || 10
+        })
 
-      this.pagination = { ... { ...res, total: res.totalCount } }
-      this.tableData = res.data || [];
-      this.queryStatus();
+        this.pagination = { ... { ...res, total: res.totalCount } }
+        this.tableData = res.data || [];
+        this.queryStatus();
+      }catch(e){
+        
+      }finally{
+        this.loading = false;
+      }
     },
     resetForm() {
       this.$refs.searchForm.resetFields();

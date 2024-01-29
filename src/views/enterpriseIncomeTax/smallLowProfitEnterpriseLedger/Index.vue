@@ -25,7 +25,7 @@
       </div>
     </div>
     <div class="custom-vxe-table">
-      <vxe-table align="center" border show-footer show-overflow keep-source ref="xTable" :data="tableData" :edit-config="{ trigger: 'click', mode: 'cell', showIcon: false, enabled: canEdit }" :cell-style="cellStyle"
+      <vxe-table align="center" border v-loading="loading" show-footer show-overflow keep-source ref="xTable" :data="tableData" :edit-config="{ trigger: 'click', mode: 'cell', showIcon: false, enabled: canEdit }" :cell-style="cellStyle"
         :span-method="footerColspanMethod" :footer-method="() => []">
         <vxe-column field="ssq" title="税款所属期">
           <template #default="{ row }"> {{ formatAllDate(row.ssq, '季') }} </template>
@@ -95,6 +95,7 @@ export default {
       //   jc: [{ required: true, message: '请输入', trigger: "blur" }],
       //   jms: [{ required: true, message: '请输入', trigger: "blur" }, { pattern: /^[0-9]*$/, message: '请输入正整数' }],
       // }
+      loading:false,
     }
   },
   activated() {
@@ -119,11 +120,18 @@ export default {
     },
 
     async handleSearch() {
-      const { code = '', data = [] } = await querySmall({ ...this.form })
-      if (code === '0') {
-        this.tableData = data || []
-        // this.queryStatus()
+      this.loading = true;
+      try{
+        const { code = '', data = [] } = await querySmall({ ...this.form })
+        if (code === '0') {
+          this.tableData = data || []
+          // this.queryStatus()
+        }
+      }catch(e){
+        this.loading = false;
       }
+      
+      this.loading = false;
     },
     // 初始化纳税申报查询进入所携带的参数
     initQueryParam() {

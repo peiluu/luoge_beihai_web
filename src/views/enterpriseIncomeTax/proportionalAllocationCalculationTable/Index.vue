@@ -42,7 +42,7 @@
         <el-table-column prop="date" label="分配比例" align="center" />
       </el-table>
     </div> -->
-      <vxe-table :height="height" :data="tableData" border align="center" ref="xTable">
+      <vxe-table :height="height" :data="tableData" v-loading="loading"  border align="center" ref="xTable">
         <vxe-column type="seq" width="60" title="序号" field="seq" />
         <vxe-column title="总机构名称" field="zjgmc" min-width="130" />
         <vxe-column title="总机构纳税人识别号" field="zjgsbh" min-width="140" />
@@ -95,6 +95,7 @@ export default {
         ssq: '',
         nsrsbh: ''
       },
+      loading: false
     }
   },
   mounted() {
@@ -177,11 +178,17 @@ export default {
     },
     // 查询申报状态
     async queryStatus() {
+      this.loading = true;
       // false是当前还没有申报
-      const { code = '', data } = await queryStatus({ ...this.form, sbsz: 'sds' })
-      if (code === '0') {
-        this.querySbStatus = data
+      try {
+        const { code = '', data } = await queryStatus({ ...this.form, sbsz: 'sds' })
+        if (code === '0') {
+          this.querySbStatus = data
+        }
+      } catch (error) {
+        this.loading = false;
       }
+      this.loading = false;
     },
   },
 

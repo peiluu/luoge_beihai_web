@@ -25,7 +25,7 @@
         <el-button @click="handleExport" type="primary">导出</el-button>
       </div>
     </div>
-    <div class="custom-table">
+    <div class="custom-table" v-loading="loading">
       <table border class="content-table">
         <thead>
           <tr>
@@ -91,6 +91,7 @@ export default {
       querySdstbzq: '季',
       searchKey: '',
       querySbStatus: false,
+      loading: false
     }
   },
   mounted() {
@@ -114,16 +115,22 @@ export default {
     },
 
     async handleSearch() {
-      const { code = '', data = {} } = await queryLedgerSdsYjskjs(this.form)
-      if (code === '0') {
-        this.queryStatus()
-        this.tableData = this.tableData.map((item) => {
-          return {
-            ...item,
-            value: data[item.propKey]
+      this.loading = true;
+      try{
+        const { code = '', data = {} } = await queryLedgerSdsYjskjs(this.form)
+          if (code === '0') {
+            this.queryStatus()
+            this.tableData = this.tableData.map((item) => {
+              return {
+                ...item,
+                value: data[item.propKey]
+              }
+            })
           }
-        })
+      }finally{
+        this.loading = false;
       }
+      
     },
 
     // 取数

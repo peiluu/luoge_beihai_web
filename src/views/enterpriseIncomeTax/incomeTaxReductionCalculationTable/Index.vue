@@ -27,7 +27,7 @@
     </div>
 
     <div class="custom-vxe-table">
-      <vxe-table border show-overflow keep-source ref="xTable" :data="tableData" :edit-config="{ trigger: 'click', mode: 'cell', showIcon: false, enabled: false }" :edit-rules="validRules" :cell-style="cellStyle">
+      <vxe-table border show-overflow keep-source ref="xTable" v-loading="loading" :data="tableData" :edit-config="{ trigger: 'click', mode: 'cell', showIcon: false, enabled: false }" :edit-rules="validRules" :cell-style="cellStyle">
         <vxe-column type="seq" title="序号" width="50" />
         <vxe-column field="nsrmc" title="纳税主体名称" />
         <vxe-column field="ssq" title="税款所属期" align="center">
@@ -77,6 +77,7 @@ export default {
       rules: {
         jmsdse: [{ required: true, message: "请输入", trigger: "blur" }, { pattern: /^([-+])?\d+(\.[0-9]{1,2})?$/, message: '请输入最多2位小数的数字' }]
       },
+      loading:false
     }
   },
   mounted() {
@@ -100,11 +101,17 @@ export default {
     },
 
     async handleSearch() {
-      const { code = '', data = [] } = await queryLedgerSdsJmsdsejs(this.form)
-      if (code === '0') {
-        this.queryStatus()
-        this.tableData = data;
+      this.loading = true;
+      try{
+        const { code = '', data = [] } = await queryLedgerSdsJmsdsejs(this.form)
+        if (code === '0') {
+          this.queryStatus()
+          this.tableData = data;
+        }
+      }finally{
+        this.loading = false;
       }
+     
     },
     // 更新台账
     async saveOrUpdateBatch() {
