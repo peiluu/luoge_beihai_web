@@ -12,7 +12,7 @@
     </el-form>
 
     <!-- 数据信息 -->
-    <div class="content-info">
+    <div class="content-info" v-loading="loading">
       <div class="info-header">
         <!-- <div class="left">本期：{{ form.skssq }}</div> -->
         <div class="left" />
@@ -44,8 +44,8 @@
       </div>
       <div class="right" @click="toDetail()">更多数据</div>
     </div>
-
-    <div class="custom-table">
+ 
+    <div class="custom-table" v-loading="tableLoading">
       <el-table stripe ref="table" border tooltip-effect="dark" highlight-current-row :data="tableData" :header-cell-style="{
         fontWeight: 400,
         borderTop: '1px solid #adb4bc',
@@ -155,7 +155,9 @@ export default {
       taxBodyList: [],
       creditInfo: {},
       detailVisible: false,
-      detailInfo: {}
+      detailInfo: {},
+      loading: true,
+      tableLoading: true,
     };
   },
   computed: {
@@ -200,6 +202,7 @@ export default {
     },
     // 查询额度赋码票量信息
     async getCreditInfo() {
+      this.loading = true;
       const { code = '', data = {} } = await getCreditInfo(this.form)
       if (code === '0') {
         this.creditInfo = data;
@@ -209,9 +212,11 @@ export default {
         });
 
       }
+      this.loading = false;
     },
     // 历史授信额度信息 || 历史票量额度信息
     async getList() {
+      this.tableLoading = true;
       const api = this.activeName == 'credit' ? creditCredit : creditCode;
       const { code = '', data = [] } = await api({
         pageNo: 1,
@@ -221,6 +226,7 @@ export default {
       if (code === '0') {
         this.tableData = data
       }
+      this.tableLoading = false;
     },
     /**
      * @description 授信额度更新

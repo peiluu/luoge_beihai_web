@@ -3235,12 +3235,14 @@ export default {
     console.log(this.query,"3")
   },
   mounted() {
+    console.log(123)
     if(!this.$route.query.isFormInvoiced){
       this.init()
     }
     
   },
   activated() {
+    console.log(456)
     if(this.$route.query.isFormInvoiced){
       this.init()
     }
