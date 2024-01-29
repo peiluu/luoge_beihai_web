@@ -142,7 +142,7 @@ export default {
             });
             that.importing = false;
             that.$router.push({
-              path: '/foundationaldata/keyPersonnelCollectionDetails'
+              path: '/foundationalData/keyPersonnelCollectionDetails/Index'
             })
             this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
 
@@ -155,7 +155,7 @@ export default {
     handleBack() {
       this.initData();
       this.$router.push({
-        path: '/foundationaldata/keyPersonnelCollectionDetails',
+        path: '/foundationalData/keyPersonnelCollectionDetails/Index',
       })
       this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
     },

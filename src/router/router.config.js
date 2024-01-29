@@ -56,7 +56,7 @@ export const mainChildrenRoutes = [
   {
     path: '/inputInvoice/invoiceDeductionCheck',
     name: 'invoiceDeductionCheck',
-    meta: { name: '发票勾选抵扣', isTab: true  },
+    meta: { title: '发票勾选抵扣', isTab: true  },
     component: () =>
       import('@/views/inputInvoice/invoiceDeductionCheck/Index'),
   },
@@ -80,7 +80,7 @@ export const mainChildrenRoutes = [
   {
     path: '/invoiceDownload/download',
     name: 'invoiceDownloadDownload',
-    meta: { name: '下载发票', isTab: true  },
+    meta: { title: '下载发票', isTab: true  },
     component: () =>
       import('@/views/inputInvoice/invoiceDownload/download/Index'),
   },
@@ -105,7 +105,7 @@ export const mainChildrenRoutes = [
   {
     path: '/deductionStatistics/applyStatistics',
     // name: 'applyStatistics',
-    meta: { name: '抵扣统计表', isTab: true  },
+    meta: { title: '抵扣统计表', isTab: true  },
     component: () =>
       import(
         '@/views/inputInvoice/deductionStatistics/applyStatistics/Index'
@@ -166,15 +166,6 @@ export const mainChildrenRoutes = [
       import('@/views/foundationalData/deemedSalesRevenueDetails/Index'),
   },
   {
-    path: '/foundationaldata/retiredSoldierCollectionDetails',
-    name: 'RetiredSoldierCollectionDetails',
-    meta: { name: '退役士兵采集明细', isTab: true  },
-    component: () =>
-      import(
-        '@/views/foundationalData/retiredSoldierCollectionDetails/Index'
-      ),
-  },
-  {
     path: '/retiredSoldierCollectionDetails/retiredSoldierImport',
     name: 'RetiredSoldierImport',
     meta: { title: '退役士兵导入', isTab: true  },
@@ -190,15 +181,6 @@ export const mainChildrenRoutes = [
     component: () =>
       import(
         '@/views/foundationalData/retiredSoldierCollectionDetails/previousOffsetDetail/Index'
-      ),
-  },
-  {
-    path: '/foundationaldata/keyPersonnelCollectionDetails',
-    name: 'KeyPersonnelCollectionDetails',
-    meta: { title: '重点人员采集', isTab: true  },
-    component: () =>
-      import(
-        '@/views/foundationalData/keyPersonnelCollectionDetails/Index'
       ),
   },
   {
@@ -278,7 +260,7 @@ export const mainChildrenRoutes = [
   {
     path: '/enterpriseIncomeTax/compensatingLossesLedger',
     name: 'CompensatingLossesLedger',
-    meta: { name: '弥补以前年度亏损台帐', isTab: true, },
+    meta: { title: '弥补以前年度亏损台帐', isTab: true, },
     component: () =>
       import('@/views/enterpriseIncomeTax/compensatingLossesLedger/Index'),
   },
@@ -419,20 +401,20 @@ export const pageRoutes = [
   {
     path: '/invoice/preview',
     name: 'preview',
-    meta: { redirect: true, name: '发票预览' },
+    meta: { redirect: true, title: '发票预览' },
     component: () => import('@/views/invoice/Preview.vue'),
   },
   {
     path: '/expTemplateDetail',
     name: 'expTemplateDetail',
-    meta: { redirect: true, name: '模板编辑' },
+    meta: { redirect: true, title: '模板编辑' },
     component: () =>
       import('@/views/reportTools/templateMng/ExpTemplateDetail.vue'),
   },
   {
     path: '/declareSource',
     name: 'declareSource',
-    meta: { redirect: true, name: '申报表配置' },
+    meta: { redirect: true, title: '申报表配置' },
     component: () => import('@/views/reportTools/DeclareSource.vue'),
   },
 ];

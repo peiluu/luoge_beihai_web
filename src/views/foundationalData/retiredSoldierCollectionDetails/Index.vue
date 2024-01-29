@@ -296,6 +296,15 @@ export default {
           this.$message.warning('享受优惠起始月份和终止月份相差不能超过36个月');
           return;
         }
+        if ((moment(emonth).diff(moment(smonth), 'month')) > 35) {
+          this.$message.warning('享受优惠起始月份和终止月份相差不能超过36个月');
+          return;
+        }
+        // 终止时间不得小于开始时间
+        if ( emonth < smonth ) {
+          this.$message.warning('享受优惠“终止月份”不得小于“起始月份”');
+          return;
+        }
         const api = this.editForm.id ? updateOrg : saveOrg
         const { code = '' } = await api(this.editForm)
         if (code === '0') {

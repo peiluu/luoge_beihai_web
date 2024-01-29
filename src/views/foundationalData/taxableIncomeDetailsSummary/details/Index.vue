@@ -225,7 +225,7 @@ export default {
       this.$router.push({
         path: "/foundationalData/taxableIncomeDetailsSummary/Index"
       })
-      // this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+      this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
     },
   },
   computed: {

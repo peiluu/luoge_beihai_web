@@ -10,7 +10,7 @@
     <el-divider></el-divider>
     <div v-if="step === 1" class="mid-margin-35 upload-template mb10">
       <span>上传退役士兵信息</span>
-      <span class="right"><el-button type="text" @click="downloadTemplate">下载模板</el-button></span>
+      <!-- <span class="right"><el-button type="text" @click="downloadTemplate">下载模板</el-button></span> -->
       <el-upload action="" drag accept=".xlsx,.xls" :limit="1" :http-request="ajaxUpload">
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -142,7 +142,7 @@ export default {
             });
             that.importing = false;
             that.$router.push({
-              path: '/foundationaldata/retiredSoldierCollectionDetails'
+              path: '/foundationalData/retiredSoldierCollectionDetails/Index'
             })
             this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
 
@@ -155,7 +155,7 @@ export default {
     handleBack() {
       this.initData();
       this.$router.push({
-        path: '/foundationaldata/retiredSoldierCollectionDetails',
+        path: '/foundationalData/retiredSoldierCollectionDetails/Index',
       })
       this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
     },

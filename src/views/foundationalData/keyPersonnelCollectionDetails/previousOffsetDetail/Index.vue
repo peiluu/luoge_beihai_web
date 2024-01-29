@@ -1,6 +1,6 @@
 <template>
   <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
-    <BackBtn path="/foundationaldata/keyPersonnelCollectionDetails" />
+    <BackBtn path="/foundationalData/keyPersonnelCollectionDetails/Index" />
     <form-list :columns="columns" :searchKey="propsKey" :searchRow="searchList" :api="api" :param="param" :height="height" v-loading="loading" ref="list" @getNextList="getOrgList" @getSearchParam="getSearchParam">
       <template #quota="{ data }">{{ formatMoney(data.quota) }}</template>
       <template #ssq="{ data }"> {{ formatDate('YYYY-MM', data.ssq) }} </template>
