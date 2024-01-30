@@ -153,6 +153,7 @@
 
     <!--申报明细数据确认-->
     <DetailConfirmModal
+      v-if="detailConfirmVisible"
       :detailConfirmVisible="detailConfirmVisible"
       :curRow="curRow"
       @closeDetailConfirm="closeDetailConfirm"
@@ -567,7 +568,6 @@ export default {
       this.toDeclareForm();
     },
     closeDetailConfirm() {
-      this.curRow = {};
       this.detailConfirmVisible = false;
     },
     exportDeclaration() {

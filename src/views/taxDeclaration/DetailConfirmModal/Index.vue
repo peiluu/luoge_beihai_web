@@ -53,7 +53,7 @@ export default {
     },
     curRow: {
       type: Object,
-      default:{}
+      default: () => ({})
     }
   },
   data() {
@@ -68,15 +68,18 @@ export default {
     }
   },
   watch: {
-    'curRow.id'(newVal, oldVal){
-      if(newVal){
-        this.sjlx = 0;
-        this.current = 1;
-        this.total = 3;
-        this.stepTitle = '申报明细数据确认';
-        this.listLegerConfirm(newVal, this.sjlx);
-      }
-    },
+    // 'curRow.id': {
+    //   handler: function(newVal, oldVal){
+    //     if(newVal){
+    //       this.sjlx = 0;
+    //       this.current = 1;
+    //       this.total = 3;
+    //       this.stepTitle = '申报明细数据确认';
+    //       this.listLegerConfirm(newVal, this.sjlx);
+    //     }
+    //   }, 
+    //   immediate: true
+    // },
     // sjlx(newVal, oldVal){
     //   this.listLegerConfirm(this.curRow.id, newVal);
     // },
@@ -85,7 +88,8 @@ export default {
     }
   },
   mounted(){
-
+    this.stepTitle = '申报明细数据确认';
+    this.listLegerConfirm(this.curRow.id, this.sjlx);
   },
   methods: {
     listLegerConfirm(id, sjlx){
