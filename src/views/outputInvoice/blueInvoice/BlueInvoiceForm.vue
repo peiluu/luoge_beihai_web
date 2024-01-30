@@ -3228,21 +3228,24 @@ export default {
       return this.thirdData?.slotData || this.$route.query ;
     },
     contentHeight() {
-      return window.innerHeight - 250;
+      let route = this.$route.query || {};
+      let h = 250;
+      if(route?.isFormInvoiced){
+        h = 150
+      }
+      return window.innerHeight - h;
     },
   },
-  created(){
-    console.log(this.query,"3")
-  },
+  // created(){
+  //   console.log(this.query,"3")
+  // },
   mounted() {
-    console.log(123)
     if(!this.$route.query.isFormInvoiced){
       this.init()
     }
     
   },
   activated() {
-    console.log(456)
     if(this.$route.query.isFormInvoiced){
       this.init()
     }
