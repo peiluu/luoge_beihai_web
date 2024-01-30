@@ -293,7 +293,7 @@ export default {
     //   return window.innerHeight - 282;
     // }
   },
-  mounted() {
+  activated() {
     // console.log(this.$route, "00988");
     this.handlerInit();
   },
