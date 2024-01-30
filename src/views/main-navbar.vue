@@ -22,8 +22,8 @@
         <el-menu-item index="5" class="aui-navbar__avatar">
           <el-dropdown placement="bottom" :show-timeout="0">
             <span class="el-dropdown-link">
-              <img src="~@/assets/img/avatar.png">
-              <span>{{ $store.state.user.username }}</span>
+              <!-- <img src="~@/assets/img/avatar.png"> -->
+              <span>您好：{{ $store.state.user.username }}</span>
               <i class="el-icon-arrow-down"></i>
             </span>
             <el-dropdown-menu slot="dropdown">

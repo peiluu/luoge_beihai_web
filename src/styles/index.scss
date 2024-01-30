@@ -48,8 +48,12 @@ html {
 }
 
 .el-menu-item.is-active {
-    background-color: #2D3E4F !important;
-    box-shadow: 0 3px 6px 0 rgba(1,1,1,0.09);
+    // background-color: #2D3E4F !important;
+    // box-shadow: 0 3px 6px 0 rgba(1,1,1,0.09);
+    &::before {
+        background: transparent !important;
+        box-shadow: none !important;
+    }
     i {
         color: #1B90FF !important;
     }
