@@ -3228,7 +3228,7 @@ export default {
       return this.thirdData?.slotData || this.$route.query ;
     },
     contentHeight() {
-      return window.innerHeight - 230;
+      return window.innerHeight - 250;
     },
   },
   created(){

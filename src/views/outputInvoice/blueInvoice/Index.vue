@@ -1,6 +1,6 @@
 <template>
   <div class="" style="height: 100%">
-    <el-card shadow="hover" :body-style="{padding:'20px'}">
+    <el-card shadow="hover" :body-style="{padding:'20px'}" v-if="!$route.query.isFormInvoiced">
       <article class="invoice_header">
         <div class="header_title_content">
           <span>蓝字发票开具</span>
