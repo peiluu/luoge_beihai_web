@@ -11,7 +11,7 @@
         v-loading="loading"
         :disabled="!canEdit"
       >
-        <div class="content-bar">
+        <div class="content-bar" v-if="!detailInfo.isFormInvoiced">
           <div>
             <vxe-button :loading="loading" icon="el-icon-back" size="mini" @click="handleBack"
               >返回</vxe-button
@@ -62,7 +62,7 @@
             </el-form-item>
           </div>
         </div>
-        <el-divider class="content-divider"></el-divider>
+        <el-divider class="content-divider" v-if="!detailInfo.isFormInvoiced"></el-divider>
         <div class="content-invoice">
           <div class="invoice-head">
             <div class="head-left">
@@ -1404,7 +1404,11 @@ export default {
     thirdData: {
       type: Object,
       default: ()=>({})
-    }
+    },
+    detailInfo: {
+      type: Object,
+      default: ()=>({})
+    },
   },
   components: {
     Step,
@@ -1968,10 +1972,10 @@ export default {
             }
           }
         });
-      } else if (this.query.isFormInvoiced == "N") {
+      } else if (this.query.isFormInvoiced == "N" || this.detailInfo.isFormInvoiced == "N") {
         //编辑发票
         this.api
-          .getInvoiceDetailById({ id: this.query.invoiceId })
+          .getInvoiceDetailById({ id: this.query.invoiceId || this.detailInfo.id})
           .then((res) => {
             this.$refs.xTable.remove();
             this.form = res.data;
@@ -2080,7 +2084,10 @@ export default {
     },
     handleBack() {
       this.clearAll();
-
+      if(this.detailInfo.id){
+        this.$emit('cancel');
+        return
+      }
       if (this.query.orgid) {
         this.$emit('handleBack',this.query);
       } else if (this.query.isFormInvoiced == "Y") {
@@ -3090,6 +3097,7 @@ export default {
                       //  that.$set(that.form, "id", res.data);
                       //  that.clearAll()
                       that.deleteInvoice();
+                      if(this.detailInfo.isFormInvoiced)this.$emit("handeDoneOk");
                     }else{
                       
                       that.$notify({
@@ -3228,10 +3236,9 @@ export default {
       return this.thirdData?.slotData || this.$route.query ;
     },
     contentHeight() {
-      let route = this.$route.query || {};
       let h = 250;
-      if(route?.isFormInvoiced){
-        h = 150
+      if(this.detailInfo.isFormInvoiced){
+        h = 160
       }
       return window.innerHeight - h;
     },
@@ -3240,15 +3247,7 @@ export default {
   //   console.log(this.query,"3")
   // },
   mounted() {
-    if(!this.$route.query.isFormInvoiced){
-      this.init()
-    }
-    
-  },
-  activated() {
-    if(this.$route.query.isFormInvoiced){
-      this.init()
-    }
+    this.init()
   },
 };
 </script>
