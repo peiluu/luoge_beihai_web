@@ -3237,7 +3237,7 @@ export default {
     },
     contentHeight() {
       let h = 250;
-      if(this.detailInfo.isFormInvoiced){
+      if(this.detailInfo.isFormInvoiced || this.$route.query.isFormInvoiced){
         h = 160
       }
       return window.innerHeight - h;
@@ -3247,7 +3247,15 @@ export default {
   //   console.log(this.query,"3")
   // },
   mounted() {
-    this.init()
+    if(!this.$route.query.isFormInvoiced){
+      this.init()
+    }
+    
+  },
+  activated() {
+    if(this.$route.query.isFormInvoiced){
+      this.init()
+    }
   },
 };
 </script>
