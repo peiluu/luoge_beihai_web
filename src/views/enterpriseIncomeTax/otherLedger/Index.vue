@@ -8,7 +8,7 @@
           <div class="toolbar-left" />
           <div class="toolbar-right">
             <el-button @click="addLine({}, 'add')" type="primary"> 新增</el-button>
-            <el-button @click="handleExport">导出</el-button>
+            <el-button @click="handleExport" :loading="exLoading">导出</el-button>
           </div>
         </div>
       </template>
@@ -128,8 +128,6 @@ export default {
           key: "nsrsbh",
           val: "",
           type: "select",
-          isQueryNext: true,
-          nextPropskey: '',
           placeholder: '请选择',
           options: [],
         },
@@ -165,6 +163,7 @@ export default {
         jbxmjmje: [{ required: true, message: "请输入", trigger: "blur" }, { pattern: /^([-+])?\d+(\.[0-9]{1,2})?$/, message: '请输入最多2位小数的数字' }],
         bz: [{ required: true, message: "请输入", trigger: "blur" }],
       },
+      exLoading: false
     };
   },
   mounted() {
@@ -212,7 +211,7 @@ export default {
         // 携带参数进入
         if (!this.$route.query.nsrsbh) {
           this.querySdstbzq = sdstbzq
-          this.param.nsrsbh = nsrsbh
+          this.$set(this.param, 'nsrsbh', nsrsbh)
           // 进入页面初始化数据
           this.initDate(nsrsbh)
         }
@@ -221,8 +220,8 @@ export default {
     // 初始化纳税申报查询进入所携带的参数
     initQueryParam() {
       const { nsrsbh, ssq, tbzq } = this.$route.query
-      this.param.nsrsbh = nsrsbh
-      this.param.ssq = ssq
+      this.$set(this.param, 'nsrsbh', nsrsbh)
+      this.$set(this.param, 'ssq', ssq )
       this.querySdstbzq = tbzq
       this.searchList[0].val = nsrsbh
       this.searchList[1].val = ssq
@@ -233,29 +232,36 @@ export default {
     // 初始化属期时间
     initDate(nsrsbh) {
       const { monthValue, quarterValue } = getCurrentSsq();
-      const value = this.querySdstbzq == '月' ? monthValue : quarterValue
-      this.param.ssq = value
+      const ssq = this.querySdstbzq == '月' ? monthValue : quarterValue
+      this.$set(this.param, 'ssq', ssq )
       this.param.tbzq = this.querySdstbzq
       this.searchList[0].val = nsrsbh
-      this.searchList[1].val = value
+      this.searchList[1].val = ssq
       this.searchList[1].pickerType = this.querySdstbzq || '季'
       this.propskey = `${nsrsbh}_${this.querySdstbzq}`
     },
 
     // 导出
     async handleExport() {
-      const fileName = `不征税、免税、减计收入及所得减免台账.xlsx`
-      await exportLedger({
-        reqData: { ...this.queryParam, pageNo: 1, pageSize: 99999 },
-        fileName
-      })
+      try {
+        this.exLoading = true;
+        const fileName = `不征税、免税、减计收入及所得减免台账.xlsx`
+        await exportLedger({
+          reqData: { ...this.queryParam, pageNo: 1, pageSize: 99999 },
+          fileName
+        })
+      } catch (error) {
+        
+      } finally {
+        this.exLoading = false;
+      }
     },
     getList() {
       this.$refs.list && this.$refs.list.handleGetData(this.queryParam)
     },
     getSearchParam(param) {
       this.queryParam = param;
-      this.queryStatus()
+      // this.queryStatus()
     },
     handleDelete(row) {
       this.$confirm(`您确定要删除吗？`, '警告', {
@@ -286,7 +292,7 @@ export default {
       const sdstbzq = this.taxBodyList.find((item) => item.nsrsbh === val)?.sdstbzq
       if (type === 'update') {
         this.sdstbzq = sdstbzq || '季'
-        this.queryStatus(type)
+        // this.queryStatus(type)
         return
       }
       this.querySdstbzq = sdstbzq
@@ -303,24 +309,24 @@ export default {
     },
     // 查询申报状态
     async queryStatus(type) {
-      let status = false;
-      // false是当前还没有申报
+      // let status = false;
       const { monthValue, quarterValue } = getCurrentSsq();
       const ssq = this.sdstbzq == '月' ? monthValue : quarterValue
       const param = type == 'add' ? { nsrsbh: this.editForm.nsrsbh, ssq } : this.queryParam
       // false 是当前还没有申报
       const { code = '', data } = await queryStatus({ ...param, sbsz: 'sds' })
       if (code === '0') {
-        status = data
-        if (type == 'add') {
-          // false 是当前还没有申报，本期还是可以选的
-          this.currentDateDisabled = data;
-          this.preDateDisabled = !data;
-          return;
-        }
-        this.querySbStatus = data
+        // status = data
+        // if (type == 'add') {
+        //   // false 是当前还没有申报，本期还是可以选的
+        //   this.currentDateDisabled = data;
+        //   this.preDateDisabled = !data;
+        //   return;
+        // }
+        // this.querySbStatus = data
+        return data;
       }
-      return status
+      // return status
     },
     async saveData() {
       this.$refs["editForm"].validate(async valid => {
@@ -329,7 +335,7 @@ export default {
           this.$message.warning('请选择属期！');
           return;
         }
-        if (await this.queryStatus()) {
+        if (await this.queryStatus('update')) {
           this.$message.warning('该属期已申报，无法变更数据')
           return;
         }

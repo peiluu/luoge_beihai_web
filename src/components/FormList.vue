@@ -222,6 +222,9 @@ export default {
       handler(val){
         this.radioValue = val;
       }
+    },
+    param: function(val){
+      this.formParams = cloneDeep({...this.formParams, ...val})
     }
   },
   data() {
@@ -343,7 +346,12 @@ export default {
           } else {
             vm.data = []
           }
-          vm.pagination.total = res.totalCount;
+          vm.pagination = {
+            ...res,
+            pageNo: res.pageNo || 1,
+            pageSize: res.pageSize || 10,
+            total: res.totalCount || 0
+          }
           if (res.total) {
             vm.$emit('sumTotal', res.total);
           }
@@ -380,8 +388,8 @@ export default {
     },
     // 刷新
     reload(args) {
-      
-      this.handleGetData(this.formParams, args);
+      const param = { ... this.param, ...this.searchParam, ...args }
+      this.handleGetData(param);
     },
     async deleteApi(id, param = {}) {
       let res;

@@ -21,8 +21,8 @@
     <div class="toolbar">
       <div class="toolbar-left" />
       <div class="toolbar-right">
-        <el-button @click="initialization" type="primary" :disabled="!canUpdate">取数</el-button>
-        <el-button @click="handleExport" type="primary">导出</el-button>
+        <el-button @click="initialization" type="primary" :disabled="!canUpdate" :loading="qsLoading">取数</el-button>
+        <el-button @click="handleExport" :loading="exLoading">导出</el-button>
       </div>
     </div>
     <div class="custom-table" v-loading="loading">
@@ -91,7 +91,9 @@ export default {
       querySdstbzq: '季',
       searchKey: '',
       querySbStatus: false,
-      loading: false
+      loading: false,
+      exLoading: false,
+      qsLoading: false,
     }
   },
   mounted() {
@@ -135,10 +137,17 @@ export default {
 
     // 取数
     async initialization() {
-      const { code = '' } = await initialization(this.form)
-      if (code === '0') {
-        this.$message.success('操作成功');
-        this.handleSearch()
+      try {
+        this.qsLoading = true;
+        const { code = '' } = await initialization(this.form)
+        if (code === '0') {
+          this.$message.success('操作成功');
+          this.handleSearch()
+        }
+      } catch (error) {
+        
+      } finally {
+        this.qsLoading = false;
       }
     },
     resetForm() {
@@ -177,11 +186,18 @@ export default {
     },
     // 导出
     async handleExport() {
-      const fileName = `所得税预缴计算表.xlsx`
-      await exportLedger({
-        reqData: { ...this.form, pageNo: 1, pageSize: 99999 },
-        fileName
-      })
+      try {
+        this.exLoading = true
+        const fileName = `所得税预缴计算表.xlsx`
+        await exportLedger({
+          reqData: { ...this.form, pageNo: 1, pageSize: 99999 },
+          fileName
+        })
+      } catch (error) {
+        
+      } finally {
+        this.exLoading = false
+      }
     },
     // 查询申报状态
     async queryStatus() {

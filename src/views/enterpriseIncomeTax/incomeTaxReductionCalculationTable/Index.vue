@@ -21,7 +21,7 @@
       <div class="toolbar-left" />
       <div class="toolbar-right">
         <el-button @click="saveOrUpdateBatch" type="primary" :disabled="!tableData.length || !canUpdate">保存</el-button>
-        <el-button @click="initialization" type="primary" :disabled="!canUpdate">取数</el-button>
+        <el-button @click="initialization" type="primary" :disabled="!canUpdate" :loading="qsLoading">取数</el-button>
         <!-- <el-button @click="initialization" type="primary">导出</el-button> -->
       </div>
     </div>
@@ -77,7 +77,8 @@ export default {
       rules: {
         jmsdse: [{ required: true, message: "请输入", trigger: "blur" }, { pattern: /^([-+])?\d+(\.[0-9]{1,2})?$/, message: '请输入最多2位小数的数字' }]
       },
-      loading:false
+      loading:false,
+      qsLoading: false
     }
   },
   mounted() {
@@ -126,11 +127,19 @@ export default {
 
     // 取数
     async initialization() {
-      const { code = '' } = await initialization(this.form)
-      if (code === '0') {
-        this.$message.success('操作成功');
-        this.handleSearch(this.form)
+      try {
+        this.qsLoading = true;
+        const { code = '' } = await initialization(this.form)
+        if (code === '0') {
+          this.$message.success('操作成功');
+          this.handleSearch(this.form)
+        }
+      } catch (error) {
+        
+      } finally {
+        this.qsLoading = false;
       }
+      
     },
     resetForm() {
       this.$refs.searchForm.resetFields();

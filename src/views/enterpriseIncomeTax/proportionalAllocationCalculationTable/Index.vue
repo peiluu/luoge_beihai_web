@@ -21,8 +21,8 @@
       <!-- <div class="toolbar-left">默认每月8号自动生成</div> -->
       <div class="toolbar-left" />
       <div class="toolbar-right">
-        <el-button @click="fetchCalPrepaidShare" type="primary" :disabled="querySbStatus">取数</el-button>
-        <el-button @click="handleExport" type="primary">导出</el-button>
+        <el-button @click="fetchCalPrepaidShare" type="primary" :disabled="querySbStatus" :loading="qsLoading">取数</el-button>
+        <el-button @click="handleExport" :loading="exLoading">导出</el-button>
       </div>
     </div>
     <div class="custom-vxe-table">
@@ -95,7 +95,9 @@ export default {
         ssq: '',
         nsrsbh: ''
       },
-      loading: false
+      loading: false,
+      exLoading: false,
+      qsLoading: false
     }
   },
   mounted() {
@@ -131,11 +133,19 @@ export default {
     },
     // 取数
     async fetchCalPrepaidShare() {
-      const { code = '' } = await fetchCalPrepaidShare(this.form)
-      if (code === '0') {
-        this.$message.success('操作成功');
-        this.handleSearch(this.form)
+      try {
+        this.qsLoading = true
+        const { code = '' } = await fetchCalPrepaidShare(this.form)
+        if (code === '0') {
+          this.$message.success('操作成功');
+          this.handleSearch(this.form)
+        }
+      } catch (error) {
+        
+      } finally {
+        this.qsLoading = false
       }
+      
     },
     resetForm() {
       this.$refs.searchForm.resetFields();
@@ -170,11 +180,19 @@ export default {
     },
     // 导出
     async handleExport() {
-      const fileName = `分支机构比例分摊计算表.xlsx`
-      await exportLedger({
-        reqData: { ...this.form, pageNo: 1, pageSize: 99999 },
-        fileName
-      })
+      try {
+        this.exLoading = true;
+        const fileName = `分支机构比例分摊计算表.xlsx`
+        await exportLedger({
+          reqData: { ...this.form, pageNo: 1, pageSize: 99999 },
+          fileName
+        })
+      } catch (error) {
+        
+      } finally {
+        this.exLoading = false;
+      }
+      
     },
     // 查询申报状态
     async queryStatus() {

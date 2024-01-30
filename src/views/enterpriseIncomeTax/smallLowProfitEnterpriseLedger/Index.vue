@@ -21,7 +21,7 @@
       <div class="toolbar-left">注：如存在除个税通以外的劳务派遣人员，请手动修改从业人数。</div>
       <div class="toolbar-right">
         <el-button @click="updateSmall" type="primary" :disabled="!tableData.length || !canEdit">保存</el-button>
-        <el-button @click="fetchSmall" type="primary" :disabled="!canEdit">取数</el-button>
+        <el-button @click="fetchSmall" type="primary" :disabled="!canEdit" :loading="qsLoading">取数</el-button>
       </div>
     </div>
     <div class="custom-vxe-table">
@@ -96,6 +96,7 @@ export default {
       //   jms: [{ required: true, message: '请输入', trigger: "blur" }, { pattern: /^[0-9]*$/, message: '请输入正整数' }],
       // }
       loading:false,
+      qsLoading: false,
     }
   },
   activated() {
@@ -174,11 +175,18 @@ export default {
     },
     // 取数
     async fetchSmall() {
-      const { quarterValue } = getCurrentSsq();
-      const { code = '' } = await fetchSmall({ ...this.form, ssq: quarterValue })
-      if (code === '0') {
-        this.$message.success('操作成功');
-        this.handleSearch()
+      try {
+        this.qsLoading = true;
+        const { quarterValue } = getCurrentSsq();
+        const { code = '' } = await fetchSmall({ ...this.form, ssq: quarterValue })
+        if (code === '0') {
+          this.$message.success('操作成功');
+          this.handleSearch()
+        }
+      } catch (error) {
+        
+      } finally {
+        this.qsLoading = false;
       }
     },
     //

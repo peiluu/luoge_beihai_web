@@ -1,7 +1,7 @@
 <template>
   <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
     <form-list :columns="columns" :searchKey="propskey" :searchRow="searchList" :api="api" :param="param" :height="height" v-loading="loading" @getSearchParam="getSearchParam" :firstLoading="false"
-      @getNextList="getNextList" :rebulidForm="true" ref="list" >
+      @getNextList="getNextList" ref="list">
       <template #topTool>
         <div class="toolbar">
           <div class="toolbar-left" />
@@ -74,8 +74,6 @@ export default {
           key: "nsrsbh",
           val: "",
           type: "select",
-          isQueryNext: true,
-          nextPropskey: '',
           placeholder: '请选择',
           options: [],
         },
@@ -160,7 +158,7 @@ export default {
         }))
         if (!this.$route.query.nsrsbh) {
           const { nsrsbh = '' } = data[0] || {}
-          this.param.nsrsbh = nsrsbh
+          this.$set(this.param, 'nsrsbh', nsrsbh)
           this.initDate(nsrsbh)
           this.$refs.list.reload()
         }
@@ -177,8 +175,8 @@ export default {
     // 初始化纳税申报查询进入所携带的参数
     initQueryParam() {
       const { nsrsbh, ssq, tbzq } = this.$route.query
-      this.param.nsrsbh = nsrsbh
-      this.param.ssq = ssq
+      this.$set(this.param, 'nsrsbh', nsrsbh)
+      this.$set(this.param, 'ssq', ssq )
       this.querySdstbzq = tbzq
       this.searchList[0].val = nsrsbh
       this.searchList[1].val = ssq
