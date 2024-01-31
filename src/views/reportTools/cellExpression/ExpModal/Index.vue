@@ -4,7 +4,7 @@
       <el-header>
         <div>公式编辑</div>
         <div>
-          <el-dropdown placement="top-start" trigger="click" @command="handleOpt">
+          <el-dropdown  trigger="click" @command="handleOpt">
             <span class="el-dropdown-link">
               运算符<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
@@ -23,7 +23,7 @@
             </el-dropdown-menu>
           </el-dropdown>
 
-          <el-dropdown placement="top-start" trigger="click" @command="handleOpt">
+          <el-dropdown  trigger="click" @command="handleOpt">
             <span class="el-dropdown-link">
               函数<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
@@ -227,9 +227,9 @@ export default {
   /deep/ .el-dialog__body{
     padding: 0;
   }
-  .el-dropdown-menu{
-    margin-top:200px;
-  }
+  // .el-dropdown-menu{
+  //   margin-top:200px;
+  // }
   .el-dropdown-link {
     cursor: pointer;
     color: #409EFF;
