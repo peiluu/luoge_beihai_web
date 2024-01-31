@@ -184,6 +184,15 @@ export const mainChildrenRoutes = [
       ),
   },
   {
+    path: '/foundationaldata/keyPersonnelCollectionDetails',
+    name: 'KeyPersonnelCollectionDetails',
+    meta: { title: '重点人员采集', isTab: true  },
+    component: () =>
+      import(
+        '@/views/foundationalData/keyPersonnelCollectionDetails/Index'
+      ),
+  },
+  {
     path: '/keyPersonnelCollectionDetails/keyPersonnelImport',
     name: 'KeyPersonnelImport',
     meta: { title: '重点人员采集导入', isTab: true  },
