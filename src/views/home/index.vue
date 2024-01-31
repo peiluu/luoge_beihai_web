@@ -671,7 +671,7 @@ export default {
     },
     // 处理待办任务
     handleClick(row) {
-      console.log('--row--', row);
+      // console.log('--row--', row);
       this.$router.push({
         path: '/redInvoice/redInfoConfirm',
         query: {

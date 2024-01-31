@@ -173,7 +173,7 @@
 
       </el-form>
       <!-- 扩展信息 -->
-      <ExtendInfo :nsrsbh="form.nsrsbh" v-if="form.isDigital === 'Y' && operateType == 'detail'" />
+      <ExtendInfo :nsrsbh="form.nsrsbh" v-if="form.isDigital === 'Y' && operateType == 'detail' && form.nsrsbh" />
     </div>
 
     <div class="footer">
@@ -291,10 +291,6 @@ export default {
   },
 
   mounted() {
-    if (sessionStorage.getItem('clearTaxBody') == 1) {
-      this.form = { isDigital: 'N' }
-      sessionStorage.setItem('clearTaxBody', 0)
-    }
     this.listCascaderDict();
     this.getTaxArea();
     this.selectYtList();
