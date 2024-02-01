@@ -553,8 +553,10 @@ export default {
     },
     toDeclareForm(row) {
       if (row) this.curRow = row;
+      const path = '/taxDeclaration/fillDeclaration'
+      this.$eventBus.$emit('removeCachePage', path)
       this.$router.push({
-        path: '/taxDeclaration/fillDeclaration',
+        path,
         query: { taxDeclarationId: this.curRow.id, templateId: this.curRow.templateId, status: this.curRow.status },
       });
     },

@@ -92,7 +92,7 @@ export default {
     },
     // tabs, 选中tab
     tabSelectedHandle (tab) {
-      // console.log('---tab111---', tab.$attrs.value)
+      console.log('---tab111---', tab.$attrs.value)
       let value = {
         params: {},
         query: {}
