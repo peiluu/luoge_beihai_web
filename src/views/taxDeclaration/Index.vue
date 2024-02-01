@@ -442,6 +442,13 @@ export default {
           return;
         }
       }
+      if(ids.length === 0){
+        this.$message({
+          message: '请先选择要提交的纳税主体',
+          type: 'warning',
+        });
+        return;
+      }
       this.api.batchUpdateStatus({ ids: ids, status: 2 }).then((res) => {
         if (res.code === '0') {
           this.$message.success('操作成功');
