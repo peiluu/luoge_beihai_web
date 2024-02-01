@@ -94,12 +94,14 @@ export default {
   methods: {
     listLegerConfirm(id, sjlx){
       this.api.listLegerConfirm(id, sjlx).then(res=>{
-        if(res.data.length==0){
+        if(res.data.length==0 && sjlx === 0){
           //明细为空，直接查询台账
           this.current = 1;
           this.total = 2;
           this.stepTitle = '申报台账数据确认'
-          this.$set(this, 'sjlx', 1);
+          const newSjlx = 1;
+          this.sjlx = newSjlx;
+          this.listLegerConfirm(id, newSjlx);
         }else {
           this.confirmInfos = res.data;
         }
@@ -115,8 +117,8 @@ export default {
         this.current = 2;
         this.total = 3;
         this.stepTitle = '申报台账数据确认';
-        const newSjlx = this.sjlx + 1
-        this.$set(this, "sjlx", newSjlx);
+        const newSjlx = this.sjlx + 1;
+        this.sjlx = newSjlx;
         this.listLegerConfirm(this.curRow.id, newSjlx);
       }
     },
