@@ -27,7 +27,7 @@
     <div class="top-tool">
       <div class="toolbar-left" />
       <div class="toolbar-right">
-        <el-button @click="fetchPrepaidShare" type="primary" :disabled="querySbStatus">取数</el-button>
+        <el-button @click="fetchPrepaidShare" type="primary" :disabled="querySbStatus" :loading="qsLoading">取数</el-button>
         <el-button @click="handleExport" :loading="exLoading">导出</el-button>
       </div>
     </div>
@@ -93,6 +93,7 @@ export default {
       },
       loading: false,
       exLoading: false,
+      qsLoading: false,
     };
   },
   mounted() {
@@ -223,11 +224,19 @@ export default {
     },
     // 取数
     async fetchPrepaidShare() {
-      const { code = '' } = await fetchPrepaidShare(this.form)
-      if (code === '0') {
-        this.$message.success('操作成功');
-        this.handleSearch()
+      try {
+        this.qsLoading = true;
+        const { code = '' } = await fetchPrepaidShare(this.form)
+        if (code === '0') {
+          this.$message.success('操作成功');
+          this.handleSearch()
+        }
+      } catch (error) {
+        
+      } finally {
+        this.qsLoading = false;
       }
+      
     },
     // 导出
     async handleExport() {
