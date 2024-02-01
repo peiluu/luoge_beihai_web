@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :title="title" :visible.sync="dialogVisible" min-height="600px;" width="80%" :before-close="handleClose">
+  <el-dialog :title="title" :visible.sync="dialogVisible" min-height="600px;" width="80%" :show-close="!loading" :before-close="handleClose">
     <div  class="dialog_content" v-loading="loading">
     <div class="content-left">
       <vxe-table max-height="500" show-overflow :show-header="false" row-key :row-config="{ isHover: true, isCurrent: true }" border ref="xTree" row-id="id" :data="treeData" :tree-config="{
@@ -59,8 +59,8 @@
     </div>
   </div>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="handleClose">关 闭</el-button>
-      <el-button type="success" @click="handleSubmit">添加至发票</el-button>
+      <el-button @click="handleClose" :disabled="loading">关 闭</el-button>
+      <el-button type="success" @click="handleSubmit" :disabled="loading">添加至发票</el-button>
     </span>
   </el-dialog>
 </template>
@@ -218,6 +218,7 @@ export default {
     },
 
     handleClose() {
+      if(this.loading) return;
       this.$refs.mutiVxeTable.removeRadioRow();
       this.$emit('closeDialog')
     },
