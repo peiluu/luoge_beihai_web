@@ -1971,6 +1971,8 @@ export default {
               this.ceTableData = this.ceForm.invoiceVariableLevyDetailList;
             }
           }
+        }).catch(err=>{
+          this.loading = false;
         });
       } else if (this.query.isFormInvoiced == "N" || this.detailInfo.isFormInvoiced == "N") {
         //编辑发票
@@ -1995,6 +1997,8 @@ export default {
                 this.ceTableData = this.ceForm.invoiceVariableLevyDetailList;
               }
             }
+          }).catch(err=>{
+            this.loading = false;
           });
       } else {
         //新增发票
