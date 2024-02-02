@@ -1,9 +1,6 @@
 <template>
   <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
-    <div class="blue-detail" v-if="detailDialog">
-      <BlueInvoiceForm :detailInfo="detailInfo" @cancel="cancel" @handeDoneOk="handeDoneOk"/>
-    </div>
-    <form-list v-show="!detailDialog" :columns="columns" :searchRow="SearchList" :api="api" :param="param" :height="height" @handleSelection="handleSelection" v-loading="loading" :tableCounterShow="true" ref="list"
+    <form-list :columns="columns" :searchRow="SearchList" :api="api" :param="param" :height="height" @handleSelection="handleSelection" v-loading="loading" :tableCounterShow="true" ref="list"
       @getSearchParam="getSearchParam">
       <!-- 操作按钮 -->
 
@@ -210,11 +207,6 @@ export default {
       backDialog: false,
       backMsg: '',
       queryParam: {},
-      detailDialog: false,
-      detailInfo: {
-        id: '',
-        isFormInvoiced: 'N'
-      }
     };
 
   },
@@ -234,13 +226,6 @@ export default {
 
   methods: {
     previewPdf,
-    cancel(){
-      this.detailDialog = false;
-    },
-    handeDoneOk(){
-      this.cancel();
-      this.handleOk();
-    },
     handleOk() {
       this.$refs.list.reload()
     },
@@ -472,19 +457,14 @@ export default {
      * @param row
      */
     editInvoice(row) {
-      this.detailDialog = true;
-      this.detailInfo = {
-        id: row.id,
-        isFormInvoiced: 'N'
-      }
-      // this.$router.push({
-      //   path: '/outputInvoice/blueInvoice/Index',
-      //   query: {
-      //     invoiceId: row.id,
-      //     isFormInvoiced: 'N'
-      //   }
-      // })
-      // this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+      this.$router.push({
+        path: '/outputInvoice/blueInvoice/BlueInvoiceForm',
+        query: {
+          invoiceId: row.id,
+          isFormInvoiced: 'N'
+        }
+      })
+      this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
     },
     getSearchParam(param) {
       this.queryParam = param;
@@ -499,16 +479,3 @@ export default {
   }
 };
 </script>
-<style lang='scss' scoped>
-.main-content {
-  position: relative;
-  // .blue-detail {
-  //   position: absolute;
-  //   left: 0;
-  //   top: 0;
-  //   right: 0;
-  //   bottom: 0;
-  //   z-index: 1000;
-  // }
-}
-</style>
