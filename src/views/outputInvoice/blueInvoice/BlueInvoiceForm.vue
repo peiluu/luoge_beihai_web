@@ -1950,7 +1950,6 @@ export default {
         this.$refs.ceItemForm.clearValidate();
       }
       this.loading = true;
-      console.log(this.query);
       
       if (this.query.isFormInvoiced == "Y") {
         //复制开票
