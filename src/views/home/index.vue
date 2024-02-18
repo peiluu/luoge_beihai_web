@@ -330,10 +330,12 @@ export default {
   },
   mounted() {
     this.getList(); // 获取纳税主体 ， 开票数据，涉税数据
-    this.geApplyList(); // 获取待办事项
     this.getShortcutList();
     this.getEchartData();
     this.initTree();
+  },
+  activated() {
+    this.geApplyList(); // 获取待办事项
   },
   methods: {
     // 数据初始化
