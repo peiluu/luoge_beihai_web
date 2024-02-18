@@ -32,7 +32,7 @@
 
       </el-form>
       <div class="search-btns">
-        <el-button type="success" @click="search">查询</el-button>
+        <el-button type="success" @click="search" :loading="loading" >查询</el-button>
         <el-button @click="resetForm">重置</el-button>
         <el-button v-show="showMore" :class="moreStatus == 'down' ? 'more' : 'more-down'" icon="el-icon-d-arrow-right" circle @click="handleMore"></el-button>
       </div>
@@ -45,8 +45,8 @@
       </div>
     </div>
 
-    <div class="custom-table">
-      <el-table border :data="tableData"  :header-cell-style="{ fontWeight: 400, borderTop: '1px solid #adb4bc', background: '#f7f9fd', color: '#333333', padding: '7px 0' }">
+    <div class="custom-table" v-loading="loading" >
+      <el-table border :data="tableData" :header-cell-style="{ fontWeight: 400, borderTop: '1px solid #adb4bc', background: '#f7f9fd', color: '#333333', padding: '7px 0' }">
         <el-table-column label="序号" type="index" min-width="50" />
         <!-- <el-table-column label="纳税主体名称" prop="name" min-width="250" /> -->
         <el-table-column show-overflow-tooltip label="会计主体名称" prop="orgName" min-width="210" />
@@ -103,6 +103,7 @@ export default {
       nsrlx: 1,
       taxBodyList: [],
       orgList: [],
+      loading: false,
     };
   },
   mounted() {
@@ -162,18 +163,26 @@ export default {
       this.handleSearch()
     },
     async handleSearch() {
-      const res = await getList({
-        ...this.form,
-        pageNo: this.pagination.pageNo || 1,
-        pageSize: this.pagination.pageSize || 10
-      })
-      this.pagination = {
-        ...res,
-        total: res.totalCount || 0,
-        pageNo: res.pageNo || 1,
-        pageSize: res.pageSize || 10
+      try {
+        this.loading = true;
+        const res = await getList({
+          ...this.form,
+          pageNo: this.pagination.pageNo || 1,
+          pageSize: this.pagination.pageSize || 10
+        })
+        this.pagination = {
+          ...res,
+          total: res.totalCount || 0,
+          pageNo: res.pageNo || 1,
+          pageSize: res.pageSize || 10
+        }
+        this.tableData = res.data || [];
+      } catch (error) {
+        
+      } finally {
+        this.loading = false
       }
-      this.tableData = res.data || [];
+      
     },
     // 取数
     async fetchDetail() {
