@@ -38,19 +38,25 @@
 
         declaration: {},
         lastId:'',
+        lastTemplateId: '',
       }
     },
     computed:{
       searchParam(){
         return this.$route.query
+      },
+      calcTaxIdTempId(){
+        const { query } = this.$route
+        return query.taxDeclarationId + '_' + query.templateId
       }
     },
     watch: {
-     'searchParam.taxDeclarationId'(newVal, oldVal){
-       if(newVal && newVal!= this.lastId){
-         this.loadTemplate(newVal, this.searchParam.templateId);
-       }
-      }
+      // taxDeclarationId 和 templateId 其中任一个id变动都需要重新执行loadTemplate
+      'calcTaxIdTempId'(newVal, oldVal){
+        if(/^[0-9]/.test(newVal) && newVal != this.lastId + '_' + this.lastTemplateId){
+          this.loadTemplate(this.searchParam.taxDeclarationId, this.searchParam.templateId);
+        }
+      },
     },
     created(){
       this.$nextTick(() => {
@@ -72,6 +78,7 @@
             }
           }
           that.lastId = taxDeclarationId;
+          that.lastTemplateId = templateId;
         });
       },
       uploadExcel(file){
