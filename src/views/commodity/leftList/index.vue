@@ -21,12 +21,14 @@
       </article>
       <article class="tree_main">
         <el-tree
+        ref="treeRef"
           :data="treeData"
           :node-key="!useMode?'id':'id'"
           :default-expand-all="useMode?false:true"
           :props="defaultProps"
           :expand-on-click-node="false"
           style = "overflow: auto;" 
+          :filter-node-method="filterNode"
           @node-click="handlerNodeClick">
           <span class="custom-tree-node" slot-scope="{ node, data }" >
             <span>{{ node.label }}</span>
@@ -209,8 +211,13 @@ export default {
    }, 
    /* 搜索 */
    handleSearchClassification(){
-
+    this.$refs.treeRef.filter(this.form.name);
    },
+   filterNode(value, data) {
+   
+    if (!value || !this.useMode) return true;
+    return data.sphfwmc.indexOf(value) !== -1;
+  },
    /* 递归返回数据 */
    handlerPrsoneData(data) {
       let firstId = null; // 保存最底层的第一个非空子列表中的第一个元素的 id
