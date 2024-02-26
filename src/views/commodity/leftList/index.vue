@@ -6,7 +6,7 @@
         <el-form ref="form" :model="form" :label-width="useMode?'0px':'80px'">
           <el-form-item :label="useMode?'':'商品名称'">
             <el-input v-model="form.name">
-              {{ useMode }}
+            
               <template slot="append">
                 <div v-if="!useMode" @click="() => handleAddClassification('', '', 1)">
                   <i  class="el-icon-circle-plus-outline"></i>
@@ -21,11 +21,13 @@
       </article>
       <article class="tree_main">
         <el-tree
+          ref="treeRef"
           :data="treeData"
           :node-key="!useMode?'id':'id'"
           :default-expand-all="useMode?false:true"
           :props="defaultProps"
           :expand-on-click-node="false"
+          :filter-node-method="filterNode"
           style = "overflow: auto;" 
           @node-click="handlerNodeClick">
           <span class="custom-tree-node" slot-scope="{ node, data }" >
@@ -112,7 +114,7 @@ export default {
         this.useMode = val;
         
       }
-    }
+    },
   },
   methods: {
    /**
@@ -204,13 +206,18 @@ export default {
    },
    /* 点击返回 */
    handlerNodeClick(data,node,item){
-    console.log(data,node,item);
+    
     this.$emit('handleNodeClick',data)
    }, 
    /* 搜索 */
    handleSearchClassification(){
-
+    this.$refs.treeRef.filter(this.form.name);
    },
+   filterNode(value, data) {
+   
+    if (!value || !this.useMode) return true;
+    return data.sphfwmc.indexOf(value) !== -1;
+  },
    /* 递归返回数据 */
    handlerPrsoneData(data) {
       let firstId = null; // 保存最底层的第一个非空子列表中的第一个元素的 id
