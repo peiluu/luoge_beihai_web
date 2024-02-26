@@ -372,11 +372,17 @@ export default {
         },
         /* 开票点变化事件 */
         handlerOrgidsChange(val){
-            if(val.includes('0')){
-                this.addForm.orgids = this.buillingOptions.map(k=> k.value); 
-            }else if(!val.includes('0') && this.addForm.orgids.length === this.buillingOptions.filter(k=> k.value !=='0').length){
-                this.addForm.orgids = [];
+            const allOptions = this.buillingOptions.map(k => k.value)
+            let orgidsIndex = val.indexOf("0");
+            // 判断全选选项是否被选中
+            if(orgidsIndex !== -1){
+                if(val.length === allOptions.length) {  //如果全选后长度相同，则取消全选
+                    val = [];
+                } else { // 全选被选中且不是全选状态，进行全选
+                    val = allOptions;
+                }
             }
+            this.addForm.orgids = val;
         },
         /* 移除 */
         handlerRemoveTag(val){
