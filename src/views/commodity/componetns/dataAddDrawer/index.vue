@@ -341,9 +341,6 @@ export default {
                     this.buillingOptions = res.data.map(k=> {return {...k,label:k.name,value:k.id}});
                     if(this.buillingOptions.length >0){
                         this.buillingOptions.unshift({label:'全部',value:'0'})
-                    }else{
-                        this.buillingOptions.unshift({label:'test',value:'0'})
-                        this.buillingOptions.unshift({label:'test1',value:'1'})
                     }
                    
                 }
