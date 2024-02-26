@@ -339,7 +339,13 @@ export default {
                 console.log(res,"2")
                 if(res.code === '0'){
                     this.buillingOptions = res.data.map(k=> {return {...k,label:k.name,value:k.id}});
-                    this.buillingOptions.unshift({label:'全部',value:'0'})
+                    if(this.buillingOptions.length >0){
+                        this.buillingOptions.unshift({label:'全部',value:'0'})
+                    }else{
+                        this.buillingOptions.unshift({label:'test',value:'0'})
+                        this.buillingOptions.unshift({label:'test1',value:'1'})
+                    }
+                   
                 }
             })
         },
@@ -372,11 +378,17 @@ export default {
         },
         /* 开票点变化事件 */
         handlerOrgidsChange(val){
-            if(val.includes('0')){
-                this.addForm.orgids = this.buillingOptions.map(k=> k.value); 
-            }else if(!val.includes('0') && this.addForm.orgids.length === this.buillingOptions.filter(k=> k.value !=='0').length){
-                this.addForm.orgids = [];
+            const allOptions = this.buillingOptions.map(k => k.value)
+            let orgidsIndex = val.indexOf("0");
+            // 判断全选选项是否被选中
+            if(orgidsIndex !== -1){
+                if(val.length === allOptions.length) {  //如果全选后长度相同，则取消全选
+                    val = [];
+                } else { // 全选被选中且不是全选状态，进行全选
+                    val = allOptions;
+                }
             }
+            this.addForm.orgids = val;
         },
         /* 移除 */
         handlerRemoveTag(val){
