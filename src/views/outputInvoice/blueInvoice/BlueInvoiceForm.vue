@@ -815,9 +815,9 @@
               <el-form-item label="开票人" prop="kpr">
                 <el-input :disabled="false" v-model="form.kpr"></el-input>
               </el-form-item>
-              <!-- <el-form-item label="邮箱" prop="email">
+              <el-form-item label="邮箱" prop="email">
                 <el-input v-model="form.email"></el-input>
-              </el-form-item> -->
+              </el-form-item>
                <!--<el-form-item label="开票日期" prop="kprq">
                 <el-date-picker
                   type="date"
