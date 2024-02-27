@@ -22,6 +22,8 @@ import VXETable from 'vxe-table';
 // import '../vxe-table-variables.scss'
 import 'vxe-table/lib/style.css';
 import './utils/dialogDrag.js'
+import '@/utils/calc.js'
+import { getCurrentSsq, getCurrentDate } from "@/utils/tool"
 import moment from 'moment'
 Vue.config.productionTip = false
 
@@ -342,6 +344,15 @@ Vue.prototype.getUrlParam = (key =>{
 })
 
 /**
+ * @description 判断是否是当前属期 从美的二期迁移过来需要找路姐确认
+ * @param preSsq 往前的属期
+ */
+Vue.prototype.judgeIsCurrentSq = (date, type, preSsq) => {
+  const { quarterValue, monthValue } = getCurrentSsq('', preSsq || 1, preSsq || 1)
+  // return  type == '月' ? monthValue == date : quarterValue == date
+  return true
+}
+/**
  * @description 格式化时间 ，返回属期月份
  * @param fmt 需要的格式
  * @param val 时间
@@ -350,10 +361,50 @@ Vue.prototype.formatDate = (fmt, val) => {
   return moment(val).format(fmt)
 }
 
+/**
+ * @description 格式化时间，支持返回月份或是季度
+ * @param date 时间
+ * @param returnType 返回类型
+ */
+Vue.prototype.formatAllDate = (date, returnType) => {
+  const { formatQuarterValue = '', formatMonthValue = '' } = getCurrentDate(date)
+  return returnType == '月' ? formatMonthValue : formatQuarterValue
+}
 
+// 配置输入框失去焦点时显示千分位
+Vue.directive("thousands", {
+  inserted: function (el, binding) {
+    // debugger
+    // 获取input节点
+    if (el.tagName.toLocaleUpperCase() !== "INPUT") {
+      el = el.getElementsByTagName("input")[0];
+    }
 
+    setTimeout(() => {
+      el.value = el.value ? parseFloat(el.value).toLocaleString("zh", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }) : ''
+    }, 0)
+    // 千分位格式化
+    // 聚焦转化为数字格式（去除千分位）
+    el.onfocus = e => {
+      const a = el.value ? el.value.replace(/,/g, "") : ''; // 去除千分号的','
+      el.value = a ? parseFloat(a).toFixed(2) : ''
+    };
+    // 失去焦点重新格式化
+    el.onblur = e => {
+      setTimeout(() => {
+        // 恢复原始值
+        // 格式化为千分位
+        el.value = el.value ? parseFloat(el.value).toLocaleString("zh", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        }) : '0.00'
+      }, 0);
+    };
+  },
 
-
-
+});
 
 

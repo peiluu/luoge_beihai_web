@@ -32,7 +32,7 @@
       <el-form-item label="是否特定业务" prop="tdys">
         <el-select :disabled="isBlank(form.fppz)"  class="form-inline-input" v-model="form.tdys" size="small" clearable>
         <el-option key="jzfw" label="建筑服务" value="03"></el-option>
-        <el-option key="bdcxs" label="不动产销售" value="05"></el-option>
+        <!-- <el-option key="bdcxs" label="不动产销售" value="05"></el-option> -->
         <el-option key="bdczl" label="不动产经营租赁服务" value="06"></el-option>
       </el-select>
       </el-form-item>

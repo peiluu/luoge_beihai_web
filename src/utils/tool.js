@@ -1,4 +1,7 @@
 import { config } from "@/config"
+import { numberMap, slListMap } from '@/config/constant'
+import moment from 'moment';
+
 const getUUID = function (len, radix) {
     const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
     let uuid = [], i;
@@ -246,7 +249,7 @@ const getCurrentSsq = () => {
     // 按季申报
     quarterValue: `${quarterYear}${InitialTime(whitchQuarter(quarterMonth))}`,
     formatQuarterValue: `${quarterYear}年${whitchQuarter(quarterMonth)}季度`,
-     // 单季度 （第一季度）
+      // 单季度 （第一季度）
     singleQuarter: `第${numberMap[whitchQuarter(month)].label}季度`,
   };
 };
@@ -290,6 +293,112 @@ const InitialTime = (val) => {
       // console.error('时间格式有误！');
   }
   return num;
+};
+/**
+ * @description 获取税率代码对应的计算税率
+ * @param slCode 税率代码 1 => 10% => 0.1
+ */
+export const geComputedSl = (slCode) => {
+  return parseFloat(slListMap[slCode].replace('%', '') / 100)
+};
+/**
+ * @description 根据输入的月份判断是哪一个季节
+ */
+export const whitchQuarter = (month) => {
+  let quarter = '';
+  month = Number(month);
+  switch (month) {
+    case 1:
+    case 2:
+    case 3:
+      quarter = '1';
+      break;
+    case 4:
+    case 5:
+    case 6:
+      quarter = '2';
+      break;
+    case 7:
+    case 8:
+    case 9:
+      quarter = '3';
+      break;
+    case 10:
+    case 11:
+    case 12:
+      quarter = '4';
+      break;
+    default:
+      // console.error('The entered time is incorrect');
+  }
+  return quarter;
+};
+/**
+ * @description 获取当前年份倒数n年的年份
+ * @param n 倒数的年份, 默认值为5
+ */
+export const getPreYearList = (nowYear, n) => {
+
+  const yearNumber = n || 5;
+  let now = new Date(nowYear);
+  let year = now.getFullYear() -1 ;
+  const list = [];
+  let index = 1;
+  for (let i = year; i > year - yearNumber; i--) {
+
+    list.push({
+      label: `前${numberMap[index].label}年度（${i}年）`,
+      propsKey: numberMap[index].propsKey
+    });
+    index ++
+  }
+  return list;
+};
+/**
+ * @description 获取当前月份的属期的xx： 格式比如： 2023年7月
+//  * @param next 当前属期的后next月，默认值0
+ */
+export const getCurrentMonthSsq = () => {
+  // 1月的属期的是上年度12月
+  let now = new Date();
+  let currentYear = now.getFullYear();
+  let currentMonth = now.getMonth() + 1
+  const month = currentMonth == 1 ? 12 : currentMonth;
+  const year = currentMonth == 1 ? currentYear - 1 : currentYear;
+  return {
+    dateValue: `${year}${month < 10 ? '0' + month : month}`,
+    dateValueLine: `${year}${month < 10 ? '-0' + month : '-' + month}`,
+    dateLabel: `${year}年${month}月`,
+  };
+};
+/**
+ * @description 获取当前年份倒数n年的年份列表
+ * @param n 倒数的年份, 默认值为5
+ */
+export const getCurrentYearList = (n) => {
+  const yearNumber = n || 5;
+  let now = new Date();
+  let year = now.getFullYear();
+  const list = [];
+  for (let i = year; i > year - yearNumber; i--) {
+    list.push(i);
+  }
+  return list;
+};
+/**
+ * @description 获取属期数组
+ */
+export const getssqArr = (ssq, tbzq) => {
+  // 按月
+  const formatSsq = moment(ssq).format('YYYY-MM');
+  if (tbzq == '月') {
+    return [formatSsq, formatSsq]
+  } else {
+    // 按季度，起始月份往前推2月
+    const ssqStart = moment(ssq).subtract(2, "months").format("YYYY-MM");
+    return [ssqStart, formatSsq]
+  // 按季度
+  }
 };
 export {
     getUUID,

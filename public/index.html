@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="shortcut icon" href="<%= BASE_URL %>favicon.ico">
+  <!-- luckysheet -->
+  <link rel='stylesheet' href='./luckySheet/plugins/css/pluginsCss.css' />
+  <link rel='stylesheet' href='./luckySheet/plugins/plugins.css' />
+  <link rel='stylesheet' href='./luckySheet/css/luckysheet.css' />
+  <link rel='stylesheet' href='./luckySheet/assets/iconfont/iconfont.css' />
+  <script src="./luckySheet/plugins/js/plugin.js"></script>
+  <script src="./luckySheet/luckysheet.umd.js"></script>
   <!-- 站点配置 -->
   <script>
     window.SITE_CONFIG = {};
@@ -16,7 +23,6 @@
       'menuId': '',      // 菜单id（用于选中侧边栏菜单，与this.$store.state.app.sidebarMenuActiveName进行匹配）
       'title': '',       // 标题
       'isTab': true,     // 是否通过tab展示内容?
-      'iframeURL': ''    // 是否通过iframe嵌套展示内容? (以http[s]://开头, 自动匹配)
     };
     window.SITE_CONFIG['permissions'] = [];                  // 页面按钮操作权限（后台返回，未做处理）
     window.SITE_CONFIG['dynamicRoutes'] = [];                // 动态路由列表

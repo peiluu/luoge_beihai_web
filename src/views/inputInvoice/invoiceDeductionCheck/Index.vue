@@ -1,0 +1,157 @@
+<template>
+  <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
+    <div class="content-header">
+      <div class="content-header-left">
+        <BackBtn path="/inputInvoice/choseDate" align="left" :query="$route.query" />
+        <BtnTabs :activeName="1" :zt="applyStatisticsStatus.zt" />
+      </div>
+      <div>勾选属期月份：{{ currentSq.dateLabel }}</div>
+    </div>
+
+    <div class="tab-box">
+      <el-tabs class="custom-card-tabs" v-model="level" type="card">
+        <el-tab-pane label="发票" name="1" />
+        <el-tab-pane label="代扣代缴完税凭证" name="2" />
+      </el-tabs>
+      <div> <i class="el-icon-warning" />当前纳税主体: {{ $route.query.nsrmc }} </div>
+    </div>
+
+
+    <!-- 发票下载 -->
+    <Invoice v-if="level == 1" :key="level" :currentSq="currentSq" />
+    <!-- 代扣代缴完税凭证 -->
+    <Withhold v-if="level == 2" :key="level" />
+  </div>
+</template>
+<script>
+import { getCurrentMonthSsq } from "@/utils/tool";
+import BackBtn from "@/components/BackBtn";
+import BtnTabs from '../components/BtnTabs.vue';
+import Invoice from './invoice/Index.vue';
+import Withhold from './withhold/Index.vue';
+import { queryApplyStatisticsStatus } from './invoice/Api'
+
+export default {
+  name: 'InvoiceDeductionCheck',
+  components: {
+    BackBtn,
+    Withhold,
+    Invoice,
+    BtnTabs
+  },
+  data() {
+    return {
+      level: '1',
+      applyStatisticsStatus: {}
+    };
+  },
+  computed: {
+    contentHeight() {
+      return window.innerHeight - 132;
+    },
+    currentSq() {
+      return getCurrentMonthSsq()
+    }
+  },
+  activated() {
+    this.queryApplyStatisticsStatus();
+  },
+  methods: {
+    // 申请统计状态查询
+    async queryApplyStatisticsStatus() {
+      const { code = '', data = [] } = await queryApplyStatisticsStatus({
+        gfsbh: this.$route.query.nsrsbh
+      })
+      if (code === '0') {
+        this.applyStatisticsStatus = data
+      }
+    },
+  }
+
+};
+</script>
+
+<style lang="scss" scoped>
+@import '../../../styles/variables.scss';
+.main-content {
+  font-size: 14px;
+  color: $mainTextColor;
+}
+
+.content-header {
+  display: flex;
+  justify-content: space-between;
+  padding-right: 24px;
+
+  .content-header-left {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+.tab-box {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.custom-card-tabs {
+  margin: 0;
+}
+
+.el-icon-warning {
+  margin: 0 4px 0 12px;
+  color: #E6A23C;
+}
+
+/deep/ .el-dialog__body {
+  padding: 20px 80px;
+
+
+  .title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 8px;
+    text-align: center;
+    color: $mainTextColor;
+    font-size: 15px;
+  }
+
+  .el-icon-warning {
+    margin-right: 4px;
+    color: red;
+    font-size: 32px;
+  }
+
+  .title-normal {
+    .el-icon-warning {
+      margin-right: 4px;
+      color: #1890ff;
+      font-size: 32px;
+    }
+
+    span {
+      padding: 0 2px;
+      color: #000;
+      font-weight: bold;
+    }
+  }
+
+  .tip {
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .list {
+    text-align: center;
+    padding: 12px 24px 0;
+
+    span {
+      padding: 8px 8px 8px 0;
+      color: #02A7F0
+    }
+  }
+}
+</style>

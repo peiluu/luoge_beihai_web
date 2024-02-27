@@ -651,7 +651,7 @@ export default {
         this.saveLoading = true;
         const res = await saveMenu({ userMenuList: this.selectMenus });
         if (res.code === '0') {
-          this.$message.success(res.msg);
+          this.$message.success(res.msg || '设置成功');
           this.shortcutMenus = cloneDeep(this.selectMenus);
         }
       } catch (error) {
@@ -673,7 +673,7 @@ export default {
     },
     // 处理待办任务
     handleClick(row) {
-      console.log('--row--', row);
+      // console.log('--row--', row);
       this.$router.push({
         path: '/redInvoice/redInfoConfirm',
         query: {

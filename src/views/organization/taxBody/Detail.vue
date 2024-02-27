@@ -44,13 +44,13 @@
         </el-form-item>
 
         <el-form-item label="所属业态" prop="businessFormat">
-          <el-select v-model="form.businessFormat" placeholder="请选择" filterable>
+          <el-select v-model="form.businessFormat" placeholder="请选择" filterable allow-create>
             <el-option v-for="(item, index) in ytList" :key="index" :label="item" :value="item">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="所属区域" prop="region">
-          <el-select v-model="form.region" placeholder="请选择" filterable>
+          <el-select v-model="form.region" placeholder="请选择" filterable allow-create>
             <el-option v-for="(item, index) in qyList" :key="index" :label="item" :value="item">
             </el-option>
           </el-select>
@@ -173,7 +173,7 @@
 
       </el-form>
       <!-- 扩展信息 -->
-      <ExtendInfo :nsrsbh="form.nsrsbh" v-if="form.isDigital === 'Y' && operateType == 'detail'" />
+      <ExtendInfo :nsrsbh="form.nsrsbh" v-if="form.isDigital === 'Y' && operateType == 'detail' && form.nsrsbh" />
     </div>
 
     <div class="footer">
@@ -291,10 +291,6 @@ export default {
   },
 
   mounted() {
-    if (sessionStorage.getItem('clearTaxBody') == 1) {
-      this.form = { isDigital: 'N' }
-      sessionStorage.setItem('clearTaxBody', 0)
-    }
     this.listCascaderDict();
     this.getTaxArea();
     this.selectYtList();

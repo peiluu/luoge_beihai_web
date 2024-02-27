@@ -15,7 +15,8 @@ export default {
         sidebarMenuActiveName: '',
         // 内容, 标签页
         contentTabs: [],
-        contentTabsActiveName: 'home'
+        contentTabsActiveName: 'home',
+        dynamicsCacheExcludePage: [], // 动态配置不需要缓存的页面
     },
     mutations: {
         saveCollapsed(state, collapsed) {
@@ -55,7 +56,9 @@ export default {
         saveContentTabs(state, data){
           state.contentTabs = data
         },
-
+        saveExcludePage(state, val) {
+            state.dynamicsCacheExcludePage = val
+        }
     },
     actions: {
         updateCollapsed(context, collapsed) {
