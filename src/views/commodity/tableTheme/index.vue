@@ -296,16 +296,14 @@ export default {
 </script>
 <style scoped lang="scss">
 /*@import url(); 引入公共css类*/
-.commodity_main {
-  padding: 15px;
-}
+
 ::v-deep{
     .el-form-item--mini.el-form-item{
         margin-bottom:0px
     }
 }
 .top_margin_common{
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 .btn_list{
     text-align: right;

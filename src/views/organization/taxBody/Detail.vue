@@ -44,13 +44,13 @@
         </el-form-item>
 
         <el-form-item label="所属业态" prop="businessFormat">
-          <el-select v-model="form.businessFormat" placeholder="请选择" filterable>
+          <el-select v-model="form.businessFormat" placeholder="请选择" filterable allow-create>
             <el-option v-for="(item, index) in ytList" :key="index" :label="item" :value="item">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="所属区域" prop="region">
-          <el-select v-model="form.region" placeholder="请选择" filterable>
+          <el-select v-model="form.region" placeholder="请选择" filterable allow-create>
             <el-option v-for="(item, index) in qyList" :key="index" :label="item" :value="item">
             </el-option>
           </el-select>

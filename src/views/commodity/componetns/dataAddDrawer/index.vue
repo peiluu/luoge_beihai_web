@@ -339,7 +339,10 @@ export default {
                 console.log(res,"2")
                 if(res.code === '0'){
                     this.buillingOptions = res.data.map(k=> {return {...k,label:k.name,value:k.id}});
-                    this.buillingOptions.unshift({label:'全部',value:'0'})
+                    if(this.buillingOptions.length >0){
+                        this.buillingOptions.unshift({label:'全部',value:'0'})
+                    }
+                   
                 }
             })
         },

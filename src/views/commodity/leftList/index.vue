@@ -6,7 +6,7 @@
         <el-form ref="form" :model="form" :label-width="useMode?'0px':'80px'">
           <el-form-item :label="useMode?'':'商品名称'">
             <el-input v-model="form.name">
-              {{ useMode }}
+            
               <template slot="append">
                 <div v-if="!useMode" @click="() => handleAddClassification('', '', 1)">
                   <i  class="el-icon-circle-plus-outline"></i>
@@ -27,8 +27,8 @@
           :default-expand-all="useMode?false:true"
           :props="defaultProps"
           :expand-on-click-node="false"
-          style = "overflow: auto;" 
           :filter-node-method="filterNode"
+          style = "overflow: auto;" 
           @node-click="handlerNodeClick">
           <span class="custom-tree-node" slot-scope="{ node, data }" >
             <span>{{ node.label }}</span>
@@ -114,7 +114,7 @@ export default {
         this.useMode = val;
         
       }
-    }
+    },
   },
   methods: {
    /**
@@ -206,7 +206,7 @@ export default {
    },
    /* 点击返回 */
    handlerNodeClick(data,node,item){
-    console.log(data,node,item);
+    
     this.$emit('handleNodeClick',data)
    }, 
    /* 搜索 */

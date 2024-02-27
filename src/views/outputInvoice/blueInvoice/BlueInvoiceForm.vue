@@ -1418,6 +1418,13 @@ export default {
     AppUseTheme
   },
   data() {
+    const validatePass = (rule, value, callback) => {
+        if ((value ??'')!=='' && !value.includes('（个人）') && this.form.gmfzrrbz === 'Y') {
+          callback(new Error('名称必须包含（个人）注：中文括号'));
+        } else {
+          callback();
+        }
+      };
     return {
       api: require("./Api"),
       canEdit: true,
@@ -1505,7 +1512,10 @@ export default {
         lzfpbz: "0",
       },
       rules: {
-        gmfmc: [{ required: true, message: "内容必填", trigger: "blur" }],
+        gmfmc: [
+          { required: true, message: "内容必填", trigger: "blur" },
+          { validator: validatePass, trigger: 'blur' }
+        ],
         jzfwfsd: [{ required: true, message: "内容必填", trigger: "blur" }],
         bdcdz: [{ required: true, message: "内容必填", trigger: "blur" }],
         jzxmmc: [{ required: true, message: "内容必填", trigger: "blur" }],
