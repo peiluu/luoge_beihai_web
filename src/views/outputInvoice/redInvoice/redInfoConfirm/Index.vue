@@ -103,7 +103,7 @@
             <el-input v-model="form.gmfnsrsbh" placeholder="请输入" maxlength="26" :disabled="!isAddRecord" />
           </el-form-item>
           <el-form-item label="开票日期" prop="lzkprq">
-            <el-date-picker v-model="form.lzkprq" value-format="yyyy-MM-dd" placeholder="请选择" :disabled="!isAddRecord" :picker-options="{
+            <el-date-picker v-model="form.lzkprq" value-format="yyyy-MM-dd HH:mm:ss" placeholder="请选择" :disabled="!isAddRecord" :picker-options="{
               disabledDate(time) { return time.getTime() > Date.now(); }
             }" />
           </el-form-item>
@@ -489,7 +489,7 @@ export default {
         this.form = {
           ...this.form,
           ...data,
-          lzkprq: dateFormat('YYYY-mm-dd', data.lzkprq),
+          lzkprq: dateFormat('YYYY-mm-dd HH:MM:SS', data.lzkprq),
           lzfptdyslxDm: data.lzfpTdyslxDm, // 蓝字发票特定要素类型代码
         };
        
@@ -522,7 +522,7 @@ export default {
           lzhjje: data.hjje,  // 蓝字合计金额额
           lzfphm: data.fpHm,
           lzfpdm: data.fpDm,
-          lzkprq: dateFormat('YYYY-mm-dd', data.kprq),
+          lzkprq: dateFormat('YYYY-mm-dd HH:MM:SS', data.kprq),
           lzfptdyslxDm: data.tspz, // 蓝字发票特定要素类型代码
           lzfppzDm: data.fplx, // 发票种类
           invoiceId: id, // 蓝字发票id
