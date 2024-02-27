@@ -815,9 +815,9 @@
               <el-form-item label="开票人" prop="kpr">
                 <el-input :disabled="false" v-model="form.kpr"></el-input>
               </el-form-item>
-              <el-form-item label="邮箱" prop="email">
+              <!-- <el-form-item label="邮箱" prop="email">
                 <el-input v-model="form.email"></el-input>
-              </el-form-item>
+              </el-form-item> -->
                <!--<el-form-item label="开票日期" prop="kprq">
                 <el-date-picker
                   type="date"
@@ -1418,6 +1418,13 @@ export default {
     AppUseTheme
   },
   data() {
+    const validatePass = (rule, value, callback) => {
+        if ((value ??'')!=='' && !value.includes('（个人）') && this.form.gmfzrrbz === 'Y') {
+          callback(new Error('名称必须包含（个人）注：中文括号'));
+        } else {
+          callback();
+        }
+      };
     return {
       api: require("./Api"),
       canEdit: true,
@@ -1505,7 +1512,10 @@ export default {
         lzfpbz: "0",
       },
       rules: {
-        gmfmc: [{ required: true, message: "内容必填", trigger: "blur" }],
+        gmfmc: [
+          { required: true, message: "内容必填", trigger: "blur" },
+          { validator: validatePass, trigger: 'blur' }
+        ],
         jzfwfsd: [{ required: true, message: "内容必填", trigger: "blur" }],
         bdcdz: [{ required: true, message: "内容必填", trigger: "blur" }],
         jzxmmc: [{ required: true, message: "内容必填", trigger: "blur" }],
