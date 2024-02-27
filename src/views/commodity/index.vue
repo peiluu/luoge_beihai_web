@@ -59,10 +59,10 @@ export default {
 </script>
 <style scoped lang="scss">
 /*@import url(); 引入公共css类*/
-
+.commodity_main {
+  padding: 15px;
+}
 .table_main{
    
 }
-</style>
-<style scoped>
 </style>
