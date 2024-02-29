@@ -473,82 +473,82 @@
         }
       },
 
-    // 转化税率格式
-    getTaxDesc(row = {}) {
-      return row.sl1 == null ? '' :
-        (row.lslbs == 2 || (row.taxclasscode || '').substring(0, 1) == '6' ? '不征税' :
-          (row.lslbs == 1 ?
-            '免税' :
-            row.sl1 * 100 + '%'))
-    },
-    // 查看红字确认单申请详情，查看 / 红冲 /
-    async getRedInvoice(id) {
-      const { code = '', data = {} } = await getRedInvoice({ id })
-      debugger;
-      if (code === '0') {
-        this.form = {
-          ...this.form,
-          ...data,
-          lzkprq: dateFormat('YYYY-mm-dd', data.lzkprq),
-          lzfptdyslxDm: data.lzfpTdyslxDm, // 蓝字发票特定要素类型代码
-        };
-       
-        // 当前身份，销方收到的购方发起的，购方收到的销方发起的
-        // this.lrfsf = data.lrfsf == '0' ? '1' : '0'
-        this.lrfsf = data.hzqrxxztDm == '03' ? '0' : '1'
-        this.hzqrdmxList = data?.hzqrdmxList ? data?.hzqrdmxList.map((item) => {
-          return {
-            ...item,
-            je: item.spje,
-            fpspdj: item.spdj,
-            bhsje: this.getBhsje(item, 'spje')
-          }
-        }) : []
-      }
-    },
+      // 转化税率格式
+      getTaxDesc(row = {}) {
+        return row.sl1 == null ? '' :
+                (row.lslbs == 2 || (row.taxclasscode || '').substring(0, 1) == '6' ? '不征税' :
+                        (row.lslbs == 1 ?
+                                '免税' :
+                                row.sl1 * 100 + '%'))
+      },
+      // 查看红字确认单申请详情，查看 / 红冲 /
+      async getRedInvoice(id) {
+        const { code = '', data = {} } = await getRedInvoice({ id })
+        debugger;
+        if (code === '0') {
+          this.form = {
+            ...this.form,
+            ...data,
+            lzkprq: dateFormat('YYYY-mm-dd HH:MM:SS', data.lzkprq),
+            lzfptdyslxDm: data.lzfpTdyslxDm, // 蓝字发票特定要素类型代码
+          };
 
-    // 查询蓝字发票详情，非手工补录
-    async queryBlueInvoiceById(id, isFormInvoiced) {
-      // 从已开票复制进入 || 选择蓝票红冲
-      const api = isFormInvoiced == 'Y' ? invoiceInfo : queryBlueInvoiceById;
-      const { code = "", data = {} } = await api({ id });
-      delete data.id
-      if (code === "0") {
-        this.form = {
-          sfhs: 'N',
-          chyyDm: '01',
-          ...data,
-          lzhjse: data.hjse, // 蓝字合计税额
-          lzhjje: data.hjje,  // 蓝字合计金额额
-          lzfphm: data.fpHm,
-          lzfpdm: data.fpDm,
-          lzkprq: dateFormat('YYYY-mm-dd', data.kprq),
-          lzfptdyslxDm: data.tspz, // 蓝字发票特定要素类型代码
-          lzfppzDm: data.fplx, // 发票种类
-          invoiceId: id, // 蓝字发票id
-          xsfmc: data.xsfMc,
-          xsfnsrsbh: data.xsfNsrsbh,
-          gmfmc: data.gmfMc,
-          gmfnsrsbh: data.gmfNsrsbh,
-          orgid: data.orgId,
-          cezslxDm: data.zsfs, // 征税方式
-          sfzzfpbz: 'N', // 纸质发票标志, N电子发票
-        };
-        // this.hzqrdmxList = data.invoiceDetailList || []
-        const { einvoiceHisBList = [] } = data;
-        // 商品列表，参数名称转化
-        this.hzqrdmxList = einvoiceHisBList ? einvoiceHisBList?.map((item, index) => {
-          return {
-            ...item,
-            ...this.transformParam(item, einvoiceHisBList[index], index + 1),
-            bhsje: this.getBhsje(item, 'xmje')
-          }
-        }) : [];
-        this.$nextTick(() => {
-          this.dealChyy();
-        })
-      }
-    },
+          // 当前身份，销方收到的购方发起的，购方收到的销方发起的
+          // this.lrfsf = data.lrfsf == '0' ? '1' : '0'
+          this.lrfsf = data.hzqrxxztDm == '03' ? '0' : '1'
+          this.hzqrdmxList = data?.hzqrdmxList ? data?.hzqrdmxList.map((item) => {
+            return {
+              ...item,
+              je: item.spje,
+              fpspdj: item.spdj,
+              bhsje: this.getBhsje(item, 'spje')
+            }
+          }) : []
+        }
+      },
+
+      // 查询蓝字发票详情，非手工补录
+      async queryBlueInvoiceById(id, isFormInvoiced) {
+        // 从已开票复制进入 || 选择蓝票红冲
+        const api = isFormInvoiced == 'Y' ? invoiceInfo : queryBlueInvoiceById;
+        const { code = "", data = {} } = await api({ id });
+        delete data.id
+        if (code === "0") {
+          this.form = {
+            sfhs: 'N',
+            chyyDm: '01',
+            ...data,
+            lzhjse: data.hjse, // 蓝字合计税额
+            lzhjje: data.hjje,  // 蓝字合计金额额
+            lzfphm: data.fpHm,
+            lzfpdm: data.fpDm,
+            lzkprq: dateFormat('YYYY-mm-dd HH:MM:SS', data.kprq),
+            lzfptdyslxDm: data.tspz, // 蓝字发票特定要素类型代码
+            lzfppzDm: data.fplx, // 发票种类
+            invoiceId: id, // 蓝字发票id
+            xsfmc: data.xsfMc,
+            xsfnsrsbh: data.xsfNsrsbh,
+            gmfmc: data.gmfMc,
+            gmfnsrsbh: data.gmfNsrsbh,
+            orgid: data.orgId,
+            cezslxDm: data.zsfs, // 征税方式
+            sfzzfpbz: 'N', // 纸质发票标志, N电子发票
+          };
+          // this.hzqrdmxList = data.invoiceDetailList || []
+          const { einvoiceHisBList = [] } = data;
+          // 商品列表，参数名称转化
+          this.hzqrdmxList = einvoiceHisBList ? einvoiceHisBList?.map((item, index) => {
+            return {
+              ...item,
+              ...this.transformParam(item, einvoiceHisBList[index], index + 1),
+              bhsje: this.getBhsje(item, 'xmje')
+            }
+          }) : [];
+          this.$nextTick(() => {
+            this.dealChyy();
+          })
+        }
+      },
 
       // 转化蓝票参数与红票参数保持一致
       transformParam(resultItem, oldItem, xh) {
