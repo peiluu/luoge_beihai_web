@@ -188,6 +188,10 @@ export default {
       }
     },
     getTableData(data) {
+      this.searchList[0].options = [
+            { value: '0', label: "我是销售方" },
+            // { value: '1', label: "我是购买方" },
+          ]
       this.showAddRecord = !data.length
     },
     //预览发票

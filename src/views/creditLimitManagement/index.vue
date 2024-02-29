@@ -207,8 +207,7 @@ export default {
       if (code === '0') {
         this.creditInfo = data;
         this.quotaDataList.forEach(item => {
-          const value = data[item?.propKey] || (data.invoiceCreditCodeVo || {})[item?.propKey];
-          console.log(value,"3456")
+          const value = (data[item?.propKey]??'') === '' ?(data.invoiceCreditCodeVo || {})[item?.propKey]:data[item?.propKey];
           item.value = value != undefined ? item.isNum || value === 0 ? value + item.unit : this.formatMoney(value) + item.unit : ''
         });
 

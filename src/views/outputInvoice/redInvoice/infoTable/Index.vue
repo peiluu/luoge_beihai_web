@@ -98,7 +98,7 @@
               <el-button @click="confirm('N')">驳回</el-button>
             </template>
             <!-- 销方发出等待对方确认可撤销 -->
-            <el-button v-if="activeName == '0'" @click="confirm('C')">撤销</el-button>
+            <!-- <el-button v-if="activeName == '0'" @click="confirm('C')">撤销</el-button> -->
             <el-button @click="downloadConfirmList">导出</el-button>
           </div>
         </div>
@@ -154,7 +154,7 @@ export default {
         { title: "对方纳税人识别号码", width: 150, dataIndex: "dfnsrsbh", slot: 'dfnsrsbh' },
         { title: "红字通知单编号", width: 130, dataIndex: "hzfpxxqrdbh" },
         { title: "确认单状态", width: 130, align: "center", dataIndex: "hzqrxxztDm", slot: "hzqrxxztDm" },
-        { title: "审核状态", width: 110, align: "center", dataIndex: "shzt", slot: "shzt" },
+        // { title: "审核状态", width: 110, align: "center", dataIndex: "shzt", slot: "shzt" },
         { title: "对应蓝字发票号码", width: 140, dataIndex: "lzfphm" },
         { title: "对应蓝字发票代码", width: 140, dataIndex: "lzfpdm" },
         { title: "不含税金额", dataIndex: "hzcxje", slot: 'hzcxje', align: 'right', width: 100 },

@@ -8,7 +8,7 @@
       <div class="conetent-tip">
         <!-- <div>您提交的红字发票信息表，已成功申请</div> -->
         <!-- shzt为0不需要审核 -->
-        <div class="tip-txt">{{ detail.shzt == 0 ? '您已成功提交红字开票申请，本确认单无需审核，已为您开具红字发票' : '您已成功提交红字开票申请，本确认单需审核，请等待审核人员审核' }}</div>
+        <div class="tip-txt">{{ detail.shzt == 0 ? '您已成功提交红字开票申请，已为您开具红字发票' : '您已成功提交红字开票申请，本确认单需审核，请等待审核人员审核' }}</div>
         <div class="tip-txt">请定时更新红字发票开具状态</div>
       </div>
       <el-card class="content-info">
