@@ -366,12 +366,14 @@ export default {
     },
     // 搜索
     handleSearch(val, type) {
-        let param = this.formParams
+        let param = this.formParams;
+        
       // 不需要添加多余的参数
       if (this.resetAll || type == 'reset') {
+       
         this.formParams = {...val, ...this.param};
         this.handleGetData(this.formParams);
-
+        
       } else if (param) {
         param.pageNo = 1;
         this.pagination.pageNo = 1;
@@ -379,6 +381,7 @@ export default {
         Object.assign(param, val);
         this.formParams = param;
         this.handleGetData({...param, ...val});
+        
       }
     },
     // 重置搜索内容

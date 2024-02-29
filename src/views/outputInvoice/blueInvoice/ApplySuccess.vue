@@ -7,7 +7,7 @@
         <!-- <div>您提交的红字发票信息表，已成功申请</div> -->
         <!-- shzt为0不需要审核 -->
         <div class="tip-txt">{{ 
-        detail.shzt == 0 ? '您已成功提交开票申请，本单无需审核，请耐心等待开具结果' : '您已成功提交开票申请，本单需审核，请等待审核人员审核' 
+        detail.shzt == 0 ? '您已成功提交开票申请，请耐心等待开具结果' : '您已成功提交开票申请，本单需审核，请等待审核人员审核' 
         }}
         </div>
         <div class="tip-txt">请及时关注与更新发票开具状态<router-link to="/outputInvoice/invoicedList/Index">去查询>></router-link></div>
