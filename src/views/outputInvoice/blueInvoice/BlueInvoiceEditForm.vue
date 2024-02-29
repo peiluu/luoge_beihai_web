@@ -580,17 +580,13 @@
               </el-form-item>
               <el-form-item label="面积单位" prop="mjdw">
                 <el-select class="form-inline-input" v-model="form.mjdw">
-                  <el-option
-                    key="1"
-                    label="平方千米"
-                    value="平方千米"
-                  ></el-option>
-                  <el-option key="2" label="平方米" value="平方米"></el-option>
-                  <el-option key="3" label="孔公里" value="孔公里"></el-option>
+                  <el-option key="1" label="平方米" value="平方米"></el-option>
+                  <el-option key="2" label="平方千米" value="平方千米"></el-option>
+                  <!-- <el-option key="3" label="孔公里" value="孔公里"></el-option> -->
                   <el-option key="4" label="公顷" value="公顷"></el-option>
                   <el-option key="5" label="亩" value="亩"></el-option>
-                  <el-option key="6" label="hm²" value="hm²"></el-option>
-                  <el-option key="7" label="km²" value="km²"></el-option>
+                  <el-option key="6" label="h㎡" value="h㎡"></el-option>
+                  <el-option key="7" label="k㎡" value="k㎡"></el-option>
                   <el-option key="8" label="㎡" value="㎡"></el-option>
                 </el-select>
               </el-form-item>
