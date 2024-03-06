@@ -21,7 +21,7 @@
                 </div>
             </article>
         </template>
-           <article class="drawer_content">
+           <article class="drawer_content" v-loading="loadings">
                 <el-row :gutter="20">
                     <el-col :span="10">
                         <app-left-list  :mode="mode" @handleNodeClick="handleNodeClick" />
@@ -48,7 +48,7 @@
                                     </el-col>
                                     <el-col :span="24">
                                         <el-form-item label="项目商品名称" prop="name">
-                                            <el-input v-model="addForm.name"></el-input>
+                                            <el-input v-model="addForm.name" @blur="handleBlurEvent"></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="24">
@@ -143,7 +143,7 @@
 
 <script>
 import AppLeftList from '../../leftList';
-import {addCommonditySingle,getUnitList,getallBilling,getCommodityDes,getCommondityDes,updateCommondityRow} from '../../api.js';
+import {addCommonditySingle,getUnitList,getallBilling,getCommodityDes,getCommondityDes,updateCommondityRow,getNameDes} from '../../api.js';
 export default {
     name:'addcommodityPage',
     props:{
@@ -233,6 +233,7 @@ export default {
             
             addActiveId:this.commodityActiveId || null,
             loading:false,
+            loadings:false,
             isActiveName:''
         };
     },
@@ -275,6 +276,38 @@ export default {
                 
             }
         })
+       },
+       /* 离开焦点事件 */
+       handleBlurEvent(){
+        console.log(this.addForm.name)
+        if((this.addForm.name??'') !==''){
+            this.handleGetCommodiyDesNameDes(this.addForm.name);
+        }else{
+            console.log('1')
+        }
+       },
+       /* 请求商品详情 */
+       handleGetCommodiyDesNameDes(data){
+            this.loadings = true;
+            getNameDes({spmc:data??''}).then(res=>{
+                if(res.code === '0'){
+                const {id,sphfwssflhbbm,sphfwmc,sphfwfljc,zzstsgl,sm} = res.data || {};
+                this.addForm ={
+                        ...this.addForm,
+                        sm:sm,
+                        taxclasscode:sphfwssflhbbm,
+                        sphfwmc,
+                        sphfwfljc
+                    }
+                if((zzstsgl??'') !==''){
+                    let arr = zzstsgl.split('、');
+                    this.taxAssOptions = arr.map(i=> {return {lable:i,value:i}})
+                    console.log(zzstsgl.split(','))
+                }
+            }
+            }).finally(()=>{
+                this.loadings = false
+            })
        },
         /* save */
         handleAddSingle(){
@@ -319,8 +352,6 @@ export default {
                             sphfwmc,
                             sphfwfljc
                         }
-                    
-                   
                     if((zzstsgl??'') !==''){
                         let arr = zzstsgl.split('、');
                         this.taxAssOptions = arr.map(i=> {return {lable:i,value:i}})
