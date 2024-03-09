@@ -117,6 +117,7 @@ export default {
         { title: "购买方名称", width: 180, dataIndex: "gmfmc", },
         { title: "购买方识别号/身份证号", width: 180, dataIndex: "gmfnsrsbh", },
         { title: "发票请求流水号", width: 180, dataIndex: "fpqqlsh" },
+        { title: "发票号码", width: 180, dataIndex: "fphm" },
         //{ title: "开票失败原因", width: 180, dataIndex: "kpsbyy" },
         { title: "金额", width: 100, dataIndex: "hjje", slot: 'hjje', align: 'right' },
         { title: "税额", width: 100, dataIndex: "hjse", slot: 'hjse', align: 'right' },

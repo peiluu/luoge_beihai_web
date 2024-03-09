@@ -388,6 +388,13 @@ export const mainChildrenRoutes = [
     component: () =>
       import('@/views/addedTaxManageNormal/taxPrepaymentLedger/Index'),
   },
+  {
+    path: '/outputInvoice/batchBlueInvoice/blueTaskMage',
+    name: 'blueTaskMagePage',
+    meta: { title: '批量蓝字发票任务', isTab: true },
+    component: () =>
+      import('@/views/outputInvoice/batchBlueInvoice/blueTaskMage/index'),
+  },
 ];
 
 // 页面路由(独立页面), 无公共左侧菜单导航，无公共头部。如：登录页

@@ -1,4 +1,4 @@
-import { postJSON } from '@/utils/request';
+import { postJSON,getJSON } from '@/utils/request';
 import { config } from "@/config"
 
 /**
@@ -39,7 +39,8 @@ export const updateCommondityRow = data=> postJSON(`${config.host}/material/upda
 
 /* 获取编辑详情 */
 export const getCommondityDes = data=> postJSON(`${config.host}/material/detail`,data);
-
+/* 离开请求 */
+export const getNameDes = data=> getJSON(`${config.host}/invoiceTaxCode/getBySpmc`,data);
 
 //   /**
 //  * @desption 获取当前用户可以开票的开票点（不分页）
