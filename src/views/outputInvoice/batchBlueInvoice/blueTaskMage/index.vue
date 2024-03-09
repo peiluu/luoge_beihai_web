@@ -115,7 +115,7 @@
           </el-table-column>
           <el-table-column label="操作" width="180" :header-align="'center'" :align="'center'">
             <template slot-scope="scope">
-              <el-button @click="handleViewDes(scope)" type="text" size="small">
+              <el-button @click="handleViewDes(scope,'')" type="text" size="small">
                 查看
               </el-button>
               <el-popconfirm
@@ -241,6 +241,7 @@ export default {
     },
     /* 开票 */
     handleDoIncoive(scope){
+        this.loading = true;
         const {pch} = scope.row || {};
         let data ={pch}
         postBatchDoOnvoice(data).then(res=>{
@@ -250,6 +251,8 @@ export default {
             }else{
                 this.$message.error(res.msg);
             }
+        }).finally(()=>{
+            this.loading = false;
         })
     },
     /* 状态格式化
