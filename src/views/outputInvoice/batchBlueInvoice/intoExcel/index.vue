@@ -10,7 +10,7 @@
     >
       <article>
         <article style="margin-bottom:10px;">
-          <el-card shdown="never" style="padding-bottom:0px">
+          <el-card shadow="never" style="padding-bottom:0px">
             <el-form :model="desForm">
               <el-form-item label="发票状态">
                 <el-select v-model="desForm.status" placeholder="请选择" @change="handleSelectChange">
@@ -24,7 +24,7 @@
             </el-form>
           </el-card>
         </article>
-        <el-card shdown="never" style="height:calc(100vh - 255px)">
+        <el-card shadow="never" style="height:calc(100vh - 275px)">
         <article>
           <el-table :data="tableData" v-loading="loading" style="width: 100%;height:calc(100vh - 350px);overflow: hidden auto;" :border="true">
             <el-table-column type="index" label="序号" width="55">
@@ -185,7 +185,7 @@ export default {
   data() {
     return {
       intoForm:{...this.respData},
-      desForm:{status:this.respData.type || '00'},
+      desForm:{status:this.respData.type || ''},
       tableData: [],
       loading: false,
       page:{
@@ -208,7 +208,7 @@ export default {
     respData: {
       handler(val) {
         this.intoForm = { ...val };
-        this.desForm.status = val.type;
+        this.desForm.status = val.type || '';
       },
     },
   },
