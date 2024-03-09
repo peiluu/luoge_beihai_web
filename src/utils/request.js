@@ -10,7 +10,7 @@ const CancelToken = axios.CancelToken
 const source = CancelToken.source()
 const http = axios.create({
   baseURL: process.env.VUE_APP_APIURL,
-  timeout: 60000,
+  timeout: 600000,
   withCredentials: true
 })
 function goLogin() {

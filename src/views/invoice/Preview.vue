@@ -58,8 +58,8 @@
             <!-- 头部-->
             <div class="goods-hearder">
               <div style="width: 15%;text-align: center;">项目名称</div>
-              <div v-if="form.tdys==''" style="width: 8%;text-align: center;">规格型号</div>
-              <div v-if="form.tdys==''" style="width: 8%;text-align: center;">单位</div>
+              <div v-if="form.tdys=='' || !form.tdys" style="width: 8%;text-align: center;">规格型号</div>
+              <div v-if="form.tdys=='' || !form.tdys" style="width: 8%;text-align: center;">单位</div>
 
               <div v-if="form.tdys=='03'" style="width: 15%;text-align: center;">建筑服务发生地</div>
               <div v-if="form.tdys=='03'" style="width: 15%;text-align: center;">建筑项目名称</div>
@@ -67,20 +67,20 @@
               <div v-if="form.tdys=='05'||form.tdys=='06'" style="width: 22%;text-align: center;">房屋产权证书/不动产权证号</div>
               <div v-if="form.tdys=='05'||form.tdys=='06'" style="width: 8%;text-align: center;">面积单位</div>
 
-              <div v-if="form.tdys=='05'||form.tdys=='06'||form.tdys==''" style="width: 8%;text-align: center;">数量</div>
-              <div v-if="form.tdys=='05'||form.tdys=='06'||form.tdys==''" style="width: 8%;text-align: center;">单价</div>
+              <div v-if="form.tdys=='05'||form.tdys=='06'||form.tdys=='' || !form.tdys" style="width: 8%;text-align: center;">数量</div>
+              <div v-if="form.tdys=='05'||form.tdys=='06'||form.tdys=='' || !form.tdys" style="width: 8%;text-align: center;">单价</div>
 
               <div style="width: 12%;text-align: center;">金额</div>
-              <div style="width: 8%;text-align: center;">税率/征收率</div>
+              <div style="width: 8.5%;text-align: center;">税率/征收率</div>
               <div style="width: 12%;text-align: right;">税额</div>
             </div>
             <!-- 内容-->
             <div class="goods-content">
-              <div class="row" v-for="(fpmx ,index) in form.fpmxList" :key="index">
+              <div class="row" v-for="(fpmx ,index) in getUrlParam('id')?form.detailList :form.fpmxList" :key="index">
                 <div style="width: 15%;text-align: center;">{{fpmx.hwhyslwfwmc}}</div>
 
-                <div v-if="form.tdys==''" style="width: 8%;text-align: center;">{{fpmx.ggxh}}</div>
-                <div v-if="form.tdys==''" style="width: 8%;text-align: center;">{{fpmx.dw}}</div>
+                <div v-if="form.tdys=='' || !form.tdys" style="width: 8%;text-align: center;">{{fpmx.ggxh}}</div>
+                <div v-if="form.tdys==''|| !form.tdys" style="width: 8%;text-align: center;">{{fpmx.dw}}</div>
 
                 <div v-if="form.tdys=='03'" style="width: 15%;text-align: center;">{{fpmx.fphxz!='01' ? (form.jzfwfsd[0]==form.jzfwfsd[1] ? '' : form.jzfwfsd[0]) + (form.jzfwfsd[1] || '') + (form.jzfwfsd[2]||'') + (form.xxdz||'')  : '' }}</div>
                 <div v-if="form.tdys=='03'" style="width: 15%;text-align: center;">{{fpmx.fphxz!='01' ? form.jzxmmc: ''}}</div>
@@ -88,8 +88,8 @@
                 <div v-if="form.tdys=='05'||form.tdys=='06'" style="width: 22%;text-align: center;">{{form.cqzsbh || fpmx.cqzsbh}}</div>
                 <div v-if="form.tdys=='05'||form.tdys=='06'" style="width: 8%;text-align: center;">{{form.mjdw || fpmx.dw}}</div>
 
-                <div v-if="form.tdys=='05'||form.tdys=='06'||form.tdys==''" style="width: 8%;text-align: center;">{{fpmx.sl}}</div>
-                <div v-if="form.tdys=='05'||form.tdys=='06'||form.tdys==''" style="width: 8%;text-align: center;">{{fpmx.dj}}</div>
+                <div v-if="form.tdys=='05'||form.tdys=='06'||form.tdys=='' || !form.tdys" style="width: 8%;text-align: center;">{{fpmx.sl}}</div>
+                <div v-if="form.tdys=='05'||form.tdys=='06'||form.tdys=='' || !form.tdys" style="width: 8.5%;text-align: center;">{{fpmx.dj}}</div>
 
                 <div style="width: 12%;text-align: center;">{{getFpmxJe(fpmx)}}</div>
                 <div style="width: 8%;text-align: center;">
@@ -155,6 +155,7 @@
 <script>
   import { numToCny } from '@/utils/tool'
   import { Calc } from '@/utils/calc'
+  import {getBatchData} from '../outputInvoice/batchBlueInvoice/api'
   export default {
     name: "Preview",
     components: {
@@ -164,12 +165,16 @@
       return {
         api: require('../outputInvoice/blueInvoice/Api'),
         jshj: '',
-        form:{
-        },
+        form:{},
       }
     },
     mounted() {
-      this.getInvoiceData();
+      if(this.$route.query.id && (this.$route.query.id??'')!==''){
+        this.handleBatchDes(this.$route.query.id);
+      }else{
+        this.getInvoiceData();
+      }
+      
     },
     methods: {
       getInvoiceData(){
@@ -184,6 +189,22 @@
             this.$message.error('数据获取错误！')
           }
         });
+      },
+      /* 获取批量开具发票详情 */
+      handleBatchDes(data){
+        let params = {
+          id:data || '',
+        }
+        getBatchData(params).then(res=>{
+          console.log(res)
+          if([0,'0'].includes(res.code)){
+            this.form = res.data;
+            this.jshj = Calc.Sub(res.data.jshj, res.data.hjse)
+            this.form.jshjCny = numToCny(this.form.jshj + "");
+          }else{
+            this.$message.error('数据获取错误！')
+          }
+        })
       },
       getFpmxJe(fpmx){
         if(this.form.sfhs=='Y'){
