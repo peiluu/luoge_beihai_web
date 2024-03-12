@@ -273,7 +273,7 @@ export default {
         let data ={pch}
         postBatchDoOnvoice(data).then(res=>{
             if([0,'0'].includes(res.code)){
-                this.$message.success('开票中，请稍后！');
+                this.$message.success('批量开票中（时间较长），请稍后查询开票结果！');
                 this.handlerGetTaskList();
             }else{
                 this.$message.error(res.msg);
