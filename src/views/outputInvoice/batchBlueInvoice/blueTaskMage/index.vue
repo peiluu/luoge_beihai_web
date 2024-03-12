@@ -16,7 +16,7 @@
             label="批次号"
             show-overflow-tooltip
             :header-align="'center'"
-            minWidth="80"
+            minWidth="120"
             :align="'center'"
           >
           </el-table-column>
@@ -89,6 +89,33 @@
             <template slot-scope="scope">
                 <el-link type="info" @click="handleViewDes(scope,'')">{{ `${scope.row.zs} （张）` }}</el-link>
             </template>
+          </el-table-column>
+          <el-table-column
+            prop="hjje"
+            label="合计金额"
+            minWidth="80"
+            show-overflow-tooltip
+            :header-align="'center'"
+            :align="'center'"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="hjse"
+            label="合计税额"
+            minWidth="80"
+            show-overflow-tooltip
+            :header-align="'center'"
+            :align="'center'"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="jshj"
+            label="价税合计"
+            minWidth="80"
+            show-overflow-tooltip
+            :header-align="'center'"
+            :align="'center'"
+          >
           </el-table-column>
           <el-table-column
             prop="riqi"
@@ -172,7 +199,7 @@ export default {
       loading:false,
     };
   },
-  computed: {},
+  computed: { },
   watch: {},
   methods: {
     /* 分页事件 */
@@ -246,7 +273,7 @@ export default {
         let data ={pch}
         postBatchDoOnvoice(data).then(res=>{
             if([0,'0'].includes(res.code)){
-                this.$message.success('开票成功');
+                this.$message.success('批量开票中（时间较长），请稍后查询开票结果！');
                 this.handlerGetTaskList();
             }else{
                 this.$message.error(res.msg);
