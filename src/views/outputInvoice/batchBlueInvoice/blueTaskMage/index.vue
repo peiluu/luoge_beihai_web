@@ -16,7 +16,25 @@
             label="批次号"
             show-overflow-tooltip
             :header-align="'center'"
-            minWidth="120"
+            minWidth="130"
+            :align="'center'"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="nsrmc"
+            label="纳税人名称"
+            show-overflow-tooltip
+            :header-align="'center'"
+            minWidth="220"
+            :align="'center'"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="nsrsbh"
+            label="纳税人识别号"
+            show-overflow-tooltip
+            :header-align="'center'"
+            minWidth="180"
             :align="'center'"
           >
           </el-table-column>
@@ -25,7 +43,7 @@
             label="票种"
             show-overflow-tooltip
             :header-align="'center'"
-            minWidth="80"
+            minWidth="120"
             :align="'center'"
           >
           <template slot-scope="scope">
@@ -93,7 +111,7 @@
           <el-table-column
             prop="hjje"
             label="合计金额"
-            minWidth="80"
+            minWidth="120"
             show-overflow-tooltip
             :header-align="'center'"
             :align="'center'"
@@ -102,7 +120,7 @@
           <el-table-column
             prop="hjse"
             label="合计税额"
-            minWidth="80"
+            minWidth="120"
             show-overflow-tooltip
             :header-align="'center'"
             :align="'center'"
@@ -111,16 +129,7 @@
           <el-table-column
             prop="jshj"
             label="价税合计"
-            minWidth="80"
-            show-overflow-tooltip
-            :header-align="'center'"
-            :align="'center'"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="riqi"
-            label="时间"
-            minWidth="80"
+            minWidth="120"
             show-overflow-tooltip
             :header-align="'center'"
             :align="'center'"
@@ -131,7 +140,7 @@
             label="状态"
             show-overflow-tooltip
             :header-align="'center'"
-            minWidth="80"
+            minWidth="120"
             :align="'center'"
           >
           <template slot-scope="scope">
@@ -140,13 +149,23 @@
             </el-tag>
           </template>
           </el-table-column>
-          <el-table-column label="操作" width="180" :header-align="'center'" :align="'center'">
+          <el-table-column
+            prop="riqi"
+            label="时间"
+            minWidth="160"
+            show-overflow-tooltip
+            :header-align="'center'"
+            :align="'center'"
+          >
+          </el-table-column>
+         
+          <el-table-column label="操作" width="180" :header-align="'center'" :align="'center'" fixed="right">
             <template slot-scope="scope">
               <el-button @click="handleViewDes(scope,'')" type="text" size="small">
                 查看
               </el-button>
               <el-popconfirm
-                title="是否确认开票？" @confirm="handleDoIncoive(scope)" :disabled="handleParesZT(scope).type!==4">
+                title="是否确认开票？" @confirm="handleOpen(scope)" :disabled="handleParesZT(scope).type!==4">
                     <el-button slot="reference" type="text" size="small" :disabled="handleParesZT(scope).type!==4">开票</el-button>
                 </el-popconfirm>
             </template>
@@ -317,7 +336,19 @@ export default {
         }
        
     },
-    
+    /* 二次提醒开票 */
+    handleOpen(scope) {
+      const {nsrmc,nsrsbh} = scope.row || {};
+        this.$confirm(`请再次确认是否为销售方为 ${nsrmc} 纳税人识别号为${nsrsbh} 开票, 是否继续?`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.handleDoIncoive(scope)
+        }).catch(() => {
+                  
+        });
+      }
   },
   created() {
    // this.handleStartPolling();

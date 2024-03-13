@@ -22,7 +22,7 @@
     </el-card>
     <el-card shadow="never" :body-style="{height: 'calc(100vh - 220px)'}">
       <article>
-        <el-table ref="batchBlueInvoiceRef" :data="tableData" style="width: 100%;height: calc(100vh - 320px);overflow:hidden auto;" :border="true" :loading="loading">
+        <el-table ref="batchBlueInvoiceRef" :data="tableData" style="width: 100%;height: calc(100vh - 320px);overflow:hidden auto;" :border="true" :v-loading="loading">
             <el-table-column type="index" label="序号" width="55" :header-align="'center'" :align="'center'">
           </el-table-column>
           <el-table-column prop="name" label="开票点名称" minWidth="180" show-overflow-tooltip  :header-align="'center'" :align="'center'">
@@ -95,7 +95,7 @@ export default {
             name:this.form.name || ''
         }
         getList(data).then(res=>{
-            console.log(res)
+            
             if(res.code === 0 || res.code === '0'){
                 this.tableData = [...res.data];
                 this.page.currentPage = res.pageNo;
@@ -131,8 +131,9 @@ export default {
     /* 操作 */
     /*  01专 02 普 */
     handleACtion(scope){
-        const {id} = scope.row || {}
-        this.$router.push({path:'/outputInvoice/batchBlueInvoice/blueTaskMage',query:{orgId:id}});
+      console.log(scope.row,"row")
+        const {id,nsrmc,nsrsbh} = scope.row || {}
+        this.$router.push({path:'/outputInvoice/batchBlueInvoice/blueTaskMage',query:{orgId:id,nsrsbh,nsrmc}});
         // this.title = type === '01' ? '批量专票': '批量普票';
         // this.respData = {orgId:scope.row.id,fppz:type};
         // this.visible = true;
