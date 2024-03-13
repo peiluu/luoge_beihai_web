@@ -10,7 +10,7 @@
     >
       <article>
         <article style="margin-bottom:10px;">
-          <el-card shadow="never" style="padding-bottom:0px">
+          <el-card shadow="never" :body-style="{paddingBottom:'0px'}" >
             <el-form :model="desForm">
               <el-form-item label="发票状态">
                 <el-select v-model="desForm.status" placeholder="请选择" @change="handleSelectChange">
@@ -24,9 +24,9 @@
             </el-form>
           </el-card>
         </article>
-        <el-card shadow="never" style="height:calc(100vh - 475px)">
+        <el-card shadow="never" style="height:calc(100vh - 395px)">
         <article>
-          <el-table :data="tableData" v-loading="loading" style="width: 100%;height:calc(100vh - 550px);overflow: hidden auto;" :border="true">
+          <el-table :data="tableData" v-loading="loading" style="width: 100%;height:calc(100vh - 470px);overflow: hidden auto;" :border="true">
             <el-table-column type="index" label="序号" width="55">
             </el-table-column>
             <el-table-column
@@ -321,5 +321,7 @@ export default {
   margin: 7px 0 5px;
   line-height: 0.5;
 }
-
+::v-deep .el-dialog__body{
+  padding-top: 10px;
+}
 </style>
