@@ -8,7 +8,7 @@
       :before-close="handleClose"
       v-loading="loading"
     >
-      <article>
+      <article >
         <el-form
           :model="intoForm"
           :rules="rules"
@@ -18,7 +18,7 @@
         >
           <el-row>
             <el-col :span="24">
-              <el-form-item label="开票限额" prop="fppz">
+              <el-form-item label="发票类型" prop="fppz">
                 <el-select v-model="intoForm.fppz" placeholder="请选择">
                     <el-option
                     v-for="item in fppzOptions"
@@ -38,6 +38,16 @@
                   :precision="2"
                   :controls="false"
                 ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item label="纳税人名称" >
+                <el-input v-model="intoForm.nsrmc" disabled />
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item label="纳税人识别号" >
+                <el-input v-model="intoForm.nsrsbh" disabled />
               </el-form-item>
             </el-col>
             <el-col :span="24">
@@ -76,7 +86,8 @@
       </article>
       <span slot="footer" class="dialog-footer">
         <el-button @click="updateVisible(false)">取 消</el-button>
-        <el-button type="primary" @click="handleUpload">确 定</el-button>
+        <el-button type="primary"  @click="handleOpen">确 定</el-button>
+        
       </span>
     </el-dialog>
   </div>
@@ -137,7 +148,8 @@ export default {
       fppzOptions:[
         {label:'增值税专用发票',value:'01'},
         {label:'增值税普通发票',value:'02'},
-      ]
+      ],
+      queryData:this.$route.query || {}
     };
   },
   computed: {},
@@ -155,16 +167,23 @@ export default {
     },
     /* 获取开票额度 */
     async handleGetOrg() {
+      this.loading = true;
       const { orgId } = this.intoForm || {};
       try {
         let params = { orgId };
         const res = await getInvoiceQuota(params);
         if (res.code === "0") {
           this.intoForm.fpxe = res.data.amount || 0;
+          
         }
-        console.log(res, "223");
+        
       } catch (e) {
         console.error(e);
+      }finally{
+        const {nsrsbh,nsrmc} = this.$route.query || {}
+        this.intoForm.nsrsbh = nsrsbh || '';
+        this.intoForm.nsrmc = nsrmc || '';
+        this.loading = false;
       }
     },
     /* 上传验证 */
@@ -182,12 +201,14 @@ export default {
     },
     /* 上传文件 */
     handleUploadFile(option) {
-      const { orgId, fppz, fpxe } = this.intoForm || {};
+      const { orgId, fppz, fpxe,nsrmc,nsrsbh } = this.intoForm || {};
       const formData = new FormData();
       formData.append("file", option.file);
       formData.append("orgId", orgId);
       formData.append("fppz", fppz);
       formData.append("fpxe", fpxe);
+      formData.append("nsrmc", nsrmc);
+      formData.append("nsrsbh", nsrsbh);
       customPost(
         this.api,
         { "Content-Type": "multipart/form-data" },
@@ -221,6 +242,18 @@ export default {
 
     /* 关闭前 */
     handleClose() {},
+    /*提示确认框 */
+    handleOpen() {
+        this.$confirm(`此操作将为销售方为 ${this.queryData.nsrmc},纳税人识别号为 ${this.queryData.nsrsbh} 添加开票任务, 是否继续?`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.handleUpload()
+        }).catch(() => {
+                 
+        });
+      }
   },
   created() {},
   mounted() {
