@@ -241,7 +241,9 @@ export default {
     handleConfirm() {},
 
     /* 关闭前 */
-    handleClose() {},
+    handleClose() {
+      this.updateVisible(false);
+    },
     /*提示确认框 */
     handleOpen() {
       //销售方为 ${this.queryData.nsrmc},纳税人识别号为 ${this.queryData.nsrsbh} 

@@ -4,7 +4,7 @@
       :title="title"
       :visible="visible"
       :width="width"
-      fullscreen
+      :fullscreen="false"
       @update:visible="updateVisible"
       :before-close="handleClose"
     >
@@ -24,15 +24,15 @@
             </el-form>
           </el-card>
         </article>
-        <el-card shadow="never" style="height:calc(100vh - 275px)">
+        <el-card shadow="never" style="height:calc(100vh - 475px)">
         <article>
-          <el-table :data="tableData" v-loading="loading" style="width: 100%;height:calc(100vh - 350px);overflow: hidden auto;" :border="true">
+          <el-table :data="tableData" v-loading="loading" style="width: 100%;height:calc(100vh - 550px);overflow: hidden auto;" :border="true">
             <el-table-column type="index" label="序号" width="55">
             </el-table-column>
             <el-table-column
               prop="xsfmc"
               label="销售方名称"
-              minWidth="80"
+              minWidth="130"
               show-overflow-tooltip
               :header-align="'center'"
             >
@@ -42,7 +42,7 @@
               label="销售方纳税识别号"
               show-overflow-tooltip
               :header-align="'center'"
-              minWidth="80"
+              minWidth="180"
             >
             </el-table-column>
             <el-table-column
@@ -50,7 +50,7 @@
               label="购买方名称"
               show-overflow-tooltip
               :header-align="'center'"
-              minWidth="80"
+              minWidth="130"
             >
             </el-table-column>
             <el-table-column
@@ -58,7 +58,7 @@
               label="购买方纳税识别号"
               show-overflow-tooltip
               :header-align="'center'"
-              minWidth="80"
+              minWidth="180"
             >
             </el-table-column>
             <el-table-column
@@ -67,7 +67,7 @@
               show-overflow-tooltip
               :header-align="'center'"
               :align="'center'"
-              minWidth="80"
+              minWidth="110"
             >
             <template slot-scope="scope">
               <el-tag :type="['success','warning','danger','warning','info'][handleStatus(scope).type]">{{handleStatus(scope).txt  }}</el-tag>
@@ -80,12 +80,12 @@
               show-overflow-tooltip
               :header-align="'center'"
               :align="'center'"
-              minWidth="80"
+              minWidth="110"
             >
             </el-table-column>
             <el-table-column
               prop="hjje"
-              minWidth="80"
+              minWidth="110"
               label="金额"
               show-overflow-tooltip
               :header-align="'center'"
@@ -94,7 +94,7 @@
             </el-table-column>
             <el-table-column
               prop="hjse"
-              minWidth="80"
+              minWidth="110"
               label="税额"
               show-overflow-tooltip
               :header-align="'center'"
@@ -290,7 +290,9 @@ export default {
     handleConfirm() {},
 
     /* 关闭前 */
-    handleClose() {},
+    handleClose() {
+      this.updateVisible(false);
+    },
   },
   created() {},
   mounted() {
