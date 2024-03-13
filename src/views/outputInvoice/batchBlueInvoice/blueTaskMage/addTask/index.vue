@@ -244,9 +244,13 @@ export default {
     handleClose() {},
     /*提示确认框 */
     handleOpen() {
-        this.$confirm(`此操作将为销售方为 ${this.queryData.nsrmc},纳税人识别号为 ${this.queryData.nsrsbh} 添加开票任务, 是否继续?`, '提示', {
+      //销售方为 ${this.queryData.nsrmc},纳税人识别号为 ${this.queryData.nsrsbh} 
+        this.$confirm(`<div>请确认开票主体！</div>
+          <div>销售方名称：${this.queryData.nsrmc}</div>
+          <div>纳税人识别号：${this.queryData.nsrsbh}</div>`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
+          dangerouslyUseHTMLString: true,
           type: 'warning'
         }).then(() => {
           this.handleUpload()
