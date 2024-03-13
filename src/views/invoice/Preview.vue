@@ -1,5 +1,5 @@
 <template>
-  <div class="preview-body">
+  <div class="preview-body" v-loading="loading">
     <el-form ref="form" :inline="true" :model="form" size="mini">
       <div class="preview-title">发票预览</div>
       <div class="preview-content">
@@ -166,6 +166,7 @@
         api: require('../outputInvoice/blueInvoice/Api'),
         jshj: '',
         form:{},
+        loading:false,
       }
     },
     mounted() {
@@ -178,6 +179,7 @@
     },
     methods: {
       getInvoiceData(){
+        this.loading = true;
         let url = this.getUrlParam("url");
         let fpqqlsh = this.getUrlParam("fpqqlsh");
         this.api.getInvoicePreview({"url": decodeURIComponent(url), "fpqqlsh":fpqqlsh}).then(res =>{
@@ -188,6 +190,8 @@
           } else {
             this.$message.error('数据获取错误！')
           }
+        }).finally(()=>{
+          this.loading = false;
         });
       },
       /* 获取批量开具发票详情 */
@@ -195,8 +199,9 @@
         let params = {
           id:data || '',
         }
+        this.loading = true;
         getBatchData(params).then(res=>{
-          console.log(res)
+          
           if([0,'0'].includes(res.code)){
             this.form = res.data;
             this.jshj = Calc.Sub(res.data.jshj, res.data.hjse)
@@ -204,6 +209,8 @@
           }else{
             this.$message.error('数据获取错误！')
           }
+        }).finally(()=>{
+          this.loading = false;
         })
       },
       getFpmxJe(fpmx){
@@ -231,7 +238,12 @@
             return '';
           }
         }
-        return this.form.hjse ? '￥'+parseFloat(this.form.hjse).toFixed(2):'￥'+ this.form.hjse;
+        if((this.form.hjse??'') ===''){
+          return ''
+        }else{
+          return this.form.hjse ? '￥'+parseFloat(this.form.hjse).toFixed(2):'￥'+ this.form.hjse;
+        }
+        
       }
     }
   };
