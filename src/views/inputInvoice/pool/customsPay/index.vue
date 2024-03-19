@@ -17,12 +17,7 @@
             </el-col>
             <el-col :span="16" style="text-align: right">
               <el-button-group>
-                <el-button
-                  type=""
-                  :disabled="isSelected.length <= 0"
-                  @click="handleEditeStatus"
-                  >发票查验</el-button
-                >
+                
                 <el-button
                   type=""
                   :disabled="isSelected.length <= 0"
@@ -215,12 +210,12 @@
         </el-pagination>
       </article>
     </el-card>
-    <app-modify-status
+    <lg-collect-ticket-mage
       v-if="statusVisible"
       :visible.sync="statusVisible"
       width="50%"
       title="修改入账状态"
-    ></app-modify-status>
+    ></lg-collect-ticket-mage>
     <app-common-upload
       v-if="uploadVisible"
       :visible.sync="uploadVisible"
@@ -238,14 +233,14 @@
 
 <script>
 import AppSearchForm from "../componetns/searchForm";
-import AppModifyStatus from "../componetns/modifyStatus";
-import AppCommonUpload from "../componetns/commonUpload";
-import AppAuthenticationPush from "../componetns/authenticationPush";
+import LgCollectTicketMage from "../componetns/collectTicketMage";
+import AppCommonUpload from "../componetns/enterAccountMage";
+import AppAuthenticationPush from "../componetns/editeVerified";
 export default {
   name: "poolPage",
   components: {
     AppSearchForm,
-    AppModifyStatus,
+    LgCollectTicketMage,
     AppCommonUpload,
     AppAuthenticationPush,
   },

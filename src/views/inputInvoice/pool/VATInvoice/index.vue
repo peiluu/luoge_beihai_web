@@ -20,7 +20,7 @@
                 <el-button
                   type=""
                   :disabled="isSelected.length <= 0"
-                  @click="handleEditeStatus"
+                  @click="handleRequire"
                   >发票查验</el-button
                 >
                 <el-button
@@ -32,25 +32,25 @@
                 <el-button
                   type=""
                   :disabled="isSelected.length <= 0"
-                  @click="handleUpload"
+                  @click="handleEnterAccount(1)"
                   >发票入账</el-button
                 >
                 <el-button
                   type=""
                   :disabled="isSelected.length <= 0"
-                  @click="handleUpload"
+                  @click="handleEnterAccount(2)"
                   >撤销入账</el-button
                 >
                 <el-button
                   type=""
                   :disabled="isSelected.length <= 0"
-                  @click="handlePush"
+                  @click="handleStatus(1)"
                   >确认收票</el-button
                 >
                 <el-button
                   type=""
                   :disabled="isSelected.length <= 0"
-                  @click="handlePush"
+                  @click="handleStatus(2)"
                   >撤销收票</el-button
                 >
                 <el-button type="">导出查询结果</el-button>
@@ -78,7 +78,7 @@
           <el-table
             :data="tableData"
             :border="true"
-            style="width: 100%"
+            style="width: 100%;height:250px"
             @row-click="handleRowClick"
             highlight-current-row
             :row-class-name="rowClassName"
@@ -171,7 +171,7 @@
           ref="bottomTableRef"
           :data="tableData"
           :border="true"
-          style="width: 100%; height: 350px; overflow: auto"
+          style="width: 100%;  overflow: auto"
           @row-click="handleRowClick"
         >
           <el-table-column type="index" width="55" label="序号" align="center">
@@ -262,45 +262,55 @@
           :current-page="page_bottom.currentPage"
           :page-sizes="page_bottom.sizes"
           :page-size="page_bottom.pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
+          layout="total, prev, pager, next, jumper"
           :total="bottom_total"
         >
         </el-pagination>
       </article>
     </el-card>
-    <app-modify-status
-      v-if="statusVisible"
-      :visible.sync="statusVisible"
+    <lg-collect-ticket-mage
+      v-if="dialog.statusVisible"
+      :visible.sync="dialog.statusVisible"
       width="50%"
-      title="修改入账状态"
-    ></app-modify-status>
-    <app-common-upload
-      v-if="uploadVisible"
-      :visible.sync="uploadVisible"
+      :title="dialog.statusTitle"
+    ></lg-collect-ticket-mage>
+    <lg-enter-account-mage
+      v-if="dialog.enterVisible"
+      :visible.sync="dialog.enterVisible"
       width="40%"
-      title="上传文件"
-    ></app-common-upload>
-    <app-authentication-push
-      v-if="pushVisible"
-      :visible.sync="pushVisible"
+      :title="dialog.enterTitle"
+    ></lg-enter-account-mage>
+    <!-- 待修改认证科目 -->
+    <lg-edie-verified
+      v-if="dialog.editeVisible"
+      :visible.sync="dialog.editeVisible"
       width="50%"
-      title="认证凭证推送核算系统"
-    ></app-authentication-push>
+      title="修改会计科目操作"
+    ></lg-edie-verified>
+    <!-- 发票检验 -->
+    <lg-invoice-require 
+    :visible.sync="dialog.requireVisbile" 
+    v-if="dialog.requireVisbile" 
+    title="发票检验" width="45%"
+    >
+    </lg-invoice-require>
     </div>
 </template>
 
 <script>
 import AppSearchForm from "../componetns/searchForm";
-import AppModifyStatus from "../componetns/modifyStatus";
-import AppCommonUpload from "../componetns/commonUpload";
-import AppAuthenticationPush from "../componetns/authenticationPush";
+import LgCollectTicketMage from "../componetns/collectTicketMage";
+import LgEnterAccountMage from "../componetns/enterAccountMage";
+import LgEdieVerified from "../componetns/editeVerified";
+import LgInvoiceRequire from "./invoiceRequire"
 export default {
   name: "poolPage",
   components: {
     AppSearchForm,
-    AppModifyStatus,
-    AppCommonUpload,
-    AppAuthenticationPush,
+    LgCollectTicketMage,
+    LgEnterAccountMage,
+    LgEdieVerified,
+    LgInvoiceRequire
   },
   data() {
     return {
@@ -329,22 +339,30 @@ export default {
       searchForm: {},
       isSelected: [],
       selectedRow: null,
-      statusVisible: false,
-      uploadVisible: false,
-      pushVisible: false,
+      
+     
+      
       total: 1000,
       page: {
         currentPage: 1,
-        pageSize: 10,
+        pageSize: 3,
         pageSizes: [15, 25, 50, 75, 100],
       },
       page_bottom: {
         currentPage: 1,
-        pageSize: 10,
-        pageSizes: [15, 25, 50, 75, 100],
+        pageSize: 3,
+        pageSizes: [3,15, 25, 50, 75, 100],
       },
       bottom_total: 1000,
       activeName:'first',
+      dialog:{
+        requireVisbile:false,
+        editeVisible:false,
+        enterVisible:false,
+        statusVisible: false,
+        enterTitle:'',
+        statusTitle:''
+      }
     };
   },
   computed: {},
@@ -362,17 +380,19 @@ export default {
     handleBottomCurrentChange(val) {
       this.page_bottom.currentPage = val;
     },
-    /* 推送 */
-    handlePush() {
-      this.pushVisible = true;
+    /* 确认管理 */
+    handleStatus(type) {
+      this.dialog.statusTitle = type === 1?'确认收票':'撤销收票';
+      this.dialog.statusVisible = true;
     },
-    /* 上传事件 1 发票新增 2 入账信息导入 */
-    handleUpload() {
-      this.uploadVisible = true;
+    /*  1 发票入账 2 撤销抽入 */
+    handleEnterAccount(type) {
+      this.dialog.enterTitle = type === 1?'发票入账':'撤销入账';
+      this.dialog.enterVisible = true;
     },
     /* 修改入账状态 */
     handleEditeStatus() {
-      this.statusVisible = true;
+      this.dialog.editeVisible = true;
     },
     /* 表格样式 行 */
     rowClassName({ row, rowIndex }) {
@@ -390,6 +410,10 @@ export default {
       console.log(e, "2");
       this.isSelected = [...e];
     },
+    /* 发票检验 */
+    handleRequire(){
+      this.dialog.requireVisbile = true;
+    }
   },
   created() {},
   mounted() {},
