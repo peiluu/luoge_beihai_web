@@ -43,6 +43,15 @@ export default {
       // 数电业务
       if (item.isDigital === 'Y') {
         const path = this.businessType === '3' ? '/deductionStatistics/list' : '/inputInvoice/choseDate';
+        console.log("----business---", {
+          path,
+          query: {
+            nsrmc: item.nsrmc,
+            nsrsbh: item.nsrsbh,
+            taxBodyId: item.id,
+            businessType: this.businessType
+          }
+        })
         this.$router.push({
           path,
           query: {

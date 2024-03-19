@@ -123,6 +123,7 @@ export function getArrayName (array, value){
  * @param {*} menuList 菜单列表
  * @param {*} routes 递归创建的动态(菜单)路由
  */
+let keys = []
 export function fnAddDynamicMenuRoutes (menuList = [], routes = [], router) {
   var temp = []
   for (var i = 0; i < menuList.length; i++) {
@@ -150,8 +151,32 @@ export function fnAddDynamicMenuRoutes (menuList = [], routes = [], router) {
     } else {
       URL = URL.replace(/^\//, '').replace(/_/g, '-')
       // route['path'] = route['name'] = URL.replace(/\//g, '-')
+      let componentUrl = ''
+      // 后天配置特殊带参数路由处理
+      
+      if(URL.includes('?')){
+        const us =  URL.split('?')
+        componentUrl = us[0]
+        console.log('componentUrl',URL, componentUrl,keys.includes(componentUrl))
+        if(!keys.includes(componentUrl)){
+          keys.push(componentUrl)
+          mainChildrenRoutes.push({
+            path: `/${componentUrl}`,
+            component: () => import(`@/views/${componentUrl}`),
+            name: URL.replace(/\//g, '-'),
+            meta: {
+              ...window.SITE_CONFIG['contentTabDefault'],
+              menuId: menuList[i].id,
+              title: menuList[i].name
+            }
+          })
+        }
+        route['meta']['query'] = getRequest(URL)
+        console.log('---getRequest(URL)---',getRequest(URL))
+      } else {
+        componentUrl = URL
+      }
       route['path'] = `/${URL}`
-      let componentUrl = URL.indexOf('?') ? URL.split('?')[0] : URL;
       route['name'] = URL.replace(/\//g, '-')
       route['component'] = () => import(`@/views/${componentUrl}`)
     }
@@ -168,7 +193,11 @@ export function fnAddDynamicMenuRoutes (menuList = [], routes = [], router) {
     children: routes
   })
   router.addRoute({ path: '*', redirect: { name: '404' } });
-  // console.log('----routes----', routes)
+  console.log('----routes----', JSON.stringify({
+    ...moduleRoutes,
+    name: 'main-dynamic-menu',
+    children: routes
+  }))
   window.SITE_CONFIG['dynamicMenuRoutes'] = routes
 }
 
@@ -183,3 +212,28 @@ export const getStringLen = ( s ) => {
   const spRegexp = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g;
   return s.replace(spRegexp,'_').length
 }
+/**
+   * 获取url中的参数
+   * @param {url} s 
+   * @returns {a:xx, b:xx}
+   */
+export const getRequest = (url='') => {
+  try {
+    if(!url) return {};
+    let theRequest = Object.create(null);
+    if (url.indexOf("?") != -1) {
+      let str = url.split('?')[1];
+      let strs = str.split("&");
+      for(let i = 0; i < strs.length; i ++) {
+        const st = strs[i].split("=")
+        theRequest[st[0]] = decodeURIComponent(st[1]);
+      }
+    }
+    return theRequest;
+  } catch (error) {
+    console.log(error)
+  }
+    
+}
+  
+  

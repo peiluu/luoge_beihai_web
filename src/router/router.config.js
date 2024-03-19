@@ -35,12 +35,12 @@ export const mainChildrenRoutes = [
     meta: { title: '红票信息申请列表', isTab: true, },
     component: () => import('@/views/outputInvoice/redInvoice/infoTable/Index.vue'),
   },
-  {
-    path: '/inputInvoice/enterpriseList/Index',
-    name: 'inputInvoiceEnterpriseList',
-    meta: { title: '选择企业', isTab: true  },
-    component: () => import('@/views/inputInvoice/enterpriseList/Index'),
-  },
+  // {
+  //   path: '/inputInvoice/enterpriseList/Index',
+  //   name: 'inputInvoiceEnterpriseList',
+  //   meta: { title: '选择企业', isTab: true  },
+  //   component: () => import('@/views/inputInvoice/enterpriseList/Index'),
+  // },
   {
     path: '/inputInvoice/choseDate',
     name: 'inputInvoiceChoseDate',
