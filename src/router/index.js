@@ -70,13 +70,17 @@ router.beforeEach((to, from, next) => {
     return next()
   }
   const token = getToken();
-  // console.log('----token----', token)
+  // console.log('----token----', token, router)
   // console.log('----beforeEach to----', to)
   // console.log('----beforeEach from----', to)
-  if (!token && to.name !== 'login') { // 未登录且不是在登录页，重定向到登录页
-    return next({ name: 'login' });
+  if (!token ) { // 未登录
+    if(to.path !== '/login'){ // 不是在登录页，重定向到登录页
+      return next('/login');
+    } else if( to.path === '/login'){ // 是在登录页，直接next
+      return next();
+    }
   }
-  if (store.state.app.sidebarMenuList.length || fnCurrentRouteIsPageRoute(to, pageRoutes)) {
+  if (store.state.app.sidebarMenuList.length) {
     if(to.path === '/'){
       return next({name: 'home'})
     }

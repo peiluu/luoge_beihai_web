@@ -157,7 +157,6 @@ export function fnAddDynamicMenuRoutes (menuList = [], routes = [], router) {
       if(URL.includes('?')){
         const us =  URL.split('?')
         componentUrl = us[0]
-        console.log('componentUrl',URL, componentUrl,keys.includes(componentUrl))
         if(!keys.includes(componentUrl)){
           keys.push(componentUrl)
           mainChildrenRoutes.push({
@@ -172,7 +171,6 @@ export function fnAddDynamicMenuRoutes (menuList = [], routes = [], router) {
           })
         }
         route['meta']['query'] = getRequest(URL)
-        console.log('---getRequest(URL)---',getRequest(URL))
       } else {
         componentUrl = URL
       }
@@ -193,11 +191,11 @@ export function fnAddDynamicMenuRoutes (menuList = [], routes = [], router) {
     children: routes
   })
   router.addRoute({ path: '*', redirect: { name: '404' } });
-  console.log('----routes----', JSON.stringify({
-    ...moduleRoutes,
-    name: 'main-dynamic-menu',
-    children: routes
-  }))
+  // console.log('----routes----', JSON.stringify({
+  //   ...moduleRoutes,
+  //   name: 'main-dynamic-menu',
+  //   children: routes
+  // }))
   window.SITE_CONFIG['dynamicMenuRoutes'] = routes
 }
 

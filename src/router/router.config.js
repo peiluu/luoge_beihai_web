@@ -6,7 +6,7 @@ export const moduleRoutes = {
   // redirect: { name: 'index' },
   meta: { title: '主入口布局' },
   children: [
-    // { path: '/index', component: () => import('@/views/index'), name: 'index', meta: { title: '首页', isTab: true } }
+    // { path: '/home', component: () => import('@/views/home'), name: 'home', meta: { title: '首页', isTab: true } }
   ],
 };
 // 本地路由配置，有公共左侧菜单导航，有公共头部，不在菜单导航中显示（菜单导航由后台配置）

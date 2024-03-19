@@ -12,6 +12,7 @@
 <script>
 import { urlMap } from '@/config/constant.js'
 import FormList from '@/components/FormList.vue';
+import { getRequest } from '@/utils'
 export default {
   name: "InputInvoiceEnterpriseList",
   components: {
@@ -43,15 +44,6 @@ export default {
       // 数电业务
       if (item.isDigital === 'Y') {
         const path = this.businessType === '3' ? '/deductionStatistics/list' : '/inputInvoice/choseDate';
-        console.log("----business---", {
-          path,
-          query: {
-            nsrmc: item.nsrmc,
-            nsrsbh: item.nsrsbh,
-            taxBodyId: item.id,
-            businessType: this.businessType
-          }
-        })
         this.$router.push({
           path,
           query: {
@@ -85,7 +77,8 @@ export default {
     },
     // 业务类型 : 1: 勾选抵扣 2: 勾选不抵扣 3: 勾选统计（不需要选择属期）
     businessType() {
-      return this.$route.query.businessType
+      const query = getRequest(location.href)
+      return this.$route.query.businessType || query.businessType
     },
   },
 };
