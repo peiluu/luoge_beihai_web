@@ -3,7 +3,7 @@
         <el-card shadow="never">
       <app-search-form></app-search-form>
     </el-card>
-    <el-card shadow="never">
+    <el-card shadow="never" style="margin-top: 10px;height: calc(100vh - 480px);">
       <article>
         <article style="padding: 2px">
           <el-row>
@@ -74,11 +74,11 @@
             </el-col>
           </el-row>
         </article>
-        <article>
+        <article >
           <el-table
             :data="tableData"
             :border="true"
-            style="width: 100%;height:100%;max-height:350px;overflow: auto;"
+            style="width: 100%;height: calc(100vh - 600px);overflow: auto;"
             @row-click="handleRowClick"
             highlight-current-row
             :row-class-name="rowClassName"
@@ -301,9 +301,11 @@
     >
     </lg-invoice-require>
     <!-- 查看发票 -->
-    <lg-view-invoice :visible.sync="dialog.viewVisible" v-if="dialog.viewVisible">
+    <lg-view-invoice title="发票预览" width="60%" :visible.sync="dialog.viewVisible" v-if="dialog.viewVisible">
       <template v-slot:main>
-        <h1>弹窗</h1>
+        <article style="min-height: 450px; max-height: 550px;">
+          <lg-invoice-view :invoice="{}" v-if="dialog.viewVisible"></lg-invoice-view>
+        </article>
       </template>
     </lg-view-invoice>
     </div>
@@ -316,6 +318,7 @@ import LgEnterAccountMage from "../componetns/enterAccountMage";
 import LgEdieVerified from "../componetns/editeVerified";
 import LgInvoiceRequire from "./invoiceRequire";
 import LgViewInvoice from "../componetns/viewInvoice";
+import LgInvoiceView from "@/components/invoiceView";
 export default {
   name: "poolPage",
   components: {
@@ -324,11 +327,32 @@ export default {
     LgEnterAccountMage,
     LgEdieVerified,
     LgInvoiceRequire,
-    LgViewInvoice
+    LgViewInvoice,
+    LgInvoiceView
   },
   data() {
     return {
       tableData: [
+        {
+          date: "2016-05-02",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1518 弄",
+        },
+        {
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄",
+        },
+        {
+          date: "2016-05-01",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1519 弄",
+        },
+        {
+          date: "2016-05-03",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1516 弄",
+        },
         {
           date: "2016-05-02",
           name: "王小虎",
@@ -452,13 +476,17 @@ export default {
     }
   },
   created() {},
-  mounted() {},
+  mounted() {
+   
+  },
   beforeCreate() {},
   beforeMount() {},
   beforeUpdate() {},
   updated() {
     this.$refs.bottomTableRef.doLayout();
-    this.$refs.tableRef.doLayout();
+    this.$nextTick(()=>{
+      this.$refs.tableRef.doLayout();
+    })
   },
   beforeDestroy() {},
   destroyed() {},
