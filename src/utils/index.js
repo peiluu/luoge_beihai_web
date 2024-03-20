@@ -183,3 +183,28 @@ export const getStringLen = ( s ) => {
   const spRegexp = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g;
   return s.replace(spRegexp,'_').length
 }
+/**
+   * 获取url中的参数
+   * @param {url} s 
+   * @returns {a:xx, b:xx}
+   */
+export const getRequest = (url='') => {
+  try {
+    if(!url) return {};
+    let theRequest = Object.create(null);
+    if (url.indexOf("?") != -1) {
+      let str = url.split('?')[1];
+      let strs = str.split("&");
+      for(let i = 0; i < strs.length; i ++) {
+        const st = strs[i].split("=")
+        theRequest[st[0]] = decodeURIComponent(st[1]);
+      }
+    }
+    return theRequest;
+  } catch (error) {
+    console.log(error)
+  }
+    
+}
+  
+  

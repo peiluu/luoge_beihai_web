@@ -1,6 +1,9 @@
 <template>
   <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
-    <BackBtn path="/inputInvoice/enterpriseList" :query="{ businessType: $route.query.businessType }" />
+    <BackBtn 
+      :path="$route.query.businessType === '1'?'/inputInvoice/enterpriseList/invoiceCheck':'/inputInvoice/enterpriseList/invoiceNotChecked'" 
+      :query="{ businessType: $route.query.businessType }" 
+    />
 
     <el-form :inline="true" :model="form">
       <el-form-item label="当前纳税主体" prop="nsrsbh">

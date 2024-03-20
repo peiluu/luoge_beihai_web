@@ -12,10 +12,17 @@
 <script>
 import { urlMap } from '@/config/constant.js'
 import FormList from '@/components/FormList.vue';
+import { getRequest } from '@/utils'
 export default {
   name: "InputInvoiceEnterpriseList",
   components: {
     FormList,
+  },
+  props: {
+    businessType: { // 业务类型 : 1: 勾选抵扣 2: 勾选不抵扣 3: 勾选统计（不需要选择属期）
+      type: String,
+      default: '1'
+    }
   },
   data() {
     return {
@@ -73,10 +80,6 @@ export default {
     },
     height() {
       return window.innerHeight - 280;
-    },
-    // 业务类型 : 1: 勾选抵扣 2: 勾选不抵扣 3: 勾选统计（不需要选择属期）
-    businessType() {
-      return this.$route.query.businessType
     },
   },
 };

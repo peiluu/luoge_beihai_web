@@ -363,7 +363,7 @@ export const getCurrentMonthSsq = () => {
   let now = new Date();
   let currentYear = now.getFullYear();
   let currentMonth = now.getMonth() + 1
-  const month = currentMonth == 1 ? 12 : currentMonth;
+  const month = currentMonth == 1 ? 12 : currentMonth - 1;
   const year = currentMonth == 1 ? currentYear - 1 : currentYear;
   return {
     dateValue: `${year}${month < 10 ? '0' + month : month}`,
