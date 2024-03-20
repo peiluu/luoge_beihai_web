@@ -315,7 +315,7 @@ import LgCollectTicketMage from "../componetns/collectTicketMage";
 import LgEnterAccountMage from "../componetns/enterAccountMage";
 import LgEdieVerified from "../componetns/editeVerified";
 import LgInvoiceRequire from "./invoiceRequire";
-import LgViewInvoice from "../";
+import LgViewInvoice from "../componetns/viewInvoice";
 export default {
   name: "poolPage",
   components: {
