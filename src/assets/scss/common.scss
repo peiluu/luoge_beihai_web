@@ -84,9 +84,9 @@ img {
 /* Reset element-ui
 ------------------------------ */
 .aui-wrapper {
-  .el-card + .el-card {
-    margin-top: 15px;
-  }
+  // .el-card + .el-card {
+  //   margin-top: 15px;
+  // }
   .el-input__prefix .el-input__icon {
     display: inline-block;
     vertical-align: middle;
