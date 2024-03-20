@@ -57,7 +57,7 @@
                 <el-button
                   type=""
                   :disabled="isSelected.length <= 0"
-                  @click="handlePush"
+                  @click="handleStatus(1)"
                   >导出选中发票</el-button
                 >
               </el-button-group>
@@ -78,11 +78,12 @@
           <el-table
             :data="tableData"
             :border="true"
-            style="width: 100%;height:250px"
+            style="width: 100%;height:100%;max-height:350px;overflow: auto;"
             @row-click="handleRowClick"
             highlight-current-row
             :row-class-name="rowClassName"
             @selection-change="handleSelectionChange"
+            ref="tableRef"
           >
             <el-table-column type="selection" width="55" fixed="left" align="center">
             </el-table-column>
@@ -142,6 +143,11 @@
             </el-table-column>
             <el-table-column prop="date" label="修改时间" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
+            <el-table-column prop="aciton" fixed="right" label="操作" width="120" :header-align="'center'" :align="'center'">
+              <template slot-scope="scope">
+                <el-button size="small" type="primary" @click="handleViewInvoice(scope.row)">查看发票</el-button>
+              </template>
+            </el-table-column>
           </el-table>
         </article>
         <article class="table_bottom_page">
@@ -169,9 +175,9 @@
       <article>
         <el-table
           ref="bottomTableRef"
-          :data="tableData"
+          :data="bottomTableData"
           :border="true"
-          style="width: 100%;  overflow: auto"
+          style="width: 100%; height: 150px; overflow: auto"
           @row-click="handleRowClick"
         >
           <el-table-column type="index" width="55" label="序号" align="center">
@@ -260,7 +266,7 @@
           @size-change="handleBottomSizeChange"
           @current-change="handleBottomCurrentChange"
           :current-page="page_bottom.currentPage"
-          :page-sizes="page_bottom.sizes"
+          :page-sizes="page_bottom.pageSizes"
           :page-size="page_bottom.pageSize"
           layout="total, prev, pager, next, jumper"
           :total="bottom_total"
@@ -294,6 +300,12 @@
     title="发票检验" width="45%"
     >
     </lg-invoice-require>
+    <!-- 查看发票 -->
+    <lg-view-invoice :visible.sync="dialog.viewVisible" v-if="dialog.viewVisible">
+      <template v-slot:main>
+        <h1>弹窗</h1>
+      </template>
+    </lg-view-invoice>
     </div>
 </template>
 
@@ -302,7 +314,8 @@ import AppSearchForm from "../componetns/searchForm";
 import LgCollectTicketMage from "../componetns/collectTicketMage";
 import LgEnterAccountMage from "../componetns/enterAccountMage";
 import LgEdieVerified from "../componetns/editeVerified";
-import LgInvoiceRequire from "./invoiceRequire"
+import LgInvoiceRequire from "./invoiceRequire";
+import LgViewInvoice from "../";
 export default {
   name: "poolPage",
   components: {
@@ -310,7 +323,8 @@ export default {
     LgCollectTicketMage,
     LgEnterAccountMage,
     LgEdieVerified,
-    LgInvoiceRequire
+    LgInvoiceRequire,
+    LgViewInvoice
   },
   data() {
     return {
@@ -339,7 +353,23 @@ export default {
       searchForm: {},
       isSelected: [],
       selectedRow: null,
-      
+      bottomTableData:[
+      {
+          date: "2016-05-02",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1518 弄",
+        },
+        {
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄",
+        },
+        {
+          date: "2016-05-01",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1519 弄",
+        },
+      ],
      
       
       total: 1000,
@@ -351,7 +381,7 @@ export default {
       page_bottom: {
         currentPage: 1,
         pageSize: 3,
-        pageSizes: [3,15, 25, 50, 75, 100],
+        pageSizes: [3,10, 15, 50, 100, 200],
       },
       bottom_total: 1000,
       activeName:'first',
@@ -360,6 +390,7 @@ export default {
         editeVisible:false,
         enterVisible:false,
         statusVisible: false,
+        viewVisible:false,
         enterTitle:'',
         statusTitle:''
       }
@@ -413,6 +444,11 @@ export default {
     /* 发票检验 */
     handleRequire(){
       this.dialog.requireVisbile = true;
+    },
+    /* 发票查看 */
+    handleViewInvoice(row){
+      this.dialog.viewVisible = true;
+      console.log(row)
     }
   },
   created() {},
@@ -422,6 +458,7 @@ export default {
   beforeUpdate() {},
   updated() {
     this.$refs.bottomTableRef.doLayout();
+    this.$refs.tableRef.doLayout();
   },
   beforeDestroy() {},
   destroyed() {},
@@ -444,5 +481,8 @@ export default {
 }
 .aui-wrapper .el-pagination{
     margin-top: 0;
+}
+::v-deep .el-table__body-wrapper, .el-table__fixed-body-wrapper{
+  min-height: 100px;
 }
 </style>
