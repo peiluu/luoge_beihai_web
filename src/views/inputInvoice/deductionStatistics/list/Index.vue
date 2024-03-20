@@ -1,7 +1,7 @@
 <template>
   <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
     <div class="content-tab-header">
-      <BackBtn path="/inputInvoice/enterpriseList/Index" align="left" :query="{ businessType: this.$route.query.businessType }" />
+      <BackBtn path="/inputInvoice/enterpriseList/deductionCheckStatistics" align="left" :query="{ businessType: this.$route.query.businessType }" />
       <BtnTabs :activeName="2" :zt="applyStatisticsStatus.zt" />
     </div>
 
@@ -351,5 +351,8 @@ export default {
   .el-button {
     font-size: 14px;
   }
+}
+.content-tab-header {
+  display: flex;
 }
 </style>
