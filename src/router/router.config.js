@@ -165,15 +165,15 @@ export const mainChildrenRoutes = [
     component: () =>
       import('@/views/foundationalData/deemedSalesRevenueDetails/Index'),
   },
-  {
-    path: '/retiredSoldierCollectionDetails/retiredSoldierImport',
-    name: 'RetiredSoldierImport',
-    meta: { title: '退役士兵导入', isTab: true  },
-    component: () =>
-      import(
-        '@/views/foundationalData/retiredSoldierCollectionDetails/RetiredSoldierImport'
-      ),
-  },
+  // {
+  //   path: '/retiredSoldierCollectionDetails/retiredSoldierImport',
+  //   name: 'RetiredSoldierImport',
+  //   meta: { title: '退役士兵导入', isTab: true  },
+  //   component: () =>
+  //     import(
+  //       '@/views/foundationalData/retiredSoldierCollectionDetails/RetiredSoldierImport'
+  //     ),
+  // },
   {
     path: '/foundationaldata/previousOffsetDetail',
     name: 'RetiredSoldierpPreviousOffsetDetail',
@@ -192,15 +192,15 @@ export const mainChildrenRoutes = [
         '@/views/foundationalData/keyPersonnelCollectionDetails/Index'
       ),
   },
-  {
-    path: '/keyPersonnelCollectionDetails/keyPersonnelImport',
-    name: 'KeyPersonnelImport',
-    meta: { title: '重点人员采集导入', isTab: true  },
-    component: () =>
-      import(
-        '@/views/foundationalData/keyPersonnelCollectionDetails/KeyPersonnelImport'
-      ),
-  },
+  // {
+  //   path: '/keyPersonnelCollectionDetails/keyPersonnelImport',
+  //   name: 'KeyPersonnelImport',
+  //   meta: { title: '重点人员采集导入', isTab: true  },
+  //   component: () =>
+  //     import(
+  //       '@/views/foundationalData/keyPersonnelCollectionDetails/KeyPersonnelImport'
+  //     ),
+  // },
   {
     path: '/foundationaldata/keyPersonnelPreviousOffsetDetail',
     name: 'KeyPersonnelPreviousOffsetDetail',

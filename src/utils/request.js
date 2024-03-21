@@ -168,6 +168,7 @@ export const customPost = function(url, hearders, params, cb){
           if(cb && typeof cb === 'function')cb(res);
           resolve(res)
       }).catch(err => {
+        if(cb && typeof cb === 'function')cb(err);
           reject(err)
       })
   })

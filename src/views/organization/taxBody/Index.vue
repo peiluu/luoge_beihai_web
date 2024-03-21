@@ -70,16 +70,18 @@
     >
       <Detail :detailInfo="detailInfo" @onOk="onOk" @onClose="onClose"/>
     </el-dialog>
-    <el-dialog
-      v-if="importVisible"
-      :visible.sync="importVisible"
-      width="80%"
-      :before-close="onClose"
-      class="import-dialog"
-      destroy-on-close
-    >
-      <TaxBodyImport @onOk="onOk"/>
-    </el-dialog>
+   <custom-import 
+      dialogTitle="纳税主体信息"
+      :dialogVisible="dialogImportVisible"
+      @handleClose="onClose"
+      @handleOk="onOk"
+      downloadTemplateApi="/taxBody/downExcel/1"
+      downloadTemplateName="纳税主体信息_导入模板"
+      upApi="/taxBody/importTaxBodyExcelInfo"
+      importApi="/taxBody/importTaxBodyInfo"
+      upTitle="上传纳税主体信息"
+      :importColumns="importColumns"
+    ></custom-import>
   </div>
 </template>
 
@@ -88,13 +90,13 @@ import FormList from '@/components/FormList.vue';
 import { rgionEnum, cityEnum, provincesEnmu } from '@/config/regionEnums.js';
 import { listCascaderDict, selectYtList, delTaxBodyBatch, setIsDigital, getListAll, selectQyList, downLoadApplyList, exportTaxBodyInfo, } from './Api.js'
 import Detail from './Detail.vue'
-import TaxBodyImport from './TaxBodyImport.vue'
+import CustomImport from '@/components/CustomImport'
 export default {
   name: 'organizationTaxBody',
   components: {
     FormList,
     Detail,
-    TaxBodyImport
+    CustomImport
   },
   data() {
     return {
@@ -131,6 +133,10 @@ export default {
           fixed: 'right',
           scopedSlots: { customRender: "action" }
         }
+      ],
+      importColumns:[
+        { title: "纳税主体名称", width: 160, dataIndex: "nsrmc", },
+        { title: "纳税主体识别号", width: 160, dataIndex: "nsrsbh", },
       ],
       searchList: [
         {
@@ -213,7 +219,7 @@ export default {
         operateType: '',
         id: null
       },
-      importVisible: false,
+      dialogImportVisible: false,
 
     };
 
@@ -241,7 +247,7 @@ export default {
     },
     onClose(){
       this.detailVisible = false;
-      this.importVisible  = false;
+      this.dialogImportVisible  = false;
       this.detailInfo = {
         operateType: '',
         id: null,
@@ -391,7 +397,7 @@ export default {
     },
     //导入
     handleImport() {
-      this.importVisible = true;
+      this.dialogImportVisible = true;
     },
     getSearchParam(param) {
       this.queryParam = param;
