@@ -74,78 +74,81 @@
             </el-col>
           </el-row>
         </article>
-        <article >
+        <article style="height: calc(100vh - 600px);">
           <el-table
             :data="tableData"
             :border="true"
-            style="width: 100%;height: calc(100vh - 600px);overflow: auto;"
+           
             @row-click="handleRowClick"
             highlight-current-row
             :row-class-name="rowClassName"
             @selection-change="handleSelectionChange"
             ref="tableRef"
+            height="100%"
+            v-loading="loading"
           >
             <el-table-column type="selection" width="55" fixed="left" align="center">
             </el-table-column>
             <el-table-column type="index" width="55" label="序号" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="发票号码" minWidth="160" align="center">
+            <el-table-column prop="fphm" label="发票号码" minWidth="160" align="center">
             </el-table-column>
-            <el-table-column prop="name" label="发票代码" minWidth="140" align="center">
+            <el-table-column prop="zzfpDm" label="发票代码" minWidth="140" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="开票日期" minWidth="160" align="center">
+            <el-table-column prop="kprq" label="开票日期" minWidth="160" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="发票类型" minWidth="100" align="center">
+            <el-table-column prop="fppzDm" label="发票类型" minWidth="100" align="center">
+
             </el-table-column>
-            <el-table-column prop="date" label="特殊票种" minWidth="100" align="center">
+            <el-table-column prop="tdyslxDm" label="特殊票种" minWidth="100" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="凭证号" minWidth="120" align="center">
+            <el-table-column prop="wspzh" label="凭证号" minWidth="180" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="作废日期" minWidth="120" align="center">
+            <el-table-column prop="zfrq" label="作废日期" minWidth="120" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="销方名称" minWidth="180" align="center">
+            <el-table-column prop="xsfmc" label="销方名称" minWidth="180" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="销方税号" minWidth="180" align="center">
+            <el-table-column prop="xsfnsrsbh" label="销方税号" minWidth="180" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="合计金额" minWidth="120" :header-align="'center'" :align="'right'">
+            <el-table-column prop="hjje" label="合计金额" minWidth="120" :header-align="'center'" :align="'right'">
             </el-table-column>
-            <el-table-column prop="date" label="合计税额" minWidth="120" :header-align="'center'" :align="'right'">
+            <el-table-column prop="hjse" label="合计税额" minWidth="120" :header-align="'center'" :align="'right'">
             </el-table-column>
-            <el-table-column prop="date" label="价税合计" minWidth="120" :header-align="'center'" :align="'right'">
+            <el-table-column prop="jshj" label="价税合计" minWidth="120" :header-align="'center'" :align="'right'">
             </el-table-column>
-            <el-table-column prop="date" label="扣除额" minWidth="120" :header-align="'center'" :align="'center'">
+            <el-table-column prop="kce" label="扣除额" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="date" label="发票状态" minWidth="120" :header-align="'center'" :align="'center'">
+            <el-table-column prop="fpzt" label="发票状态" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="date" label="异常凭证状态" minWidth="120" :header-align="'center'" :align="'center'">
+            <el-table-column prop="sfycpz" label="异常凭证状态" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="date" label="红字锁定标识" minWidth="120" :header-align="'center'" :align="'center'">
+            <el-table-column prop="sdzt" label="红字锁定标识" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="date" label="发票用途" minWidth="120" :header-align="'center'" :align="'center'">
+            <el-table-column prop="hxyt" label="发票用途" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="date" label="入账状态" minWidth="120" :header-align="'center'" :align="'center'">
+            <el-table-column prop="rzzt" label="入账状态" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="date" label="收票状态" minWidth="120" :header-align="'center'" :align="'center'">
+            <el-table-column prop="spzt" label="收票状态" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="date" label="收票日期" minWidth="120" :header-align="'center'" :align="'center'">
+            <el-table-column prop="sprq" label="收票日期" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="date" label="转出状态" minWidth="120" :header-align="'center'" :align="'center'">
+            <el-table-column prop="zczt" label="转出状态" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="date" label="原发票号码" minWidth="120" :header-align="'center'" :align="'center'">
+            <el-table-column prop="yfphm" label="原发票号码" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="date" label="原发票代码" minWidth="120" :header-align="'center'" :align="'center'">
+            <el-table-column prop="yfpdm" label="原发票代码" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="date" label="财务备注" minWidth="120" :header-align="'center'" :align="'center'">
+            <el-table-column prop="cwbz" label="财务备注" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="date" label="归集日期" minWidth="120" :header-align="'center'" :align="'center'">
+            <el-table-column prop="gjrq" label="归集日期" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="date" label="创建时间" minWidth="120" :header-align="'center'" :align="'center'">
+            <el-table-column prop="creattime" label="创建时间" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="date" label="修改时间" minWidth="120" :header-align="'center'" :align="'center'">
+            <el-table-column prop="updatetime" label="修改时间" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
             <el-table-column prop="aciton" fixed="right" label="操作" width="120" :header-align="'center'" :align="'center'">
               <template slot-scope="scope">
-                <el-button size="small" type="primary" @click="handleViewInvoice(scope.row)">查看发票</el-button>
+                <el-button  type="primary" @click="handleViewInvoice(scope.row)">查看发票</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -178,7 +181,6 @@
           :data="bottomTableData"
           :border="true"
           style="width: 100%; height: 150px; overflow: auto"
-          @row-click="handleRowClick"
         >
           <el-table-column type="index" width="55" label="序号" align="center">
           </el-table-column>
@@ -312,13 +314,14 @@
 </template>
 
 <script>
-import AppSearchForm from "../componetns/searchForm";
+import AppSearchForm from "./searchForm";
 import LgCollectTicketMage from "../componetns/collectTicketMage";
 import LgEnterAccountMage from "../componetns/enterAccountMage";
 import LgEdieVerified from "../componetns/editeVerified";
 import LgInvoiceRequire from "./invoiceRequire";
 import LgViewInvoice from "../componetns/viewInvoice";
 import LgInvoiceView from "@/components/invoiceView";
+import {getPoolInvoiceList,getPoolInvoiceSingleDes} from '@/api/pool/index.js'
 export default {
   name: "poolPage",
   components: {
@@ -333,74 +336,21 @@ export default {
   data() {
     return {
       tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄",
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1519 弄",
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1516 弄",
-        },
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄",
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1519 弄",
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1516 弄",
-        },
+        
       ],
       searchForm: {},
       isSelected: [],
       selectedRow: null,
       bottomTableData:[
-      {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄",
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1519 弄",
-        },
+      
       ],
      
       
       total: 1000,
       page: {
         currentPage: 1,
-        pageSize: 3,
-        pageSizes: [15, 25, 50, 75, 100],
+        pageSize: 10,
+        pageSizes: [10,15, 25, 50, 75, 100],
       },
       page_bottom: {
         currentPage: 1,
@@ -417,16 +367,45 @@ export default {
         viewVisible:false,
         enterTitle:'',
         statusTitle:''
-      }
+      },
+      loading:false
     };
   },
   computed: {},
   watch: {},
   methods: {
+    handleInit(){
+      this.handleGetTableList()
+    },
+    async handleGetTableList(){
+      this.loading= true;
+      let parmas = {
+        pageNo:this.page.currentPage,
+        pageSize:this.page.pageSize,
+      }
+      try{
+        const res = await getPoolInvoiceList(parmas);
+        if([0,'0'].includes(res.code)){
+          this.tableData = [...res.data];
+          this.total = res.totalCount;
+          this.$refs.tableRef.doLayout();
+        }
+      }finally{
+        this.loading = false
+      }
+      
+     
+    },
     /* size change */
-    handleSizeChange() {},
+    handleSizeChange(page) {
+      this.page.pageSize = page;
+      this.handleGetTableList()
+    },
     /* Current change */
-    handleCurrentChange() {},
+    handleCurrentChange(current) {
+      this.page.currentPage(current)
+      this.handleGetTableList()
+    },
     /* size change */
     handleBottomSizeChange(val) {
       this.page_bottom.pageSize = val;
@@ -458,7 +437,16 @@ export default {
     },
     /*点击行事件 */
     handleRowClick(row) {
+      const {id} = row || {};
       this.selectedRow = row;
+      this.handleGetSingleDes({id});
+    },
+    /* 请求详情 */
+    async handleGetSingleDes(data){
+      const res = await getPoolInvoiceSingleDes(data);
+      if([0,'0'].includes(res.code)){
+        this.bottomTableData = [...res.data];
+      }
     },
     /* 勾选 */
     handleSelectionChange(e) {
@@ -477,16 +465,14 @@ export default {
   },
   created() {},
   mounted() {
-   
+   this.handleInit()
   },
   beforeCreate() {},
   beforeMount() {},
   beforeUpdate() {},
   updated() {
     this.$refs.bottomTableRef.doLayout();
-    this.$nextTick(()=>{
-      this.$refs.tableRef.doLayout();
-    })
+    this.$refs.tableRef.doLayout();
   },
   beforeDestroy() {},
   destroyed() {},
