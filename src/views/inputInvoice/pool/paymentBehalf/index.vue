@@ -1,9 +1,9 @@
 <template>
     <div class="">
-        <el-card shadow="never">
+        <el-card shadow="never" class="card_bottom">
       <app-search-form></app-search-form>
     </el-card>
-    <el-card shadow="never">
+    <el-card shadow="never" >
       <article>
         <article style="padding: 2px">
           <el-row>
@@ -78,46 +78,48 @@
             highlight-current-row
             :row-class-name="rowClassName"
             @selection-change="handleSelectionChange"
+            v-loading="loading"
+            height="360"
           >
             <el-table-column type="selection" width="55" fixed="left" align="center">
             </el-table-column>
             <el-table-column type="index" width="55" label="序号" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="代扣代缴完税凭证号" minWidth="160" align="center">
+            <el-table-column prop="dkdjwspzh" label="代扣代缴完税凭证号" minWidth="160" align="center">
             </el-table-column>
-            <el-table-column prop="name" label="票种类型" minWidth="140" align="center">
+            <el-table-column prop="pzlx" label="票种类型" minWidth="140" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="扣缴义务人识别号（购方）" minWidth="160" align="center">
+            <el-table-column prop="kjywrsbh" label="扣缴义务人识别号（购方）" minWidth="160" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="扣缴义务人名称" minWidth="100" align="center">
+            <el-table-column prop="kjywrmc" label="扣缴义务人名称" minWidth="100" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="填发日期" minWidth="100" align="center">
+            <el-table-column prop="tfrq" label="填发日期" minWidth="100" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="开具日期" minWidth="120" align="center">
+            <el-table-column prop="kjrq" label="开具日期" minWidth="120" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="计税金额" minWidth="120" align="center">
+            <el-table-column prop="jsje" label="计税金额" minWidth="120" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="实缴金额" minWidth="180" align="center">
+            <el-table-column prop="sjje" label="实缴金额" minWidth="180" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="被扣缴纳税人识别号" minWidth="180" align="center">
+            <el-table-column prop="bkjnsrsbh" label="被扣缴纳税人识别号" minWidth="180" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="被扣缴纳税人名称" minWidth="120" :header-align="'center'" :align="'right'">
+            <el-table-column prop="bkjnsrmc" label="被扣缴纳税人名称" minWidth="120" :header-align="'center'" :align="'right'">
             </el-table-column>
-            <el-table-column prop="date" label="入账状态" minWidth="120" :header-align="'center'" :align="'right'">
+            <el-table-column prop="rzzt" label="入账状态" minWidth="120" :header-align="'center'" :align="'right'">
             </el-table-column>
-            <el-table-column prop="date" label="收票状态" minWidth="120" :header-align="'center'" :align="'right'">
+            <el-table-column prop="spzt" label="收票状态" minWidth="120" :header-align="'center'" :align="'right'">
             </el-table-column>
-            <el-table-column prop="date" label="收票日期" minWidth="180" align="center">
+            <el-table-column prop="sprq" label="收票日期" minWidth="180" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="转出状态" minWidth="180" align="center">
+            <el-table-column prop="zczt" label="转出状态" minWidth="180" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="财务备注" minWidth="180" align="center">
+            <el-table-column prop="cwbz" label="财务备注" minWidth="180" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="归集日期" minWidth="180" align="center">
+            <el-table-column prop="gjrq" label="归集日期" minWidth="180" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="创建时间" minWidth="180" align="center">
+            <el-table-column prop="createtime" label="创建时间" minWidth="180" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="修改时间" minWidth="180" align="center">
+            <el-table-column prop="updatetime" label="修改时间" minWidth="180" align="center">
             </el-table-column>
           </el-table>
         </article>
@@ -146,10 +148,11 @@
       <article>
         <el-table
           ref="bottomTableRef"
-          :data="tableData"
+          :data="bottomTableData"
           :border="true"
-          style="width: 100%; height: 350px; overflow: auto"
-          @row-click="handleRowClick"
+          v-loading="loading_1"
+          
+          height="150px"
         >
           <el-table-column type="index" width="55" label="序号" align="center">
           </el-table-column>
@@ -267,10 +270,11 @@
 </template>
 
 <script>
-import AppSearchForm from "../componetns/searchForm";
+import AppSearchForm from "./searchForm";
 import LgCollectTicketMage from "../componetns/collectTicketMage";
 import AppCommonUpload from "../componetns/enterAccountMage";
 import AppAuthenticationPush from "../componetns/editeVerified";
+import {getPoolPayList,getPoolPayTableSingleDes} from '@/api/pool/index.js'
 export default {
   name: "poolPage",
   components: {
@@ -282,26 +286,7 @@ export default {
   data() {
     return {
       tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄",
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1519 弄",
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1516 弄",
-        },
+        
       ],
       searchForm: {},
       isSelected: [],
@@ -313,24 +298,55 @@ export default {
       page: {
         currentPage: 1,
         pageSize: 10,
-        pageSizes: [15, 25, 50, 75, 100],
+        pageSizes: [10,15, 25, 50, 75, 100],
       },
       page_bottom: {
         currentPage: 1,
-        pageSize: 10,
-        pageSizes: [15, 25, 50, 75, 100],
+        pageSize: 3,
+        pageSizes: [3,15, 25, 50, 75, 100],
       },
       bottom_total: 1000,
       activeName:'first',
+      loading:false,
+      loading_1:false,
+      bottomTableData:[],
     };
   },
   computed: {},
   watch: {},
   methods: {
+    handleInit(){
+      this.handleGetPayTableList()
+    },
+  async handleGetPayTableList(){
+    this.loading = true;
+    let parmas = {
+      pageNo: this.page.currentPage,
+      pageSize: this.page.pageSize,
+    };
+    try{
+      const res = await getPoolPayList(parmas)
+      if([0,'0'].includes(res.code)){
+        this.tableData = [...res.data];
+        this.total = res.totalCount || 0
+      }
+    }catch(e){
+      console.error(e)
+    }finally{
+      this.loading = false;
+    }
+    
+  },
     /* size change */
-    handleSizeChange() {},
+    handleSizeChange(val) {
+      this.page.currentPage = val;
+      this.handleGetPayTableList()
+    },
     /* Current change */
-    handleCurrentChange() {},
+    handleCurrentChange(val) {
+      this.page.currentPage = val;
+      this.handleGetPayTableList()
+    },
     /* size change */
     handleBottomSizeChange(val) {
       this.page_bottom.pageSize = val;
@@ -361,6 +377,23 @@ export default {
     /*点击行事件 */
     handleRowClick(row) {
       this.selectedRow = row;
+      this.handleGetPaySingleDes({id:row.id})
+    },
+    async handleGetPaySingleDes(val){
+      this.loading_1 = true;
+      let data = {
+        id:val.id,
+        pageNo:this.page_bottom.currentPage,
+        pageSize:this.page_bottom.pageSize
+      }
+      try{
+        const res = await getPoolPayTableSingleDes(data);
+        if([0,'0'].includes(res.code)){
+          this.bottomTableData = [...res.data];
+        }
+      }finally{
+        this.loading_1 = false; 
+      }
     },
     /* 勾选 */
     handleSelectionChange(e) {
@@ -369,7 +402,9 @@ export default {
     },
   },
   created() {},
-  mounted() {},
+  mounted() {
+    this.handleInit()
+  },
   beforeCreate() {},
   beforeMount() {},
   beforeUpdate() {},
@@ -397,5 +432,10 @@ export default {
 }
 .aui-wrapper .el-pagination{
     margin-top: 0;
+}
+</style>
+<style>
+.card_bottom .el-card__body{
+  padding-bottom: 0;
 }
 </style>

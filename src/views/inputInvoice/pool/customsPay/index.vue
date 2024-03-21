@@ -73,43 +73,45 @@
           <el-table
             :data="tableData"
             :border="true"
-            style="width: 100%"
             @row-click="handleRowClick"
             highlight-current-row
             :row-class-name="rowClassName"
             @selection-change="handleSelectionChange"
+            height="340"
+            style="width: 100%;"
+            ref="topTableRef"
           >
             <el-table-column type="selection" width="55" fixed="left" align="center">
             </el-table-column>
             <el-table-column type="index" width="55" label="序号" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="海关缴款书号码" minWidth="160" align="center">
+            <el-table-column prop="hgjkshm" label="海关缴款书号码" minWidth="170" align="center">
             </el-table-column>
-            <el-table-column prop="name" label="填发日期" minWidth="140" align="center">
+            <el-table-column prop="tprq" label="填发日期" minWidth="140" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="税款金额" minWidth="160" align="center">
+            <el-table-column prop="skje" label="税款金额" minWidth="160" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="缴款单位人纳税人识别号" minWidth="100" align="center">
+            <el-table-column prop="jkdwrnsrsbh" label="缴款单位人纳税人识别号" minWidth="160" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="缴款单位人纳税人名称" minWidth="100" align="center">
+            <el-table-column prop="jkdwrnsrmc" label="缴款单位人纳税人名称" minWidth="180" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="是否重号锁定" minWidth="120" align="center">
+            <el-table-column prop="sfzhsd" label="是否重号锁定" minWidth="120" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="入账状态" minWidth="120" align="center">
+            <el-table-column prop="rzzt" label="入账状态" minWidth="120" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="收票状态" minWidth="180" align="center">
+            <el-table-column prop="spzz" label="收票状态" minWidth="180" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="收票日期" minWidth="180" align="center">
+            <el-table-column prop="sprq" label="收票日期" minWidth="180" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="转出状态" minWidth="120" :header-align="'center'" :align="'right'">
+            <el-table-column prop="zczz" label="转出状态" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="date" label="财务备注" minWidth="120" :header-align="'center'" :align="'right'">
+            <el-table-column prop="cwbz" label="财务备注" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="date" label="归集日期" minWidth="120" :header-align="'center'" :align="'right'">
+            <el-table-column prop="gjrq" label="归集日期" minWidth="180" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="date" label="创建时间" minWidth="180" align="center">
+            <el-table-column prop="createtime" label="创建时间" minWidth="180" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="修改时间" minWidth="180" align="center">
+            <el-table-column prop="updatetime" label="修改时间" minWidth="180" align="center">
             </el-table-column>
           </el-table>
         </article>
@@ -138,10 +140,10 @@
       <article>
         <el-table
           ref="bottomTableRef"
-          :data="tableData"
+          :data="bottomTableData"
           :border="true"
-          style="width: 100%; height: 350px; overflow: auto"
-          @row-click="handleRowClick"
+          style="width: 100%;"
+          height="150px"
         >
           <el-table-column type="index" width="55" label="序号" align="center">
           </el-table-column>
@@ -204,7 +206,7 @@
           :current-page="page_bottom.currentPage"
           :page-sizes="page_bottom.sizes"
           :page-size="page_bottom.pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
+          layout="total, prev, pager, next, jumper"
           :total="bottom_total"
         >
         </el-pagination>
@@ -232,10 +234,11 @@
 </template>
 
 <script>
-import AppSearchForm from "../componetns/searchForm";
+import AppSearchForm from "./searchForm";
 import LgCollectTicketMage from "../componetns/collectTicketMage";
 import AppCommonUpload from "../componetns/enterAccountMage";
 import AppAuthenticationPush from "../componetns/editeVerified";
+import {getPoolCustomsList,getPoolTableSingleDes} from '@/api/pool/index.js'
 export default {
   name: "poolPage",
   components: {
@@ -246,28 +249,7 @@ export default {
   },
   data() {
     return {
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄",
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1519 弄",
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1516 弄",
-        },
-      ],
+      tableData: [],
       searchForm: {},
       isSelected: [],
       selectedRow: null,
@@ -278,24 +260,47 @@ export default {
       page: {
         currentPage: 1,
         pageSize: 10,
-        pageSizes: [15, 25, 50, 75, 100],
+        pageSizes: [10,15, 25, 50, 75, 100],
       },
       page_bottom: {
         currentPage: 1,
-        pageSize: 10,
-        pageSizes: [15, 25, 50, 75, 100],
+        pageSize: 3,
+        pageSizes: [3,15, 25, 50, 75, 100],
       },
       bottom_total: 1000,
       activeName:'first',
+      bottomTableData:[]
     };
   },
   computed: {},
   watch: {},
   methods: {
+    handleInit(){
+      this.handleGetTableList();
+    },
+    async handleGetTableList(){
+      let parmas = {
+        pageNo:this.page.currentPage,
+        pageSize:this.page.pageSize
+      }
+      try{
+        const res = await getPoolCustomsList(parmas);
+        if([0,'0'].includes(res.code)){
+          this.tableData = [...res.data];
+          this.total = res.totalCount
+        }
+      }finally{}
+      
+    },
     /* size change */
-    handleSizeChange() {},
+    handleSizeChange(val) {
+      this.page.pageSize = val;
+      this.handleGetTableList();
+    },
     /* Current change */
-    handleCurrentChange() {},
+    handleCurrentChange(val) {
+      this.page.currentPage = val
+    },
     /* size change */
     handleBottomSizeChange(val) {
       this.page_bottom.pageSize = val;
@@ -326,6 +331,16 @@ export default {
     /*点击行事件 */
     handleRowClick(row) {
       this.selectedRow = row;
+      const {id} = row || {};
+      this.handleGetTableSingleDes({id})
+    },
+    async handleGetTableSingleDes(data){
+      try{
+        const res = await getPoolTableSingleDes(data);
+        if([0,'0'].includes(res.code)){
+          this.bottomTableData = [...res.data];
+        }
+      }finally{}
     },
     /* 勾选 */
     handleSelectionChange(e) {
@@ -334,12 +349,17 @@ export default {
     },
   },
   created() {},
-  mounted() {},
+  mounted() {
+    this.handleInit();
+  },
   beforeCreate() {},
   beforeMount() {},
   beforeUpdate() {},
   updated() {
+   this.$nextTick(()=>{
     this.$refs.bottomTableRef.doLayout();
+    this.$refs.topTableRef.doLayout();
+   })
   },
   beforeDestroy() {},
   destroyed() {},

@@ -3,10 +3,10 @@
     <el-form ref="form" :model="where" label-width="120px">
       <el-row :gutter="20">
         <el-col :span="6">
-          <el-form-item label="发票类型" label-width="85px">
+          <el-form-item label="发票类型：" label-width="85px">
             <el-select
               style="width: 100%"
-              v-model="where.value"
+              v-model="where.fplx"
               placeholder="请选择"
               clearable
               filterable
@@ -22,10 +22,10 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="纳税主体" label-width="85px">
+          <el-form-item label="纳税主体：" label-width="85px">
             <el-select
               style="width: 100%"
-              v-model="where.value"
+              v-model="where.xsfnsrsbh"
               placeholder="请选择"
               clearable
               filterable
@@ -41,10 +41,10 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-              <el-form-item label="受票组织">
+              <el-form-item label="受票组织：">
                 <el-select
                   style="width: 100%"
-                  v-model="where.value"
+                  v-model="where.orgid"
                   placeholder="请选择"
                   clearable
                   filterable
@@ -96,7 +96,7 @@
               <el-form-item label="购方名称：">
                 <el-select
                   style="width: 100%"
-                  v-model="where.value"
+                  v-model="where.gmfmc"
                   placeholder="请选择"
                   clearable
                   filterable
@@ -114,7 +114,7 @@
             <el-col :span="8">
               <el-form-item label="购方税号：">
                 <el-input
-                  v-model="where.input"
+                  v-model="where.gmfnsrsbh"
                   placeholder="请输入内容"
                 ></el-input>
               </el-form-item>
@@ -123,7 +123,7 @@
               <el-form-item label="发票状态：">
                 <el-select
                   style="width: 100%"
-                  v-model="where.value"
+                  v-model="where.fpzt"
                   placeholder="请选择"
                   clearable
                   filterable
@@ -141,7 +141,7 @@
             <el-col :span="8">
               <el-form-item label="发票号码：">
                 <el-input
-                  v-model="where.input"
+                  v-model="where.fphm"
                   placeholder="请输入内容"
                 ></el-input>
               </el-form-item>
@@ -149,7 +149,7 @@
             <el-col :span="8">
               <el-form-item label="发票代码：">
                 <el-input
-                  v-model="where.input"
+                  v-model="where.fpdm"
                   placeholder="请输入内容"
                 ></el-input>
               </el-form-item>
@@ -158,7 +158,7 @@
               <el-form-item label="认证状态：">
                 <el-select
                   style="width: 100%"
-                  v-model="where.value"
+                  v-model="where.verifyStatus"
                   placeholder="请选择"
                   clearable
                   filterable
@@ -176,7 +176,7 @@
             <el-col :span="8">
               <el-form-item label="凭号证：">
                 <el-input style="width: 100%;"
-                  v-model="where.input"
+                  v-model="where.wspzh"
                   placeholder="请输入内容"
                 ></el-input>
               </el-form-item>
@@ -185,7 +185,7 @@
               <el-form-item label="会计科目：">
                 <el-select
                   style="width: 100%"
-                  v-model="where.value"
+                  v-model="where.accSegment"
                   placeholder="请选择"
                   clearable
                   filterable
@@ -204,7 +204,7 @@
               <el-form-item label="入账状态：">
                 <el-select
                   style="width: 100%"
-                  v-model="where.value"
+                  v-model="where.rzzt"
                   placeholder="请选择"
                   clearable
                   filterable
@@ -223,7 +223,7 @@
               <el-form-item label="开票日期：">
                 <el-date-picker
                   style="width: 100%"
-                  v-model="where.value1"
+                  v-model="where.kprq"
                   type="daterange"
                   range-separator="至"
                   start-placeholder="开始日期"
@@ -244,7 +244,7 @@
               <el-form-item label="转出状态：">
                 <el-select
                   style="width: 100%"
-                  v-model="where.value"
+                  v-model="where.zczt"
                   placeholder="请选择"
                   clearable
                   filterable
@@ -263,7 +263,7 @@
               <el-form-item label="收票状态：">
                 <el-select
                   style="width: 100%"
-                  v-model="where.value"
+                  v-model="where.spzt"
                   placeholder="请选择"
                   clearable
                   filterable

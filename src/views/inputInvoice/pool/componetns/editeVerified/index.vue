@@ -12,7 +12,7 @@
             <article class="dailog_info">
                 <el-form ref="form" :model="pushForm" label-width="280px">
                     <el-form-item label="入账状态：">
-                        <el-select style="width:100%" v-model="pushForm.value" placeholder="请选择" clearable filterable>
+                        <el-select style="width:100%" v-model="pushForm.rzzt" placeholder="请选择" clearable filterable>
                             <el-option
                             v-for="item in options"
                             :key="item.value"
@@ -23,18 +23,18 @@
                     </el-form-item>
                     <el-form-item label="入账属期：">
                         <el-date-picker style="width:100%"
-                            v-model="pushForm.value2"
+                            v-model="pushForm.rzsq"
                             type="month"
                             placeholder="选择月">
                             </el-date-picker>
                     </el-form-item>
                     <el-form-item label="凭证号：">
-                        <el-input v-model="pushForm.value8" placeholder="请输入"></el-input>
+                        <el-input v-model="pushForm.wspzh" placeholder="请输入"></el-input>
                     </el-form-item>
                     <el-form-item label="所属账套：">
-                        <el-select style="width:100%" v-model="pushForm.value" placeholder="请选择" clearable filterable>
+                        <el-select style="width:100%" v-model="pushForm.orgid" placeholder="请选择" clearable filterable>
                             <el-option
-                            v-for="item in options"
+                            v-for="item in orgidOption"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value">
@@ -42,9 +42,9 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="进项税对应费用会计科目编码与名称：">
-                        <el-select style="width:100%" v-model="pushForm.value" placeholder="请选择" clearable filterable>
+                        <el-select style="width:100%" v-model="pushForm.accSegment" placeholder="请选择" clearable filterable>
                             <el-option
-                            v-for="item in options"
+                            v-for="item in accSegmentOptions"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value">
@@ -62,9 +62,9 @@
 </template>
 
 <script>
-
+import {postPoolEditebook} from '@/api/pool/index.js'
 export default {
-    name:'',
+    name:'editeVerifiedPage',
     props:{
         visible: {
             type: Boolean,
@@ -84,7 +84,16 @@ export default {
     components: {},
     data() {
         return {
-            pushForm:{},
+            pushForm:{
+                rzzt:'01',
+                wspzh:'gBmADr3Hzkn9LVdKjwba',
+                rzsq:'2024-02',
+                orgid:'56030'
+            },
+            accSegmentOptions:[
+                {label:'应交税费/待认证进项税额/工程类',value:'22210401'},
+                {label:'应交税费/待认证进项税额/费用类',value:'22210402'}
+            ]
         };
     },
     computed: {},
@@ -97,13 +106,26 @@ export default {
 
         /* 确认 */
         handleConfirm(){
-
+            this.handleSubmitForm()
         },
 
         /* 关闭前 */
         handleClose(){
             this.updateVisible(false);
         },
+        /* 提交 */
+        async handleSubmitForm(){
+            let data = {
+                type:'ZZSFP',
+                ...this.pushForm,
+            }
+            try{
+                const res = await postPoolEditebook(data)
+                if([0,'0'].includes(res.code)){
+                    this.updateVisible(false)
+                }
+            }finally{}
+        }
     },
     created() {},
     mounted() {},
