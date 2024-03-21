@@ -39,7 +39,7 @@
             <div class="toolbar-left" />
             <div class="toolbar-right">
               <el-button type="primary" @click="handleExport">新增</el-button>
-              <el-button @click="handleExport">导入</el-button>
+              <el-button @click="importExcel">导入</el-button>
               <el-button @click="handleExport">导出</el-button>
             </div>
           </div>
@@ -58,9 +58,23 @@
         <template #kprq="{ data }"> {{ dateFormat('YYYY-mm-dd', data.kprq) }} </template>
       </form-list>
     </div>
+    <custom-import 
+      dialogTitle="导入敏感税收分类编码表"
+      :dialogVisible="dialogImportVisible"
+      @handleClose="handleImportClose"
+      @handleOk="handleImportOk"
+      downloadTemplateApi="/taxConfig/downExcel"
+      downloadTemplateName="敏感税收分类编码_导入模板"
+      upApi="/taxBody/importTaxBodyExcelInfo"
+      importApi="/taxConfig/importPreferentialInfo"
+      upTitle="上传敏税收分类编码"
+      :importColumns="importColumns"
+    ></custom-import>
+    
   </div>
 </template>
 <script>
+import CustomImport from '@/components/CustomImport'
 import FormList from '@/components/FormList.vue';
 import { dateFormat } from '@/utils/tool';
 import { getListByUser, getOrgList, exportInvoiceDetailList } from './Api.js';
@@ -68,9 +82,11 @@ export default {
   name: 'SensitiveCargo',
   components: {
     FormList,
+    CustomImport
   },
   data() {
     return {
+      dialogImportVisible: false, // 导入
       filterText: '',
       currentNodeKey: 1,
       data: [
@@ -145,6 +161,10 @@ export default {
           width: 100,
           scopedSlots: { customRender: "action" }
         }
+      ],
+      importColumns: [
+        { title: '敏感税收分类编码', width: 200, dataIndex: 'nsrmc' },
+        { title: '风险等级', width: 200, dataIndex: 'orgName' },
       ],
       searchList: [
         {
@@ -239,6 +259,17 @@ export default {
       this.searchList[0].val = nsrsbh;
       this.$refs.list.handleGetData(this.param);
       this.getOrgList(nsrsbh);
+    },
+    // 导入
+    importExcel() {
+      this.dialogImportVisible = true
+    },
+    handleImportClose(){
+      this.dialogImportVisible = false
+    },
+    handleImportOk(){
+      this.handleImportClose()
+      this.getList()
     },
     // 导出
     async handleExport() {

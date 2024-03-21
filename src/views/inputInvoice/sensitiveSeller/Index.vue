@@ -39,7 +39,7 @@
             <div class="toolbar-left" />
             <div class="toolbar-right">
               <el-button type="primary" @click="handleExport">新增</el-button>
-              <el-button @click="handleExport">导入</el-button>
+              <el-button @click="importExcel">导入</el-button>
               <el-button @click="handleExport">导出</el-button>
             </div>
           </div>
@@ -58,9 +58,23 @@
         <template #kprq="{ data }"> {{ dateFormat('YYYY-mm-dd', data.kprq) }} </template>
       </form-list>
     </div>
+    <custom-import 
+      dialogTitle="导入敏感销方名称表"
+      :dialogVisible="dialogImportVisible"
+      @handleClose="handleImportClose"
+      @handleOk="handleImportOk"
+      downloadTemplateApi="/taxConfig/downExcel"
+      downloadTemplateName="敏感销方名称_导入模板"
+      upApi="/taxBody/importTaxBodyExcelInfo"
+      importApi="/taxConfig/importPreferentialInfo"
+      upTitle="上传敏感货物名称"
+      :importColumns="importColumns"
+    ></custom-import>
+    
   </div>
 </template>
 <script>
+import CustomImport from '@/components/CustomImport'
 import FormList from '@/components/FormList.vue';
 import { dateFormat } from '@/utils/tool';
 import { getListByUser, getOrgList, exportInvoiceDetailList } from './Api.js';
@@ -68,9 +82,11 @@ export default {
   name: 'SensitiveCargo',
   components: {
     FormList,
+    CustomImport
   },
   data() {
     return {
+      dialogImportVisible: false, // 导入
       filterText: '',
       currentNodeKey: 1,
       data: [
@@ -133,7 +149,7 @@ export default {
       columns: [
         { type: 'selection', width: 50 },
         { title: '序号', type: 'index', width: 50 },
-        { title: '敏感销方企业名称', width: 200, dataIndex: 'nsrmc' },
+        { title: '敏感销方名称', width: 200, dataIndex: 'nsrmc' },
         { title: '风险等级', width: 200, dataIndex: 'orgName' },
         { title: '备注', width: 150, dataIndex: 'fplxMc' },
         { title: '生效日期', width: 150, dataIndex: 'fphm' },
@@ -146,9 +162,13 @@ export default {
           scopedSlots: { customRender: "action" }
         }
       ],
+      importColumns: [
+        { title: '敏感销方名称', width: 200, dataIndex: 'nsrmc' },
+        { title: '风险等级', width: 200, dataIndex: 'orgName' },
+      ],
       searchList: [
         {
-          label: '敏感销方企业名称',
+          label: '敏感销方名称',
           key: 'nsrsbh',
           val: '',
           type: 'select',
@@ -239,6 +259,17 @@ export default {
       this.searchList[0].val = nsrsbh;
       this.$refs.list.handleGetData(this.param);
       this.getOrgList(nsrsbh);
+    },
+    // 导入
+    importExcel() {
+      this.dialogImportVisible = true
+    },
+    handleImportClose(){
+      this.dialogImportVisible = false
+    },
+    handleImportOk(){
+      this.handleImportClose()
+      this.getList()
     },
     // 导出
     async handleExport() {
