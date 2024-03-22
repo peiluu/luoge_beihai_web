@@ -462,7 +462,7 @@ export default {
     },
     /* 返回后刷新状态 */
     handleDone(val){
-      this.handleGetTableList()
+      this.handleGetPayTableList()
     }
   },
   created() {},
