@@ -32,10 +32,10 @@
                         <el-input v-model="pushForm.wspzh" disabled placeholder="请输入"></el-input>
                     </el-form-item>
                     <el-form-item label="所属账套：">
-                        <el-select style="width:100%" disabled v-model="pushForm.orgid" placeholder="请选择" clearable filterable>
+                        <el-select style="width:100%"  v-model="pushForm.orgid" placeholder="请选择" clearable filterable>
                             <el-option
-                            v-for="(item,index) in optionList.orgOption"
-                            :key="index"
+                            v-for="(item) in orgidList"
+                            :key="item.id"
                             :label="item.name"
                             :value="item.id">
                             </el-option>
@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import {postPoolEditebook} from '@/api/pool/index.js'
+import {postPoolEditebook,getOrgnizationList} from '@/api/pool/index.js'
 export default {
     name:'editeVerifiedPage',
     props:{
@@ -96,7 +96,7 @@ export default {
                 // rzzt:'01',
                 // wspzh:'gBmADr3Hzkn9LVdKjwba',
                 // rzsq:'2024-02',
-                // orgid:'56030',
+                 orgid:'',
                 ...this.rowData,
             },
             accSegmentOptions:[
@@ -114,7 +114,8 @@ export default {
                 }]
             },
             orgidOption:[],
-            types:{...this.typeStatus,}
+            types:{...this.typeStatus,},
+            orgidList:[]
         };
     },
     computed: {},
@@ -170,16 +171,39 @@ export default {
                 if([0,'0'].includes(res.code)){
                     this.$message.success("提交成功！")
                     this.updateVisible(false)
+                    this.$emit("successDone",true)
                 }else{
                     this.$message.error("提交错误！请联系管理员！")
                 }
             }finally{}
+        },
+        /* 所属套账 */
+        async handleGetList(){
+            let parmas = {
+                nsrsbh:this.pushForm.gfnsrsbh
+            }
+            try{
+                const res = await getOrgnizationList(parmas);
+                if([0,'0'].includes(res.code)){
+                   this.$nextTick(()=>{
+                    this.orgidList = res.data;
+                    
+                   })
+                    
+                }else{
+                    this.$message.error("提交错误！请联系管理员！")
+                }
+            }finally{}
+            
+
         }
     },
     inject: ['optionList'],
-    created() {},
+    created() {
+        this.handleGetList()
+    },
     mounted() {
-        console.log(this.rowData,"'row'")
+       
     },
     beforeCreate() {},
     beforeMount() {},

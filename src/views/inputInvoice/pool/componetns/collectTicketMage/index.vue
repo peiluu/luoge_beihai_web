@@ -138,6 +138,7 @@ export default {
                 if([0,'0'].includes(res.code)){
                     this.$message.success("提交成功！")
                     this.updateVisible(false)
+                    this.$emit("successDone",true)
                 }else{
                     this.$message.error("提交错误！请联系管理员！")
                 }
