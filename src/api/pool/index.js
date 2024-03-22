@@ -17,7 +17,7 @@ export const getPoolInvoiceSingleDes = data => postJSON(`${config.host}/income/q
 export const getVerifyInvoice = data => postJSON(`${config.host}/income/queryInvoiceIncome/${data.id}`)
 
 /* 发票验证 */
-export const getRequiredInvoice = data => postJSON(`${config.host}/income/invoiceCheck`,data)
+export const getRequiredInvoice = data => postJSON(`${config.host}/income/invoiceZzsCheck`,data)
 
 /**
  * 获取海关缴款书列表

@@ -347,7 +347,7 @@ export default {
         return
       }else{
         this.dialog.statusTitle = type === 1?'确认收票':'撤销收票';
-        this.typeStatus = {type:'HGJNS'}
+        this.typeStatus = {type:'HGJNS',status:type}
         this.rowData = {...this.isSelected[0]}
         this.dialog.statusVisible = true;
       }
@@ -359,7 +359,7 @@ export default {
         return
       }else{
         this.dialog.enterTitle = type === 1?'发票入账':'撤销入账';
-        this.typeStatus = {type:'HGJNS'}
+        this.typeStatus = {type:'HGJNS',status:type}
         this.rowData = {...this.isSelected[0]}
         this.dialog.enterVisible = true;
       }

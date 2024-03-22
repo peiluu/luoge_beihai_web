@@ -7,7 +7,7 @@
       @update:visible="updateVisible"
       :before-close="handleClose"
     >
-      <article >
+      <article v-loading="loading">
         <article class="require_tag">
             <div class="require_img_main"><img src="@/assets/img/pass.png" alt=""></div>
             <div>发票合规性校验通过！</div>
@@ -88,7 +88,8 @@ export default {
         requireTableData:[
             {label:'失信人黑名单检查',value:'销方税号是XXXX，为失信人黑名风险！',require:false}
         ],
-        requirdList:{}
+        requirdList:{},
+        loading:false,
     };
   },
   computed: {},
@@ -107,14 +108,18 @@ export default {
       this.updateVisible(false);
     },
     async handlerInit(){
-        const res = await getRequiredInvoice({fphm:this.invoiceNumber})
+        this.loading = true;
+        
         try{
+            const res = await getRequiredInvoice({fphm:this.invoiceNumber})
             if([0,'0'].includes(res.code)){
                 this.requirdList = {...res.data}
             }else{
                 this.$message.error("检查发票失败！请重试")
             }
-        }catch{}finally{}
+        }catch{}finally{
+            this.loading = false;
+        }
         
         
     }

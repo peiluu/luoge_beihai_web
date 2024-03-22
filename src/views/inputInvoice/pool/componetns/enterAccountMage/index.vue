@@ -32,10 +32,10 @@
                     <el-form-item label="所属账套：">
                         <el-select style="width:100%" :disabled="isDisabled" v-model="pushForm.orgid" placeholder="请选择" clearable filterable>
                             <el-option
-                            v-for="item in orgidOptions"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
+                            v-for="item in optionList.orgOption"
+                            :key="item.nsrsbh"
+                            :label="item.nsrmc"
+                            :value="item.nsrsbh">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -182,6 +182,7 @@ export default {
             }finally{}
         },
     },
+    inject: ['optionList'],
     created() {
         this.handleInit()
     },
