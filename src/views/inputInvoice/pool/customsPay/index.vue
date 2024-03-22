@@ -191,7 +191,7 @@
           >
           </el-table-column>
           <el-table-column
-            prop="hmslv"
+            prop="hwslv"
             label="增值税税率/征收率"
             minWidth="160"
             align="center"
