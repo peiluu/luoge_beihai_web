@@ -1,7 +1,7 @@
 <template>
     <div class="">
         <el-card shadow="never">
-      <app-search-form></app-search-form>
+      <app-search-form @search="handlerSearch" @resst="handleRest"></app-search-form>
     </el-card>
     <el-card shadow="never">
       <article>
@@ -27,32 +27,32 @@
                 <el-button
                   type=""
                   :disabled="isSelected.length <= 0"
-                  @click="handleUpload"
+                  @click="handleEnterAccount(1)"
                   >发票入账</el-button
                 >
                 <el-button
                   type=""
                   :disabled="isSelected.length <= 0"
-                  @click="handleUpload"
+                  @click="handleEnterAccount(2)"
                   >撤销入账</el-button
                 >
                 <el-button
                   type=""
                   :disabled="isSelected.length <= 0"
-                  @click="handlePush"
+                  @click="handleStatus(1)"
                   >确认收票</el-button
                 >
                 <el-button
                   type=""
                   :disabled="isSelected.length <= 0"
-                  @click="handlePush"
+                  @click="handleStatus(2)"
                   >撤销收票</el-button
                 >
-                <el-button type="">导出查询结果</el-button>
+                <el-button type="" @click="handleExportRange">导出查询结果</el-button>
                 <el-button
                   type=""
                   :disabled="isSelected.length <= 0"
-                  @click="handlePush"
+                  @click="handleExportSelected"
                   >导出选中发票</el-button
                 >
               </el-button-group>
@@ -73,51 +73,55 @@
           <el-table
             :data="tableData"
             :border="true"
-            style="width: 100%"
             @row-click="handleRowClick"
             highlight-current-row
             :row-class-name="rowClassName"
             @selection-change="handleSelectionChange"
+            v-loading="loading"
+            height="340"
+            style="width: 100%;"
+            ref="topTableRef"
+            row-key="id"
           >
             <el-table-column type="selection" width="55" fixed="left" align="center">
             </el-table-column>
             <el-table-column type="index" width="55" label="序号" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="海关缴款书号码" minWidth="160" align="center">
+            <el-table-column prop="hgjkshm" label="海关缴款书号码" minWidth="170" align="center">
             </el-table-column>
-            <el-table-column prop="name" label="填发日期" minWidth="140" align="center">
+            <el-table-column prop="tprq" label="填发日期" minWidth="140" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="税款金额" minWidth="160" align="center">
+            <el-table-column prop="skje" label="税款金额" minWidth="160" align="center">
+              <template slot-scope="{row}">{{ formatMoney(row.skje) }} </template>
             </el-table-column>
-            <el-table-column prop="date" label="缴款单位人纳税人识别号" minWidth="100" align="center">
+            <el-table-column prop="jkdwrnsrsbh" label="缴款单位人纳税人识别号" minWidth="160" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="缴款单位人纳税人名称" minWidth="100" align="center">
+            <el-table-column prop="jkdwrnsrmc" label="缴款单位人纳税人名称" minWidth="180" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="是否重号锁定" minWidth="120" align="center">
+            <el-table-column prop="sfzhsd" label="是否重号锁定" minWidth="120" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="入账状态" minWidth="120" align="center">
+            <el-table-column prop="srzzt" label="入账状态" minWidth="120" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="收票状态" minWidth="180" align="center">
+            <el-table-column prop="spzt" label="收票状态" minWidth="180" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="收票日期" minWidth="180" align="center">
+            <el-table-column prop="sprq" label="收票日期" minWidth="180" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="转出状态" minWidth="120" :header-align="'center'" :align="'right'">
+            <el-table-column prop="zczz" label="转出状态" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="date" label="财务备注" minWidth="120" :header-align="'center'" :align="'right'">
+            <el-table-column prop="cwbz" label="财务备注" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="date" label="归集日期" minWidth="120" :header-align="'center'" :align="'right'">
+            <el-table-column prop="gjrq" label="归集日期" minWidth="180" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="date" label="创建时间" minWidth="180" align="center">
+            <el-table-column prop="createtime" label="创建时间" minWidth="180" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="修改时间" minWidth="180" align="center">
+            <el-table-column prop="updatetime" label="修改时间" minWidth="180" align="center">
             </el-table-column>
           </el-table>
         </article>
         <article class="table_bottom_page">
             <article class="footer_text_main">
-            金额总额<span class="footer_sum"> 224,181.03</span> 元 / 税额总额
-            <span class="footer_sum"> 10,928.27 </span> 元 / 价税合计总额
-            <span class="footer_sum"> 235,109.30 </span>元
+              已选择<span class="footer_sum"> {{ isSelected.length }}</span> 项 | 税款金额合计
+            <span class="footer_sum"> {{accountTotal}} </span> 元 
             </article>
             <article>
             <el-pagination
@@ -138,57 +142,57 @@
       <article>
         <el-table
           ref="bottomTableRef"
-          :data="tableData"
+          :data="bottomTableData"
           :border="true"
-          style="width: 100%; height: 350px; overflow: auto"
-          @row-click="handleRowClick"
+          style="width: 100%;"
+          height="150px"
         >
           <el-table-column type="index" width="55" label="序号" align="center">
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="shdm"
             label="税号信息"
             minWidth="180"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="wsjg"
             label="完税价格"
             minWidth="140"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="hwmc"
             label="货物名称"
             minWidth="120"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="dw"
             label="单位"
             minWidth="120"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="sl"
             label="数量"
             minWidth="120"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="skje"
             label="税款金额"
             minWidth="140"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="hwslv"
             label="增值税税率/征收率"
             minWidth="160"
             align="center"
@@ -204,98 +208,147 @@
           :current-page="page_bottom.currentPage"
           :page-sizes="page_bottom.sizes"
           :page-size="page_bottom.pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
+          layout="total, prev, pager, next, jumper"
           :total="bottom_total"
         >
         </el-pagination>
       </article>
     </el-card>
     <lg-collect-ticket-mage
-      v-if="statusVisible"
-      :visible.sync="statusVisible"
+      v-if="dialog.statusVisible"
+      :visible.sync="dialog.statusVisible"
       width="50%"
-      title="修改入账状态"
+      :title="dialog.statusTitle"
+      :row-data="rowData"
+      :type-status="typeStatus"
+      @successDone="handleDone"
     ></lg-collect-ticket-mage>
-    <app-common-upload
-      v-if="uploadVisible"
-      :visible.sync="uploadVisible"
+    <lg-enter-account-mage
+      v-if="dialog.enterVisible"
+      :visible.sync="dialog.enterVisible"
       width="40%"
-      title="上传文件"
-    ></app-common-upload>
-    <app-authentication-push
-      v-if="pushVisible"
-      :visible.sync="pushVisible"
+      :title="dialog.enterTitle"
+      :row-data="rowData"
+      :type-status="typeStatus"
+      @successDone="handleDone"
+    ></lg-enter-account-mage>
+    <!-- 待修改认证科目 -->
+    <lg-edie-verified
+      v-if="dialog.editeVisible"
+      :visible.sync="dialog.editeVisible"
       width="50%"
-      title="认证凭证推送核算系统"
-    ></app-authentication-push>
+      title="修改会计科目操作"
+      :row-data="rowData"
+      :type-status="typeStatus"
+      @successDone="handleDone"
+    ></lg-edie-verified>
     </div>
 </template>
 
 <script>
-import AppSearchForm from "../componetns/searchForm";
+import AppSearchForm from "./searchForm";
 import LgCollectTicketMage from "../componetns/collectTicketMage";
-import AppCommonUpload from "../componetns/enterAccountMage";
-import AppAuthenticationPush from "../componetns/editeVerified";
+import LgEnterAccountMage from "../componetns/enterAccountMage";
+import LgEdieVerified from "../componetns/editeVerified";
+import {getPoolCustomsList,getPoolTableSingleDes,postHGDownloadList,postHGDownloadSelect} from '@/api/pool/index.js'
 export default {
   name: "poolPage",
   components: {
     AppSearchForm,
     LgCollectTicketMage,
-    AppCommonUpload,
-    AppAuthenticationPush,
+    LgEnterAccountMage,
+    LgEdieVerified,
   },
   data() {
     return {
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄",
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1519 弄",
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1516 弄",
-        },
-      ],
+      tableData: [],
       searchForm: {},
       isSelected: [],
       selectedRow: null,
-      statusVisible: false,
       uploadVisible: false,
       pushVisible: false,
       total: 1000,
       page: {
         currentPage: 1,
         pageSize: 10,
-        pageSizes: [15, 25, 50, 75, 100],
+        pageSizes: [10,15, 25, 50, 75, 100],
       },
       page_bottom: {
         currentPage: 1,
-        pageSize: 10,
-        pageSizes: [15, 25, 50, 75, 100],
+        pageSize: 3,
+        pageSizes: [3,15, 25, 50, 75, 100],
       },
       bottom_total: 1000,
       activeName:'first',
+      bottomTableData:[],
+      dialog:{
+        requireVisbile:false,
+        editeVisible:false,
+        enterVisible:false,
+        statusVisible: false,
+        viewVisible:false,
+        enterTitle:'',
+        statusTitle:''
+      },
+      loading:false,
+      rowData:{},
+      typeStatus:{},
+      where:{},
     };
   },
-  computed: {},
+  computed: {
+    accountTotal(){
+      const totalAmount = this.isSelected.reduce((sum, item) => sum + (Number(item.skje) || 0), 0);
+      // 格式化成带千位符且保留两位小数的字符串
+      const formattedTotalAmount = totalAmount.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+      return formattedTotalAmount
+    }
+  },
   watch: {},
   methods: {
+    handleInit(){
+      this.handleGetTableList();
+    },
+    async handleGetTableList(val = {}){
+      this.loading = true;
+      let parmas = {
+        pageNo:this.page.currentPage,
+        pageSize:this.page.pageSize,
+        ...val,
+      }
+      try{
+        const res = await getPoolCustomsList(parmas);
+        if([0,'0'].includes(res.code)){
+          this.tableData = [...res.data];
+          this.total = res.totalCount
+        }
+      }finally{
+        this.loading = false;
+      }
+      
+    },
     /* size change */
-    handleSizeChange() {},
+    handleSizeChange(val) {
+      this.page.pageSize = val;
+      this.handleGetTableList();
+    },
     /* Current change */
-    handleCurrentChange() {},
+    handleCurrentChange(val) {
+      this.page.currentPage = val
+    },
+    /* 搜索 */
+    handlerSearch(val){
+      this.where = {...val};
+      this.handleGetTableList(val);
+    },
+    /* 重置 */
+    handleRest(val){
+      this.where = {...val};
+      this.handleGetTableList(val)
+    },
     /* size change */
     handleBottomSizeChange(val) {
       this.page_bottom.pageSize = val;
@@ -304,17 +357,84 @@ export default {
     handleBottomCurrentChange(val) {
       this.page_bottom.currentPage = val;
     },
-    /* 推送 */
-    handlePush() {
-      this.pushVisible = true;
+    /* 确认管理 */
+    handleStatus(type) {
+      console.log(this.isSelected)
+      if(this.isSelected.length >1){
+        this.$message.warning("当前操作只支持单个！")
+        return
+      }
+      if(type=== 1 && this.isSelected[0].spzt === '1'){
+        this.$message.warning(`当前发票已确认收票`)
+        return
+      }
+      if(type=== 2 && this.isSelected[0].spzt === '2'){
+        this.$message.warning(`当前发票还未确认收票`)
+        return
+      }
+      this.dialog.statusTitle = type === 1?'确认收票':'撤销收票';
+      this.typeStatus = {type:'HGJNS',status:type}
+      this.rowData = {...this.isSelected[0]}
+      this.dialog.statusVisible = true;
     },
-    /* 上传事件 1 发票新增 2 入账信息导入 */
-    handleUpload() {
-      this.uploadVisible = true;
+     /*  1 发票入账 2 撤销抽入 */
+     handleEnterAccount(type) {
+      if(this.isSelected.length >1){
+        this.$message.warning("当前操作只支持单个！")
+        return
+      }
+      if(type === 1 && /02|03/.test(this.isSelected[0].rzzt)){
+        this.$message.warning(`当前发票已入账`)
+        return
+      }
+      if(type === 2 && !/02|03/.test(this.isSelected[0].rzzt)){
+        this.$message.warning(`当前发票还未入账`)
+        return
+      }
+      this.dialog.enterTitle = type === 1?'发票入账':'撤销入账';
+      this.typeStatus = {type:'HGJNS',status:type}
+      this.rowData = {...this.isSelected[0]}
+      this.dialog.enterVisible = true;
     },
     /* 修改入账状态 */
     handleEditeStatus() {
-      this.statusVisible = true;
+      if(this.isSelected.length >1){
+        this.$message.warning("当前操作只支持单个！")
+        return
+      }else{
+        this.typeStatus = {type:'HGJNS'}
+        this.rowData = {...this.isSelected[0]}
+        this.dialog.editeVisible = true;
+      }
+      
+    },
+     /* 导出范围 */
+     async handleExportRange(){
+      let data = {
+        ...this.where,
+      };
+      let fileName = '增值税发票.xlsx'
+      try{
+         await  postHGDownloadList({
+        reqData: { ...data,},
+        fileName
+      })
+        
+
+      }catch{
+
+      }
+     
+    },
+    /* 导出已选择 */
+    async handleExportSelected(){
+      let data = this.isSelected;
+      let fileName = '增值税发票--已选择.xlsx'
+      try{
+         await  postHGDownloadSelect({
+        reqData: data,
+        fileName
+      })}catch{}
     },
     /* 表格样式 行 */
     rowClassName({ row, rowIndex }) {
@@ -326,20 +446,44 @@ export default {
     /*点击行事件 */
     handleRowClick(row) {
       this.selectedRow = row;
+      const {id} = row || {};
+      this.handleGetTableSingleDes({id})
+    },
+    async handleGetTableSingleDes(data){
+      let params = {
+        ...data,
+        pageNo:this.page_bottom.currentPage,
+        pageSize:this.page_bottom.pageSize,
+      }
+      try{
+        const res = await getPoolTableSingleDes(params);
+        if([0,'0'].includes(res.code)){
+          this.bottomTableData = [...res.data];
+          this.bottom_total = res.totalCount
+        }
+      }finally{}
     },
     /* 勾选 */
     handleSelectionChange(e) {
-      console.log(e, "2");
       this.isSelected = [...e];
     },
+    /* 返回后刷新状态 */
+    handleDone(val){
+      this.handleGetTableList()
+    }
   },
   created() {},
-  mounted() {},
+  mounted() {
+    this.handleInit();
+  },
   beforeCreate() {},
   beforeMount() {},
   beforeUpdate() {},
   updated() {
+   this.$nextTick(()=>{
     this.$refs.bottomTableRef.doLayout();
+    this.$refs.topTableRef.doLayout();
+   })
   },
   beforeDestroy() {},
   destroyed() {},

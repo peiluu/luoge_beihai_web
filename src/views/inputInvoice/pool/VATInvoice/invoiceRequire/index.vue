@@ -7,37 +7,37 @@
       @update:visible="updateVisible"
       :before-close="handleClose"
     >
-      <article >
+      <article v-loading="loading">
         <article class="require_tag">
             <div class="require_img_main"><img src="@/assets/img/pass.png" alt=""></div>
             <div>发票合规性校验通过！</div>
         </article>
         <el-descriptions :column="2">
           <el-descriptions-item label="销方纳税人识别号"
-            >kooriookami</el-descriptions-item
+            >{{requirdList.xsfmc}}</el-descriptions-item
           >
           <el-descriptions-item label="销方纳税人识别号"
-            >18100000000</el-descriptions-item
+            >{{requirdList.xsfnsrsbh}}</el-descriptions-item
           >
           <el-descriptions-item label="购方纳税人识别号"
-            >苏州市</el-descriptions-item
+            >{{requirdList.gmfmc}}</el-descriptions-item
           >
           <el-descriptions-item label="购方纳税人识别号"
-            >学校</el-descriptions-item
+            >{{requirdList.gmfnsrsbh}}</el-descriptions-item
           >
           <el-descriptions-item label="发票号码"
-            >江苏省苏州市吴中区吴中大道 1188 号</el-descriptions-item
+            >{{requirdList.fphm}}</el-descriptions-item
           >
           <el-descriptions-item label="发票代码"
-            >kooriookami</el-descriptions-item
+            >{{requirdList.fpdm}}</el-descriptions-item
           >
           <el-descriptions-item label="开票日期"
-            >18100000000</el-descriptions-item
+            >{{requirdList.kprq}}</el-descriptions-item
           >
-          <el-descriptions-item label="发票金额">苏州市</el-descriptions-item>
-          <el-descriptions-item label="发票税额">学校</el-descriptions-item>
+          <el-descriptions-item label="发票金额">{{requirdList.kpje}}</el-descriptions-item>
+          <el-descriptions-item label="发票税额">{{requirdList.kpse}}</el-descriptions-item>
           <el-descriptions-item label="查验次数"
-            >江苏省苏州市吴中区吴中大道 1188 号</el-descriptions-item
+            >{{requirdList.cycs}}</el-descriptions-item
           >
         </el-descriptions>
         <article style="margin-top:15px;">
@@ -59,6 +59,7 @@
 </template>
 
 <script>
+import {getRequiredInvoice} from '@/api/pool/index.js'
 export default {
   name: "invoiceRequirePage",
   props: {
@@ -76,13 +77,19 @@ export default {
       type: String,
       default: "50%",
     },
+    invoiceNumber:{
+        type:[String,Number],
+        default:null
+    }
   },
   components: {},
   data() {
     return {
         requireTableData:[
             {label:'失信人黑名单检查',value:'销方税号是XXXX，为失信人黑名风险！',require:false}
-        ]
+        ],
+        requirdList:{},
+        loading:false,
     };
   },
   computed: {},
@@ -100,9 +107,27 @@ export default {
     handleClose() {
       this.updateVisible(false);
     },
+    async handlerInit(){
+        this.loading = true;
+        
+        try{
+            const res = await getRequiredInvoice({fphm:this.invoiceNumber})
+            if([0,'0'].includes(res.code)){
+                this.requirdList = {...res.data}
+            }else{
+                this.$message.error("检查发票失败！请重试")
+            }
+        }catch{}finally{
+            this.loading = false;
+        }
+        
+        
+    }
   },
   created() {},
-  mounted() {},
+  mounted() {
+    this.handlerInit();
+  },
   beforeCreate() {},
   beforeMount() {},
   beforeUpdate() {},

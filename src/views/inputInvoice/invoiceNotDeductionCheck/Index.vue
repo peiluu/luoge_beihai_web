@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
+  <div class="main-content">
 
 
     <div class="content-header">
@@ -12,15 +12,18 @@
 
     <div class="tab-box">
       <el-tabs class="custom-card-tabs" v-model="level" type="card">
-        <el-tab-pane label="发票" name="1" />
-        <el-tab-pane label="代扣代缴完税凭证" name="2" />
+        <el-tab-pane label="增值税发票" name="1" />
+        <el-tab-pane label="海关缴款书" name="2" />
+        <el-tab-pane label="代扣代缴完税凭证" name="3" />
       </el-tabs>
       <i class="el-icon-warning" />当前纳税主体: {{ $route.query.nsrmc }}
     </div>
-    <!-- 发票 -->
-    <Invoice v-if="level == 1" :key="level" :currentSq="currentSq" />
+     <!-- 发票下载 -->
+    <Invoice v-show="level === '1'" :level="level" :currentSq="currentSq" />
+    <!-- 海关缴款书 -->
+    <Customs v-show="level === '2'"  :level="level"/>
     <!-- 代扣代缴完税凭证 -->
-    <Withhold v-if="level == 2" :key="level" />
+    <Withhold v-show="level === '3'" :level="level"/>
   </div>
 </template>
 <script>
@@ -29,7 +32,7 @@ import BackBtn from "@/components/BackBtn";
 import Invoice from './invoice/Index.vue';
 import Withhold from './withhold/Index.vue';
 import BtnTabs from '../components/BtnTabs.vue';
-
+import Customs from './customs/Index.vue';
 
 export default {
   name: 'InvoiceNotDeductionCheck',
@@ -37,25 +40,29 @@ export default {
     BackBtn,
     Withhold,
     Invoice,
+    Customs,
     BtnTabs
   },
   data() {
     return {
       level: '1',
+      applyStatisticsStatus: {}
 
     };
   },
   computed: {
-    contentHeight() {
-      return window.innerHeight - 132;
-    },
     currentSq() {
       return getCurrentMonthSsq()
     }
   },
   methods: {
+  },
+  activated(){
+    this.level = null;
+    this.$nextTick(()=>{
+      this.level = '1';
+    })
   }
-
 };
 </script>
 

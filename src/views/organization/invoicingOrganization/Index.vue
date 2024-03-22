@@ -70,16 +70,18 @@
     >
       <Detail :detailInfo="detailInfo" @onOk="onOk" @onClose="onClose"/>
     </el-dialog>
-    <el-dialog
-      v-if="importVisible"
-      :visible.sync="importVisible"
-      width="80%"
-      :before-close="onClose"
-      class="import-dialog"
-      destroy-on-close
-    >
-      <InvoiceOrganizationImport @onOk="onOk"/>
-    </el-dialog>
+   <custom-import 
+      dialogTitle="导入开票点组织信息"
+      :dialogVisible="dialogImportVisible"
+      @handleClose="onClose"
+      @handleOk="onOk"
+      downloadTemplateApi="/taxBody/downExcel/2"
+      downloadTemplateName="开票点组织信息_导入模板"
+      upApi="/orgnization/importOutputExcelInfo"
+      importApi="/orgnization/importOutputInfo"
+      upTitle="上传开票点组织信息"
+      :importColumns="importColumns"
+    ></custom-import>
   </div>
 </template>
 
@@ -87,13 +89,13 @@
 import FormList from '@/components/FormList.vue';
 import { getListAll, delOrg, moveOrg, setEnable, exportOrganizationInfo } from './Api.js'
 import Detail from './Detail.vue'
-import InvoiceOrganizationImport from './InvoiceOrganizationImport.vue'
+import CustomImport from '@/components/CustomImport'
 export default {
   name: 'InvoicingOrganization',
   components: {
     FormList,
     Detail,
-    InvoiceOrganizationImport
+    CustomImport
   },
   props: {
     taxBodyId: {},
@@ -124,6 +126,11 @@ export default {
           fixed: 'right',
           scopedSlots: { customRender: "action" }
         }
+      ],
+      importColumns:[
+        { title: "组织编码", width: 100, dataIndex: "code", },
+        { title: "组织名称", width: 150, dataIndex: "name", },
+        { title: "所属主体", width: 150, dataIndex: "nsrmc", },
       ],
       searchList: [
         {
@@ -176,7 +183,7 @@ export default {
         operateType: '',
         id: null
       },
-      importVisible: false
+      dialogImportVisible: false
     };
 
   },
@@ -187,7 +194,7 @@ export default {
   },
   computed: {
     height() {
-      return window.innerHeight - 310
+      return window.innerHeight - 380
     },
     selections() {
       return this.$refs.list.getSelections()
@@ -201,7 +208,7 @@ export default {
     },
     onClose(){
       this.detailVisible = false;
-      this.importVisible  = false;
+      this.dialogImportVisible  = false;
       this.detailInfo = {
         operateType: '',
         id: null,
@@ -311,7 +318,7 @@ export default {
     },
     // 导入
     handleImport() {
-      this.importVisible = true;
+      this.dialogImportVisible = true;
     },
     getSearchParam(param) {
       this.queryParam = param;

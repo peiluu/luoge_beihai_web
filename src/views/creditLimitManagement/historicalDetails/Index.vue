@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div>
     <div class="content-header">
       <el-tabs :key="activeName" class="custom-card-tabs" v-model="activeName" type="card">
         <el-tab-pane label="历史授信额度信息" name="credit" />
@@ -104,10 +104,7 @@ export default {
 
   computed: {
     height() {
-      return window.innerHeight - 320;
-    },
-    contentHeight() {
-      return window.innerHeight - 132;
+      return window.innerHeight - 420;
     },
   },
 

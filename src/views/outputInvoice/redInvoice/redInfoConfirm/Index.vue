@@ -484,7 +484,7 @@
       // 查看红字确认单申请详情，查看 / 红冲 /
       async getRedInvoice(id) {
         const { code = '', data = {} } = await getRedInvoice({ id })
-        debugger;
+        // debugger;
         if (code === '0') {
           this.form = {
             ...this.form,

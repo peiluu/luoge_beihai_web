@@ -1,9 +1,9 @@
 <template>
     <div class="">
         <el-card shadow="never">
-      <app-search-form></app-search-form>
+      <app-search-form @search="handlerSearch" @resst="handleRest"></app-search-form>
     </el-card>
-    <el-card shadow="never">
+    <el-card shadow="never" style="margin-top: 10px;">
       <article>
         <article style="padding: 2px">
           <el-row>
@@ -53,11 +53,11 @@
                   @click="handleStatus(2)"
                   >撤销收票</el-button
                 >
-                <el-button type="">导出查询结果</el-button>
+                <el-button type="" @click="handleExportRange">导出查询结果</el-button>
                 <el-button
                   type=""
                   :disabled="isSelected.length <= 0"
-                  @click="handleStatus(1)"
+                  @click="handleExportSelected"
                   >导出选中发票</el-button
                 >
               </el-button-group>
@@ -74,87 +74,100 @@
             </el-col>
           </el-row>
         </article>
-        <article>
+        <article style="">
           <el-table
             :data="tableData"
             :border="true"
-            style="width: 100%;height:100%;max-height:350px;overflow: auto;"
             @row-click="handleRowClick"
             highlight-current-row
             :row-class-name="rowClassName"
             @selection-change="handleSelectionChange"
             ref="tableRef"
+            height="340"
+            v-loading="loading"
+            row-key="id"
           >
             <el-table-column type="selection" width="55" fixed="left" align="center">
             </el-table-column>
             <el-table-column type="index" width="55" label="序号" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="发票号码" minWidth="160" align="center">
+            <el-table-column prop="fphm" label="发票号码" minWidth="160" align="center">
             </el-table-column>
-            <el-table-column prop="name" label="发票代码" minWidth="140" align="center">
+            <el-table-column prop="zzfpDm" label="发票代码" minWidth="140" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="开票日期" minWidth="160" align="center">
+            <el-table-column prop="kprq" label="开票日期" minWidth="160" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="发票类型" minWidth="100" align="center">
+            <el-table-column prop="fppzDm" label="发票类型" minWidth="140" align="center">
+              <template slot-scope="scope">
+                <span>{{ handleParesTableValue(scope.row.fppzDm,optionList.invoiceType) }}</span>
+              </template>
             </el-table-column>
-            <el-table-column prop="date" label="特殊票种" minWidth="100" align="center">
+            <el-table-column prop="tdyslxDm" label="特殊票种" minWidth="100" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="凭证号" minWidth="120" align="center">
+            <el-table-column prop="wspzh" label="凭证号" minWidth="180" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="作废日期" minWidth="120" align="center">
+            <el-table-column prop="zfrq" label="作废日期" minWidth="120" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="销方名称" minWidth="180" align="center">
+            <el-table-column prop="xsfmc" label="销方名称" minWidth="180" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="销方税号" minWidth="180" align="center">
+            <el-table-column prop="xsfnsrsbh" label="销方税号" minWidth="180" align="center">
             </el-table-column>
-            <el-table-column prop="date" label="合计金额" minWidth="120" :header-align="'center'" :align="'right'">
+            <el-table-column prop="hjje" label="合计金额" minWidth="120" :header-align="'center'" :align="'right'">
+              <template slot-scope="{row}">{{ formatMoney(row.hjje) }} </template>
             </el-table-column>
-            <el-table-column prop="date" label="合计税额" minWidth="120" :header-align="'center'" :align="'right'">
+            <el-table-column prop="hjse" label="合计税额" minWidth="120" :header-align="'center'" :align="'right'">
+              <template slot-scope="{row}">{{ formatMoney(row.hjse) }} </template>
             </el-table-column>
-            <el-table-column prop="date" label="价税合计" minWidth="120" :header-align="'center'" :align="'right'">
+            <el-table-column prop="jshj" label="价税合计" minWidth="120" :header-align="'center'" :align="'right'">
+              <template slot-scope="{row}">{{ formatMoney(row.jshj) }} </template>
             </el-table-column>
-            <el-table-column prop="date" label="扣除额" minWidth="120" :header-align="'center'" :align="'center'">
+            <el-table-column prop="kce" label="扣除额" minWidth="120" :header-align="'center'" :align="'center'">
+              <template slot-scope="{row}">{{ formatMoney(row.kce) }} </template>
             </el-table-column>
-            <el-table-column prop="date" label="发票状态" minWidth="120" :header-align="'center'" :align="'center'">
+            <el-table-column prop="fpzt" label="发票状态" minWidth="120" :header-align="'center'" :align="'center'">
+              <template slot-scope="scope">
+                <span>{{ handleParesTableValue(scope.row.fpzt,optionList.invoiceStatus) }}</span>
+              </template>
             </el-table-column>
-            <el-table-column prop="date" label="异常凭证状态" minWidth="120" :header-align="'center'" :align="'center'">
+            <el-table-column prop="sfycpz" label="异常凭证状态" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="date" label="红字锁定标识" minWidth="120" :header-align="'center'" :align="'center'">
+            <el-table-column prop="sdzt" label="红字锁定标识" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="date" label="发票用途" minWidth="120" :header-align="'center'" :align="'center'">
+            <el-table-column prop="hxyt" label="发票用途" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="date" label="入账状态" minWidth="120" :header-align="'center'" :align="'center'">
+            <el-table-column prop="srzzt" label="入账状态" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="date" label="收票状态" minWidth="120" :header-align="'center'" :align="'center'">
+            <el-table-column prop="spzt" label="收票状态" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="date" label="收票日期" minWidth="120" :header-align="'center'" :align="'center'">
+            <el-table-column prop="sprq" label="收票日期" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="date" label="转出状态" minWidth="120" :header-align="'center'" :align="'center'">
+            <el-table-column prop="zczt" label="转出状态" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="date" label="原发票号码" minWidth="120" :header-align="'center'" :align="'center'">
+            <el-table-column prop="yfphm" label="原发票号码" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="date" label="原发票代码" minWidth="120" :header-align="'center'" :align="'center'">
+            <el-table-column prop="yfpdm" label="原发票代码" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="date" label="财务备注" minWidth="120" :header-align="'center'" :align="'center'">
+            <el-table-column prop="cwbz" label="财务备注" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="date" label="归集日期" minWidth="120" :header-align="'center'" :align="'center'">
+            <el-table-column prop="gjrq" label="归集日期" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="date" label="创建时间" minWidth="120" :header-align="'center'" :align="'center'">
+            <el-table-column prop="creattime" label="创建时间" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="date" label="修改时间" minWidth="120" :header-align="'center'" :align="'center'">
+            <el-table-column prop="updatetime" label="修改时间" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
             <el-table-column prop="aciton" fixed="right" label="操作" width="120" :header-align="'center'" :align="'center'">
               <template slot-scope="scope">
-                <el-button size="small" type="primary" @click="handleViewInvoice(scope.row)">查看发票</el-button>
+                <el-button  type="primary" @click.stop="handleViewInvoice(scope.row)">查看发票</el-button>
               </template>
             </el-table-column>
           </el-table>
         </article>
         <article class="table_bottom_page">
             <article class="footer_text_main">
-            金额总额<span class="footer_sum"> 224,181.03</span> 元 / 税额总额
-            <span class="footer_sum"> 10,928.27 </span> 元 / 价税合计总额
-            <span class="footer_sum"> 235,109.30 </span>元
+              已选择<span class="footer_sum"> {{isSelected.length}}</span> 项 | 合计金额
+            <span class="footer_sum"> {{ totalje }} </span> 元 | 合计税额
+            <span class="footer_sum">{{ totalse }} </span>元 | 价税合计
+            <span class="footer_sum"> {{ totaljs }} </span>元
             </article>
             <article>
             <el-pagination
@@ -177,85 +190,87 @@
           ref="bottomTableRef"
           :data="bottomTableData"
           :border="true"
-          style="width: 100%; height: 150px; overflow: auto"
-          @row-click="handleRowClick"
+          v-loading="loading_1"
+          height="150px"
         >
           <el-table-column type="index" width="55" label="序号" align="center">
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="xmmc"
             label="项目名称"
             minWidth="180"
+            :show-overflow-tooltip="true"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="ggxh"
             label="规格型号"
             minWidth="140"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="dw"
             label="单位"
             minWidth="120"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="fpjysl"
             label="数量"
             minWidth="120"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="fpjydj"
             label="单价"
             minWidth="120"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="je"
             label="金额"
             minWidth="140"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="slv"
             label="增值税税率/征收率"
             minWidth="160"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="se"
             label="税额"
             minWidth="120"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="hsje"
             label="含税金额"
             minWidth="110"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="kce"
             label="扣除额"
             minWidth="110"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="sphfwssflhbbm"
             label="商品和服务税收分类合并编码"
-            minWidth="180"
+            width="180"
+            
             align="center"
           >
           </el-table-column>
@@ -279,12 +294,18 @@
       :visible.sync="dialog.statusVisible"
       width="50%"
       :title="dialog.statusTitle"
+      :row-data="rowData"
+      :type-status="typeStatus"
+      @successDone="handleDone"
     ></lg-collect-ticket-mage>
     <lg-enter-account-mage
       v-if="dialog.enterVisible"
       :visible.sync="dialog.enterVisible"
       width="40%"
       :title="dialog.enterTitle"
+      :row-data="rowData"
+      :type-status="typeStatus"
+      @successDone="handleDone"
     ></lg-enter-account-mage>
     <!-- 待修改认证科目 -->
     <lg-edie-verified
@@ -292,30 +313,39 @@
       :visible.sync="dialog.editeVisible"
       width="50%"
       title="修改会计科目操作"
+      :row-data="rowData"
+      :type-status="typeStatus"
+      @successDone="handleDone"
     ></lg-edie-verified>
     <!-- 发票检验 -->
     <lg-invoice-require 
     :visible.sync="dialog.requireVisbile" 
     v-if="dialog.requireVisbile" 
     title="发票检验" width="45%"
+    :invoice-number="invoiceNumber"
     >
     </lg-invoice-require>
     <!-- 查看发票 -->
-    <lg-view-invoice :visible.sync="dialog.viewVisible" v-if="dialog.viewVisible">
+    <lg-view-invoice title="发票预览" width="60%" :visible.sync="dialog.viewVisible" v-if="dialog.viewVisible">
       <template v-slot:main>
-        <h1>弹窗</h1>
+        <article style="min-height: 450px; max-height: 550px;">
+          <lg-invoice-view :invoice-id="invoiceId" v-if="dialog.viewVisible"></lg-invoice-view>
+        </article>
       </template>
     </lg-view-invoice>
     </div>
 </template>
 
 <script>
-import AppSearchForm from "../componetns/searchForm";
+import AppSearchForm from "./searchForm";
 import LgCollectTicketMage from "../componetns/collectTicketMage";
 import LgEnterAccountMage from "../componetns/enterAccountMage";
 import LgEdieVerified from "../componetns/editeVerified";
 import LgInvoiceRequire from "./invoiceRequire";
 import LgViewInvoice from "../componetns/viewInvoice";
+import LgInvoiceView from "@/components/invoiceView";
+import {getPoolInvoiceList,getPoolInvoiceSingleDes,postDownloadList,postDownloadSelect} from '@/api/pool/index.js'
+
 export default {
   name: "poolPage",
   components: {
@@ -324,59 +354,22 @@ export default {
     LgEnterAccountMage,
     LgEdieVerified,
     LgInvoiceRequire,
-    LgViewInvoice
+    LgViewInvoice,
+    LgInvoiceView
   },
+  props:{},
   data() {
     return {
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄",
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1519 弄",
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1516 弄",
-        },
-      ],
+      tableData: [],
       searchForm: {},
       isSelected: [],
-      selectedRow: null,
-      bottomTableData:[
-      {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄",
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1519 弄",
-        },
-      ],
-     
-      
+      selectedRow: [],
+      bottomTableData:[],
       total: 1000,
       page: {
         currentPage: 1,
-        pageSize: 3,
-        pageSizes: [15, 25, 50, 75, 100],
+        pageSize: 10,
+        pageSizes: [10,15, 25, 50, 75, 100],
       },
       page_bottom: {
         currentPage: 1,
@@ -393,16 +386,89 @@ export default {
         viewVisible:false,
         enterTitle:'',
         statusTitle:''
-      }
+      },
+      loading:false,
+      rowData:{},
+      typeStatus:{},
+      where:{},
+      loading_1:false,
     };
   },
-  computed: {},
+  computed: { 
+    totalje(){
+      const totalAmount = this.isSelected.reduce((sum, item) => sum + (item.hjje || 0), 0);
+      // 格式化成带千位符且保留两位小数的字符串
+      const formattedTotalAmount = totalAmount.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+      return formattedTotalAmount
+    },
+    totalse(){
+      const totalAmount = this.isSelected.reduce((sum, item) => sum + (item.hjse || 0), 0);
+      // 格式化成带千位符且保留两位小数的字符串
+      const formattedTotalAmount = totalAmount.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+      return formattedTotalAmount
+      
+    },
+    totaljs(){
+      const totalAmount = this.isSelected.reduce((sum, item) => sum + (item.hjje || 0), 0);
+      // 格式化成带千位符且保留两位小数的字符串
+      const formattedTotalAmount = totalAmount.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+      return formattedTotalAmount
+    }
+  },
   watch: {},
   methods: {
+    handleInit(){
+      this.handleGetTableList()
+    },
+    async handleGetTableList(val = {}){
+      this.loading= true;
+      let parmas = {
+        pageNo:this.page.currentPage,
+        pageSize:this.page.pageSize,
+        ...val,
+      }
+      try{
+        const res = await getPoolInvoiceList(parmas);
+        if([0,'0'].includes(res.code)){
+          this.tableData = [...res.data];
+          this.total = res.totalCount;
+          this.$refs.tableRef.doLayout();
+        }
+      }finally{
+        this.loading = false
+      }
+      
+     
+    },
     /* size change */
-    handleSizeChange() {},
+    handleSizeChange(page) {
+      this.page.pageSize = page;
+      this.handleGetTableList()
+    },
     /* Current change */
-    handleCurrentChange() {},
+    handleCurrentChange(current) {
+      this.page.currentPage =current
+      this.handleGetTableList()
+    },
+    /* 搜索 */
+    handlerSearch(val){
+      this.where = {...val};
+      this.handleGetTableList(val);
+    },
+    /* 重置 */
+    handleRest(val){
+      this.where = {...val};
+      this.handleGetTableList(val)
+    },
     /* size change */
     handleBottomSizeChange(val) {
       this.page_bottom.pageSize = val;
@@ -413,17 +479,55 @@ export default {
     },
     /* 确认管理 */
     handleStatus(type) {
+      if(this.isSelected.length >1){
+        this.$message.warning("当前操作只支持单个！")
+        return
+      } 
+      if(type=== 1 && this.isSelected[0].spzt === '1'){
+        this.$message.warning(`当前发票已确认收票`)
+        return
+      }
+      if(type=== 2 && this.isSelected[0].spzt === '2'){
+        this.$message.warning(`当前发票还未确认收票`)
+        return
+      }
       this.dialog.statusTitle = type === 1?'确认收票':'撤销收票';
+      this.typeStatus = {type:'ZZSFP',status:type}
+      this.rowData = {...this.isSelected[0]}
       this.dialog.statusVisible = true;
     },
     /*  1 发票入账 2 撤销抽入 */
     handleEnterAccount(type) {
+      if(this.isSelected.length >1){
+        this.$message.warning("当前操作只支持单个！")
+        return
+      }
+      if(type === 1 && /02|03/.test(this.isSelected[0].rzzt)){
+        this.$message.warning(`当前发票已入账`)
+        return
+      }
+      if(type === 2 && !/02|03/.test(this.isSelected[0].rzzt)){
+        this.$message.warning(`当前发票还未入账`)
+        return
+      }
       this.dialog.enterTitle = type === 1?'发票入账':'撤销入账';
+      this.typeStatus = {type:'ZZSFP',status:type}
+      this.rowData = {...this.isSelected[0]}
       this.dialog.enterVisible = true;
+      
+      
     },
     /* 修改入账状态 */
     handleEditeStatus() {
-      this.dialog.editeVisible = true;
+      if(this.isSelected.length >1){
+        this.$message.warning("当前操作只支持单个！")
+        return
+      }else{
+        this.typeStatus = {type:'ZZSFP'}
+        this.rowData = {...this.isSelected[0]}
+        this.dialog.editeVisible = true;
+      }
+      
     },
     /* 表格样式 行 */
     rowClassName({ row, rowIndex }) {
@@ -434,7 +538,22 @@ export default {
     },
     /*点击行事件 */
     handleRowClick(row) {
+      const {id} = row || {};
       this.selectedRow = row;
+      this.handleGetSingleDes({id});
+    },
+    /* 请求详情 */
+    async handleGetSingleDes(data){
+      let params = {
+        ...data,
+        pageNo:this.page_bottom.currentPage,
+        pageSize:this.page_bottom.pageSize
+      }
+      const res = await getPoolInvoiceSingleDes(params);
+      if([0,'0'].includes(res.code)){
+        this.bottomTableData = [...res.data];
+        this.bottom_total = res.totalCount
+      }
     },
     /* 勾选 */
     handleSelectionChange(e) {
@@ -443,16 +562,66 @@ export default {
     },
     /* 发票检验 */
     handleRequire(){
-      this.dialog.requireVisbile = true;
+      if(this.isSelected.length > 1){
+        this.$message.warning("此操作只支持单个操作！请重试");
+        return
+      }else{
+        this.invoiceNumber = this.isSelected[0]?.fphm;
+        this.dialog.requireVisbile = true;
+      }
+      
     },
     /* 发票查看 */
     handleViewInvoice(row){
+      this.invoiceId = row.id || ''
       this.dialog.viewVisible = true;
-      console.log(row)
+      
+    },
+    /* 导出范围 */
+    async handleExportRange(){
+      let data = {
+        ...this.where,
+      };
+      let fileName = '增值税发票.xlsx'
+      try{
+         await  postDownloadList({
+        reqData: { ...data,},
+        fileName
+      })
+        
+
+      }catch{
+
+      }
+     
+    },
+    /* 导出已选择 */
+    async handleExportSelected(){
+      let data = this.isSelected;
+      let fileName = '增值税发票--已选择.xlsx'
+      try{
+         await  postDownloadSelect({
+        reqData: data,
+        fileName
+      })}catch{}
+    },
+    /* 返回后刷新状态 */
+    handleDone(val){
+      this.handleGetTableList()
+    },
+    handleParesTableValue(val,option){
+      if(option.length <=0 || (val??'') ===''){
+        return ''
+      }else{
+       return option.find(k=> k.value === val).label
+      }
     }
   },
+  inject: ['optionList'],
   created() {},
-  mounted() {},
+  mounted() {
+   this.handleInit()
+  },
   beforeCreate() {},
   beforeMount() {},
   beforeUpdate() {},

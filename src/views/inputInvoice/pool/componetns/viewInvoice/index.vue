@@ -10,8 +10,8 @@
             <slot name="main"></slot>
            </article>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="updateVisible(false)">取 消</el-button>
-                <el-button type="primary" @click="handleConfirm">确 定</el-button>
+                <el-button type="primary" @click="updateVisible(false)">关 闭</el-button>
+                
             </span>
         </el-dialog>
     </div>
@@ -58,7 +58,7 @@ export default {
 
         /* 关闭前 */
         handleClose(){
-
+            this.updateVisible(false)
         },
     },
     created() {},

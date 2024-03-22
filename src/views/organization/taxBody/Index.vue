@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form-list :columns="columns" :searchKey="propsKey" :searchRow="searchList" :api="api" :param="param" :firstLoading="false" v-loading="loading" @getSearchParam="getSearchParam" ref="list">
+    <form-list :columns="columns" :height="height" :searchKey="propsKey" :searchRow="searchList" :api="api" :param="param" :firstLoading="false" v-loading="loading" @getSearchParam="getSearchParam" ref="list">
       <!-- 中间部分 -->
       <template #topTool>
         <div class="toolbar">
@@ -22,6 +22,7 @@
       <template #sffgs="{ data }"> {{ data.sffgs == 'Y' ? '是' : '否' }}</template>
       <template #city="{ data }"> {{ data.city || '' + data.area || '' }}</template>
       <template #zgsmc="{ data }"> {{ data.sffgs == 'Y' ? data.zgsmc : '' }}</template>
+      <template #sfqkrzgx="{ data }"> {{ data.sfqkrzgx == 'Y' ? '是' : '否' }}</template>
 
       <template #myscope="{ data }">
         <el-popover placement="left" trigger="hover" popper-class="customPopper">
@@ -70,16 +71,18 @@
     >
       <Detail :detailInfo="detailInfo" @onOk="onOk" @onClose="onClose"/>
     </el-dialog>
-    <el-dialog
-      v-if="importVisible"
-      :visible.sync="importVisible"
-      width="80%"
-      :before-close="onClose"
-      class="import-dialog"
-      destroy-on-close
-    >
-      <TaxBodyImport @onOk="onOk"/>
-    </el-dialog>
+   <custom-import 
+      dialogTitle="纳税主体信息"
+      :dialogVisible="dialogImportVisible"
+      @handleClose="onClose"
+      @handleOk="onOk"
+      downloadTemplateApi="/taxBody/downExcel/1"
+      downloadTemplateName="纳税主体信息_导入模板"
+      upApi="/taxBody/importTaxBodyExcelInfo"
+      importApi="/taxBody/importTaxBodyInfo"
+      upTitle="上传纳税主体信息"
+      :importColumns="importColumns"
+    ></custom-import>
   </div>
 </template>
 
@@ -88,13 +91,13 @@ import FormList from '@/components/FormList.vue';
 import { rgionEnum, cityEnum, provincesEnmu } from '@/config/regionEnums.js';
 import { listCascaderDict, selectYtList, delTaxBodyBatch, setIsDigital, getListAll, selectQyList, downLoadApplyList, exportTaxBodyInfo, } from './Api.js'
 import Detail from './Detail.vue'
-import TaxBodyImport from './TaxBodyImport.vue'
+import CustomImport from '@/components/CustomImport'
 export default {
   name: 'organizationTaxBody',
   components: {
     FormList,
     Detail,
-    TaxBodyImport
+    CustomImport
   },
   data() {
     return {
@@ -115,6 +118,7 @@ export default {
         // { title: "是否开通数电", width: 100, dataIndex: "isDigital", slot: 'isDigital', align: 'center' },
         { title: "所属业态", width: 100, dataIndex: "businessFormat", align: 'center' },
         { title: "所属区域", width: 140, dataIndex: "region" },
+        { title: "是否强控入账勾选", width: 120, dataIndex: "sfqkrzgx", slot: 'sfqkrzgx'},
         { title: "包含开票组织数量", width: 120, dataIndex: "orgCount", align: 'right' },
         { title: "所属省份", width: 100, dataIndex: "province" },
         { title: "所属城市", width: 100, dataIndex: "city", },
@@ -131,6 +135,10 @@ export default {
           fixed: 'right',
           scopedSlots: { customRender: "action" }
         }
+      ],
+      importColumns:[
+        { title: "纳税主体名称", width: 160, dataIndex: "nsrmc", },
+        { title: "纳税主体识别号", width: 160, dataIndex: "nsrsbh", },
       ],
       searchList: [
         {
@@ -213,7 +221,7 @@ export default {
         operateType: '',
         id: null
       },
-      importVisible: false,
+      dialogImportVisible: false,
 
     };
 
@@ -226,9 +234,9 @@ export default {
     this.getList()
   },
   computed: {
-    // height() {
-    //   return window.innerHeight - 310
-    // },
+    height() {
+      return window.innerHeight - 380
+    },
     selections() {
       return this.$refs.list.getSelections()
     }
@@ -241,7 +249,7 @@ export default {
     },
     onClose(){
       this.detailVisible = false;
-      this.importVisible  = false;
+      this.dialogImportVisible  = false;
       this.detailInfo = {
         operateType: '',
         id: null,
@@ -391,7 +399,7 @@ export default {
     },
     //导入
     handleImport() {
-      this.importVisible = true;
+      this.dialogImportVisible = true;
     },
     getSearchParam(param) {
       this.queryParam = param;

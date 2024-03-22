@@ -168,6 +168,7 @@ export const customPost = function(url, hearders, params, cb){
           if(cb && typeof cb === 'function')cb(res);
           resolve(res)
       }).catch(err => {
+        if(cb && typeof cb === 'function')cb(err);
           reject(err)
       })
   })
@@ -228,9 +229,9 @@ export function download(url, params, extendParamNames = null, showLoading = fal
   if (showLoading){
     loading = Loading.service({
       lock: true,
-      text: '',
+      text: '下载中....请稍后',
       spinner: 'el-icon-loading',
-      background: 'rgba(0, 0, 0, 0.7)'
+      background: 'rgba(255, 255, 255, 0.5)'
     });
   }
   const { reqData, fileName = '' } = params

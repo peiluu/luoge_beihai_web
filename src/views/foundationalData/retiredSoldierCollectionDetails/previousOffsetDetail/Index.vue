@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
+  <div class="main-content">
     <BackBtn path="/foundationalData/retiredSoldierCollectionDetails/Index" />
     <form-list :columns="columns" :searchKey="propsKey" :searchRow="searchList" :api="api" :param="param" :height="height" v-loading="loading" ref="list" @getNextList="getOrgList" @getSearchParam="getSearchParam">
       <template #monthQuota="{ data }">{{ formatMoney(data.monthQuota) }}</template>
@@ -98,11 +98,8 @@ export default {
   },
   computed: {
     height() {
-      return window.innerHeight - 350
+      return window.innerHeight - 380
     },
-    contentHeight() {
-      return window.innerHeight - 132;
-    }
   },
 
   methods: {

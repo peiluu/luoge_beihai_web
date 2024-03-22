@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content" :style="'min-height: ' + contentHeight + 'px;'">
+  <div class="main-content">
     <el-form :inline="true">
       <el-form-item label="纳税主体" prop="nsrsbh">
         <el-select v-model="form.nsrsbh" placeholder="请选择" @change="getInfo" filterable style="width: 280px; marginRight: 12px">
@@ -161,9 +161,6 @@ export default {
     };
   },
   computed: {
-    contentHeight() {
-      return window.innerHeight - 132;
-    },
     height() {
       return window.innerHeight - 406;
     },

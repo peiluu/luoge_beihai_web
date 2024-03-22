@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
+  <div class="main-content">
     <form-list :columns="columns" :searchKey="propskey" :searchRow="searchList" :api="api" :param="param" :height="height" v-loading="loading" @getSearchParam="getSearchParam" :firstLoading="false"
       @getNextList="getNextList" ref="list">
       <!-- 中间部分 -->
@@ -230,10 +230,7 @@ export default {
   },
   computed: {
     height() {
-      return window.innerHeight - 290
-    },
-    contentHeight() {
-      return window.innerHeight - 132;
+      return window.innerHeight - 340
     },
     finalYhsxmcList() {
       return this.yhsxmcList.filter((item) => item.xmdm === this.editForm.kcfs)

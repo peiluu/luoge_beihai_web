@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
+  <div class="main-content">
     <form-list :columns="columns" :searchKey="propsKey" :searchRow="searchList" :api="api" :param="param" :height="height" @handleSelection="handleSelection" v-loading="loading" ref="list" @getNextList="getNextList"
       @getSearchParam="getSearchParam" :firstLoading="false">
       <!-- 操作按钮 -->
@@ -25,7 +25,7 @@
           <div class="toolbar-right">
             <el-button @click="addLine({})" type="primary">新增</el-button>
             <el-button type="primary" @click="previousOffsetDetail">抵减明细</el-button>
-            <el-button @click="handleImport">导入</el-button>
+            <el-button @click="importExcel">导入</el-button>
             <!-- <el-button @click="handleExport">导入模板下载</el-button>  -->
             <el-button @click="handleExport">导出</el-button>
           </div>
@@ -79,6 +79,18 @@
         <el-button type="success" @click="saveData">保 存</el-button>
       </span>
     </el-dialog>
+     <custom-import 
+      dialogTitle="导入退役士兵信息"
+      :dialogVisible="dialogimportVisible"
+      @handleClose="handleImportClose"
+      @handleOk="handleImportOk"
+      downloadTemplateApi=""
+      downloadTemplateName="退役士兵_导入模板"
+      upApi="/taxBody/importTaxBodyExcelInfo"
+      importApi="/taxBody/importTaxBodyInfo"
+      upTitle="上传退役士兵信息"
+      :importColumns="importColumns"
+    ></custom-import>
   </div>
 </template>
 
@@ -87,16 +99,18 @@ import moment from "moment";
 import FormList from '@/components/FormList.vue';
 import { regCollection } from '@/config/constant'
 import { getListByUser, updateOrg, saveOrg, detailDownload, getOrgList } from './Api.js'
-
+import CustomImport from '@/components/CustomImport'
 export default {
   name: 'RetiredSoldierCollectionDetails',
   components: {
-    FormList
+    FormList,
+    CustomImport
   },
   props: {
   },
   data() {
     return {
+      dialogimportVisible: false,
       form: {},
       api: require('./Api'),
       param: {},
@@ -121,6 +135,10 @@ export default {
           width: 80,
           scopedSlots: { customRender: "action" },
         },
+      ],
+      importColumns: [
+        { title: "纳税主体名称", width: 210, dataIndex: "nsrmc"},
+        { title: "纳税主体识别号", width: 180, dataIndex: "nsrsbh"},
       ],
       searchList: [
         {
@@ -181,11 +199,8 @@ export default {
   },
   computed: {
     height() {
-      return window.innerHeight - 280;
+      return window.innerHeight - 340;
     },
-    contentHeight() {
-      return window.innerHeight - 132;
-    }
   },
 
   methods: {
@@ -270,12 +285,6 @@ export default {
     getSearchParam(param) {
       this.queryParam = param;
     },
-    //导入
-    handleImport() {
-      sessionStorage.setItem('clearRetiredSoldierImport', 1)
-      this.$router.push({ path: "/retiredSoldierCollectionDetails/retiredSoldierImport" })
-      this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
-    },
 
     addLine(row) {
       this.editForm = row.enjoyTime ? row : { ...row, enjoyTime: 0 }
@@ -334,6 +343,17 @@ export default {
     handleClose(row, data) {
       this.dialogVisible = false
       this.editForm = {}
+    },
+     // 导入
+    importExcel() {
+      this.dialogimportVisible = true
+    },
+    handleImportClose(){
+      this.dialogimportVisible = false
+    },
+    handleImportOk(){
+      this.handleImportClose()
+      this.getList()
     },
     verifyQuota(rule, value, callback) {
       let pattern = /^([-+])?\d+(\.[0-9]{1,2})?$/

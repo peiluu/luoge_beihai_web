@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
+  <div class="main-content">
     <el-form :inline="true" :model="form" :rules="rules" ref="ruleForm">
       <el-form-item label="发票种类" prop="fplx">
         <el-select v-model="form.fplx" placeholder="请选择">
@@ -29,7 +29,7 @@
       <el-form-item class="content-footer" label="">
         <div>
           <el-button @click="reset">重置</el-button>
-          <el-button type="success" @click="submit">查询</el-button>
+          <el-button type="success" @click="submit" :loading="loading">查询</el-button>
         </div>
       </el-form-item>
     </el-form>
@@ -98,7 +98,7 @@
             <el-popover placement="left" trigger="hover" popper-class="customPopper">
               <template>
                 <el-button @click="handleViewClick(scope.row)">预览</el-button>
-                <el-button @click="handleViewClick(scope.row)">查看用途</el-button>
+                <el-button @click="handleUseClick(scope.row)">查看用途</el-button>
               </template>
               <el-button slot="reference">操作</el-button>
             </el-popover>
@@ -107,6 +107,25 @@
         </el-table-column>
       </el-table>
     </div>
+    <el-dialog
+      title="发票用途"
+      :visible.sync="dialogVisible"
+      width="50%"
+      :before-close="handleClose">
+      <el-descriptions title="" border :column="2">
+        <el-descriptions-item label="数电发票号码" label-class-name="dec-label">{{useList.fphm}}</el-descriptions-item>
+        <el-descriptions-item label="发票代码" label-class-name="dec-label">{{useList.zzfpDm}}</el-descriptions-item>
+        <el-descriptions-item label="发票号码" label-class-name="dec-label">{{useList.fphm}}</el-descriptions-item>
+        <el-descriptions-item label="增值税勾选属期" label-class-name="dec-label"></el-descriptions-item>
+        <el-descriptions-item label="增值税用途标签" label-class-name="dec-label"></el-descriptions-item>
+        <el-descriptions-item label="发票入账状态" label-class-name="dec-label"></el-descriptions-item>
+        <el-descriptions-item label="消费税勾选属期" label-class-name="dec-label"></el-descriptions-item>
+        <el-descriptions-item label="消费税用途标签" label-class-name="dec-label"></el-descriptions-item>
+      </el-descriptions>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">关 闭</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -118,6 +137,8 @@ export default {
   components: {},
   data() {
     return {
+      dialogVisible: false,
+      loading: false,
       tableData: [],
       form: {},
       rules: {
@@ -177,6 +198,7 @@ export default {
         value: '61',
         label: '数电航空运输客票电子行程单'
       }],
+      useList: {}
     };
   },
 
@@ -188,7 +210,9 @@ export default {
       return window.innerHeight - 360;
     },
   },
-
+  activated(){
+    this.$refs.table.doLayout();
+  },
   methods: {
     /**
      * @description 提交表单，验证数据格式
@@ -196,16 +220,27 @@ export default {
     async submit() {
       this.$refs["ruleForm"].validate(async valid => {
         if (!valid) return;
+        this.loading = true;
         const data = await approveInvoice(this.form);
         if (data.code === '0') {
           this.tableData = data.data;
+          this.$refs.table.doLayout();
         }
+        this.loading = false;
       })
     },
     reset() {
       this.form = {}
     },
-    handleViewClick() { }
+    handleViewClick() { },
+    // 发票用途
+    handleUseClick(row){
+      this.dialogVisible = true
+      this.useList = row
+    },
+    handleClose() {
+      this.dialogVisible = false
+    },
   }
 }
 </script>
@@ -240,6 +275,9 @@ export default {
     justify-content: flex-end;
     width: 100%;
   }
+}
+/deep/ .dec-label {
+  width: 115px;
 }
 </style>
 

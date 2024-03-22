@@ -112,11 +112,7 @@ export default {
   // 同一页面切换会触发更新
   computed: {
     height() {
-      return window.innerHeight - 280;
-
-    },
-    contentHeight() {
-      return window.innerHeight - 132;
+      return window.innerHeight - 380;
     },
     level() {
       // level: output - 销项待确认的 input. 进项待确认

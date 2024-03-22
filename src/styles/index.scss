@@ -118,8 +118,8 @@ html {
     padding: 12px;
     margin: 8px;
     border-radius: 4px;
-    // height: calc(100% - 40px);
-    // overflow-y: auto;
+    height: calc(100vh - 88px - 16px) !important;
+    overflow-y: auto;
     .toolbar {
         margin-bottom: 15px;
     }
@@ -364,10 +364,10 @@ html {
     }
 }
 // .table-body-warpper{
-    .el-table__body-wrapper,
-    .el-table__fixed-body-wrapper {
-      min-height: 300px;
-    }
+    // .el-table__body-wrapper,
+    // .el-table__fixed-body-wrapper {
+    //   min-height: 300px;
+    // }
 // }
 
 // 居中对齐
@@ -388,7 +388,7 @@ table {
 
 .lg_dialog{
     .el-dialog__header {
-        background: #339966;
+        background: $primaryGreenColor;
         padding: 6px;
         .el-dialog__title {
           color: #fff;
@@ -407,3 +407,28 @@ table {
         text-align: center;
       }
 }
+
+.form-dialog {
+    .el-dialog__body {
+        .el-form-item {
+            width: 100%;
+            margin-bottom: 16px;
+  
+        .el-form-item__label {
+            width: 220px;
+        }
+  
+        .el-form-item__content {
+            width: calc(100% - 320px);
+  
+            .el-select,
+            .el-date-editor,
+            .vxe-select,
+            .vxe-input,
+            .el-input {
+                width: 100%;
+            }
+        }
+      }
+    }
+  }

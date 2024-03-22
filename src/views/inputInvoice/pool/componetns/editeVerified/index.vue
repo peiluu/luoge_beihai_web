@@ -10,11 +10,11 @@
         @update:visible="updateVisible"
         :before-close="handleClose">
             <article class="dailog_info">
-                <el-form ref="form" :model="pushForm" label-width="280px">
+                <el-form ref="formEdite" :model="pushForm" :rules="editeRules" label-width="280px">
                     <el-form-item label="入账状态：">
-                        <el-select style="width:100%" v-model="pushForm.value" placeholder="请选择" clearable filterable>
+                        <el-select style="width:100%" disabled v-model="pushForm.rzzt" placeholder="请选择" clearable filterable>
                             <el-option
-                            v-for="item in options"
+                            v-for="item in rzztOptions"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value">
@@ -22,29 +22,29 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="入账属期：">
-                        <el-date-picker style="width:100%"
-                            v-model="pushForm.value2"
+                        <el-date-picker disabled style="width:100%"
+                            v-model="pushForm.rzsq"
                             type="month"
                             placeholder="选择月">
                             </el-date-picker>
                     </el-form-item>
                     <el-form-item label="凭证号：">
-                        <el-input v-model="pushForm.value8" placeholder="请输入"></el-input>
+                        <el-input v-model="pushForm.wspzh" disabled placeholder="请输入"></el-input>
                     </el-form-item>
                     <el-form-item label="所属账套：">
-                        <el-select style="width:100%" v-model="pushForm.value" placeholder="请选择" clearable filterable>
+                        <el-select style="width:100%" disabled  v-model="pushForm.orgid" placeholder="请选择" clearable filterable>
                             <el-option
-                            v-for="item in options"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
+                            v-for="(item) in orgidList"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id">
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="进项税对应费用会计科目编码与名称：">
-                        <el-select style="width:100%" v-model="pushForm.value" placeholder="请选择" clearable filterable>
+                    <el-form-item label="进项税对应费用会计科目编码与名称：" prop="accSegment">
+                        <el-select style="width:100%"  v-model="pushForm.accSegment" placeholder="请选择" clearable filterable>
                             <el-option
-                            v-for="item in options"
+                            v-for="item in accSegmentOptions"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value">
@@ -55,16 +55,16 @@
             </article>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="updateVisible(false)">取 消</el-button>
-                <el-button type="primary" @click="handleConfirm">提 交</el-button>
+                <el-button type="primary" @click="handleFormRequired">提 交</el-button>
             </span>
         </el-dialog>
     </div>
 </template>
 
 <script>
-
+import {postPoolEditebook,getOrgnizationList} from '@/api/pool/index.js'
 export default {
-    name:'',
+    name:'editeVerifiedPage',
     props:{
         visible: {
             type: Boolean,
@@ -79,16 +79,60 @@ export default {
         width: {
             type: String,
             default: '30%'
+        },
+        rowData:{
+            type:Object,
+            default:()=> ({})
+        },
+        typeStatus:{
+            type: Object,
+            default: ()=> ({})
         }
     },
     components: {},
     data() {
         return {
-            pushForm:{},
+            pushForm:{
+                // rzzt:'01',
+                // wspzh:'gBmADr3Hzkn9LVdKjwba',
+                // rzsq:'2024-02',
+                 orgid:'',
+                ...this.rowData,
+            },
+            accSegmentOptions:[
+                {label:'应交税费/待认证进项税额/工程类',value:'22210401'},
+                {label:'应交税费/待认证进项税额/费用类',value:'22210402'}
+            ],
+            rzztOptions:[
+                {label:'入账(企业所得税税前扣除)',value:'02',},
+                {label:'入账(企业所得税不扣除)',value:'03',},
+                 {label:'入账撤销',value:'06',disabled:true},
+            ],
+            editeRules:{
+                accSegment:[{
+                    required:true, message:'请选择进项税对应费用会计科目编码与名称',tigger:'blur'
+                }]
+            },
+            orgidOption:[],
+            types:{...this.typeStatus,},
+            orgidList:[]
         };
     },
     computed: {},
-    watch: {},
+    watch: {
+        rowData:{
+            handler(val){
+                this.pushForm = {...val};
+            },
+            deep:true
+        },
+        typeStatus:{
+            handler(val){
+                this.types = {...val};
+            },
+            deep:true
+        }
+    },
     methods: {
         /* 关闭 */
         updateVisible(value) {
@@ -97,16 +141,70 @@ export default {
 
         /* 确认 */
         handleConfirm(){
-
+            this.handleSubmitForm()
         },
 
         /* 关闭前 */
         handleClose(){
             this.updateVisible(false);
         },
+        /* 表单验证 */
+        handleFormRequired(){
+            this.$refs.formEdite.validate((valid) => {
+                if (valid) {
+                    this.handleSubmitForm();
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
+        },
+        /* 提交 */
+        async handleSubmitForm(){
+            let data = {
+                type:'ZZSFP',
+                ...this.pushForm,
+            }
+           
+            try{
+                const res = await postPoolEditebook(data)
+                if([0,'0'].includes(res.code)){
+                    this.$message.success("提交成功！")
+                    this.updateVisible(false)
+                    this.$emit("successDone",true)
+                }else{
+                    this.$message.error("提交错误！请联系管理员！")
+                }
+            }finally{}
+        },
+        /* 所属套账 */
+        async handleGetList(){
+            let parmas = {
+                nsrsbh:this.pushForm.gmfNsrsbh
+            }
+            try{
+                const res = await getOrgnizationList(parmas);
+                if([0,'0'].includes(res.code)){
+                   this.$nextTick(()=>{
+                    this.orgidList = res.data;
+                    
+                   })
+                    
+                }else{
+                    this.$message.error("提交错误！请联系管理员！")
+                }
+            }finally{}
+            
+
+        }
     },
-    created() {},
-    mounted() {},
+    inject: ['optionList'],
+    created() {
+        this.handleGetList()
+    },
+    mounted() {
+       
+    },
     beforeCreate() {},
     beforeMount() {},
     beforeUpdate() {},

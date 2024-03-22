@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
+  <div class="main-content">
     <div class="content-header">
       <div class="content-header-left">
         <BackBtn path="/inputInvoice/choseDate" align="left" :query="$route.query" />
@@ -10,7 +10,7 @@
 
     <div class="tab-box">
       <el-tabs class="custom-card-tabs" v-model="level" type="card">
-        <el-tab-pane label="发票" name="1" />
+        <el-tab-pane label="增值税发票" name="1" />
         <el-tab-pane label="海关缴款书" name="2" />
         <el-tab-pane label="代扣代缴完税凭证" name="3" />
       </el-tabs>
@@ -19,11 +19,11 @@
 
 
     <!-- 发票下载 -->
-    <Invoice v-if="level == 1" :key="level" :currentSq="currentSq" />
+    <Invoice v-show="level === '1'" :level="level" :currentSq="currentSq" />
     <!-- 海关缴款书 -->
-    <Customs v-if="level == 2" :key="level" />
+    <Customs v-show="level === '2'"  :level="level"/>
     <!-- 代扣代缴完税凭证 -->
-    <Withhold v-if="level == 3" :key="level" />
+    <Withhold v-show="level === '3'" :level="level"/>
   </div>
 </template>
 <script>
@@ -51,9 +51,6 @@ export default {
     };
   },
   computed: {
-    contentHeight() {
-      return window.innerHeight - 132;
-    },
     currentSq() {
       return getCurrentMonthSsq()
     }
@@ -71,6 +68,12 @@ export default {
         this.applyStatisticsStatus = data
       }
     },
+  },
+  activated(){
+    this.level = null;
+    this.$nextTick(()=>{
+      this.level = '1';
+    })
   }
 
 };

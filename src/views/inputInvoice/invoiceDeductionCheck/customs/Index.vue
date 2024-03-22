@@ -2,24 +2,25 @@
   <div class="com-withhold">
     <form-list :columns="columns" :searchRow="searchList" :api="api" :param="param" :height="height"
       @getSearchParam="getSearchParam" @handleSelection="handleSelection" v-loading="loading" :tableCounterShow="true"
-      ref="list">
+      ref="list"
+      :firstLoading="level === '2'">
       <!-- 中间部分 -->
       <template #topTool>
         <div class="toolbar">
           <div class="toolbar-left" />
           <div class="toolbar-right">
-            <el-button type="success" @click="cancleBatch('02')"
-              v-if="$refs.list && $refs.list.searchParam.cljg == '01'">撤销勾选</el-button>
-            <el-button type="success" @click="submitBatch('01')" v-else>提交勾选</el-button>
+            <el-button type="success" @click="cancleBatch('02')" v-if="$refs.list && $refs.list.searchParam.cljg == '01'">撤销勾选</el-button>
+          <el-button type="success" @click="submitBatch('01')" v-else>提交勾选</el-button>
             <!-- <el-button @click="exportWithholdList">导出</el-button> -->
-            <el-button type="">导出查询结果</el-button>
-            <el-button type="" :disabled="isSelected.length <= 0" @click="handlePush">导出选中发票</el-button>
+            <el-button @click="downloadNoList">导出查询结果</el-button>
+            <el-button type="" @click="exportSelectedData">导出选中发票</el-button>
           </div>
         </div>
       </template>
-      <template #cljg="{ data }"> {{ data.cljg == '01' ? '已勾选' : '未勾选' }}</template>
-      <template #sfycpz="{ data }"> {{ data.sfycpz == '01' ? '正常' : data.sfycpz == '02' ? '异常' : data.sfycpz == '03' ?
-      '疑似异常' : '' }}</template>
+      
+      <template #sfchsd="{ data }"> {{ data.sfchsd == 'Y' ? '锁定' : '未锁定' }}</template>
+      <template #rzzt="{ data }"> {{ data.rzzt == '01' ? '未入账' : data.rzzt == '02' ? '已入账' : data.rzzt == '03' ?
+      '已入账撤销' : '' }}</template>
       <template #fplx="{ data }"> {{ inputFplxMap[data.fplx] }} </template>
       <template #tfrq="{ data }"> {{ data.tfrq ? dateFormat('YYYY-MM-DD', data.tfrq) : '' }} </template>
       <template #gxsj="{ data }"> {{ data.gxsj ? dateFormat('YYYY-MM-DD', data.gxsj) : '' }} </template>
@@ -42,7 +43,7 @@
 
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="success" @click="batchWithhold">确 认</el-button>
+        <el-button type="success" @click="checkCustomsPayment">确 认</el-button>
       </span>
     </el-dialog>
   </div>
@@ -51,7 +52,7 @@
 <script>
 import moment from "moment";
 import FormList from '@/components/FormList.vue';
-import { batchWithhold, exportWithholdList } from './Api'
+import { checkCustomsPayment,getKjList } from './Api'
 import { inputFplxMap } from '@/config/constant'
 
 export default {
@@ -59,28 +60,34 @@ export default {
   components: {
     FormList
   },
+  props: {
+    level: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {
       inputFplxMap,
       api: require('./Api'),
-      param: {},
+      param: {cljg: '02' },
       loading: false,
       columns: [
         { type: "selection", width: 50, },
         { title: '序号', type: "index", width: 50, },
-        { title: "海关缴款书号码", width: 140, dataIndex: "cljg", slot: 'cljg', align: 'center' },
-        { title: "填发日期", width: 180, dataIndex: 'dkdjwspzh' },
-        { title: "有效抵扣税额", width: 150, dataIndex: "tfrq", slot: 'tfrq' },
-        { title: "加计扣除额合计", width: 160, dataIndex: "bkjnsrsbh", },
-        { title: "加计扣除剩余额 ", width: 160, dataIndex: "bkjnsrmc", },
-        { title: "缴款单位人纳税人识别号", dataIndex: "yxdkse", width: 160, },
-        { title: "缴款单位人纳税人名称", width: 150, dataIndex: "gxsj", slot: 'gxsj', align: 'center' },
-        { title: "是否重号锁定", width: 130, dataIndex: "createrName" },
+        { title: "海关缴款书号码", width: 140, dataIndex: "hgjkshm", slot: 'hgjkshm', align: 'center' },
+        { title: "填发日期", width: 180, dataIndex: 'tfrq' },
+        { title: "有效抵扣税额", width: 150, dataIndex: "yxdkse", slot: 'yxdkse' },
+        { title: "加计扣除额合计", width: 160, dataIndex: "jjkcehj", },
+        { title: "加计扣除剩余额 ", width: 160, dataIndex: "jjkcsye", },
+        { title: "缴款单位人纳税人识别号", dataIndex: "jkdwrnsrsbh", width: 160, },
+        { title: "缴款单位人纳税人名称", width: 150, dataIndex: "jkdwrnsrmc", slot: 'jkdwrnsrmc', align: 'center' },
+        { title: "是否重号锁定", width: 130, dataIndex: "sfchsd",slot:'sfchsd' },
         { title: "认证状态", width: 130, dataIndex: "createrName" },
-        { title: "勾选失败原类", width: 130, dataIndex: "createrName" },
+        { title: "勾选失败原因", width: 130, dataIndex: "createrName" },
         { title: "勾选人", width: 130, dataIndex: "createrName" },
-        { title: "勾选时间", width: 130, dataIndex: "createrName" },
-        { title: "入账状态", width: 130, dataIndex: "createrName" },
+        { title: "勾选时间", width: 130, dataIndex: "updateTime" },
+        { title: "入账状态", width: 130, dataIndex: " rzzt",slot:'rzzt' },
         { title: "入账日期", width: 130, dataIndex: "createrName" },
         { title: "入账属期", width: 130, dataIndex: "createrName" },
 
@@ -99,8 +106,8 @@ export default {
           val: "",
           type: "select",
           options: [
-            { value: "02", label: "锁定" },
-            { value: "01", label: "未锁定" },
+            { value: "Y", label: "锁定" },
+            { value: "N", label: "未锁定" },
           ]
         },
         {
@@ -119,7 +126,7 @@ export default {
         },
         {
           label: "海关缴款书号码",
-          key: "hkjkshm",
+          key: "hgjkshm",
           val: '',
           type: "input",
           placeholder: "请输入"
@@ -133,7 +140,7 @@ export default {
         },
         {
           label: "填发日期",
-          key: "tfrqList",
+          key: "tfrq",
           val: [],
           type: "daterange",
           pickerOptions: {
@@ -151,14 +158,14 @@ export default {
         },
         {
           label: "认证状态",
-          key: "rzzt",
+          key: "rz",
           val: "",
           type: "select",
           options: [],
         },
         {
           label: "入帐状态",
-          key: "rz",
+          key: "rzzt",
           val: "",
           type: "select",
           options: [],
@@ -169,6 +176,16 @@ export default {
           val: "",
           type: "select",
           options: [],
+        },
+        {
+          label: "勾选状态",
+          key: "cljg",
+          val: "02",
+          type: "select",
+          options: [
+          { value: "02", label: "未勾选" },
+            { value: "01", label: "已勾选" },
+          ],
         },
       ],
       selecedInfo: {
@@ -184,34 +201,41 @@ export default {
       totalEntity: {},
       queryParam: {},
       isSelected: [],
-
     };
   },
-  mounted() {
-    const param = {
-      cljg: '02',
-      skssq: this.$route.query.skssq,
-      kjywrsbh: this.$route.query.nsrsbh,
-      // bkjnsrsbh: this.$route.query.nsrsbh,
-    }
-    this.param = param;
-    this.$refs.list.handleGetData(param)
-  },
   watch: {
-    activeName() {
-      this.$router.push({
-        path: '/deductionStatistics/list',
-        query: this.$route.query
-      })
-    },
+    level(newV, oldV){
+      if(newV === '2'){
+        this.init()
+      }
+    }
   },
   computed: {
     height() {
-      return window.innerHeight - 390;
+      return window.innerHeight - 460;
     },
   },
 
   methods: {
+    init(){
+      this.getKjList();
+      this.form = this.$route.query;
+
+      const param = {
+        cljg: '02',
+        skssq: this.$route.query.skssq,
+        kjywrsbh: this.$route.query.nsrsbh,
+        // gfsbh: this.$route.query.gfsbh,
+        // gxlx: this.$route.query.gxlx,
+
+        // bkjnsrsbh: this.$route.query.nsrsbh,
+      }
+      this.param = {
+        ...this.param,
+        ...param
+      }
+      this.$refs.list.handleGetData(param)
+    },
     // 处理多选
     handleSelection(rows) {
       this.selections = rows;
@@ -243,7 +267,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.batchWithhold();
+        this.checkCustomsPayment();
       });
     },
 
@@ -259,7 +283,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.batchWithhold();
+        this.checkCustomsPayment();
       });
 
       return
@@ -269,12 +293,12 @@ export default {
     },
 
     // 提交数据
-    async batchWithhold() {
-      const { code = '' } = await batchWithhold({
-        kjywrsbh: this.$route.query.nsrsbh,
-        gxlxDm: this.gxlxDm,
-        skssq: this.$route.query.skssq,
-        dkdjmx: this.selections
+    async checkCustomsPayment() {
+      const hgjksmx = this.selections.map(item=> ({jkshm: item.hgjkshm , tfrq: item.tfrq}))
+      const { code = '' } = await checkCustomsPayment({
+        gfsbh: this.$route.query.nsrsbh,
+        gxlx: this.gxlxDm,
+        hgjksmx,
       })
       if (code === '0') {
         this.$message.success('提交成功');
@@ -285,6 +309,21 @@ export default {
 
     getSearchParam(param) {
       this.queryParam = param;
+    },
+    // 会计科目列表
+    async getKjList() {
+      const { code = '', data = [] } = await getKjList({})
+      if (code === '0') {
+        const index = this.searchList.findIndex((item) => item.key === 'kjkm');
+        const options = [{ value: "", label: "全部" }].concat(data.map((item) => {
+          return {
+            value: item.accSegmentCode,
+            label: item.accSegmentName
+          }
+        }))
+        // debugger;
+        this.$set(this.searchList[index],'options',options)
+      }
     },
     // 导出发票数据
     async exportWithholdList() {
@@ -306,10 +345,20 @@ export default {
       console.log(e, "2");
       this.isSelected = [...e];
     },
-        /* 推送 */
-        handlePush() {
-      this.pushVisible = true;
+    async downloadNoList() {
+      const fileName = `海关缴款书.xlsx`
+      await this.api.downLoadNoOpenList({
+        reqData: { ...this.queryParam },
+        fileName
+      })
     },
+    async exportSelectedData() {
+      const fileName = `海关缴款书.xlsx`
+      await this.api.downLoadNoOpenList({
+        reqData: { ...this.queryParam },
+        fileName
+      })
+    }
   }
 };
 </script>./Index.vue

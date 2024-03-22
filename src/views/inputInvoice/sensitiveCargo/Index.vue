@@ -32,14 +32,15 @@
         @getNextList="getOrgList"
         :firstLoading="false"
         ref="list"
+        :height="height"
       >
         <!-- 中间部分 -->
         <template #topTool>
           <div class="toolbar">
             <div class="toolbar-left" />
             <div class="toolbar-right">
-              <el-button type="primary" @click="handleExport">新增</el-button>
-              <el-button @click="handleExport">导入</el-button>
+              <el-button type="primary" @click="handleAdd">新增</el-button>
+              <el-button @click="importExcel">导入</el-button>
               <el-button @click="handleExport">导出</el-button>
             </div>
           </div>
@@ -58,9 +59,48 @@
         <template #kprq="{ data }"> {{ dateFormat('YYYY-mm-dd', data.kprq) }} </template>
       </form-list>
     </div>
+    <custom-import
+      dialogTitle="导入敏感货物名称表"
+      :dialogVisible="dialogImportVisible"
+      @handleClose="handleImportClose"
+      @handleOk="handleImportOk"
+      downloadTemplateApi="/taxConfig/downExcel"
+      downloadTemplateName="敏感货物名称_导入模板"
+      upApi="/taxBody/importTaxBodyExcelInfo"
+      importApi="/taxConfig/importPreferentialInfo"
+      upTitle="上传敏感货物名称"
+      :importColumns="importColumns"
+    ></custom-import>
+    <el-dialog title="新增" :visible.sync="addVisible" width="50%" :before-close="handleAddClose" class="form-dialog">
+      <el-form :inline="true" :model="editForm" ref="editForm" :rules="rules">
+        <el-form-item label="敏感货物名称" prop="mghwmc">
+          <el-input v-model="editForm.mghwmc" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="风险等级" prop="fxdj">
+          <el-select v-model="editForm.fxdj" placeholder="请选择">
+            <el-option label="强" :value="1"></el-option>
+            <el-option label="弱" :value="0"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="生效日期" prop="sxrq">
+          <el-date-picker value-format="yyyyMMdd" v-model="editForm.sxrq" type="date" placeholder="请选择" />
+        </el-form-item>
+        <el-form-item label="失效日期" prop="invalidrq">
+          <el-date-picker value-format="yyyyMMdd" v-model="editForm.sxrq" type="date" placeholder="请选择" />
+        </el-form-item>
+        <el-form-item label="备注" prop="bz">
+          <el-input v-model="editForm.bz" maxlength="100" placeholder="请输入" />
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="handleAddClose">取 消</el-button>
+        <el-button type="success" @click="saveData">提 交</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
+import CustomImport from '@/components/CustomImport';
 import FormList from '@/components/FormList.vue';
 import { dateFormat } from '@/utils/tool';
 import { getListByUser, getOrgList, exportInvoiceDetailList } from './Api.js';
@@ -68,9 +108,11 @@ export default {
   name: 'SensitiveCargo',
   components: {
     FormList,
+    CustomImport,
   },
   data() {
     return {
+      dialogImportVisible: false, // 导入
       filterText: '',
       currentNodeKey: 1,
       data: [
@@ -140,11 +182,15 @@ export default {
         { title: '失效日期', width: 100, dataIndex: 'kplx', slot: 'kplx' },
         { title: '维护人', width: 100, dataIndex: 'kprq', slot: 'kprq', align: 'center' },
         {
-          title: "操作",
-          key: "action",
+          title: '操作',
+          key: 'action',
           width: 100,
-          scopedSlots: { customRender: "action" }
-        }
+          scopedSlots: { customRender: 'action' },
+        },
+      ],
+      importColumns: [
+        { title: '敏感货物名称', width: 200, dataIndex: 'nsrmc' },
+        { title: '风险等级', width: 200, dataIndex: 'orgName' },
       ],
       searchList: [
         {
@@ -170,11 +216,16 @@ export default {
           },
         },
         { label: '风险等级', key: 'orgid', val: '', type: 'select', placeholder: '请选择' },
-        
       ],
       taxBodyList: [],
       queryParam: {},
       propsKey: '',
+      addVisible: false,
+      editForm: {},
+      rules: {
+        mghwmc: [{ required: true, message: '请输入', trigger: 'change' }],
+        fxdj: [{ required: true, message: '请选择', trigger: 'change' }],
+      },
     };
   },
   watch: {
@@ -182,8 +233,24 @@ export default {
       this.$refs.tree.filter(val);
     },
   },
-
   methods: {
+    handleAdd() {
+      this.addVisible = true;
+    },
+    handleAddClose() {
+      this.addVisible = false;
+    },
+    saveData() {
+      this.$refs['editForm'].validate(async valid => {
+        if (!valid) return;
+        // const { code = '' } = await updateDrawback([{ ...this.editForm }]);
+        // if (code === '0') {
+        //   this.$message.success('操作成功');
+        //   this.handleClose();
+        //   this.getList();
+        // }
+      });
+    },
     filterNode(value, data) {
       if (!value) return true;
       return data.label.indexOf(value) !== -1;
@@ -240,6 +307,17 @@ export default {
       this.$refs.list.handleGetData(this.param);
       this.getOrgList(nsrsbh);
     },
+    // 导入
+    importExcel() {
+      this.dialogImportVisible = true;
+    },
+    handleImportClose() {
+      this.dialogImportVisible = false;
+    },
+    handleImportOk() {
+      this.handleImportClose();
+      this.getList();
+    },
     // 导出
     async handleExport() {
       const fileName = `销项发票明细.xlsx`;
@@ -256,10 +334,10 @@ export default {
     getSearchParam(param) {
       this.queryParam = param;
     },
-    nodeClick(v,p,n){
-      console.log(v)
-      this.currentNodeKey = v.id
-    }
+    nodeClick(v, p, n) {
+      console.log(v);
+      this.currentNodeKey = v.id;
+    },
   },
   mounted() {
     this.getListByUser();
@@ -267,7 +345,7 @@ export default {
 
   computed: {
     height() {
-      return window.innerHeight - 190;
+      return window.innerHeight - 380;
     },
   },
 };
@@ -294,8 +372,5 @@ export default {
     //   color: #666;
     // }
   }
-}
-/deep/ .el-table__body-wrapper {
-  height: calc( 100vh - 390px );
 }
 </style>

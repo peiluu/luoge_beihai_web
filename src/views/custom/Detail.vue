@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="main-content">
+    <div>
       <el-form :inline="true" :model="form" :rules="rules" ref="ruleForm" :disabled="operateType === 'detail'">
         <div class="content-title">客户信息</div>
         <el-form-item label="所属开票点" prop="orgids" class="form-orgids">
