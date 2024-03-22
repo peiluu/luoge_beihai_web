@@ -57,6 +57,8 @@ export const getRatepayingMain = (data = {}) => postJSON(`${config.host}/taxBody
 export const getOrganList = (data = {}) => postJSON(`${config.host}/orgnization/getOrgList`,data);
 /* 会计科目 */
 export const getAccountantList = (data = {}) => postJSON(`${config.host}/mtc/accountingSubjects/list`,data);
+/* 所属组织 */
+export const getOrgnizationList = (data = {}) => postJSON(`${config.host}/orgnization/getOrgList`,data);
 
 
 /**

@@ -118,9 +118,8 @@
         </article>
         <article class="table_bottom_page">
             <article class="footer_text_main">
-            金额总额<span class="footer_sum"> 224,181.03</span> 元 / 税额总额
-            <span class="footer_sum"> 10,928.27 </span> 元 / 价税合计总额
-            <span class="footer_sum"> 235,109.30 </span>元
+              已选择<span class="footer_sum"> {{ isSelected.length }}</span> 项 | 税款金额合计
+            <span class="footer_sum"> {{accountTotal}} </span> 元 
             </article>
             <article>
             <el-pagination
@@ -293,7 +292,17 @@ export default {
       where:{},
     };
   },
-  computed: {},
+  computed: {
+    accountTotal(){
+      const totalAmount = this.isSelected.reduce((sum, item) => sum + (Number(item.skje) || 0), 0);
+      // 格式化成带千位符且保留两位小数的字符串
+      const formattedTotalAmount = totalAmount.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+      return formattedTotalAmount
+    }
+  },
   watch: {},
   methods: {
     handleInit(){

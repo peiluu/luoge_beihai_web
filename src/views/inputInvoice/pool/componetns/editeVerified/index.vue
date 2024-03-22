@@ -42,7 +42,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="进项税对应费用会计科目编码与名称：" prop="accSegment">
-                        <el-select style="width:100%" disabled v-model="pushForm.accSegment" placeholder="请选择" clearable filterable>
+                        <el-select style="width:100%"  v-model="pushForm.accSegment" placeholder="请选择" clearable filterable>
                             <el-option
                             v-for="item in accSegmentOptions"
                             :key="item.value"

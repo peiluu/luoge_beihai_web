@@ -381,15 +381,34 @@ export default {
       loading_1:false,
     };
   },
-  computed: {
+  computed: { 
     totalje(){
-      return 0
+      const totalAmount = this.isSelected.reduce((sum, item) => sum + (item.hjje || 0), 0);
+      // 格式化成带千位符且保留两位小数的字符串
+      const formattedTotalAmount = totalAmount.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+      return formattedTotalAmount
     },
     totalse(){
-      return 0
+      const totalAmount = this.isSelected.reduce((sum, item) => sum + (item.hjse || 0), 0);
+      // 格式化成带千位符且保留两位小数的字符串
+      const formattedTotalAmount = totalAmount.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+      return formattedTotalAmount
+      
     },
     totaljs(){
-      return 0
+      const totalAmount = this.isSelected.reduce((sum, item) => sum + (item.hjje || 0), 0);
+      // 格式化成带千位符且保留两位小数的字符串
+      const formattedTotalAmount = totalAmount.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+      return formattedTotalAmount
     }
   },
   watch: {},
