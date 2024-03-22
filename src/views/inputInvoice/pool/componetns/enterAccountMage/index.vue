@@ -150,7 +150,7 @@ export default {
                
                this.isDisabled = false;
             }else{
-                this.rzztOptions = [{label:'入账撤销',vlaue:'06',}]
+                this.rzztOptions = [{label:'入账撤销',value:'06',}]
                 this.isDisabled = true;
                 this.pushForm.rzzt = '06'
             }
