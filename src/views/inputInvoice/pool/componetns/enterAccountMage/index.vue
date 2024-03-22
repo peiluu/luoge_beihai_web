@@ -14,7 +14,8 @@
                             v-for="(item,index) in rzztOptions"
                             :key="index"
                             :label="item.label"
-                            :value="item.value">
+                            :value="item.value"
+                            :disabled="item.disabled">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -97,7 +98,7 @@ export default {
            rzztOptions:[
                 {label:'入账(企业所得税税前扣除)',value:'02',},
                 {label:'入账(企业所得税不扣除)',value:'03',},
-                {label:'入账撤销',value:'06',}
+                {label:'入账撤销',value:'06', disabled: true}
            ],
            orgidOptions:[],
            accSegmentOptions:[
@@ -147,12 +148,12 @@ export default {
         //  1 2
         handleInit(){
             if(this.types.status === 1){
-               
+               this.$set(this.pushForm, 'rzzt', '02')
                this.isDisabled = false;
             }else{
                 this.rzztOptions = [{label:'入账撤销',value:'06',}]
                 this.isDisabled = true;
-                this.pushForm.rzzt = '06'
+               this.$set(this.pushForm, 'rzzt', '06')
             }
            
         },
