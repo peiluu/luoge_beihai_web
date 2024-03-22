@@ -13,7 +13,7 @@
                         <span>{{ pushForm.fphm }}</span>
                     </el-form-item>
                     <el-form-item label="开票日期：">
-                        <span>{{ pushForm.fprq }}</span>
+                        <span>{{ pushForm.kprq }}</span>
                     </el-form-item>
                     <el-form-item label="发票类型：">
                         <span>{{ optionList.invoiceType.find(k=> k.value === pushForm.fppzDm).label }}</span>
@@ -131,6 +131,7 @@ export default {
                 type:'ZZSFP',
                 state:this.typeStatus.status,
                 ...this.pushForm,
+                spzt: this.rowData.spzt === '1' ? '2' : '1'
             }
            
             try{

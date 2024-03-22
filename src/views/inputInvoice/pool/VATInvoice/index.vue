@@ -476,15 +476,19 @@ export default {
       if(this.isSelected.length >1){
         this.$message.warning("当前操作只支持单个！")
         return
-      }else if(this.isSelected.find(k=> Number(k.spzt) === type)){
-        this.$message.warning(`当前发票处于${type === 1?'确认收票':'撤销收票'}`)
+      } 
+      if(type=== 1 && this.isSelected[0].spzt === '1'){
+        this.$message.warning(`当前发票已确认收票`)
         return
-      }else{
-        this.dialog.statusTitle = type === 1?'确认收票':'撤销收票';
-        this.typeStatus = {type:'ZZSFP',status:type}
-        this.rowData = {...this.isSelected[0]}
-        this.dialog.statusVisible = true;
       }
+      if(type=== 2 && this.isSelected[0].spzt === '2'){
+        this.$message.warning(`当前发票还未确认收票`)
+        return
+      }
+      this.dialog.statusTitle = type === 1?'确认收票':'撤销收票';
+      this.typeStatus = {type:'ZZSFP',status:type}
+      this.rowData = {...this.isSelected[0]}
+      this.dialog.statusVisible = true;
     },
     /*  1 发票入账 2 撤销抽入 */
     handleEnterAccount(type) {

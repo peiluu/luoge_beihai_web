@@ -159,7 +159,7 @@ export default {
   beforeMount() {},
   beforeUpdate() {},
   updated() {
-    this.$refs.bottomTableRef.doLayout();
+    // this.$refs.bottomTableRef.doLayout();
   },
   beforeDestroy() {},
   destroyed() {},
