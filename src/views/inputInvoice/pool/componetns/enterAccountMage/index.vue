@@ -23,7 +23,8 @@
                             v-model="pushForm.rzsq"
                             type="month"
                             placeholder="选择月"
-                            :disabled="isDisabled">
+                            :disabled="isDisabled"
+                            value-format="yyyy-MM">
                             </el-date-picker>
                     </el-form-item>
                     <el-form-item label="凭证号：">
@@ -33,7 +34,7 @@
                         <el-select style="width:100%" :disabled="isDisabled" v-model="pushForm.orgid" placeholder="请选择" clearable filterable>
                             <el-option
                             v-for="item in optionList.orgOption"
-                            :key="item.nsrsbh"
+                            :key="item.id"
                             :label="item.name"
                             :value="item.id">
                             </el-option>
@@ -91,11 +92,11 @@ export default {
     data() {
         return {
            // useTitle:this.title
-           pushForm:{...this.rowData},
+           pushForm:{rzzt:'',rzsq:'',...this.rowData},
            
            rzztOptions:[
-                {label:'入账(企业所得税税前扣除)',vlaue:'02',},
-                {label:'入账(企业所得税不扣除)',vlaue:'03',},
+                {label:'入账(企业所得税税前扣除)',value:'02',},
+                {label:'入账(企业所得税不扣除)',value:'03',},
                 
            ],
            orgidOptions:[],
@@ -121,7 +122,7 @@ export default {
     watch: {
         rowData:{
             handler(val){
-                this.pushForm = {...val};
+                this.pushForm = {rzzt:'',rzsq:'',...val};
             },
             deep:true
         },
