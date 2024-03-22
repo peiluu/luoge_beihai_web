@@ -106,7 +106,7 @@
             </el-table-column>
             <el-table-column prop="bkjnsrmc" label="被扣缴纳税人名称" minWidth="120" :header-align="'center'" :align="'right'">
             </el-table-column>
-            <el-table-column prop="rzzt" label="入账状态" minWidth="120" :header-align="'center'" :align="'right'">
+            <el-table-column prop="srzzt" label="入账状态" minWidth="120" :header-align="'center'" :align="'right'">
             </el-table-column>
             <el-table-column prop="spzt" label="收票状态" minWidth="120" :header-align="'center'" :align="'right'">
             </el-table-column>
@@ -354,6 +354,9 @@ export default {
       if(this.isSelected.length >1){
         this.$message.warning("当前操作只支持单个！")
         return
+      }else if(this.isSelected.find(k=> Number(k.spzt) === type)){
+        this.$message.warning(`当前发票处于${type === 1?'确认收票':'撤销收票'}`)
+        return
       }else{
         this.dialog.statusTitle = type === 1?'确认收票':'撤销收票';
         this.typeStatus = {type:'DKDJWSPZ',status:type}
@@ -365,6 +368,9 @@ export default {
     handleEnterAccount(type) {
       if(this.isSelected.length >1){
         this.$message.warning("当前操作只支持单个！")
+        return
+      }else if(this.isSelected.find(k=> Number(k.rzzt) === type)){
+        this.$message.warning(`当前发票处于${type === 1?'发票入账':'撤销入账'}`)
         return
       }else{
         this.dialog.enterTitle = type === 1?'发票入账':'撤销入账';

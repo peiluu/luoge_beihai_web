@@ -180,7 +180,7 @@ export default {
         /* 所属套账 */
         async handleGetList(){
             let parmas = {
-                nsrsbh:this.pushForm.gfnsrsbh
+                nsrsbh:this.pushForm.gmfNsrsbh
             }
             try{
                 const res = await getOrgnizationList(parmas);
