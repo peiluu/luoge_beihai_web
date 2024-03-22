@@ -7,8 +7,8 @@
       <div class="toolbar">
         <div class="toolbar-left">
           <template v-if="isBusinessFormat">
-            <el-button type="success" @click="showDialogVisiblePercent">修改进销比例</el-button>
-            <el-button type="success" @click="calPreCheck">计算</el-button>
+            <!-- <el-button type="success" @click="showDialogVisiblePercent">修改进销比例</el-button>
+            <el-button type="success" @click="calPreCheck">计算</el-button> -->
             <span style="marginLeft: 12px;">上期销项税额： {{ formatMoney(10000) }}元</span>
             <span style="marginLeft: 12px;">可抵扣税额合计： {{ formatMoney(selecedInfo.yxdkse) }}元</span>
           </template>
@@ -17,13 +17,13 @@
 
         <div class="toolbar-right">
           <template v-if="isBusinessFormat">
-            <el-button type="success" @click="submitRevokePreCheck('Y')">提交预勾选</el-button>
-            <el-button @click="submitRevokePreCheck('N')">取消预勾选</el-button>
+            <!-- <el-button type="success" @click="submitRevokePreCheck('Y')">提交预勾选</el-button>
+            <el-button @click="submitRevokePreCheck('N')">取消预勾选</el-button> -->
           </template>
 
           <el-button type="success" @click="cancleBatch('02')" v-if="searchParam.cljg == '01'">撤销勾选</el-button>
           <el-button type="success" @click="submitBatch('01')" v-else>提交勾选</el-button>
-          <el-button @click="exportPreCheck" v-if="isBusinessFormat">导出预勾选数据</el-button>
+          <!-- <el-button @click="exportPreCheck" v-if="isBusinessFormat">导出预勾选数据</el-button> -->
           <el-button @click="exportInvoiceCheck">导出</el-button>
         </div>
       </div>

@@ -2,12 +2,8 @@
 import { postJSON, download } from '@/utils/request';
 import { config } from '@/config';
 
-// 获取列表
-export const getList = data =>
-  postJSON(`${config.host}/income/queryWithholdList`, {
-    ...data,
-    sign: data.cljg == '01' ? 'Y' : ''
-  });
+  // 获取列表
+  export const getList = data => postJSON(`${config.host}/income/queryCustomsPayment`, data)
 
 // 批量上传增值税代扣代缴完税凭证抵扣勾选
 export const batchWithhold = data =>
@@ -18,8 +14,15 @@ export const batchWithhold = data =>
  */
 export const getOrgList = data => postJSON(`${config.host}/orgnization/getOrgList`, data);
 
-/**
- * @desption 导出
- */
-export const exportWithholdList = data =>
-  download(`${config.host}/income/exportWithholdList`, data);
+  /**
+   * @desption 导出查询结果
+   */
+  export const downLoadNoOpenList = data => download(`${config.host}/applyInvoiceUpload/downLoadNoOpenList`, data);
+    /**
+   * @desption 获取当前用户会计科目（不分页）
+   */
+    export const getKjList = data => postJSON(`${config.host}/mtc/accountingSubjects/list`, data);
+       /**
+   * @desption 提交勾选
+   */
+       export const checkCustomsPayment = data => postJSON(`${config.host}/income/checkCustomsPayment`, data);

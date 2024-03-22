@@ -14,15 +14,17 @@
           <span :class="row.data.hzqrxxztDm != null ? confirmStatusMap[row.data.hzqrxxztDm].class : ''"> {{
             row.data.hzqrxxztDm != null ? confirmStatusMap[row.data.hzqrxxztDm].label : '-' }}</span>
         </template>
-  
+<!--   
         <template #chyyDm="row">{{ chyyDmMap[row.data.chyyDm] }}</template>
         <template #hzcxje="row">{{ formatMoney(row.data.hzcxje) }}</template>
         <template #hzcxse="row">{{ formatMoney(row.data.hzcxse) }}</template>
-  
+   -->
         <!-- 操作按钮 -->
         <template #myscope="{ data }">
           <template>
             <el-button @click.stop="handleInvoice(data)" type="success">修改</el-button>
+            <el-button @click.stop="" type="">删除</el-button>
+
           </template>
         </template>
         <!-- 中间部分 -->
@@ -30,8 +32,13 @@
           <div class="toolbar" :style="`visibility: ${otherParam.type === '1' ? 'visible': 'hidden'}`">
             <div class="toolbar-left" />
             <div class="toolbar-right">
-              <el-button @click="confirm('Y')">通过</el-button>
-              <el-button type="danger" @click="confirm('N')">驳回</el-button>
+              <el-button @click="">新增</el-button>
+              <el-button @click="">删除</el-button>
+              <el-button @click="">导入</el-button>
+              <el-button @click="downloadNoList">导出</el-button>
+
+              <!-- <el-button @click="confirm('Y')">通过</el-button>
+              <el-button type="danger" @click="confirm('N')">驳回</el-button> -->
             </div>
           </div>
         </template>
@@ -66,17 +73,17 @@
         columns: [
           { type: "selection", width: 50 },
           { title: "序号", type: "index" },
-          { title: "当前登录人", dataIndex: "gxfsf", slot: "gxfsf", width: 130, },
-          { title: "销售方名称", width: 130, dataIndex: "xsfmc" },
-          { title: "销售方识别号/身份证号码", width: 200, dataIndex: "xsfnsrsbh" },
-          { title: "购买方名称", width: 130, dataIndex: "gmfmc", },
-          { title: "购买方识别号/身份证号码", width: 200, dataIndex: "gmfnsrsbh" },
-          { title: "红字通知单编号", width: 180, dataIndex: "hzfpxxqrdbh" },
-          { title: "对应蓝字发票号码", width: 180, dataIndex: "lzfphm" },
-          // { title: "对应蓝字发票代码", width: 180, dataIndex: "lzfpdm" },
-          { title: "不含税金额", dataIndex: "hzcxje", slot: 'hzcxje', align: 'right', width: 100 },
-          { title: "税额", dataIndex: "hzcxse", slot: 'hzcxse', align: 'right', width: 100 },
-          { title: "冲红原因", dataIndex: "chyyDm", slot: "chyyDm", width: 100, },
+          { title: "企业类型", dataIndex: "gxfsf", slot: "gxfsf", width: 130, },
+          { title: "风险尖型", width: 130, dataIndex: "xsfmc" },
+          { title: "企业名称", width: 200, dataIndex: "xsfnsrsbh" },
+          { title: "地区", width: 130, dataIndex: "gmfmc", },
+          { title: "所属税务机关名称", width: 200, dataIndex: "gmfnsrsbh" },
+          { title: "纳税人识别号", width: 180, dataIndex: "hzfpxxqrdbh" },
+          { title: "经营地点", width: 180, dataIndex: "lzfphm" },
+          { title: "案件描述", width: 180, dataIndex: "lzfpdm" },
+          { title: "数据来源", dataIndex: "hzcxje", slot: 'hzcxje', align: 'right', width: 100 },
+          { title: "生效日期", dataIndex: "hzcxse", slot: 'hzcxse', align: 'right', width: 100 },
+          { title: "失效日期", dataIndex: "chyyDm", slot: "chyyDm", width: 100, },
           { title: "确认单状态", width: 170, dataIndex: "hzqrxxztDm", slot: "hzqrxxztDm", formatter: "statusFormatter" },
           {
             title: "操作",
@@ -181,7 +188,14 @@
         console.log(tab.name);
         this.otherParam.type = tab.name;
         this.$refs.list.reload({ type: tab.name });
-      }
+      },
+      async downloadNoList() {
+      const fileName = `失信人员黑名单.xlsx`
+      await this.api.downLoadNoOpenList({
+        reqData: { ...this.queryParam },
+        fileName
+      })
+    }
     }
   };
   </script>
