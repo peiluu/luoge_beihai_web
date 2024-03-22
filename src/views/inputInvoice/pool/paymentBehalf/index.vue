@@ -90,9 +90,9 @@
             </el-table-column>
             <el-table-column prop="pzlx" label="票种类型" minWidth="140" align="center">
             </el-table-column>
-            <el-table-column prop="kjywrsbh" label="扣缴义务人识别号（购方）" minWidth="160" align="center">
+            <el-table-column prop="kjywrsbh" label="扣缴义务人识别号（购方）" minWidth="190" align="center">
             </el-table-column>
-            <el-table-column prop="kjywrmc" label="扣缴义务人名称" minWidth="100" align="center">
+            <el-table-column prop="kjywrmc" label="扣缴义务人名称" minWidth="120" align="center">
             </el-table-column>
             <el-table-column prop="tfrq" label="填发日期" minWidth="100" align="center">
             </el-table-column>
@@ -106,7 +106,7 @@
             </el-table-column>
             <el-table-column prop="bkjnsrsbh" label="被扣缴纳税人识别号" minWidth="180" align="center">
             </el-table-column>
-            <el-table-column prop="bkjnsrmc" label="被扣缴纳税人名称" minWidth="120" :header-align="'center'" :align="'right'">
+            <el-table-column prop="bkjnsrmc" label="被扣缴纳税人名称" minWidth="200" show-overflow-tooltip :header-align="'center'" :align="'right'">
             </el-table-column>
             <el-table-column prop="srzzt" label="入账状态" minWidth="120" :header-align="'center'" :align="'right'">
             </el-table-column>
