@@ -155,9 +155,10 @@
         </article>
         <article class="table_bottom_page">
             <article class="footer_text_main">
-            金额总额<span class="footer_sum"> 224,181.03</span> 元 / 税额总额
-            <span class="footer_sum"> 10,928.27 </span> 元 / 价税合计总额
-            <span class="footer_sum"> 235,109.30 </span>元
+              已选择<span class="footer_sum"> {{isSelected.length}}</span> 项 | 合计金额
+            <span class="footer_sum"> {{ totalje }} </span> 元 | 合计税额
+            <span class="footer_sum">{{ totalse }} </span>元 | 价税合计
+            <span class="footer_sum"> {{ totaljs }} </span>元
             </article>
             <article>
             <el-pagination
@@ -380,7 +381,36 @@ export default {
       loading_1:false,
     };
   },
-  computed: {},
+  computed: { 
+    totalje(){
+      const totalAmount = this.isSelected.reduce((sum, item) => sum + (item.hjje || 0), 0);
+      // 格式化成带千位符且保留两位小数的字符串
+      const formattedTotalAmount = totalAmount.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+      return formattedTotalAmount
+    },
+    totalse(){
+      const totalAmount = this.isSelected.reduce((sum, item) => sum + (item.hjse || 0), 0);
+      // 格式化成带千位符且保留两位小数的字符串
+      const formattedTotalAmount = totalAmount.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+      return formattedTotalAmount
+      
+    },
+    totaljs(){
+      const totalAmount = this.isSelected.reduce((sum, item) => sum + (item.hjje || 0), 0);
+      // 格式化成带千位符且保留两位小数的字符串
+      const formattedTotalAmount = totalAmount.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+      return formattedTotalAmount
+    }
+  },
   watch: {},
   methods: {
     handleInit(){
@@ -441,7 +471,7 @@ export default {
         return
       }else{
         this.dialog.statusTitle = type === 1?'确认收票':'撤销收票';
-        this.typeStatus = {type:'ZZSFP'}
+        this.typeStatus = {type:'ZZSFP',status:type}
         this.rowData = {...this.isSelected[0]}
         this.dialog.statusVisible = true;
       }
@@ -453,7 +483,7 @@ export default {
         return
       }else{
         this.dialog.enterTitle = type === 1?'发票入账':'撤销入账';
-        this.typeStatus = {type:'ZZSFP'}
+        this.typeStatus = {type:'ZZSFP',status:type}
         this.rowData = {...this.isSelected[0]}
         this.dialog.enterVisible = true;
       }

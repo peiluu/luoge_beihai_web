@@ -17,7 +17,7 @@ export const getPoolInvoiceSingleDes = data => postJSON(`${config.host}/income/q
 export const getVerifyInvoice = data => postJSON(`${config.host}/income/queryInvoiceIncome/${data.id}`)
 
 /* 发票验证 */
-export const getRequiredInvoice = data => postJSON(`${config.host}/income/invoiceCheck`,data)
+export const getRequiredInvoice = data => postJSON(`${config.host}/income/invoiceZzsCheck`,data)
 
 /**
  * 获取海关缴款书列表
@@ -57,6 +57,8 @@ export const getRatepayingMain = (data = {}) => postJSON(`${config.host}/taxBody
 export const getOrganList = (data = {}) => postJSON(`${config.host}/orgnization/getOrgList`,data);
 /* 会计科目 */
 export const getAccountantList = (data = {}) => postJSON(`${config.host}/mtc/accountingSubjects/list`,data);
+/* 所属组织 */
+export const getOrgnizationList = (data = {}) => postJSON(`${config.host}/orgnization/getOrgList`,data);
 
 
 /**

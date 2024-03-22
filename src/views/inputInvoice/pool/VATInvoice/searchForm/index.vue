@@ -12,7 +12,7 @@
               filterable
             >
               <el-option
-                v-for="item in options"
+                v-for="item in optionList.invoiceType"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -31,7 +31,7 @@
               filterable
             >
               <el-option
-              v-for="item in xsfnsrsbhOptions"
+              v-for="item in optionList.xsfnsrsbhOptions"
                 :key="item.id"
                 :label="item.nsrmc"
                 :value="item.nsrsbh"
@@ -50,10 +50,10 @@
                   filterable
                 >
                   <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
+                    v-for="item in optionList.orgOption"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id"
                   >
                   </el-option>
                 </el-select>
@@ -94,21 +94,11 @@
            
             <el-col :span="8">
               <el-form-item label="购方名称：">
-                <el-select
-                  style="width: 100%"
+                <el-input
                   v-model="where.gmfmc"
-                  placeholder="请选择"
-                  clearable
-                  filterable
-                >
-                  <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                  >
-                  </el-option>
-                </el-select>
+                  placeholder="请输入内容"
+                ></el-input>
+               
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -129,7 +119,7 @@
                   filterable
                 >
                   <el-option
-                    v-for="item in options"
+                    v-for="item in optionList.invoiceStatus"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value"
@@ -164,7 +154,7 @@
                   filterable
                 >
                   <el-option
-                    v-for="item in options"
+                    v-for="item in optionList.authenticationStatus"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value"
@@ -191,10 +181,10 @@
                   filterable
                 >
                   <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
+                    v-for="item in optionList.accountantList"
+                    :key="item.accSegmentCode"
+                    :label="item.accSegmentName"
+                    :value="item.accSegmentCode"
                   >
                   </el-option>
                 </el-select>
@@ -210,7 +200,7 @@
                   filterable
                 >
                   <el-option
-                    v-for="item in options"
+                    v-for="item in optionList.enterAccountStatus"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value"
@@ -250,7 +240,7 @@
                   filterable
                 >
                   <el-option
-                    v-for="item in options"
+                    v-for="item in optionList.rollOntStatus"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value"
@@ -269,7 +259,7 @@
                   filterable
                 >
                   <el-option
-                    v-for="item in options"
+                    v-for="item in optionList.collectTicketStatus"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value"
@@ -287,7 +277,7 @@
   </div>
 </template>
 <script>
-import {getRatepayingMain} from '@/api/pool/index.js'
+
 export default {
   name: "poolsearcFormPage",
   components: {},
@@ -299,6 +289,7 @@ export default {
       xsfnsrsbhOptions:[],
     };
   },
+  
   computed: {},
   watch: {},
   methods: {
@@ -307,16 +298,7 @@ export default {
       this.isShow = !this.isShow;
       
     },
-    async hanldeGetOrgId(){
-      
-      try {
-        const res = await getRatepayingMain();
-        console.log(res,"223")
-        this.xsfnsrsbhOptions = [... res.data]
-      }catch{
-        
-      }
-    },
+    
     /* 搜索 */
     handleSearch(){
       this.$emit('search',this.where)
@@ -327,9 +309,11 @@ export default {
       this.$emit('resst',this.where)
     }
   },
+  inject: ['optionList'],
   created() {},
   mounted() {
-    this.hanldeGetOrgId();
+
+    
   },
   beforeCreate() {},
   beforeMount() {},

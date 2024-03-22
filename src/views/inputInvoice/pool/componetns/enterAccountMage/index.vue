@@ -23,7 +23,8 @@
                             v-model="pushForm.rzsq"
                             type="month"
                             placeholder="选择月"
-                            :disabled="isDisabled">
+                            :disabled="isDisabled"
+                            value-format="yyyy-MM">
                             </el-date-picker>
                     </el-form-item>
                     <el-form-item label="凭证号：">
@@ -32,10 +33,15 @@
                     <el-form-item label="所属账套：">
                         <el-select style="width:100%" :disabled="isDisabled" v-model="pushForm.orgid" placeholder="请选择" clearable filterable>
                             <el-option
-                            v-for="item in orgidOptions"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
+<<<<<<< HEAD
+                            v-for="item in orgidList"
+                            :key="item.nsrsbh"
+=======
+                            v-for="item in optionList.orgOption"
+                            :key="item.id"
+>>>>>>> 3849d3967ebadc0482ff73d0393b334dc3b45452
+                            :label="item.name"
+                            :value="item.id">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -60,7 +66,7 @@
 </template>
 
 <script>
-import {postPoolInAccount} from '@/api/pool/index.js'
+import {postPoolInAccount,getOrgnizationList} from '@/api/pool/index.js'
 export default {
     name:'enterAccountMagePage',
     props:{
@@ -91,11 +97,11 @@ export default {
     data() {
         return {
            // useTitle:this.title
-           pushForm:{...this.rowData},
+           pushForm:{rzzt:'',rzsq:'',...this.rowData},
            
            rzztOptions:[
-                {label:'入账(企业所得税税前扣除)',vlaue:'02',},
-                {label:'入账(企业所得税不扣除)',vlaue:'03',},
+                {label:'入账(企业所得税税前扣除)',value:'02',},
+                {label:'入账(企业所得税不扣除)',value:'03',},
                 
            ],
            orgidOptions:[],
@@ -113,6 +119,7 @@ export default {
                 }]
             },
             isDisabled:false,
+            orgidList:[],
         };
     },
     computed: {
@@ -121,7 +128,7 @@ export default {
     watch: {
         rowData:{
             handler(val){
-                this.pushForm = {...val};
+                this.pushForm = {rzzt:'',rzsq:'',...val};
             },
             deep:true
         },
@@ -175,13 +182,32 @@ export default {
                 const res = await postPoolInAccount(data)
                 if([0,'0'].includes(res.code)){
                     this.$message.success("提交成功！")
-                    this.updateVisible(false)
+                    this.updateVisible(false);
+                    this.$emit("successDon",true)
                 }else{
                     this.$message.error("提交错误！请联系管理员！")
                 }
             }finally{}
         },
+        /* 所属套账 */
+        async handleGetList(){
+            let parmas = {
+                nsrsbh:this.pushForm.gfnsrsbh
+            }
+            try{
+                const res = await getOrgnizationList(parmas);
+                if([0,'0'].includes(res.code)){
+                   
+                    this.orgidList = res.data;
+                }else{
+                    this.$message.error("提交错误！请联系管理员！")
+                }
+            }finally{}
+            
+
+        }
     },
+    inject: ['optionList'],
     created() {
         this.handleInit()
     },
