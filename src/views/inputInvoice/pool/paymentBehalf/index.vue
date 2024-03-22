@@ -441,7 +441,7 @@ export default {
       let data = {
         ...this.where,
       };
-      let fileName = '增值税发票.xlsx'
+      let fileName = '代扣代缴.xlsx'
       try{
          await  postDKDJDownloadList({
         reqData: { ...data,},
@@ -453,7 +453,7 @@ export default {
     /* 导出已选择 */
     async handleExportSelected(){
       let data = this.isSelected;
-      let fileName = '增值税发票--已选择.xlsx'
+      let fileName = '代扣代缴--已选择.xlsx'
       try{
          await  postDKDJDownloadSelect({
         reqData: data,
