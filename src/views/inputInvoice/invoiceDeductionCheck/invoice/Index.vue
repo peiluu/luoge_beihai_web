@@ -151,7 +151,11 @@ import { purchaserstatusList, purchaserstatusMap, fpztMap, fpztList } from '@/vi
 export default {
   name: 'InvoiceDeductionCheckInvoice',
   props: {
-    currentSq: {}
+    currentSq: {},
+    level: {
+      type: String,
+      default: ''
+    }
   },
   components: { FormSearch, TableCounter },
   data() {
@@ -313,9 +317,15 @@ export default {
       isBusinessFormat: '' // 物业,需要预勾选操作
     };
   },
-
-  activated() {
-    this.getData()
+  watch: {
+    level: {
+      handler: function(newV, oldV){
+        if(newV === '1'){
+          this.getData()
+        }
+      },
+      immediate: true
+    }
   },
   computed: {
     height() {
@@ -324,9 +334,6 @@ export default {
     nsrsbh() {
       return this.$route.query.nsrsbh
     }
-  },
-  mounted() {
-    this.getData()
   },
 
   methods: {
@@ -689,7 +696,8 @@ export default {
       this.form = {}
     },
     checkSelectable(row, index) {
-      return row.purchaserstatus == '42'
+      return this.$route.query.sfqkrzgx !== 'Y'
+      // return row.purchaserstatus == '42'
     }
   }
 };

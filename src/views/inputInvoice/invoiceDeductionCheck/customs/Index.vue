@@ -2,7 +2,8 @@
   <div class="com-withhold">
     <form-list :columns="columns" :searchRow="searchList" :api="api" :param="searchParam" :height="height"
       @getSearchParam="getSearchParam" @handleSelection="handleSelection" v-loading="loading" :tableCounterShow="true"
-      ref="list">
+      ref="list"
+      :firstLoading="level === '2'">
       <!-- 中间部分 -->
       <template #topTool>
         <div class="toolbar">
@@ -57,6 +58,12 @@ export default {
   name: 'customs',
   components: {
     FormList
+  },
+  props: {
+    level: {
+      type: String,
+      default: ''
+    }
   },
   data() {
     return {
@@ -188,29 +195,12 @@ export default {
 
     };
   },
-  mounted() {
-    this.getKjList();
-    this.form = this.$route.query;
-
-    const param = {
-      cljg: '02',
-      skssq: this.$route.query.skssq,
-      kjywrsbh: this.$route.query.nsrsbh,
-      // gfsbh: this.$route.query.gfsbh,
-      // gxlx: this.$route.query.gxlx,
-
-      // bkjnsrsbh: this.$route.query.nsrsbh,
-    }
-    this.param = param;
-    this.$refs.list.handleGetData(param)
-  },
   watch: {
-    activeName() {
-      this.$router.push({
-        path: '/deductionStatistics/list',
-        query: this.$route.query
-      })
-    },
+    level(newV, oldV){
+      if(newV === '2'){
+        this.init()
+      }
+    }
   },
   computed: {
     height() {
@@ -219,6 +209,22 @@ export default {
   },
 
   methods: {
+    init(){
+      this.getKjList();
+      this.form = this.$route.query;
+
+      const param = {
+        cljg: '02',
+        skssq: this.$route.query.skssq,
+        kjywrsbh: this.$route.query.nsrsbh,
+        // gfsbh: this.$route.query.gfsbh,
+        // gxlx: this.$route.query.gxlx,
+
+        // bkjnsrsbh: this.$route.query.nsrsbh,
+      }
+      this.param = param;
+      this.$refs.list.handleGetData(param)
+    },
     // 处理多选
     handleSelection(rows) {
       this.selections = rows;

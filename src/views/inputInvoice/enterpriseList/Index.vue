@@ -56,6 +56,7 @@ export default {
             nsrmc: item.nsrmc,
             nsrsbh: item.nsrsbh,
             taxBodyId: item.id,
+            sfqkrzgx: item.sfqkrzgx,
             businessType: this.businessType
           }
         })
