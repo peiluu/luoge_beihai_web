@@ -170,7 +170,7 @@ export default {
         /* 提交 */
         async handleSubmitForm(){
             let data = {
-                type:'ZZSFP',
+                type:this.types.type,
                 state:this.types.status,
                 ...this.pushForm,
             }

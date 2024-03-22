@@ -96,7 +96,7 @@
             </el-table-column>
             <el-table-column prop="jkdwrnsrsbh" label="缴款单位人纳税人识别号" minWidth="160" align="center">
             </el-table-column>
-            <el-table-column prop="jkdwrnsrmc" label="缴款单位人纳税人名称" minWidth="180" align="center">
+            <el-table-column prop="jkdwrnsrmc" label="缴款单位人纳税人名称" minWidth="180" show-overflow-tooltip align="center">
             </el-table-column>
             <el-table-column prop="sfzhsd" label="是否重号锁定" minWidth="120" align="center">
             </el-table-column>
@@ -373,7 +373,7 @@ export default {
         return
       }
       this.dialog.statusTitle = type === 1?'确认收票':'撤销收票';
-      this.typeStatus = {type:'HGJNS',status:type}
+      this.typeStatus = {type:'HGJKS',status:type}
       this.rowData = {...this.isSelected[0]}
       this.dialog.statusVisible = true;
     },
@@ -392,7 +392,7 @@ export default {
         return
       }
       this.dialog.enterTitle = type === 1?'发票入账':'撤销入账';
-      this.typeStatus = {type:'HGJNS',status:type}
+      this.typeStatus = {type:'HGJKS',status:type}
       this.rowData = {...this.isSelected[0]}
       this.dialog.enterVisible = true;
     },
@@ -402,7 +402,7 @@ export default {
         this.$message.warning("当前操作只支持单个！")
         return
       }else{
-        this.typeStatus = {type:'HGJNS'}
+        this.typeStatus = {type:'HGJKS'}
         this.rowData = {...this.isSelected[0]}
         this.dialog.editeVisible = true;
       }
