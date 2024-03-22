@@ -9,7 +9,7 @@
         <div class="toolbar">
           <div class="toolbar-left" />
           <div class="toolbar-right">
-            <el-button type="success" @click="cancleBatch('02')" v-if="searchParam.cljg == '01'">撤销勾选</el-button>
+            <el-button type="success" @click="cancleBatch('02')" v-if="$refs.list && $refs.list.searchParam.cljg == '01'">撤销勾选</el-button>
           <el-button type="success" @click="submitBatch('01')" v-else>提交勾选</el-button>
             <!-- <el-button @click="exportWithholdList">导出</el-button> -->
             <el-button @click="downloadNoList">导出查询结果</el-button>
@@ -177,6 +177,16 @@ export default {
           type: "select",
           options: [],
         },
+        {
+          label: "勾选状态",
+          key: "cljg",
+          val: "02",
+          type: "select",
+          options: [
+          { value: "02", label: "未勾选" },
+            { value: "01", label: "已勾选" },
+          ],
+        },
       ],
       selecedInfo: {
         number: 0,
@@ -284,11 +294,11 @@ export default {
 
     // 提交数据
     async checkCustomsPayment() {
-      const list = this.selections.map(item=> ({jkshm: item.hgjkshm , tfrq: item.tfrq}))
+      const hgjksmx = this.selections.map(item=> ({jkshm: item.hgjkshm , tfrq: item.tfrq}))
       const { code = '' } = await checkCustomsPayment({
         gfsbh: this.$route.query.nsrsbh,
         gxlx: this.gxlxDm,
-        list,
+        hgjksmx,
       })
       if (code === '0') {
         this.$message.success('提交成功');
