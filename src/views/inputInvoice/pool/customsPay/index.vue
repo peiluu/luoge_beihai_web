@@ -219,6 +219,7 @@
       :title="dialog.statusTitle"
       :row-data="rowData"
       :type-status="typeStatus"
+      @successDone="handleDone"
     ></lg-collect-ticket-mage>
     <lg-enter-account-mage
       v-if="dialog.enterVisible"
@@ -227,6 +228,7 @@
       :title="dialog.enterTitle"
       :row-data="rowData"
       :type-status="typeStatus"
+      @successDone="handleDone"
     ></lg-enter-account-mage>
     <!-- 待修改认证科目 -->
     <lg-edie-verified
@@ -236,6 +238,7 @@
       title="修改会计科目操作"
       :row-data="rowData"
       :type-status="typeStatus"
+      @successDone="handleDone"
     ></lg-edie-verified>
     </div>
 </template>
@@ -445,6 +448,10 @@ export default {
     handleSelectionChange(e) {
       this.isSelected = [...e];
     },
+    /* 返回后刷新状态 */
+    handleDone(val){
+      this.handleGetTableList()
+    }
   },
   created() {},
   mounted() {

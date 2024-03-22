@@ -33,13 +33,8 @@
                     <el-form-item label="所属账套：">
                         <el-select style="width:100%" :disabled="isDisabled" v-model="pushForm.orgid" placeholder="请选择" clearable filterable>
                             <el-option
-<<<<<<< HEAD
                             v-for="item in orgidList"
                             :key="item.nsrsbh"
-=======
-                            v-for="item in optionList.orgOption"
-                            :key="item.id"
->>>>>>> 3849d3967ebadc0482ff73d0393b334dc3b45452
                             :label="item.name"
                             :value="item.id">
                             </el-option>
@@ -183,7 +178,7 @@ export default {
                 if([0,'0'].includes(res.code)){
                     this.$message.success("提交成功！")
                     this.updateVisible(false);
-                    this.$emit("successDon",true)
+                    this.$emit("successDone",true)
                 }else{
                     this.$message.error("提交错误！请联系管理员！")
                 }
@@ -211,7 +206,9 @@ export default {
     created() {
         this.handleInit()
     },
-    mounted() {},
+    mounted() {
+        this.handleGetList();
+    },
     beforeCreate() {},
     beforeMount() {},
     beforeUpdate() {},
