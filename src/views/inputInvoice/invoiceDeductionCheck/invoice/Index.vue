@@ -676,8 +676,11 @@ export default {
       this.getOrgList();
       this.queryScale();
       this.queryBusinessFormat();
-      this.searchParam.skssq = this.currentSq.dateValue;
-      this.searchParam.gfsbh = this.$route.query.nsrsbh
+      this.searchParam = {
+        ...this.param,
+        skssq: this.currentSq.dateValue,
+        gfsbh: this.$route.query.nsrsbh
+      }
       this.handleGetData(this.searchParam)
       this.propsKey = this.$route.query.nsrsbh + '_' + this.currentSq.dateValue;
       // const { code = '', data } = await getList({

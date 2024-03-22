@@ -17,9 +17,10 @@
           </div>
         </div>
       </template>
-      <template #cljg="{ data }"> {{ data.cljg == '01' ? '已勾选' : '未勾选' }}</template>
-      <template #sfycpz="{ data }"> {{ data.sfycpz == '01' ? '正常' : data.sfycpz == '02' ? '异常' : data.sfycpz == '03' ?
-      '疑似异常' : '' }}</template>
+      
+      <template #sfchsd="{ data }"> {{ data.sfchsd == 'Y' ? '锁定' : '未锁定' }}</template>
+      <template #rzzt="{ data }"> {{ data.rzzt == '01' ? '未入账' : data.rzzt == '02' ? '已入账' : data.rzzt == '03' ?
+      '已入账撤销' : '' }}</template>
       <template #fplx="{ data }"> {{ inputFplxMap[data.fplx] }} </template>
       <template #tfrq="{ data }"> {{ data.tfrq ? dateFormat('YYYY-MM-DD', data.tfrq) : '' }} </template>
       <template #gxsj="{ data }"> {{ data.gxsj ? dateFormat('YYYY-MM-DD', data.gxsj) : '' }} </template>
@@ -76,17 +77,17 @@ export default {
         { title: '序号', type: "index", width: 50, },
         { title: "海关缴款书号码", width: 140, dataIndex: "hgjkshm", slot: 'hgjkshm', align: 'center' },
         { title: "填发日期", width: 180, dataIndex: 'tfrq' },
-        { title: "有效抵扣税额", width: 150, dataIndex: "tfrq", slot: 'tfrq' },
-        { title: "加计扣除额合计", width: 160, dataIndex: "bkjnsrsbh", },
-        { title: "加计扣除剩余额 ", width: 160, dataIndex: "bkjnsrmc", },
+        { title: "有效抵扣税额", width: 150, dataIndex: "yxdkse", slot: 'yxdkse' },
+        { title: "加计扣除额合计", width: 160, dataIndex: "jjkcehj", },
+        { title: "加计扣除剩余额 ", width: 160, dataIndex: "jjkcsye", },
         { title: "缴款单位人纳税人识别号", dataIndex: "jkdwrnsrsbh", width: 160, },
         { title: "缴款单位人纳税人名称", width: 150, dataIndex: "jkdwrnsrmc", slot: 'jkdwrnsrmc', align: 'center' },
-        { title: "是否重号锁定", width: 130, dataIndex: "sfchsd" },
+        { title: "是否重号锁定", width: 130, dataIndex: "sfchsd",slot:'sfchsd' },
         { title: "认证状态", width: 130, dataIndex: "createrName" },
-        { title: "勾选失败原类", width: 130, dataIndex: "createrName" },
+        { title: "勾选失败原因", width: 130, dataIndex: "createrName" },
         { title: "勾选人", width: 130, dataIndex: "createrName" },
-        { title: "勾选时间", width: 130, dataIndex: "createrName" },
-        { title: "入账状态", width: 130, dataIndex: " rzzt" },
+        { title: "勾选时间", width: 130, dataIndex: "updateTime" },
+        { title: "入账状态", width: 130, dataIndex: " rzzt",slot:'rzzt' },
         { title: "入账日期", width: 130, dataIndex: "createrName" },
         { title: "入账属期", width: 130, dataIndex: "createrName" },
 
@@ -105,8 +106,8 @@ export default {
           val: "",
           type: "select",
           options: [
-            { value: "02", label: "锁定" },
-            { value: "01", label: "未锁定" },
+            { value: "Y", label: "锁定" },
+            { value: "N", label: "未锁定" },
           ]
         },
         {
@@ -204,7 +205,7 @@ export default {
   },
   computed: {
     height() {
-      return window.innerHeight - 390;
+      return window.innerHeight - 460;
     },
   },
 

@@ -1,7 +1,7 @@
 <template>
   <div class="com-invoice">
     <form-list :columns="columns" :searchRow="searchList" @getSearchParam="getSearchParam" :api="api" :param="param"
-      @handleSelection="handleSelection" :height="height" :firstLoading="false" v-loading="loading" ref="list"
+      @handleSelection="handleSelection" :height="height" :firstLoading="level === '2'" v-loading="loading" ref="list"
       :tableCounterShow="true">
       <!-- 中间部分 -->
       <template #topTool>
@@ -17,9 +17,9 @@
         </div>
       </template>
 
-      <template #cljg="{ data }"> {{ data.cljg == '01' ? '已勾选' : '未勾选' }}</template>
-      <template #sfycpz="{ data }"> {{ data.sfycpz == '01' ? '正常' : data.sfycpz == '02' ? '异常' : data.sfycpz == '03' ?
-      '疑似异常' : '' }}</template>
+      <template #sfchsd="{ data }"> {{ data.sfchsd == 'Y' ? '锁定' : '未锁定' }}</template>
+      <template #rzzt="{ data }"> {{ data.rzzt == '01' ? '未入账' : data.rzzt == '02' ? '已入账' : data.rzzt == '03' ?
+      '已入账撤销' : '' }}</template>
       <template #fplx="{ data }"> {{ inputFplxMap[data.fplx] }} </template>
       <template #fpzt="{ data }">{{ data.fpzt ? fpztMap[data.fpzt] : '' }} </template>
 
@@ -85,7 +85,11 @@ export default {
     FormList, SelectReasonModal,
   },
   props: {
-    currentSq: {}
+    currentSq: {},
+    level: {
+      type: String,
+      default: ''
+    }
   },
   data() {
     return {
@@ -98,7 +102,7 @@ export default {
       fpztMap,
       api: require('./Api'),
       param: {
-        cljg: '02'
+        cljg: ''
       },
       loading: false,
       columns: [
@@ -106,16 +110,16 @@ export default {
         { title: '序号', type: "index", width: 50, },
         { title: "海关缴款书号码", width: 150, dataIndex: "hgjkshm", },
         { title: "填发日期", width: 100, dataIndex: "tfrq", align: "center", slot: 'tfrq' },
-        { title: "有效抵扣税额", width: 150, dataIndex: "fphm", },
-        { title: "加计扣除额合计", width: 150, dataIndex: "fphm", },
-        { title: "加计扣除剩余额", width: 150, dataIndex: "fphm", },
-        { title: "缴款单位人纳税人识别号", width: 150, dataIndex: "jkdwrnsrsbh", },
+        { title: "有效抵扣税额", width: 150, dataIndex: "yxdkse", },
+        { title: "加计扣除额合计", width: 150, dataIndex: "jjkcehj", },
+        { title: "加计扣除剩余额", width: 150, dataIndex: "jjkcsye", },
+        { title: "缴款单位人纳税人识别号", width: 160, dataIndex: "jkdwrnsrsbh", },
         { title: "缴款单位人纳税人名称", width: 150, dataIndex: "jkdwrnsrmc", },
         { title: "是否重号锁定", dataIndex: "sfchsd", width: 100, slot: 'sfchsd' },
         { title: "认证状态", dataIndex: "syncInvoice", width: 100, slot: 'syncInvoice' },
-        { title: "勾选失败原类", dataIndex: "syncInvoice", width: 100, slot: 'syncInvoice' },
-        { title: "勾选人", dataIndex: "syncInvoice", width: 100, slot: 'syncInvoice' },
-        { title: "勾选时间", dataIndex: "syncInvoice", width: 100, slot: 'syncInvoice' },
+        { title: "勾选失败原因", dataIndex: "syncInvoice", width: 100, slot: 'syncInvoice' },
+        { title: "勾选人", dataIndex: "createrName", width: 100, slot: 'createrName' },
+        { title: "勾选时间", dataIndex: "createTime", width: 100, slot: 'createTime' },
         { title: "入账状态", dataIndex: "rzzt", width: 100, slot: 'rzzt' },
         { title: "入账日期", dataIndex: "syncInvoice", width: 100, slot: 'syncInvoice' },
         { title: "入账属期", dataIndex: "rzsq", width: 100, slot: 'rzsq' },
@@ -146,18 +150,18 @@ export default {
         {
           label: "是否重号锁定",
           key: "cljg",
-          val: "02",
+          val: "",
           noClearable: 'Y',
           type: "select",
           options: [
-            { value: "02", label: "是" },
-            { value: "01", label: "否" },
+            { value: "Y", label: "锁定" },
+            { value: "N", label: "未锁定" },
           ]
         },
         {
           label: "勾选状态",
           key: "cljg",
-          val: "02",
+          val: "",
           noClearable: 'Y',
           type: "select",
           options: [
@@ -252,23 +256,25 @@ export default {
       selectedInvoices: []
     };
   },
-  mounted() {
-    // this.getList();
-    this.getKjList();
-    this.form = this.$route.query;
-  },
-
-  activated() {
-    this.getList()
-
+  watch: {
+    level(newV, oldV){
+      if(newV === '2'){
+        this.init()
+      }
+    }
   },
   computed: {
     height() {
-      return window.innerHeight - 380;
+      return window.innerHeight - 460;
     },
   },
 
   methods: {
+    init(){
+      // this.getList();
+      this.getKjList();
+      this.form = this.$route.query;
+    },
     dateFormat(fmt, val) {
       return moment(val).format(fmt)
     },

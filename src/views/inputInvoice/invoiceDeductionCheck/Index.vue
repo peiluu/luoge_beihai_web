@@ -68,6 +68,12 @@ export default {
         this.applyStatisticsStatus = data
       }
     },
+  },
+  activated(){
+    this.level = null;
+    this.$nextTick(()=>{
+      this.level = '1';
+    })
   }
 
 };
