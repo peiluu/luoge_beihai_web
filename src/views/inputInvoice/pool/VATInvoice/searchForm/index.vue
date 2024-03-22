@@ -25,7 +25,7 @@
           <el-form-item label="纳税主体：" label-width="85px">
             <el-select
               style="width: 100%"
-              v-model="where.xsfNsrsbh"
+              v-model="where.gmfNsrsbh"
               placeholder="请选择"
               clearable
               filterable
@@ -141,7 +141,7 @@
             <el-col :span="8">
               <el-form-item label="发票号码：">
                 <el-input
-                  v-model="where.fphm"
+                  v-model="where.fpHm"
                   placeholder="请输入内容"
                 ></el-input>
               </el-form-item>
