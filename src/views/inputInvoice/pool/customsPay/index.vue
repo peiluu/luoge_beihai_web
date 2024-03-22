@@ -413,7 +413,7 @@ export default {
       let data = {
         ...this.where,
       };
-      let fileName = '增值税发票.xlsx'
+      let fileName = '海关缴款书.xlsx'
       try{
          await  postHGDownloadList({
         reqData: { ...data,},
@@ -429,7 +429,7 @@ export default {
     /* 导出已选择 */
     async handleExportSelected(){
       let data = this.isSelected;
-      let fileName = '增值税发票--已选择.xlsx'
+      let fileName = '海关缴款书--已选择.xlsx'
       try{
          await  postHGDownloadSelect({
         reqData: data,
