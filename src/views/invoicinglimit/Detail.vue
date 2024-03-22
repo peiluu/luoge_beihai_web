@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div class="main-content">
+    <div>
       <el-form :inline="true" :model="form" :rules="rules" ref="ruleForm" :disabled="operateType === 'detail'">
         <div class="content-title"></div>
         <el-form-item label="请选择纳税主体" prop="nsrsbh">
-          <el-select v-model="form.nsrsbh" placeholder="请选择" filterable clearable multiple :disabled="detailInfo.id">
+          <el-select v-model="form.nsrsbh" placeholder="请选择" filterable clearable multiple :disabled="!!detailInfo.id">
             <el-option v-for="(item, index) in taxBodyList" :key="index" :label="item.nsrmc" :value="item.nsrsbh">
             </el-option>
           </el-select>

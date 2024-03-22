@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form-list :columns="columns" :searchKey="propsKey" :searchRow="searchList" :api="api" :param="param" :firstLoading="false" v-loading="loading" @getSearchParam="getSearchParam" ref="list">
+    <form-list :columns="columns" :height="height" :searchKey="propsKey" :searchRow="searchList" :api="api" :param="param" :firstLoading="false" v-loading="loading" @getSearchParam="getSearchParam" ref="list">
       <!-- 中间部分 -->
       <template #topTool>
         <div class="toolbar">
@@ -232,9 +232,9 @@ export default {
     this.getList()
   },
   computed: {
-    // height() {
-    //   return window.innerHeight - 310
-    // },
+    height() {
+      return window.innerHeight - 380
+    },
     selections() {
       return this.$refs.list.getSelections()
     }

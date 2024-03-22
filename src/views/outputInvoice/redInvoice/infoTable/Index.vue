@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
+  <div class="main-content">
     <div class="content-header">
       <BackBtn path="/outputInvoice/redInvoice/enterpriseList/index" align="left" />
       <el-tabs class="custom-card-tabs" v-model="activeName" type="card">
@@ -294,15 +294,11 @@ export default {
   },
   computed: {
     height() {
-      return window.innerHeight - 340;
+      return window.innerHeight - 400;
     },
     api() {
       return this.activeName == '0' ? this.sendApi : this.receiveApi
     },
-    contentHeight() {
-      return window.innerHeight - 132;
-    },
-
   },
 
   methods: {

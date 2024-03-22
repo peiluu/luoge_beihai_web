@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="main-content">
+    <div>
       <el-form :inline="true" :model="form" :rules="rules" ref="ruleForm">
         <div class="content-title">基本信息</div>
         <div class="content-section">

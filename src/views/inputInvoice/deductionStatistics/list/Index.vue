@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
+  <div class="main-content">
     <div class="content-tab-header">
       <BackBtn path="/inputInvoice/enterpriseList/deductionCheckStatistics" align="left" :query="{ businessType: this.$route.query.businessType }" />
       <BtnTabs :activeName="2" :zt="applyStatisticsStatus.zt" />
@@ -127,9 +127,6 @@ export default {
   },
 
   computed: {
-    contentHeight() {
-      return window.innerHeight - 132;
-    },
     currentMonth() {
       return `${new Date().getFullYear()}年${new Date().getMonth() + 1}月`
     },
@@ -331,7 +328,7 @@ export default {
 }
 
 .content-footer {
-  height: calc(100% - 430px);
+  height: calc(100% - 460px);
   display: flex;
   align-items: center;
   flex-direction: column;

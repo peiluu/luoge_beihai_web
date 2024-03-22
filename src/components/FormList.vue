@@ -14,6 +14,7 @@
         ref="table" 
         :data="data"
         :border="border" 
+        :height="height"
         stripe 
         @row-click="rowClcik"
         :header-cell-style="{fontWeight: 400,borderTop: '1px solid #adb4bc',background: '#f7f9fd',color: '#333333',padding: '7px 0'}"

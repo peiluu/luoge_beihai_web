@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content" :style="'min-height: ' + contentHeight + 'px;'">
+  <div class="main-content">
     <BackBtn path="/outputInvoice/redInvoice/infoTable/Index" :query="$route.query" />
     <div class="content-header">
       <!-- <Step :stepData="{ current: 1, total: 3, title: '查询发票信息' }" /> -->
@@ -136,10 +136,7 @@ export default {
   },
   computed: {
     height() {
-      return window.innerHeight - 320;
-    },
-    contentHeight() {
-      return window.innerHeight - 132;
+      return window.innerHeight - 400;
     },
   },
 
@@ -238,7 +235,6 @@ export default {
   align-items: center;
 
   .el-button {
-    width: 6%;
     margin-top: 8px;
   }
 }

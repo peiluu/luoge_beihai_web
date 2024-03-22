@@ -37,7 +37,7 @@
       </div>
 
       <div class="content-right">
-        <form-list :key="activeName" :columns="columns" :searchRow="searchList" :api="api" :param="param" :height="height - 36" v-loading="loading" :notSearchContract="true" ref="list">
+        <form-list :key="activeName" :columns="columns" :searchRow="searchList" :api="api" :param="param" :height="height - 136" v-loading="loading" :notSearchContract="true" ref="list">
           <!-- 操作按钮 -->
           <template #myscope="{ data }">
             <el-button v-if="data.status == '2'" @click.stop="queryDetail(data)">查看</el-button>
@@ -138,7 +138,7 @@ export default {
 
   computed: {
     height() {
-      return window.innerHeight - 250;
+      return window.innerHeight - 260;
     },
     contentHeight() {
       return window.innerHeight - 132;
@@ -219,7 +219,7 @@ export default {
 .main-content-box {
   display: flex;
   justify-content: space-between;
-
+  height: calc(100% - 36px);
   .content-left {
     margin-right: 8px;
     width: 350px;

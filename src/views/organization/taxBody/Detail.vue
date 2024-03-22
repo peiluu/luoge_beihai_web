@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="main-content">
+    <div>
       <el-form :inline="true" :model="form" :rules="rules" ref="ruleForm" :disabled="operateType === 'detail'">
         <div class="content-title">基本信息</div>
         <!-- <el-form-item class="form-header-left"> -->

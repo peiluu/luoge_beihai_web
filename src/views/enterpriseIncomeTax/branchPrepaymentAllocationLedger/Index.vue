@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
+  <div class="main-content">
     <div class="custom-query-form">
       <el-form ref="searchForm" :model="form" :inline="true">
         <el-form-item label="所属总机构名称" prop="zjgsbh">
@@ -256,11 +256,8 @@ export default {
     dateFormat,
   },
   computed: {
-    contentHeight() {
-      return window.innerHeight - 132;
-    },
     height() {
-      return window.innerHeight - 280;
+      return window.innerHeight - 340;
     },
     ssqReturnType() {
       return this.$refs.ledgerForm.zzstbzq

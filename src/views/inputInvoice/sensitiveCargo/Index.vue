@@ -32,6 +32,7 @@
         @getNextList="getOrgList"
         :firstLoading="false"
         ref="list"
+        :height="height"
       >
         <!-- 中间部分 -->
         <template #topTool>
@@ -232,7 +233,6 @@ export default {
       this.$refs.tree.filter(val);
     },
   },
-
   methods: {
     handleAdd() {
       this.addVisible = true;
@@ -345,7 +345,7 @@ export default {
 
   computed: {
     height() {
-      return window.innerHeight - 190;
+      return window.innerHeight - 380;
     },
   },
 };

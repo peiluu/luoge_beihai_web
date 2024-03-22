@@ -194,7 +194,7 @@ export default {
   },
   computed: {
     height() {
-      return window.innerHeight - 310
+      return window.innerHeight - 380
     },
     selections() {
       return this.$refs.list.getSelections()
