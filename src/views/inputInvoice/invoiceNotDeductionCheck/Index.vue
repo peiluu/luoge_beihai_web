@@ -14,7 +14,7 @@
       <el-tabs class="custom-card-tabs" v-model="level" type="card">
         <el-tab-pane label="增值税发票" name="1" />
         <el-tab-pane label="海关缴款书" name="2" />
-        <el-tab-pane label="代扣代缴完税凭证" name="2" />
+        <el-tab-pane label="代扣代缴完税凭证" name="3" />
       </el-tabs>
       <i class="el-icon-warning" />当前纳税主体: {{ $route.query.nsrmc }}
     </div>
