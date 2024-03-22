@@ -113,12 +113,16 @@
             <el-table-column prop="xsfnsrsbh" label="销方税号" minWidth="180" align="center">
             </el-table-column>
             <el-table-column prop="hjje" label="合计金额" minWidth="120" :header-align="'center'" :align="'right'">
+              <template slot-scope="{row}">{{ formatMoney(row.hjje) }} </template>
             </el-table-column>
             <el-table-column prop="hjse" label="合计税额" minWidth="120" :header-align="'center'" :align="'right'">
+              <template slot-scope="{row}">{{ formatMoney(row.hjse) }} </template>
             </el-table-column>
             <el-table-column prop="jshj" label="价税合计" minWidth="120" :header-align="'center'" :align="'right'">
+              <template slot-scope="{row}">{{ formatMoney(row.jshj) }} </template>
             </el-table-column>
             <el-table-column prop="kce" label="扣除额" minWidth="120" :header-align="'center'" :align="'center'">
+              <template slot-scope="{row}">{{ formatMoney(row.kce) }} </template>
             </el-table-column>
             <el-table-column prop="fpzt" label="发票状态" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
@@ -490,15 +494,20 @@ export default {
       if(this.isSelected.length >1){
         this.$message.warning("当前操作只支持单个！")
         return
-      }else if(this.isSelected.find(k=> Number(k.rzzt) === type)){
-        this.$message.warning(`当前发票处于${type === 1?'发票入账':'撤销入账'}`)
-        return
-      }else{
-        this.dialog.enterTitle = type === 1?'发票入账':'撤销入账';
-        this.typeStatus = {type:'ZZSFP',status:type}
-        this.rowData = {...this.isSelected[0]}
-        this.dialog.enterVisible = true;
       }
+      if(type === 1 && /02|03/.test(this.isSelected[0].rzzt)){
+        this.$message.warning(`当前发票已入账`)
+        return
+      }
+      if(type === 2 && !/02|03/.test(this.isSelected[0].rzzt)){
+        this.$message.warning(`当前发票还未入账`)
+        return
+      }
+      this.dialog.enterTitle = type === 1?'发票入账':'撤销入账';
+      this.typeStatus = {type:'ZZSFP',status:type}
+      this.rowData = {...this.isSelected[0]}
+      this.dialog.enterVisible = true;
+      
       
     },
     /* 修改入账状态 */

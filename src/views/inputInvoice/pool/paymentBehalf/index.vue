@@ -99,8 +99,10 @@
             <el-table-column prop="kjrq" label="开具日期" minWidth="120" align="center">
             </el-table-column>
             <el-table-column prop="jsje" label="计税金额" minWidth="120" align="center">
+              <template slot-scope="{row}">{{ formatMoney(row.jsje) }} </template>
             </el-table-column>
             <el-table-column prop="sjje" label="实缴金额" minWidth="180" align="center">
+              <template slot-scope="{row}">{{ formatMoney(row.sjje) }} </template>
             </el-table-column>
             <el-table-column prop="bkjnsrsbh" label="被扣缴纳税人识别号" minWidth="180" align="center">
             </el-table-column>
@@ -370,16 +372,19 @@ export default {
       if(this.isSelected.length >1){
         this.$message.warning("当前操作只支持单个！")
         return
-      }else if(this.isSelected.find(k=> Number(k.rzzt) === type)){
-        this.$message.warning(`当前发票处于${type === 1?'发票入账':'撤销入账'}`)
-        return
-      }else{
-        this.dialog.enterTitle = type === 1?'发票入账':'撤销入账';
-        this.typeStatus = {type:'DKDJWSPZ',status:type}
-        this.rowData = {...this.isSelected[0]}
-        this.dialog.enterVisible = true;
       }
-      
+      if(type === 1 && /02|03/.test(this.isSelected[0].rzzt)){
+        this.$message.warning(`当前发票已入账`)
+        return
+      }
+      if(type === 2 && !/02|03/.test(this.isSelected[0].rzzt)){
+        this.$message.warning(`当前发票还未入账`)
+        return
+      }
+      this.dialog.enterTitle = type === 1?'发票入账':'撤销入账';
+      this.typeStatus = {type:'DKDJWSPZ',status:type}
+      this.rowData = {...this.isSelected[0]}
+      this.dialog.enterVisible = true;
     },
     /* 修改入账状态 */
     handleEditeStatus() {
