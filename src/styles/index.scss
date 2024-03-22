@@ -388,7 +388,7 @@ table {
 
 .lg_dialog{
     .el-dialog__header {
-        background: #339966;
+        background: $primaryGreenColor;
         padding: 6px;
         .el-dialog__title {
           color: #fff;
@@ -407,3 +407,28 @@ table {
         text-align: center;
       }
 }
+
+.form-dialog {
+    .el-dialog__body {
+        .el-form-item {
+            width: 100%;
+            margin-bottom: 16px;
+  
+        .el-form-item__label {
+            width: 220px;
+        }
+  
+        .el-form-item__content {
+            width: calc(100% - 320px);
+  
+            .el-select,
+            .el-date-editor,
+            .vxe-select,
+            .vxe-input,
+            .el-input {
+                width: 100%;
+            }
+        }
+      }
+    }
+  }
