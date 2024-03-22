@@ -9,7 +9,7 @@
           <div class="toolbar-left" />
           <div class="toolbar-right">
             <el-button type="success" @click="cancleBatch('04')"
-              v-if="$refs.list && $refs.list.searchParam.cljg == '01'">撤销勾选</el-button>
+              v-if="$refs.list && $refs.list.searchParam.cljg == '03'">撤销勾选</el-button>
             <el-button type="success" @click="submitBatch('03')" v-else>提交勾选</el-button>
             <el-button @click="exportInvoiceCheck">导出查询结果</el-button>
             <el-button @click="exportSelectedInvoice">导出选中发票</el-button>
@@ -63,8 +63,9 @@
     <el-dialog title="请确认" :visible.sync="dialogVisibleSubmit" width="40%" :before-close="handleClose"
       class="submit-dialog">
       <div class="title">
-        <i class="el-icon-warning" />本次勾选<span>{{ selections.length }}</span>张发票，税额合计<span>{{ selecedInfo.hjse
-          }}</span>元
+        <i class="el-icon-warning" />本次勾选<span>{{ selections.length }}</span>张发票
+        <!-- ，税额合计<span>{{ selecedInfo.hjse
+          }}</span>元 -->
       </div>
       <div class="tip">是否确认提交</div>
       <span slot="footer" class="dialog-footer">
@@ -374,7 +375,7 @@ export default {
       })
       if (code === '0') {
         this.$message.success('提交成功');
-        this.dialogVisible = false;
+        this.dialogVisibleSubmit = false;
         this.$refs.list.reload()
       }
     },

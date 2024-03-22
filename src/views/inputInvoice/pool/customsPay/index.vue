@@ -77,6 +77,7 @@
             highlight-current-row
             :row-class-name="rowClassName"
             @selection-change="handleSelectionChange"
+            v-loading="loading"
             height="340"
             style="width: 100%;"
             ref="topTableRef"
@@ -312,6 +313,7 @@ export default {
       this.handleGetTableList();
     },
     async handleGetTableList(val = {}){
+      this.loading = true;
       let parmas = {
         pageNo:this.page.currentPage,
         pageSize:this.page.pageSize,
@@ -323,7 +325,9 @@ export default {
           this.tableData = [...res.data];
           this.total = res.totalCount
         }
-      }finally{}
+      }finally{
+        this.loading = false;
+      }
       
     },
     /* size change */
