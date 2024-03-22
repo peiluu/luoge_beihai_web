@@ -17,7 +17,8 @@
                             v-for="item in rzztOptions"
                             :key="item.value"
                             :label="item.label"
-                            :value="item.value">
+                            :value="item.value"
+                            :disabled="item.disabled">
                             </el-option>
                         </el-select>
                     </el-form-item>
