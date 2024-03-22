@@ -34,8 +34,8 @@
                             <el-option
                             v-for="item in optionList.orgOption"
                             :key="item.nsrsbh"
-                            :label="item.nsrmc"
-                            :value="item.nsrsbh">
+                            :label="item.name"
+                            :value="item.id">
                             </el-option>
                         </el-select>
                     </el-form-item>

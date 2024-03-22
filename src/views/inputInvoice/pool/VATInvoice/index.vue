@@ -155,9 +155,10 @@
         </article>
         <article class="table_bottom_page">
             <article class="footer_text_main">
-            金额总额<span class="footer_sum"> 224,181.03</span> 元 / 税额总额
-            <span class="footer_sum"> 10,928.27 </span> 元 / 价税合计总额
-            <span class="footer_sum"> 235,109.30 </span>元
+              已选择<span class="footer_sum"> {{isSelected.length}}</span> 项 | 合计金额
+            <span class="footer_sum"> {{ totalje }} </span> 元 | 合计税额
+            <span class="footer_sum">{{ totalse }} </span>元 | 价税合计
+            <span class="footer_sum"> {{ totaljs }} </span>元
             </article>
             <article>
             <el-pagination
@@ -380,7 +381,17 @@ export default {
       loading_1:false,
     };
   },
-  computed: {},
+  computed: {
+    totalje(){
+      return 0
+    },
+    totalse(){
+      return 0
+    },
+    totaljs(){
+      return 0
+    }
+  },
   watch: {},
   methods: {
     handleInit(){

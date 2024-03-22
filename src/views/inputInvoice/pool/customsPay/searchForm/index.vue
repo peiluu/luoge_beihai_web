@@ -15,10 +15,10 @@
               filterable
             >
               <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                v-for="(item,index) in optionList.xsfnsrsbhOptions"
+                :key="index"
+                :label="item.nsrmc"
+                :value="item.nsrsbh"
               >
               </el-option>
             </el-select>
@@ -34,10 +34,10 @@
               filterable
             >
               <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                v-for="(item,index) in optionList.orgOption"
+                :key="index"
+                :label="item.name"
+                :value="item.id"
               >
               </el-option>
             </el-select>
@@ -68,7 +68,7 @@
                 filterable
               >
                 <el-option
-                  v-for="item in options"
+                  v-for="item in optionList.lockOption"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
@@ -87,10 +87,10 @@
                 filterable
               >
                 <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  v-for="(item,index) in optionList.accountantList"
+                  :key="index"
+                  :label="item.accSegmentName"
+                  :value="item.accSegmentCode"
                 >
                 </el-option>
               </el-select>
@@ -143,7 +143,7 @@
                 filterable
               >
                 <el-option
-                  v-for="item in options"
+                  v-for="item in optionList.invoiceStatus"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
@@ -162,7 +162,7 @@
                 filterable
               >
                 <el-option
-                  v-for="item in options"
+                  v-for="item in optionList.authenticationStatus"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
@@ -182,7 +182,7 @@
                 filterable
               >
                 <el-option
-                  v-for="item in options"
+                  v-for="item in optionList.enterAccountStatus"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
@@ -201,7 +201,7 @@
                 filterable
               >
                 <el-option
-                  v-for="item in options"
+                  v-for="item in optionList.rollOntStatus"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
@@ -235,6 +235,7 @@ export default {
       this.isShow = !this.isShow;
     },
   },
+  inject: ['optionList'],
   created() {},
   mounted() {},
   beforeCreate() {},

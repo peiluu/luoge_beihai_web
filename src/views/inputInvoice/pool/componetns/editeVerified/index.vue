@@ -12,7 +12,7 @@
             <article class="dailog_info">
                 <el-form ref="formEdite" :model="pushForm" :rules="editeRules" label-width="280px">
                     <el-form-item label="入账状态：">
-                        <el-select style="width:100%" v-model="pushForm.rzzt" placeholder="请选择" clearable filterable>
+                        <el-select style="width:100%" disabled v-model="pushForm.rzzt" placeholder="请选择" clearable filterable>
                             <el-option
                             v-for="item in rzztOptions"
                             :key="item.value"
@@ -22,27 +22,27 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="入账属期：">
-                        <el-date-picker style="width:100%"
+                        <el-date-picker disabled style="width:100%"
                             v-model="pushForm.rzsq"
                             type="month"
                             placeholder="选择月">
                             </el-date-picker>
                     </el-form-item>
                     <el-form-item label="凭证号：">
-                        <el-input v-model="pushForm.wspzh" placeholder="请输入"></el-input>
+                        <el-input v-model="pushForm.wspzh" disabled placeholder="请输入"></el-input>
                     </el-form-item>
                     <el-form-item label="所属账套：">
-                        <el-select style="width:100%" v-model="pushForm.orgid" placeholder="请选择" clearable filterable>
+                        <el-select style="width:100%" disabled v-model="pushForm.orgid" placeholder="请选择" clearable filterable>
                             <el-option
-                            v-for="item in orgidOption"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
+                            v-for="(item,index) in optionList.orgOption"
+                            :key="index"
+                            :label="item.name"
+                            :value="item.id">
                             </el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="进项税对应费用会计科目编码与名称：" prop="accSegment">
-                        <el-select style="width:100%" v-model="pushForm.accSegment" placeholder="请选择" clearable filterable>
+                        <el-select style="width:100%" disabled v-model="pushForm.accSegment" placeholder="请选择" clearable filterable>
                             <el-option
                             v-for="item in accSegmentOptions"
                             :key="item.value"
@@ -176,6 +176,7 @@ export default {
             }finally{}
         }
     },
+    inject: ['optionList'],
     created() {},
     mounted() {
         console.log(this.rowData,"'row'")

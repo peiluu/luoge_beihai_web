@@ -88,6 +88,15 @@ export default {
           {label:'已收票',value:'2'},
           
         ],
+        /* 票种类型 */
+        ticketType:[
+          {label:'增值税代扣代缴完税凭证',value:'1'},
+          {label:'消费税代扣代缴完税凭证',value:'2'},
+        ],
+        lockOption:[
+          {label:'锁定',value:'Y'},
+          {label:'未锁定',value:'N'},
+        ],
         /* 销售方纳税主体 */
         xsfnsrsbhOptions:[],
         /* 受票组织 */
