@@ -155,6 +155,12 @@
             <el-option label="否" value="N" />
           </el-select>
         </el-form-item>
+        <el-form-item label="是否强控入账勾选" prop="sfqkrzgx">
+          <el-select v-model="form.sfqkrzgx" placeholder="请选择">
+            <el-option label="是" value="Y" />
+            <el-option label="否" value="N" />
+          </el-select>
+        </el-form-item>
         <!-- <el-form-item label="涉税业务终止月份" prop="withdrawalDate" v-if="form.isWithdrawal == 'Y'">
           <el-date-picker type="month" v-model="form.withdrawalDate" value-format="yyyy-MM" placeholder="请选择" />
         </el-form-item>
