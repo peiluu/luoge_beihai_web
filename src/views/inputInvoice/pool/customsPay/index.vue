@@ -1,7 +1,7 @@
 <template>
     <div class="">
         <el-card shadow="never">
-      <app-search-form></app-search-form>
+      <app-search-form @search="handlerSearch" @resst="handleRest"></app-search-form>
     </el-card>
     <el-card shadow="never">
       <article>
@@ -27,32 +27,32 @@
                 <el-button
                   type=""
                   :disabled="isSelected.length <= 0"
-                  @click="handleUpload"
+                  @click="handleEnterAccount(1)"
                   >发票入账</el-button
                 >
                 <el-button
                   type=""
                   :disabled="isSelected.length <= 0"
-                  @click="handleUpload"
+                  @click="handleEnterAccount(2)"
                   >撤销入账</el-button
                 >
                 <el-button
                   type=""
                   :disabled="isSelected.length <= 0"
-                  @click="handlePush"
+                  @click="handleStatus(1)"
                   >确认收票</el-button
                 >
                 <el-button
                   type=""
                   :disabled="isSelected.length <= 0"
-                  @click="handlePush"
+                  @click="handleStatus(2)"
                   >撤销收票</el-button
                 >
-                <el-button type="">导出查询结果</el-button>
+                <el-button type="" @click="handleExportRange">导出查询结果</el-button>
                 <el-button
                   type=""
                   :disabled="isSelected.length <= 0"
-                  @click="handlePush"
+                  @click="handleExportSelected"
                   >导出选中发票</el-button
                 >
               </el-button-group>
@@ -80,6 +80,7 @@
             height="340"
             style="width: 100%;"
             ref="topTableRef"
+            row-key="id"
           >
             <el-table-column type="selection" width="55" fixed="left" align="center">
             </el-table-column>
@@ -148,49 +149,49 @@
           <el-table-column type="index" width="55" label="序号" align="center">
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="shdm"
             label="税号信息"
             minWidth="180"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="wsjg"
             label="完税价格"
             minWidth="140"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="hwmc"
             label="货物名称"
             minWidth="120"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="dw"
             label="单位"
             minWidth="120"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="sl"
             label="数量"
             minWidth="120"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="skje"
             label="税款金额"
             minWidth="140"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="hmslv"
             label="增值税税率/征收率"
             minWidth="160"
             align="center"
@@ -216,36 +217,43 @@
       v-if="statusVisible"
       :visible.sync="statusVisible"
       width="50%"
-      title="修改入账状态"
+      :title="dialog.statusTitle"
+      :row-data="rowData"
+      :type-status="typeStatus"
     ></lg-collect-ticket-mage>
-    <app-common-upload
-      v-if="uploadVisible"
-      :visible.sync="uploadVisible"
+    <lg-enter-account-mage
+      v-if="dialog.enterVisible"
+      :visible.sync="dialog.enterVisible"
       width="40%"
-      title="上传文件"
-    ></app-common-upload>
-    <app-authentication-push
-      v-if="pushVisible"
-      :visible.sync="pushVisible"
+      :title="dialog.enterTitle"
+      :row-data="rowData"
+      :type-status="typeStatus"
+    ></lg-enter-account-mage>
+    <!-- 待修改认证科目 -->
+    <lg-edie-verified
+      v-if="dialog.editeVisible"
+      :visible.sync="dialog.editeVisible"
       width="50%"
-      title="认证凭证推送核算系统"
-    ></app-authentication-push>
+      title="修改会计科目操作"
+      :row-data="rowData"
+      :type-status="typeStatus"
+    ></lg-edie-verified>
     </div>
 </template>
 
 <script>
 import AppSearchForm from "./searchForm";
 import LgCollectTicketMage from "../componetns/collectTicketMage";
-import AppCommonUpload from "../componetns/enterAccountMage";
-import AppAuthenticationPush from "../componetns/editeVerified";
-import {getPoolCustomsList,getPoolTableSingleDes} from '@/api/pool/index.js'
+import LgEnterAccountMage from "../componetns/enterAccountMage";
+import LgEdieVerified from "../componetns/editeVerified";
+import {getPoolCustomsList,getPoolTableSingleDes,postHGDownloadList,postHGDownloadSelect} from '@/api/pool/index.js'
 export default {
   name: "poolPage",
   components: {
     AppSearchForm,
     LgCollectTicketMage,
-    AppCommonUpload,
-    AppAuthenticationPush,
+    LgEnterAccountMage,
+    LgEdieVerified,
   },
   data() {
     return {
@@ -269,7 +277,20 @@ export default {
       },
       bottom_total: 1000,
       activeName:'first',
-      bottomTableData:[]
+      bottomTableData:[],
+      dialog:{
+        requireVisbile:false,
+        editeVisible:false,
+        enterVisible:false,
+        statusVisible: false,
+        viewVisible:false,
+        enterTitle:'',
+        statusTitle:''
+      },
+      loading:false,
+      rowData:{},
+      typeStatus:{},
+      where:{},
     };
   },
   computed: {},
@@ -301,6 +322,16 @@ export default {
     handleCurrentChange(val) {
       this.page.currentPage = val
     },
+    /* 搜索 */
+    handlerSearch(val){
+      this.where = {...val};
+      this.handleGetTableList(val);
+    },
+    /* 重置 */
+    handleRest(val){
+      this.where = {...val};
+      this.handleGetTableList(val)
+    },
     /* size change */
     handleBottomSizeChange(val) {
       this.page_bottom.pageSize = val;
@@ -309,17 +340,70 @@ export default {
     handleBottomCurrentChange(val) {
       this.page_bottom.currentPage = val;
     },
-    /* 推送 */
-    handlePush() {
-      this.pushVisible = true;
+    /* 确认管理 */
+    handleStatus(type) {
+      if(this.isSelected.length >1){
+        this.$message.warning("当前操作只支持单个！")
+        return
+      }else{
+        this.dialog.statusTitle = type === 1?'确认收票':'撤销收票';
+        this.typeStatus = {type:'HGJNS'}
+        this.rowData = {...this.isSelected[0]}
+        this.dialog.statusVisible = true;
+      }
     },
-    /* 上传事件 1 发票新增 2 入账信息导入 */
-    handleUpload() {
-      this.uploadVisible = true;
+     /*  1 发票入账 2 撤销抽入 */
+     handleEnterAccount(type) {
+      if(this.isSelected.length >1){
+        this.$message.warning("当前操作只支持单个！")
+        return
+      }else{
+        this.dialog.enterTitle = type === 1?'发票入账':'撤销入账';
+        this.typeStatus = {type:'HGJNS'}
+        this.rowData = {...this.isSelected[0]}
+        this.dialog.enterVisible = true;
+      }
+      
     },
     /* 修改入账状态 */
     handleEditeStatus() {
-      this.statusVisible = true;
+      if(this.isSelected.length >1){
+        this.$message.warning("当前操作只支持单个！")
+        return
+      }else{
+        this.typeStatus = {type:'HGJNS'}
+        this.rowData = {...this.isSelected[0]}
+        this.dialog.editeVisible = true;
+      }
+      
+    },
+     /* 导出范围 */
+     async handleExportRange(){
+      let data = {
+        ...this.where,
+      };
+      let fileName = '增值税发票.xlsx'
+      try{
+         await  postHGDownloadList({
+        reqData: { ...data,},
+        fileName
+      })
+        
+
+      }catch{
+
+      }
+     
+    },
+    /* 导出已选择 */
+    async handleExportSelected(){
+      let data = this.isSelected;
+      let fileName = '增值税发票--已选择.xlsx'
+      try{
+         await  postHGDownloadSelect({
+        reqData: data,
+        fileName
+      })}catch{}
     },
     /* 表格样式 行 */
     rowClassName({ row, rowIndex }) {
@@ -335,16 +419,21 @@ export default {
       this.handleGetTableSingleDes({id})
     },
     async handleGetTableSingleDes(data){
+      let params = {
+        ...data,
+        pageNo:this.page_bottom.currentPage,
+        pageSize:this.page_bottom.pageSize,
+      }
       try{
-        const res = await getPoolTableSingleDes(data);
+        const res = await getPoolTableSingleDes(params);
         if([0,'0'].includes(res.code)){
           this.bottomTableData = [...res.data];
+          this.bottom_total = res.totalCount
         }
       }finally{}
     },
     /* 勾选 */
     handleSelectionChange(e) {
-      console.log(e, "2");
       this.isSelected = [...e];
     },
   },

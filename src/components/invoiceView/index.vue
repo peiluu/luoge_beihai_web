@@ -1,15 +1,15 @@
 <template>
      <div class="invoice-container">
-    <div class="invoice_header flex">
+    <div class="invoice_header flex" v-loading="loading">
       <div>
-        <span class="font_famaily font_color font_size">发票代码：</span><span class="font_famaily_1"></span>
+        <span class="font_famaily font_color font_size">发票代码：</span><span class="font_famaily_1">{{ viewForm.zzfpdm }}</span>
       </div>
       <div >
         <div>
-            <span class="font_famaily font_color font_size">发票号码：</span><span class="font_famaily_1">23512000000023489461</span>
+            <span class="font_famaily font_color font_size">发票号码：</span><span class="font_famaily_1">{{ viewForm.zzfphm }}</span>
         </div>
         <div style="margin-top:2px">
-            <span class="font_famaily font_color font_size">开票日期：</span><span class="font_famaily_1">2023年05月10日</span>
+            <span class="font_famaily font_color font_size">开票日期：</span><span class="font_famaily_1">{{ viewForm.kprq }}</span>
         </div>
       </div>
     </div>
@@ -19,19 +19,19 @@
             <div class="vertical_text center width_common height_common line_height border_r border_b font_famaily font_color font_size">购买方信息</div>
             <div class="height_common name_common flex border_b padding_l padding_r">
                 <div>
-                    <span class="font_famaily font_color font_size">名称：</span><span class="font_famaily_1">广州南沙区美多莉房地立开发有限公司</span>
+                    <span class="font_famaily font_color font_size">名称：</span><span class="font_famaily_1">{{ viewForm.gmfmc }}</span>
                 </div>
                 <div>
-                    <span class="font_famaily font_color font_size">统一社会信用代码/纳税人识别号：</span><span class="font_famaily_1">91449191MACWU2F96</span>
+                    <span class="font_famaily font_color font_size">统一社会信用代码/纳税人识别号：</span><span class="font_famaily_1">{{ viewForm.gmfnsrsbh }}</span>
                 </div>
             </div>
             <div class="vertical_text center width_common line_height border_r border_b border_l font_color font_size">销售方信息</div>
             <div class="height_common name_common flex border_b padding_l padding_r">
                 <div>
-                    <span class="font_famaily font_color font_size">名称：</span><span class="font_famaily_1">华润(上海)有限公司广州顺丰速运有限公司</span>
+                    <span class="font_famaily font_color font_size">名称：</span><span class="font_famaily_1">{{ viewForm.xsfmc }}</span>
                 </div>
                 <div>
-                    <span class="font_famaily font_color font_size">统一社会信用代码/纳税人识别号：</span><span class="font_famaily_1">914401017248329968</span>
+                    <span class="font_famaily font_color font_size">统一社会信用代码/纳税人识别号：</span><span class="font_famaily_1">{{ viewForm.xsfnsrsbh }}</span>
                 </div>
             </div>
         </div>
@@ -52,15 +52,15 @@
                 </tr>
             </thead>
             <tbody class="tbody">
-                <tr  v-for="(item, index) in items" :key="index" style="height:24px" class="font_famaily_1">
-                <td>{{ item.description }}</td>
+                <tr  v-for="(item, index) in viewForm.hwxx || items" :key="index" style="height:24px" class="font_famaily_1">
+                <td style="text-align: left;">{{ item.hwhyslwfwmc }}</td>
                 <td>{{ item.ggxh }}</td>
                 <td>{{ item.dw }}</td>
-                <td>{{ item.quantity }}</td>
+                <td>{{ item.sl }}</td>
                 <td>{{ item.dj }}</td>
-                <td>{{ item.price }}</td>
-                <td>{{ item.sl | currency }}</td>
                 <td>{{ item.je }}</td>
+                <td>{{ item.slv | currency }}</td>
+                <td>{{ item.se }}</td>
                 </tr>
             </tbody>
             </table>
@@ -71,31 +71,34 @@
             </div>
             <div class="flex right_account padding_l padding_r" >
                 <div>
-                        <span class="font_famaily_1">ⓧ 贰佰元整</span>
+                        <span class="font_famaily_1">ⓧ {{ viewForm.jshjdx }}</span>
                     </div>
                     <div>
-                        <span class="font_famaily font_color font_size">(小写)</span><span class="font_famaily_1">￥ <span>200.00</span></span>
+                        <span class="font_famaily font_color font_size">(小写)</span><span class="font_famaily_1">￥ <span>{{ viewForm.jshj }}</span></span>
                     </div>
             </div>
         </article>
-        <article class="border_t ">
+        <article class="border_t flex" style="align-items: center;" >
             <div class="border_r vertical_text des_bottom">
                 <span class="font_famaily font_color font_size">备注</span>
             </div>
-            <div></div>
+            <div class="font_famaily_1">
+                {{viewForm.bz  }}
+            </div>
         </article>
       </div>
      
       
     </div>
     <div class="make_name">
-        <span class="font_famaily font_color font_size">开票人：</span><span class="font_famaily_1">张清水</span>
+        <span class="font_famaily font_color font_size">开票人：</span><span class="font_famaily_1">{{ viewForm.kpr }}</span>
     </div>
   </div>
 </template>
 
 <script>
-
+import {getVerifyInvoice} from "@/api/pool/index.js"
+import { curry } from "lodash";
 export default {
     name:'InvoiceViewPage',
     components: {},
@@ -104,167 +107,37 @@ export default {
             type: Object,
             required: true,
         },
+        invoiceId:{
+            type: [Number,String],
+            default: null,
+        }
     },
     data() {
         return {
-            items:[
-                {
-                description:'*物流辅助服务*收派服务费',
-                ggxh:undefined,
-                dw:undefined,
-                quantity:undefined,
-                dj:undefined,
-                price:190.47,
-                sl:'6%',
-                je:9.53
-            },
-            {
-                description:'*物流辅助服务*收派服务费',
-                ggxh:undefined,
-                dw:undefined,
-                quantity:undefined,
-                dj:undefined,
-                price:190.47,
-                sl:'6%',
-                je:9.53
-            },
-            {
-                description:'*物流辅助服务*收派服务费',
-                ggxh:undefined,
-                dw:undefined,
-                quantity:undefined,
-                dj:undefined,
-                price:190.47,
-                sl:'6%',
-                je:9.53
-            },
-            {
-                description:'*物流辅助服务*收派服务费',
-                ggxh:undefined,
-                dw:undefined,
-                quantity:undefined,
-                dj:undefined,
-                price:190.47,
-                sl:'6%',
-                je:9.53
-            },{
-                description:'*物流辅助服务*收派服务费',
-                ggxh:undefined,
-                dw:undefined,
-                quantity:undefined,
-                dj:undefined,
-                price:190.47,
-                sl:'6%',
-                je:9.53
-            },{
-                description:'*物流辅助服务*收派服务费',
-                ggxh:undefined,
-                dw:undefined,
-                quantity:undefined,
-                dj:undefined,
-                price:190.47,
-                sl:'6%',
-                je:9.53
-            },{
-                description:'*物流辅助服务*收派服务费',
-                ggxh:undefined,
-                dw:undefined,
-                quantity:undefined,
-                dj:undefined,
-                price:190.47,
-                sl:'6%',
-                je:9.53
-            },{
-                description:'*物流辅助服务*收派服务费',
-                ggxh:undefined,
-                dw:undefined,
-                quantity:undefined,
-                dj:undefined,
-                price:190.47,
-                sl:'6%',
-                je:9.53
-            },
-            {
-                description:'*物流辅助服务*收派服务费',
-                ggxh:undefined,
-                dw:undefined,
-                quantity:undefined,
-                dj:undefined,
-                price:190.47,
-                sl:'6%',
-                je:9.53
-            },{
-                description:'*物流辅助服务*收派服务费',
-                ggxh:undefined,
-                dw:undefined,
-                quantity:undefined,
-                dj:undefined,
-                price:190.47,
-                sl:'6%',
-                je:9.53
-            },{
-                description:'*物流辅助服务*收派服务费',
-                ggxh:undefined,
-                dw:undefined,
-                quantity:undefined,
-                dj:undefined,
-                price:190.47,
-                sl:'6%',
-                je:9.53
-            },{
-                description:'*物流辅助服务*收派服务费',
-                ggxh:undefined,
-                dw:undefined,
-                quantity:undefined,
-                dj:undefined,
-                price:190.47,
-                sl:'6%',
-                je:9.53
-            },{
-                description:'*物流辅助服务*收派服务费',
-                ggxh:undefined,
-                dw:undefined,
-                quantity:undefined,
-                dj:undefined,
-                price:190.47,
-                sl:'6%',
-                je:9.53
-            },{
-                description:'*物流辅助服务*收派服务费',
-                ggxh:undefined,
-                dw:undefined,
-                quantity:undefined,
-                dj:undefined,
-                price:190.47,
-                sl:'6%',
-                je:9.53
-            },{
-                description:'*物流辅助服务*收派服务费',
-                ggxh:undefined,
-                dw:undefined,
-                quantity:undefined,
-                dj:undefined,
-                price:190.47,
-                sl:'6%',
-                je:9.53
-            },{
-                description:'*物流辅助服务*收派服务费',
-                ggxh:undefined,
-                dw:undefined,
-                quantity:undefined,
-                dj:undefined,
-                price:190.47,
-                sl:'6%',
-                je:9.53
-            }
-            ],
+            
+            viewForm:{},
+            loading:false
         };
     },
     computed: {},
     watch: {},
-    methods: {},
+    methods: {
+        async handlerGetList(){
+            this.loading = true;
+            try{
+                const res = await getVerifyInvoice({id:this.invoiceId || ''});
+                if([0,'0'].includes(res.code)){
+                    this.viewForm = {...res.data}
+                }
+            }finally{
+                this.loading = false;
+            }
+        }
+    },
     created() {},
-    mounted() {},
+    mounted() {
+        this.handlerGetList()
+    },
     beforeCreate() {},
     beforeMount() {},
     beforeUpdate() {},
@@ -274,7 +147,7 @@ export default {
     activated() {},
     filters: {
         currency(value) {
-        return `$${parseFloat(value).toFixed(2)}`;
+        return `${parseFloat(value)* 100} %`;
         },
     },
     }
@@ -368,7 +241,7 @@ table{
         height: 15px;
         max-width: 240px;
         white-space: break-spaces;
-        text-align: right;
+        text-align: center;
     }
     }
     th{

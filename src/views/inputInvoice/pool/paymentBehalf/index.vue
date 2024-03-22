@@ -1,7 +1,7 @@
 <template>
     <div class="">
         <el-card shadow="never" class="card_bottom">
-      <app-search-form></app-search-form>
+      <app-search-form @search="handlerSearch" @resst="handleRest"></app-search-form>
     </el-card>
     <el-card shadow="never" >
       <article>
@@ -27,32 +27,32 @@
                 <el-button
                   type=""
                   :disabled="isSelected.length <= 0"
-                  @click="handleUpload"
+                  @click="handleEnterAccount(1)"
                   >发票入账</el-button
                 >
                 <el-button
                   type=""
                   :disabled="isSelected.length <= 0"
-                  @click="handleUpload"
+                  @click="handleEnterAccount(2)"
                   >撤销入账</el-button
                 >
                 <el-button
                   type=""
                   :disabled="isSelected.length <= 0"
-                  @click="handlePush"
+                  @click="handleStatus(1)"
                   >确认收票</el-button
                 >
                 <el-button
                   type=""
                   :disabled="isSelected.length <= 0"
-                  @click="handlePush"
+                  @click="handleStatus(2)"
                   >撤销收票</el-button
                 >
-                <el-button type="">导出查询结果</el-button>
+                <el-button type="" @click="handleExportRange">导出查询结果</el-button>
                 <el-button
                   type=""
                   :disabled="isSelected.length <= 0"
-                  @click="handlePush"
+                  @click="handleExportSelected"
                   >导出选中发票</el-button
                 >
               </el-button-group>
@@ -79,7 +79,8 @@
             :row-class-name="rowClassName"
             @selection-change="handleSelectionChange"
             v-loading="loading"
-            height="360"
+            height="340"
+            row-key="id"
           >
             <el-table-column type="selection" width="55" fixed="left" align="center">
             </el-table-column>
@@ -157,82 +158,34 @@
           <el-table-column type="index" width="55" label="序号" align="center">
           </el-table-column>
           <el-table-column
-            prop="date"
-            label="项目名称"
+            prop="spbm"
+            label="商品编码"
             minWidth="180"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
-            label="规格型号"
-            minWidth="140"
-            align="center"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="date"
-            label="单位"
-            minWidth="120"
-            align="center"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="date"
+            prop="sl"
             label="数量"
-            minWidth="120"
-            align="center"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="date"
-            label="单价"
-            minWidth="120"
-            align="center"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="date"
-            label="金额"
             minWidth="140"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
-            label="增值税税率/征收率"
-            minWidth="160"
-            align="center"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="date"
-            label="税额"
+            prop="jsje"
+            label="计税金额"
             minWidth="120"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
-            label="含税金额"
-            minWidth="110"
+            prop="sjje"
+            label="实缴金额"
+            minWidth="120"
             align="center"
           >
           </el-table-column>
-          <el-table-column
-            prop="date"
-            label="扣除额"
-            minWidth="110"
-            align="center"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="date"
-            label="商品和服务税收分类合并编码"
-            minWidth="180"
-            align="center"
-          >
-          </el-table-column>
+         
         </el-table>
       </article>
       <article>
@@ -249,45 +202,51 @@
       </article>
     </el-card>
     <lg-collect-ticket-mage
-      v-if="statusVisible"
-      :visible.sync="statusVisible"
+      v-if="dialog.statusVisible"
+      :visible.sync="dialog.statusVisible"
       width="50%"
-      title="修改入账状态"
+      :title="dialog.statusTitle"
+      :row-data="rowData"
+      :type-status="typeStatus"
     ></lg-collect-ticket-mage>
-    <app-common-upload
-      v-if="uploadVisible"
-      :visible.sync="uploadVisible"
+    <lg-enter-account-mage
+      v-if="dialog.enterVisible"
+      :visible.sync="dialog.enterVisible"
       width="40%"
-      title="上传文件"
-    ></app-common-upload>
-    <app-authentication-push
-      v-if="pushVisible"
-      :visible.sync="pushVisible"
+      :title="dialog.enterTitle"
+      :row-data="rowData"
+      :type-status="typeStatus"
+    ></lg-enter-account-mage>
+    <!-- 待修改认证科目 -->
+    <lg-edie-verified
+      v-if="dialog.editeVisible"
+      :visible.sync="dialog.editeVisible"
       width="50%"
-      title="认证凭证推送核算系统"
-    ></app-authentication-push>
+      title="修改会计科目操作"
+      :row-data="rowData"
+      :type-status="typeStatus"
+    ></lg-edie-verified>
     </div>
 </template>
 
 <script>
 import AppSearchForm from "./searchForm";
 import LgCollectTicketMage from "../componetns/collectTicketMage";
-import AppCommonUpload from "../componetns/enterAccountMage";
-import AppAuthenticationPush from "../componetns/editeVerified";
-import {getPoolPayList,getPoolPayTableSingleDes} from '@/api/pool/index.js'
+import LgEnterAccountMage from "../componetns/enterAccountMage";
+import LgEdieVerified from "../componetns/editeVerified";
+import {getPoolPayList,getPoolPayTableSingleDes,postDKDJDownloadList,postDKDJDownloadSelect} from '@/api/pool/index.js'
 export default {
   name: "poolPage",
   components: {
     AppSearchForm,
     LgCollectTicketMage,
-    AppCommonUpload,
-    AppAuthenticationPush,
+    LgEnterAccountMage,
+    LgEdieVerified,
   },
+ 
   data() {
     return {
-      tableData: [
-        
-      ],
+      tableData: [],
       searchForm: {},
       isSelected: [],
       selectedRow: null,
@@ -305,11 +264,24 @@ export default {
         pageSize: 3,
         pageSizes: [3,15, 25, 50, 75, 100],
       },
-      bottom_total: 1000,
+      bottom_total: 1,
       activeName:'first',
       loading:false,
       loading_1:false,
       bottomTableData:[],
+      dialog:{
+        requireVisbile:false,
+        editeVisible:false,
+        enterVisible:false,
+        statusVisible: false,
+        viewVisible:false,
+        enterTitle:'',
+        statusTitle:''
+      },
+      loading:false,
+      rowData:{},
+      typeStatus:{},
+      where:{},
     };
   },
   computed: {},
@@ -347,6 +319,16 @@ export default {
       this.page.currentPage = val;
       this.handleGetPayTableList()
     },
+    /* 搜索 */
+    handlerSearch(val){
+      this.where = {...val};
+      this.handleGetTableList(val);
+    },
+    /* 重置 */
+    handleRest(val){
+      this.where = {...val};
+      this.handleGetTableList(val)
+    },
     /* size change */
     handleBottomSizeChange(val) {
       this.page_bottom.pageSize = val;
@@ -355,17 +337,42 @@ export default {
     handleBottomCurrentChange(val) {
       this.page_bottom.currentPage = val;
     },
-    /* 推送 */
-    handlePush() {
-      this.pushVisible = true;
+    /* 确认管理 */
+    handleStatus(type) {
+      if(this.isSelected.length >1){
+        this.$message.warning("当前操作只支持单个！")
+        return
+      }else{
+        this.dialog.statusTitle = type === 1?'确认收票':'撤销收票';
+        this.typeStatus = {type:'DKDJWSPZ'}
+        this.rowData = {...this.isSelected[0]}
+        this.dialog.statusVisible = true;
+      }
     },
-    /* 上传事件 1 发票新增 2 入账信息导入 */
-    handleUpload() {
-      this.uploadVisible = true;
+    /*  1 发票入账 2 撤销抽入 */
+    handleEnterAccount(type) {
+      if(this.isSelected.length >1){
+        this.$message.warning("当前操作只支持单个！")
+        return
+      }else{
+        this.dialog.enterTitle = type === 1?'发票入账':'撤销入账';
+        this.typeStatus = {type:'DKDJWSPZ'}
+        this.rowData = {...this.isSelected[0]}
+        this.dialog.enterVisible = true;
+      }
+      
     },
     /* 修改入账状态 */
     handleEditeStatus() {
-      this.statusVisible = true;
+      if(this.isSelected.length >1){
+        this.$message.warning("当前操作只支持单个！")
+        return
+      }else{
+        this.typeStatus = {type:'DKDJWSPZ'}
+        this.rowData = {...this.isSelected[0]}
+        this.dialog.editeVisible = true;
+      }
+      
     },
     /* 表格样式 行 */
     rowClassName({ row, rowIndex }) {
@@ -390,6 +397,7 @@ export default {
         const res = await getPoolPayTableSingleDes(data);
         if([0,'0'].includes(res.code)){
           this.bottomTableData = [...res.data];
+          this.bottom_total= res.totalCount
         }
       }finally{
         this.loading_1 = false; 
@@ -400,6 +408,30 @@ export default {
       console.log(e, "2");
       this.isSelected = [...e];
     },
+    /* 导出范围 */
+    async handleExportRange(){
+      let data = {
+        ...this.where,
+      };
+      let fileName = '增值税发票.xlsx'
+      try{
+         await  postDKDJDownloadList({
+        reqData: { ...data,},
+        fileName
+      })
+      }catch{}
+     
+    },
+    /* 导出已选择 */
+    async handleExportSelected(){
+      let data = this.isSelected;
+      let fileName = '增值税发票--已选择.xlsx'
+      try{
+         await  postDKDJDownloadSelect({
+        reqData: data,
+        fileName
+      })}catch{}
+    }
   },
   created() {},
   mounted() {

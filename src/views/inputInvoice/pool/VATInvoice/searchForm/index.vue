@@ -25,16 +25,16 @@
           <el-form-item label="纳税主体：" label-width="85px">
             <el-select
               style="width: 100%"
-              v-model="where.xsfnsrsbh"
+              v-model="where.xsfNsrsbh"
               placeholder="请选择"
               clearable
               filterable
             >
               <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+              v-for="item in xsfnsrsbhOptions"
+                :key="item.id"
+                :label="item.nsrmc"
+                :value="item.nsrsbh"
               >
               </el-option>
             </el-select>
@@ -80,8 +80,8 @@
         
         <el-col :span="6">
           <el-form-item label="" label-width="0px">
-            <el-button size="mini">重 置</el-button>
-            <el-button type="primary" size="mini">搜 索</el-button>
+            <el-button size="mini" @click="handleRest">重 置</el-button>
+            <el-button type="primary" size="mini" @click="handleSearch">搜 索</el-button>
             <span  class="is_show"   @click="handlerIsShow">
               <i :class="!isShow ?'el-icon-arrow-down':'el-icon-arrow-up'">{{!isShow?'展开' : '收起'}}</i>
             </span>
@@ -102,10 +102,10 @@
                   filterable
                 >
                   <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
                   >
                   </el-option>
                 </el-select>
@@ -286,8 +286,8 @@
     </el-form>
   </div>
 </template>
-
 <script>
+import {getRatepayingMain} from '@/api/pool/index.js'
 export default {
   name: "poolsearcFormPage",
   components: {},
@@ -296,6 +296,7 @@ export default {
       where: {},
       options: [],
       isShow: false,
+      xsfnsrsbhOptions:[],
     };
   },
   computed: {},
@@ -305,10 +306,31 @@ export default {
     handlerIsShow(){
       this.isShow = !this.isShow;
       
+    },
+    async hanldeGetOrgId(){
+      
+      try {
+        const res = await getRatepayingMain();
+        console.log(res,"223")
+        this.xsfnsrsbhOptions = [... res.data]
+      }catch{
+        
+      }
+    },
+    /* 搜索 */
+    handleSearch(){
+      this.$emit('search',this.where)
+    },
+    /* 重置 */
+    handleRest(){
+      this.where = {};
+      this.$emit('resst',this.where)
     }
   },
   created() {},
-  mounted() {},
+  mounted() {
+    this.hanldeGetOrgId();
+  },
   beforeCreate() {},
   beforeMount() {},
   beforeUpdate() {},

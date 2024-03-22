@@ -1,9 +1,9 @@
 <template>
     <div class="">
         <el-card shadow="never">
-      <app-search-form></app-search-form>
+      <app-search-form @search="handlerSearch" @resst="handleRest"></app-search-form>
     </el-card>
-    <el-card shadow="never" style="margin-top: 10px;height: calc(100vh - 480px);">
+    <el-card shadow="never" style="margin-top: 10px;">
       <article>
         <article style="padding: 2px">
           <el-row>
@@ -53,11 +53,11 @@
                   @click="handleStatus(2)"
                   >撤销收票</el-button
                 >
-                <el-button type="">导出查询结果</el-button>
+                <el-button type="" @click="handleExportRange">导出查询结果</el-button>
                 <el-button
                   type=""
                   :disabled="isSelected.length <= 0"
-                  @click="handleStatus(1)"
+                  @click="handleExportSelected"
                   >导出选中发票</el-button
                 >
               </el-button-group>
@@ -74,18 +74,18 @@
             </el-col>
           </el-row>
         </article>
-        <article style="height: calc(100vh - 600px);">
+        <article style="">
           <el-table
             :data="tableData"
             :border="true"
-           
             @row-click="handleRowClick"
             highlight-current-row
             :row-class-name="rowClassName"
             @selection-change="handleSelectionChange"
             ref="tableRef"
-            height="100%"
+            height="340"
             v-loading="loading"
+            row-key="id"
           >
             <el-table-column type="selection" width="55" fixed="left" align="center">
             </el-table-column>
@@ -148,7 +148,7 @@
             </el-table-column>
             <el-table-column prop="aciton" fixed="right" label="操作" width="120" :header-align="'center'" :align="'center'">
               <template slot-scope="scope">
-                <el-button  type="primary" @click="handleViewInvoice(scope.row)">查看发票</el-button>
+                <el-button  type="primary" @click.stop="handleViewInvoice(scope.row)">查看发票</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -180,84 +180,87 @@
           ref="bottomTableRef"
           :data="bottomTableData"
           :border="true"
-          style="width: 100%; height: 150px; overflow: auto"
+          v-loading="loading_1"
+          height="150px"
         >
           <el-table-column type="index" width="55" label="序号" align="center">
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="xmmc"
             label="项目名称"
             minWidth="180"
+            :show-overflow-tooltip="true"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="ggxh"
             label="规格型号"
             minWidth="140"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="dw"
             label="单位"
             minWidth="120"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="fpjysl"
             label="数量"
             minWidth="120"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="fpjydj"
             label="单价"
             minWidth="120"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="je"
             label="金额"
             minWidth="140"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="slv"
             label="增值税税率/征收率"
             minWidth="160"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="se"
             label="税额"
             minWidth="120"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="hsje"
             label="含税金额"
             minWidth="110"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="kce"
             label="扣除额"
             minWidth="110"
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="sphfwssflhbbm"
             label="商品和服务税收分类合并编码"
-            minWidth="180"
+            width="180"
+            
             align="center"
           >
           </el-table-column>
@@ -281,12 +284,16 @@
       :visible.sync="dialog.statusVisible"
       width="50%"
       :title="dialog.statusTitle"
+      :row-data="rowData"
+      :type-status="typeStatus"
     ></lg-collect-ticket-mage>
     <lg-enter-account-mage
       v-if="dialog.enterVisible"
       :visible.sync="dialog.enterVisible"
       width="40%"
       :title="dialog.enterTitle"
+      :row-data="rowData"
+      :type-status="typeStatus"
     ></lg-enter-account-mage>
     <!-- 待修改认证科目 -->
     <lg-edie-verified
@@ -294,19 +301,22 @@
       :visible.sync="dialog.editeVisible"
       width="50%"
       title="修改会计科目操作"
+      :row-data="rowData"
+      :type-status="typeStatus"
     ></lg-edie-verified>
     <!-- 发票检验 -->
     <lg-invoice-require 
     :visible.sync="dialog.requireVisbile" 
     v-if="dialog.requireVisbile" 
     title="发票检验" width="45%"
+    :invoice-number="invoiceNumber"
     >
     </lg-invoice-require>
     <!-- 查看发票 -->
     <lg-view-invoice title="发票预览" width="60%" :visible.sync="dialog.viewVisible" v-if="dialog.viewVisible">
       <template v-slot:main>
         <article style="min-height: 450px; max-height: 550px;">
-          <lg-invoice-view :invoice="{}" v-if="dialog.viewVisible"></lg-invoice-view>
+          <lg-invoice-view :invoice-id="invoiceId" v-if="dialog.viewVisible"></lg-invoice-view>
         </article>
       </template>
     </lg-view-invoice>
@@ -321,7 +331,7 @@ import LgEdieVerified from "../componetns/editeVerified";
 import LgInvoiceRequire from "./invoiceRequire";
 import LgViewInvoice from "../componetns/viewInvoice";
 import LgInvoiceView from "@/components/invoiceView";
-import {getPoolInvoiceList,getPoolInvoiceSingleDes} from '@/api/pool/index.js'
+import {getPoolInvoiceList,getPoolInvoiceSingleDes,postDownloadList,postDownloadSelect} from '@/api/pool/index.js'
 export default {
   name: "poolPage",
   components: {
@@ -333,19 +343,14 @@ export default {
     LgViewInvoice,
     LgInvoiceView
   },
+  props:{},
   data() {
     return {
-      tableData: [
-        
-      ],
+      tableData: [],
       searchForm: {},
       isSelected: [],
-      selectedRow: null,
-      bottomTableData:[
-      
-      ],
-     
-      
+      selectedRow: [],
+      bottomTableData:[],
       total: 1000,
       page: {
         currentPage: 1,
@@ -368,7 +373,11 @@ export default {
         enterTitle:'',
         statusTitle:''
       },
-      loading:false
+      loading:false,
+      rowData:{},
+      typeStatus:{},
+      where:{},
+      loading_1:false,
     };
   },
   computed: {},
@@ -377,11 +386,12 @@ export default {
     handleInit(){
       this.handleGetTableList()
     },
-    async handleGetTableList(){
+    async handleGetTableList(val = {}){
       this.loading= true;
       let parmas = {
         pageNo:this.page.currentPage,
         pageSize:this.page.pageSize,
+        ...val,
       }
       try{
         const res = await getPoolInvoiceList(parmas);
@@ -403,8 +413,18 @@ export default {
     },
     /* Current change */
     handleCurrentChange(current) {
-      this.page.currentPage(current)
+      this.page.currentPage =current
       this.handleGetTableList()
+    },
+    /* 搜索 */
+    handlerSearch(val){
+      this.where = {...val};
+      this.handleGetTableList(val);
+    },
+    /* 重置 */
+    handleRest(val){
+      this.where = {...val};
+      this.handleGetTableList(val)
     },
     /* size change */
     handleBottomSizeChange(val) {
@@ -416,17 +436,40 @@ export default {
     },
     /* 确认管理 */
     handleStatus(type) {
-      this.dialog.statusTitle = type === 1?'确认收票':'撤销收票';
-      this.dialog.statusVisible = true;
+      if(this.isSelected.length >1){
+        this.$message.warning("当前操作只支持单个！")
+        return
+      }else{
+        this.dialog.statusTitle = type === 1?'确认收票':'撤销收票';
+        this.typeStatus = {type:'ZZSFP'}
+        this.rowData = {...this.isSelected[0]}
+        this.dialog.statusVisible = true;
+      }
     },
     /*  1 发票入账 2 撤销抽入 */
     handleEnterAccount(type) {
-      this.dialog.enterTitle = type === 1?'发票入账':'撤销入账';
-      this.dialog.enterVisible = true;
+      if(this.isSelected.length >1){
+        this.$message.warning("当前操作只支持单个！")
+        return
+      }else{
+        this.dialog.enterTitle = type === 1?'发票入账':'撤销入账';
+        this.typeStatus = {type:'ZZSFP'}
+        this.rowData = {...this.isSelected[0]}
+        this.dialog.enterVisible = true;
+      }
+      
     },
     /* 修改入账状态 */
     handleEditeStatus() {
-      this.dialog.editeVisible = true;
+      if(this.isSelected.length >1){
+        this.$message.warning("当前操作只支持单个！")
+        return
+      }else{
+        this.typeStatus = {type:'ZZSFP'}
+        this.rowData = {...this.isSelected[0]}
+        this.dialog.editeVisible = true;
+      }
+      
     },
     /* 表格样式 行 */
     rowClassName({ row, rowIndex }) {
@@ -443,9 +486,15 @@ export default {
     },
     /* 请求详情 */
     async handleGetSingleDes(data){
-      const res = await getPoolInvoiceSingleDes(data);
+      let params = {
+        ...data,
+        pageNo:this.page_bottom.currentPage,
+        pageSize:this.page_bottom.pageSize
+      }
+      const res = await getPoolInvoiceSingleDes(params);
       if([0,'0'].includes(res.code)){
         this.bottomTableData = [...res.data];
+        this.bottom_total = res.totalCount
       }
     },
     /* 勾选 */
@@ -455,12 +504,48 @@ export default {
     },
     /* 发票检验 */
     handleRequire(){
-      this.dialog.requireVisbile = true;
+      if(this.isSelected.length > 1){
+        this.$message.warning("此操作只支持单个操作！请重试");
+        return
+      }else{
+        this.invoiceNumber = this.isSelected[0]?.fphm;
+        this.dialog.requireVisbile = true;
+      }
+      
     },
     /* 发票查看 */
     handleViewInvoice(row){
+      this.invoiceId = row.id || ''
       this.dialog.viewVisible = true;
-      console.log(row)
+      
+    },
+    /* 导出范围 */
+    async handleExportRange(){
+      let data = {
+        ...this.where,
+      };
+      let fileName = '增值税发票.xlsx'
+      try{
+         await  postDownloadList({
+        reqData: { ...data,},
+        fileName
+      })
+        
+
+      }catch{
+
+      }
+     
+    },
+    /* 导出已选择 */
+    async handleExportSelected(){
+      let data = this.isSelected;
+      let fileName = '增值税发票--已选择.xlsx'
+      try{
+         await  postDownloadSelect({
+        reqData: data,
+        fileName
+      })}catch{}
     }
   },
   created() {},

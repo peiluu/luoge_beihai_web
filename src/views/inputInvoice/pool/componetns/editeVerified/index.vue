@@ -10,11 +10,11 @@
         @update:visible="updateVisible"
         :before-close="handleClose">
             <article class="dailog_info">
-                <el-form ref="form" :model="pushForm" label-width="280px">
+                <el-form ref="formEdite" :model="pushForm" :rules="editeRules" label-width="280px">
                     <el-form-item label="入账状态：">
                         <el-select style="width:100%" v-model="pushForm.rzzt" placeholder="请选择" clearable filterable>
                             <el-option
-                            v-for="item in options"
+                            v-for="item in rzztOptions"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value">
@@ -41,7 +41,7 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="进项税对应费用会计科目编码与名称：">
+                    <el-form-item label="进项税对应费用会计科目编码与名称：" prop="accSegment">
                         <el-select style="width:100%" v-model="pushForm.accSegment" placeholder="请选择" clearable filterable>
                             <el-option
                             v-for="item in accSegmentOptions"
@@ -55,7 +55,7 @@
             </article>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="updateVisible(false)">取 消</el-button>
-                <el-button type="primary" @click="handleConfirm">提 交</el-button>
+                <el-button type="primary" @click="handleFormRequired">提 交</el-button>
             </span>
         </el-dialog>
     </div>
@@ -79,25 +79,59 @@ export default {
         width: {
             type: String,
             default: '30%'
+        },
+        rowData:{
+            type:Object,
+            default:()=> ({})
+        },
+        typeStatus:{
+            type: Object,
+            default: ()=> ({})
         }
     },
     components: {},
     data() {
         return {
             pushForm:{
-                rzzt:'01',
-                wspzh:'gBmADr3Hzkn9LVdKjwba',
-                rzsq:'2024-02',
-                orgid:'56030'
+                // rzzt:'01',
+                // wspzh:'gBmADr3Hzkn9LVdKjwba',
+                // rzsq:'2024-02',
+                // orgid:'56030',
+                ...this.rowData,
             },
             accSegmentOptions:[
                 {label:'应交税费/待认证进项税额/工程类',value:'22210401'},
                 {label:'应交税费/待认证进项税额/费用类',value:'22210402'}
-            ]
+            ],
+            rzztOptions:[
+                {label:'入账(企业所得税税前扣除)',vlaue:'02',},
+                {label:'入账(企业所得税不扣除)',vlaue:'03',},
+                {label:'入账撤销',vlaue:'06',},
+            ],
+            editeRules:{
+                accSegment:[{
+                    required:true, message:'请选择进项税对应费用会计科目编码与名称',tigger:'blur'
+                }]
+            },
+            orgidOption:[],
+            types:{...this.typeStatus,}
         };
     },
     computed: {},
-    watch: {},
+    watch: {
+        rowData:{
+            handler(val){
+                this.pushForm = {...val};
+            },
+            deep:true
+        },
+        typeStatus:{
+            handler(val){
+                this.types = {...val};
+            },
+            deep:true
+        }
+    },
     methods: {
         /* 关闭 */
         updateVisible(value) {
@@ -113,22 +147,39 @@ export default {
         handleClose(){
             this.updateVisible(false);
         },
+        /* 表单验证 */
+        handleFormRequired(){
+            this.$refs.formEdite.validate((valid) => {
+                if (valid) {
+                    this.handleSubmitForm();
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
+        },
         /* 提交 */
         async handleSubmitForm(){
             let data = {
                 type:'ZZSFP',
                 ...this.pushForm,
             }
+           
             try{
                 const res = await postPoolEditebook(data)
                 if([0,'0'].includes(res.code)){
+                    this.$message.success("提交成功！")
                     this.updateVisible(false)
+                }else{
+                    this.$message.error("提交错误！请联系管理员！")
                 }
             }finally{}
         }
     },
     created() {},
-    mounted() {},
+    mounted() {
+        console.log(this.rowData,"'row'")
+    },
     beforeCreate() {},
     beforeMount() {},
     beforeUpdate() {},
