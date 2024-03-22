@@ -125,6 +125,9 @@
               <template slot-scope="{row}">{{ formatMoney(row.kce) }} </template>
             </el-table-column>
             <el-table-column prop="fpzt" label="发票状态" minWidth="120" :header-align="'center'" :align="'center'">
+              <template slot-scope="scope">
+                <span>{{ handleParesTableValue(scope.row.fpzt,optionList.invoiceStatus) }}</span>
+              </template>
             </el-table-column>
             <el-table-column prop="sfycpz" label="异常凭证状态" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
