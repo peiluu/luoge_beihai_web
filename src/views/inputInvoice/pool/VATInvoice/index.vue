@@ -111,12 +111,16 @@
             <el-table-column prop="xsfnsrsbh" label="销方税号" minWidth="180" align="center">
             </el-table-column>
             <el-table-column prop="hjje" label="合计金额" minWidth="120" :header-align="'center'" :align="'right'">
+              <template slot-scope="{row}">{{ formatMoney(row.hjje) }} </template>
             </el-table-column>
             <el-table-column prop="hjse" label="合计税额" minWidth="120" :header-align="'center'" :align="'right'">
+              <template slot-scope="{row}">{{ formatMoney(row.hjse) }} </template>
             </el-table-column>
             <el-table-column prop="jshj" label="价税合计" minWidth="120" :header-align="'center'" :align="'right'">
+              <template slot-scope="{row}">{{ formatMoney(row.jshj) }} </template>
             </el-table-column>
             <el-table-column prop="kce" label="扣除额" minWidth="120" :header-align="'center'" :align="'center'">
+              <template slot-scope="{row}">{{ formatMoney(row.kce) }} </template>
             </el-table-column>
             <el-table-column prop="fpzt" label="发票状态" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>

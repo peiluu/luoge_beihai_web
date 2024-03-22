@@ -99,8 +99,10 @@
             <el-table-column prop="kjrq" label="开具日期" minWidth="120" align="center">
             </el-table-column>
             <el-table-column prop="jsje" label="计税金额" minWidth="120" align="center">
+              <template slot-scope="{row}">{{ formatMoney(row.jsje) }} </template>
             </el-table-column>
             <el-table-column prop="sjje" label="实缴金额" minWidth="180" align="center">
+              <template slot-scope="{row}">{{ formatMoney(row.sjje) }} </template>
             </el-table-column>
             <el-table-column prop="bkjnsrsbh" label="被扣缴纳税人识别号" minWidth="180" align="center">
             </el-table-column>

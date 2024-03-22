@@ -91,6 +91,7 @@
             <el-table-column prop="tprq" label="填发日期" minWidth="140" align="center">
             </el-table-column>
             <el-table-column prop="skje" label="税款金额" minWidth="160" align="center">
+              <template slot-scope="{row}">{{ formatMoney(row.skje) }} </template>
             </el-table-column>
             <el-table-column prop="jkdwrnsrsbh" label="缴款单位人纳税人识别号" minWidth="160" align="center">
             </el-table-column>
