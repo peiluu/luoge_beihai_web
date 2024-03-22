@@ -56,8 +56,13 @@ export default {
     }
   },
   methods: {
+  },
+  activated(){
+    this.level = null;
+    this.$nextTick(()=>{
+      this.level = '1';
+    })
   }
-
 };
 </script>
 

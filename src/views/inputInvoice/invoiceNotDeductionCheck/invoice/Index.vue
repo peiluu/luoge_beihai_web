@@ -437,11 +437,14 @@ export default {
       };
     },
     getList() {
-      this.param.skssq = this.currentSq.dateValue;
-      this.param.gfsbh = this.$route.query.nsrsbh;
+      this.param = {
+        ...this.param,
+        skssq: this.currentSq.dateValue,
+        gfsbh: this.$route.query.nsrsbh
+      }
       this.getOrgList();
       this.$nextTick(() => {
-        this.$refs.list.reload()
+        this.$refs.list.reload(this.param)
       })
     },
     handleClose() {
