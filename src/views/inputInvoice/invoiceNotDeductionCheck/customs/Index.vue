@@ -1,7 +1,7 @@
 <template>
   <div class="com-invoice">
     <form-list :columns="columns" :searchRow="searchList" @getSearchParam="getSearchParam" :api="api" :param="param"
-      @handleSelection="handleSelection" :height="height" :firstLoading="false" v-loading="loading" ref="list"
+      @handleSelection="handleSelection" :height="height" :firstLoading="level === '2'" v-loading="loading" ref="list"
       :tableCounterShow="true">
       <!-- 中间部分 -->
       <template #topTool>
@@ -85,7 +85,11 @@ export default {
     FormList, SelectReasonModal,
   },
   props: {
-    currentSq: {}
+    currentSq: {},
+    level: {
+      type: String,
+      default: ''
+    }
   },
   data() {
     return {
@@ -252,23 +256,25 @@ export default {
       selectedInvoices: []
     };
   },
-  mounted() {
-    // this.getList();
-    this.getKjList();
-    this.form = this.$route.query;
-  },
-
-  activated() {
-    this.getList()
-
+  watch: {
+    level(newV, oldV){
+      if(newV === '2'){
+        this.init()
+      }
+    }
   },
   computed: {
     height() {
-      return window.innerHeight - 380;
+      return window.innerHeight - 460;
     },
   },
 
   methods: {
+    init(){
+      // this.getList();
+      this.getKjList();
+      this.form = this.$route.query;
+    },
     dateFormat(fmt, val) {
       return moment(val).format(fmt)
     },

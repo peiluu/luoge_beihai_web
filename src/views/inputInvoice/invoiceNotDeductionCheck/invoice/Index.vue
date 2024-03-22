@@ -74,7 +74,11 @@ export default {
     FormList, SelectReasonModal,
   },
   props: {
-    currentSq: {}
+    currentSq: {},
+    level: {
+      type: String,
+      default: ''
+    }
   },
   data() {
     return {
@@ -298,13 +302,15 @@ export default {
       queryParam: {},
     };
   },
-  mounted() {
-    this.getList()
-  },
-
-  activated() {
-    this.getList()
-
+  watch: {
+    level: {
+      handler: function(newV, oldV){
+        if(newV === '1'){
+          this.getList()
+        }
+      },
+      immediate: true
+    }
   },
   computed: {
     height() {
