@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="main-content">
+    <div>
       <el-form :inline="true" :model="form" :rules="rules" ref="ruleForm" :disabled="operateType === 'detail'">
         <div class="content-title">基本信息</div>
         <!-- <el-form-item class="form-header-left"> -->
@@ -151,6 +151,12 @@
         </el-form-item> -->
         <el-form-item label="是否注销" prop="isWithdrawal">
           <el-select v-model="form.isWithdrawal" placeholder="请选择">
+            <el-option label="是" value="Y" />
+            <el-option label="否" value="N" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="是否强控入账勾选" prop="sfqkrzgx">
+          <el-select v-model="form.sfqkrzgx" placeholder="请选择">
             <el-option label="是" value="Y" />
             <el-option label="否" value="N" />
           </el-select>

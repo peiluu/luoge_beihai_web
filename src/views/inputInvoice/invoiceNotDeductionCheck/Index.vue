@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
+  <div class="main-content">
 
 
     <div class="content-header">
@@ -12,9 +12,14 @@
 
     <div class="tab-box">
       <el-tabs class="custom-card-tabs" v-model="level" type="card">
+<<<<<<< HEAD
         <el-tab-pane label="发票" name="1" />
         <el-tab-pane label="海关缴款书" name="2" />
         <el-tab-pane label="代扣代缴完税凭证" name="3" />
+=======
+        <el-tab-pane label="增值税发票" name="1" />
+        <el-tab-pane label="代扣代缴完税凭证" name="2" />
+>>>>>>> 23331913527d0b3efc1e38be1dc9ee43ea05b84a
       </el-tabs>
       <i class="el-icon-warning" />当前纳税主体: {{ $route.query.nsrmc }}
     </div>
@@ -51,9 +56,6 @@ export default {
     };
   },
   computed: {
-    contentHeight() {
-      return window.innerHeight - 132;
-    },
     currentSq() {
       return getCurrentMonthSsq()
     }

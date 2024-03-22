@@ -308,7 +308,7 @@ export default {
   },
   computed: {
     height() {
-      return window.innerHeight - 380;
+      return window.innerHeight - 460;
     },
   },
 

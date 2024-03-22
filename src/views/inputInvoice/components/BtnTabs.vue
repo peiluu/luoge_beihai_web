@@ -72,7 +72,7 @@ export default {
       position: absolute;
       padding: 4px 8px;
       font-size: 10px;
-      border-radius: 200px / 50px;
+      border-radius: 5px;
       background: #D9001B;
       color: #fff;
       opacity: 0.8;

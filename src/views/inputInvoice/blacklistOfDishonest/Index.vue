@@ -123,11 +123,8 @@
     // 同一页面切换会触发更新
     computed: {
       height() {
-        return window.innerHeight - 280;
+        return window.innerHeight - 340;
   
-      },
-      contentHeight() {
-        return window.innerHeight - 132;
       },
       level() {
         // level: output - 销项待确认的 input. 进项待确认

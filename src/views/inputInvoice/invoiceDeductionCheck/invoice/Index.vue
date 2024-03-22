@@ -319,7 +319,7 @@ export default {
   },
   computed: {
     height() {
-      return window.innerHeight - 360;
+      return window.innerHeight - 460;
     },
     nsrsbh() {
       return this.$route.query.nsrsbh
@@ -575,22 +575,27 @@ export default {
 
     // 提交数据勾选
     async submitRevokeInvoiceCheck() {
-      const { code = '' } = await submitRevokeInvoiceCheck({
-        gfsbh: this.nsrsbh,
-        skssq: this.currentSq.dateValue,
-        gxlxDm: this.gxlxDm,
-        fpmx: this.selections.map((item) => {
-          return {
-            ...item,
-            fpdm: item.zzfpDm,
-          }
+      try {
+        const { code = '' } = await submitRevokeInvoiceCheck({
+          gfsbh: this.nsrsbh,
+          skssq: this.currentSq.dateValue,
+          gxlxDm: this.gxlxDm,
+          fpmx: this.selections.map((item) => {
+            return {
+              ...item,
+              fpdm: item.zzfpDm,
+            }
+          })
         })
-      })
-      this.dialogVisible = false;
-      if (code === '0') {
-        this.$message.success('提交成功');
-        this.reload();
+        this.dialogVisible = false;
+        if (code === '0') {
+          this.$message.success('提交成功');
+          this.reload();
+        }
+      } catch (error) {
+        console.log(error)
       }
+      
     },
     showDialogVisiblePercent() {
       this.queryScale()

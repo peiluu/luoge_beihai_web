@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
+  <div class="main-content">
     <form-list :columns="columns" :searchKey="propskey" :key="propskey" :searchRow="searchList" :api="api" :param="param" :height="height" v-loading="loading" @getSearchParam="getSearchParam" :firstLoading="false"
        ref="list">
       <!-- 中间部分 -->
@@ -139,11 +139,7 @@ export default {
   },
   computed: {
     height() {
-      return window.innerHeight - 290
-    },
-
-    contentHeight() {
-      return window.innerHeight - 132;
+      return window.innerHeight - 340
     },
   },
 

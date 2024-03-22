@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
+  <div class="main-content">
     <form-list :columns="columns"
                :searchRow="SearchList"
                :api="api"
@@ -161,11 +161,8 @@
 
     },
     computed: {
-      contentHeight() {
-        return window.innerHeight - 132;
-      },
       height() {
-        return window.innerHeight - 310;
+        return window.innerHeight - 340;
       },
     },
 
