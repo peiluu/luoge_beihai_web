@@ -18,12 +18,12 @@
       </el-tabs>
       <i class="el-icon-warning" />当前纳税主体: {{ $route.query.nsrmc }}
     </div>
-    <!-- 发票 -->
-    <Invoice v-if="level == 1" :key="level" :currentSq="currentSq" />
+     <!-- 发票下载 -->
+    <Invoice v-show="level === '1'" :level="level" :currentSq="currentSq" />
     <!-- 海关缴款书 -->
-    <Customs v-if="level == 2" :key="level" />
+    <Customs v-show="level === '2'"  :level="level"/>
     <!-- 代扣代缴完税凭证 -->
-    <Withhold v-if="level == 3" :key="level" />
+    <Withhold v-show="level === '3'" :level="level"/>
   </div>
 </template>
 <script>
@@ -56,8 +56,13 @@ export default {
     }
   },
   methods: {
+  },
+  activated(){
+    this.level = null;
+    this.$nextTick(()=>{
+      this.level = '1';
+    })
   }
-
 };
 </script>
 

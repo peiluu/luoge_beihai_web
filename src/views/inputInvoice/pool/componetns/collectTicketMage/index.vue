@@ -129,6 +129,7 @@ export default {
         async handleSubmitForm(){
             let data = {
                 type:'ZZSFP',
+                state:this.typeStatus.status,
                 ...this.pushForm,
             }
            
