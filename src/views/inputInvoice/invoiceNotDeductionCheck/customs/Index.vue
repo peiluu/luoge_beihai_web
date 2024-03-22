@@ -22,15 +22,20 @@
       '已入账撤销' : '' }}</template>
       <template #fplx="{ data }"> {{ inputFplxMap[data.fplx] }} </template>
       <template #fpzt="{ data }">{{ data.fpzt ? fpztMap[data.fpzt] : '' }} </template>
-
-
+      <template #bdklx="{ data, index }">
+        <span v-if="data.cljg == '01'">{{ data.bdklx ? (data.bdklx == '5' ? data.bdkyy : bdklxMap[data.bdklx]) : '' }}</span>
+        <span v-else class="column-text" @click.stop="selectBdklx(data, index)">{{
+          data.bdklx ? (data.bdklx == '5' ? data.bdkyy : bdklxMap[data.bdklx]) : '请选择'
+        }}</span>
+      </template>
+<!-- 
       <template #bdklx="{ data, index }">
         <span v-if="data.cljg == '01'">{{ data.bdklx ? data.bdklx == '5' ? data.bdkyy : bdklxMap[data.bdklx] : ''
           }}</span>
         <span v-else class="column-text" @click.stop="selectBdklx(data, index)">{{ data.bdklx ? data.bdklx == '5' ?
       data.bdkyy : bdklxMap[data.bdklx] : '请选择' }}</span>
       </template>
-      <template #syncInvoice="{ data }"> {{ data.syncInvoice == 'Y' ? '是' : '否' }}</template>
+      <template #syncInvoice="{ data }"> {{ data.syncInvoice == 'Y' ? '是' : '否' }}</template> -->
 
       <template #purchaserstatus="{ data }">
         {{ data.purchaserstatus ? purchaserstatusMap[data.purchaserstatus] : '' }}
@@ -51,6 +56,7 @@
       <!-- <template #myscope="{ data }">
         <el-button @click.stop="queryDetail(data)">查看</el-button>
       </template> -->
+
     </form-list>
 
     <!-- dialog 提交勾选 -->
@@ -102,7 +108,7 @@ export default {
       fpztMap,
       api: require('./Api'),
       param: {
-        cljg: ''
+        cljg: '04'
       },
       loading: false,
       columns: [
@@ -122,14 +128,14 @@ export default {
         { title: "勾选时间", dataIndex: "createTime", width: 100, slot: 'createTime' },
         { title: "入账状态", dataIndex: "rzzt", width: 100, slot: 'rzzt' },
         { title: "入账日期", dataIndex: "syncInvoice", width: 100, slot: 'syncInvoice' },
-        { title: "入账属期", dataIndex: "rzsq", width: 100, slot: 'rzsq' },
+        { title: "入账属期", dataIndex: "skssq", width: 100, slot: 'skssq' },
 
         {
-          title: "不抵扣原因",
-          fixed: "right",
+          title: '不抵扣原因',
+          fixed: 'right',
           width: 150,
           slot: 'bdklx',
-          scopedSlots: { customRender: "action" }
+          scopedSlots: { customRender: 'action' },
         },
         // {
         //   title: "操作",
@@ -149,7 +155,7 @@ export default {
         },
         {
           label: "是否重号锁定",
-          key: "cljg",
+          key: "sfchsd`",
           val: "",
           noClearable: 'Y',
           type: "select",
@@ -161,13 +167,12 @@ export default {
         {
           label: "勾选状态",
           key: "cljg",
-          val: "",
-          noClearable: 'Y',
+          val: "04",
           type: "select",
           options: [
-            { value: "02", label: "未勾选" },
-            { value: "01", label: "已勾选" },
-          ]
+          { value: "04", label: "未勾选" },
+            { value: "03", label: "已勾选" },
+          ],
         },
         {
           label: "会计科目",
@@ -227,8 +232,11 @@ export default {
           key: "rzzt",
           val: "",
           type: "select",
-          options: [],
+          options: [
+            
+          ],
         },
+
         {
           label: "转出状态",
           key: "zczt",
@@ -274,6 +282,20 @@ export default {
       // this.getList();
       this.getKjList();
       this.form = this.$route.query;
+      const param = {
+        cljg: '04',
+        skssq: this.$route.query.skssq,
+        kjywrsbh: this.$route.query.nsrsbh,
+        // gfsbh: this.$route.query.gfsbh,
+        // gxlx: this.$route.query.gxlx,
+
+        // bkjnsrsbh: this.$route.query.nsrsbh,
+      }
+      this.param = {
+        ...this.param,
+        ...param
+      };
+      this.$refs.list.handleGetData(param)
     },
     dateFormat(fmt, val) {
       return moment(val).format(fmt)
@@ -344,11 +366,11 @@ export default {
 
     // 提交数据
     async checkCustomsPayment() {
-      const list = this.selections.map(item=> ({jkshm: item.hgjkshm , tfrq: item.tfrq}))
+      const hgjksmx = this.selections.map(item=> ({jkshm: item.hgjkshm , tfrq: item.tfrq}))
       const { code = '' } = await checkCustomsPayment({
         gfsbh: this.$route.query.nsrsbh,
         gxlx: this.gxlxDm,
-        list,
+        hgjksmx,
       })
       if (code === '0') {
         this.$message.success('提交成功');

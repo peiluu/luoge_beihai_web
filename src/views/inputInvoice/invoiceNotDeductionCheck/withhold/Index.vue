@@ -101,13 +101,13 @@ export default {
           slot: 'bdklx',
           scopedSlots: { customRender: 'action' },
         },
-        {
-          title: '操作',
-          key: 'action',
-          fixed: 'right',
-          width: 90,
-          scopedSlots: { customRender: 'action' },
-        },
+        // {
+        //   title: '操作',
+        //   key: 'action',
+        //   fixed: 'right',
+        //   width: 90,
+        //   scopedSlots: { customRender: 'action' },
+        // },
       ],
       searchList: [
         {
