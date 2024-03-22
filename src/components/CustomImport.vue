@@ -8,7 +8,7 @@
         </el-steps>
 
         <el-divider></el-divider>
-        <div v-if="step === 1" class="upload-template">
+        <div v-if="step === 1" class="upload-template" v-loading="importing">
           <span>{{ upTitle }}</span>
           <span class="right">
             <el-button type="text" @click="downloadTemplate" v-if="downloadTemplateApi">下载模板</el-button>
@@ -203,6 +203,7 @@ export default {
       this.step = 1;
     },
     handleClose() {
+      if (this.importing) return;
       this.$emit('handleClose');
       this.initData();
     },
@@ -236,8 +237,7 @@ export default {
 }
 
 .upload-template {
-  height: 30px;
-  margin: 20px 35% 10px 35%;
+  margin: 20px 35% 10px;
   line-height: 30px;
   font-size: 14px;
 

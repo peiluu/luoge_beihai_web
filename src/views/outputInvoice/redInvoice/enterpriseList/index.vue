@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
+  <div class="main-content">
     <form-list :singleSelect="true" :columns="columns" :searchRow="searchList" :api="api" :param="param" :height="height" v-loading="loading" ref="list">
       <template #isDigital="row">
         {{ row.data.isDigital == 'Y' ? '是' : '否' }}
@@ -75,7 +75,7 @@ export default {
   },
   computed: {
     height() {
-      return window.innerHeight - 250;
+      return window.innerHeight - 300;
     },
     contentHeight() {
       return window.innerHeight - 132;

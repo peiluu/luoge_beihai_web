@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
+  <div class="main-content">
     <form-list :columns="columns" :searchKey="propsKey" :searchRow="searchList" :api="api" :param="param" :height="height" @handleSelection="handleSelection" v-loading="loading" ref="list" @getNextList="getNextList"
       @getSearchParam="getSearchParam" :firstLoading="false">
       <!-- 操作按钮 -->
@@ -199,11 +199,8 @@ export default {
   },
   computed: {
     height() {
-      return window.innerHeight - 280;
+      return window.innerHeight - 340;
     },
-    contentHeight() {
-      return window.innerHeight - 132;
-    }
   },
 
   methods: {

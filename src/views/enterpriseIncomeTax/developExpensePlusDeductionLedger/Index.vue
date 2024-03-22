@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
+  <div class="main-content">
     <el-tabs class="custom-card-tabs" v-model="activeName" type="card">
       <el-tab-pane name="1" label="研发费用明细表" />
       <el-tab-pane name="2" label="研发费用计算表" />
@@ -21,11 +21,6 @@ export default {
     return {
       activeName: '1',
     };
-  },
-  computed: {
-    contentHeight() {
-      return window.innerHeight - 132;
-    },
   },
 };
 </script>

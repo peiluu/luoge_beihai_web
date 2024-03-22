@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
+  <div class="main-content">
     <form-list :columns="columns" :searchKey="propsKey" :searchRow="searchList" :api="api" :param="param" :height="height" v-loading="loading" @getSearchParam="getSearchParam" @getNextList="getOrgList" ref="list"
       :firstLoading="false">
       <!-- 中间部分 -->
@@ -161,10 +161,7 @@ export default {
   },
   computed: {
     height() {
-      return window.innerHeight - 290
-    },
-    contentHeight() {
-      return window.innerHeight - 132;
+      return window.innerHeight - 340
     },
     columns() {
       return this.nsrlx == 2 ? this.columnsSmall : this.columnsNormal

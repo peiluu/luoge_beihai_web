@@ -7,8 +7,8 @@
       <div class="toolbar">
         <div class="toolbar-left">
           <template v-if="isBusinessFormat">
-            <el-button type="success" @click="showDialogVisiblePercent">修改进销比例</el-button>
-            <el-button type="success" @click="calPreCheck">计算</el-button>
+            <!-- <el-button type="success" @click="showDialogVisiblePercent">修改进销比例</el-button>
+            <el-button type="success" @click="calPreCheck">计算</el-button> -->
             <span style="marginLeft: 12px;">上期销项税额： {{ formatMoney(10000) }}元</span>
             <span style="marginLeft: 12px;">可抵扣税额合计： {{ formatMoney(selecedInfo.yxdkse) }}元</span>
           </template>
@@ -17,13 +17,13 @@
 
         <div class="toolbar-right">
           <template v-if="isBusinessFormat">
-            <el-button type="success" @click="submitRevokePreCheck('Y')">提交预勾选</el-button>
-            <el-button @click="submitRevokePreCheck('N')">取消预勾选</el-button>
+            <!-- <el-button type="success" @click="submitRevokePreCheck('Y')">提交预勾选</el-button>
+            <el-button @click="submitRevokePreCheck('N')">取消预勾选</el-button> -->
           </template>
 
           <el-button type="success" @click="cancleBatch('02')" v-if="searchParam.cljg == '01'">撤销勾选</el-button>
           <el-button type="success" @click="submitBatch('01')" v-else>提交勾选</el-button>
-          <el-button @click="exportPreCheck" v-if="isBusinessFormat">导出预勾选数据</el-button>
+          <!-- <el-button @click="exportPreCheck" v-if="isBusinessFormat">导出预勾选数据</el-button> -->
           <el-button @click="exportInvoiceCheck">导出</el-button>
         </div>
       </div>
@@ -151,7 +151,11 @@ import { purchaserstatusList, purchaserstatusMap, fpztMap, fpztList } from '@/vi
 export default {
   name: 'InvoiceDeductionCheckInvoice',
   props: {
-    currentSq: {}
+    currentSq: {},
+    level: {
+      type: String,
+      default: ''
+    }
   },
   components: { FormSearch, TableCounter },
   data() {
@@ -313,20 +317,23 @@ export default {
       isBusinessFormat: '' // 物业,需要预勾选操作
     };
   },
-
-  activated() {
-    this.getData()
+  watch: {
+    level: {
+      handler: function(newV, oldV){
+        if(newV === '1'){
+          this.getData()
+        }
+      },
+      immediate: true
+    }
   },
   computed: {
     height() {
-      return window.innerHeight - 360;
+      return window.innerHeight - 460;
     },
     nsrsbh() {
       return this.$route.query.nsrsbh
     }
-  },
-  mounted() {
-    this.getData()
   },
 
   methods: {
@@ -575,22 +582,27 @@ export default {
 
     // 提交数据勾选
     async submitRevokeInvoiceCheck() {
-      const { code = '' } = await submitRevokeInvoiceCheck({
-        gfsbh: this.nsrsbh,
-        skssq: this.currentSq.dateValue,
-        gxlxDm: this.gxlxDm,
-        fpmx: this.selections.map((item) => {
-          return {
-            ...item,
-            fpdm: item.zzfpDm,
-          }
+      try {
+        const { code = '' } = await submitRevokeInvoiceCheck({
+          gfsbh: this.nsrsbh,
+          skssq: this.currentSq.dateValue,
+          gxlxDm: this.gxlxDm,
+          fpmx: this.selections.map((item) => {
+            return {
+              ...item,
+              fpdm: item.zzfpDm,
+            }
+          })
         })
-      })
-      this.dialogVisible = false;
-      if (code === '0') {
-        this.$message.success('提交成功');
-        this.reload();
+        this.dialogVisible = false;
+        if (code === '0') {
+          this.$message.success('提交成功');
+          this.reload();
+        }
+      } catch (error) {
+        console.log(error)
       }
+      
     },
     showDialogVisiblePercent() {
       this.queryScale()
@@ -684,7 +696,8 @@ export default {
       this.form = {}
     },
     checkSelectable(row, index) {
-      return row.purchaserstatus == '42'
+      return this.$route.query.sfqkrzgx !== 'Y'
+      // return row.purchaserstatus == '42'
     }
   }
 };

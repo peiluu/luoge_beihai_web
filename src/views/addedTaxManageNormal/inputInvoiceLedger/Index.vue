@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
+  <div class="main-content">
     <LedgerForm @search="handleSearch">
       <template #topTool>
         <el-button @click="reStatisticsVoucher" type="primary" :disabled="!queryParam.nsrsbh || !queryParam.srssq || querySbStatus" :loading="qsLoading">取数</el-button>
@@ -217,9 +217,6 @@ export default {
     },
   },
   computed: {
-    contentHeight() {
-      return window.innerHeight - 132;
-    },
     height() {
       return window.innerHeight - 240;
     },

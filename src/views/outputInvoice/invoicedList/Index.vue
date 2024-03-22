@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
+  <div class="main-content">
     <div class="content-header">
       <div class="label">数据范围</div>
       <el-tabs v-model="scope" type="card">
@@ -335,10 +335,7 @@ export default {
   },
   computed: {
     height() {
-      return window.innerHeight - 340;
-    },
-    contentHeight() {
-      return window.innerHeight - 132;
+      return window.innerHeight - 400;
     },
     selections() {
       return this.$refs.list.getSelections()

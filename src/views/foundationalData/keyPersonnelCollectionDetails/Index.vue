@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
+  <div class="main-content">
     <form-list
       :columns="columns"
       :searchKey="propsKey"
@@ -238,10 +238,7 @@ export default {
   watch: {},
   computed: {
     height() {
-      return window.innerHeight - 310;
-    },
-    contentHeight() {
-      return window.innerHeight - 132;
+      return window.innerHeight - 380;
     },
   },
 

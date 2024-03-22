@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
+  <div class="main-content">
     <div class="search-box">
       <el-form :model="form" :inline="true" ref="searchForm">
         <el-form-item label="总机构名称" prop="nsrsbh">
@@ -211,11 +211,8 @@ export default {
   },
 
   computed: {
-    contentHeight() {
-      return window.innerHeight - 132;
-    },
     height() {
-      return window.innerHeight - 240;
+      return window.innerHeight - 280;
     },
   }
 };

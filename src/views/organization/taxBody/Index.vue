@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form-list :columns="columns" :searchKey="propsKey" :searchRow="searchList" :api="api" :param="param" :firstLoading="false" v-loading="loading" @getSearchParam="getSearchParam" ref="list">
+    <form-list :columns="columns" :height="height" :searchKey="propsKey" :searchRow="searchList" :api="api" :param="param" :firstLoading="false" v-loading="loading" @getSearchParam="getSearchParam" ref="list">
       <!-- 中间部分 -->
       <template #topTool>
         <div class="toolbar">
@@ -22,6 +22,7 @@
       <template #sffgs="{ data }"> {{ data.sffgs == 'Y' ? '是' : '否' }}</template>
       <template #city="{ data }"> {{ data.city || '' + data.area || '' }}</template>
       <template #zgsmc="{ data }"> {{ data.sffgs == 'Y' ? data.zgsmc : '' }}</template>
+      <template #sfqkrzgx="{ data }"> {{ data.sfqkrzgx == 'Y' ? '是' : '否' }}</template>
 
       <template #myscope="{ data }">
         <el-popover placement="left" trigger="hover" popper-class="customPopper">
@@ -117,6 +118,7 @@ export default {
         // { title: "是否开通数电", width: 100, dataIndex: "isDigital", slot: 'isDigital', align: 'center' },
         { title: "所属业态", width: 100, dataIndex: "businessFormat", align: 'center' },
         { title: "所属区域", width: 140, dataIndex: "region" },
+        { title: "是否强控入账勾选", width: 120, dataIndex: "sfqkrzgx", slot: 'sfqkrzgx'},
         { title: "包含开票组织数量", width: 120, dataIndex: "orgCount", align: 'right' },
         { title: "所属省份", width: 100, dataIndex: "province" },
         { title: "所属城市", width: 100, dataIndex: "city", },
@@ -232,9 +234,9 @@ export default {
     this.getList()
   },
   computed: {
-    // height() {
-    //   return window.innerHeight - 310
-    // },
+    height() {
+      return window.innerHeight - 380
+    },
     selections() {
       return this.$refs.list.getSelections()
     }

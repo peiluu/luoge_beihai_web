@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
+  <div class="main-content">
     <form-list :columns="columns" :searchKey="propskey" :searchRow="searchList" :api="api" :param="param" :height="height" v-loading="loading" @getSearchParam="getSearchParam" :firstLoading="false"
       @getNextList="getNextList" ref="list">
       <template #topTool>
@@ -136,10 +136,7 @@ export default {
       return list
     },
     height() {
-      return window.innerHeight - 260
-    },
-    contentHeight() {
-      return window.innerHeight - 132;
+      return window.innerHeight - 340
     },
   },
 
