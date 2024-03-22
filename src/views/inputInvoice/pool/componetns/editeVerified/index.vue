@@ -32,7 +32,7 @@
                         <el-input v-model="pushForm.wspzh" disabled placeholder="请输入"></el-input>
                     </el-form-item>
                     <el-form-item label="所属账套：">
-                        <el-select style="width:100%"  v-model="pushForm.orgid" placeholder="请选择" clearable filterable>
+                        <el-select style="width:100%" disabled  v-model="pushForm.orgid" placeholder="请选择" clearable filterable>
                             <el-option
                             v-for="(item) in orgidList"
                             :key="item.id"
