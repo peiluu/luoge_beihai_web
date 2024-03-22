@@ -34,7 +34,7 @@
                         <el-select style="width:100%" :disabled="isDisabled" v-model="pushForm.orgid" placeholder="请选择" clearable filterable>
                             <el-option
                             v-for="item in orgidList"
-                            :key="item.nsrsbh"
+                            :key="item.id"
                             :label="item.name"
                             :value="item.id">
                             </el-option>
