@@ -16,7 +16,7 @@
                         <span>{{ pushForm.fprq }}</span>
                     </el-form-item>
                     <el-form-item label="发票类型：">
-                        <span>{{ optionList.invoiceType.find(k=> k.value === pushForm.fppzDm).label }}</span>
+                        <span>{{ optionList.invoiceType.find(k=> k.value === pushForm.fppzDm)?.label }}</span>
                     </el-form-item>
                     <!-- <el-form-item label="收票状态：">
                         <el-radio-group v-model="pushForm.radio">

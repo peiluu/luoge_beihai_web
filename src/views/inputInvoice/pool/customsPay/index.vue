@@ -100,7 +100,7 @@
             </el-table-column>
             <el-table-column prop="rzzt" label="入账状态" minWidth="120" align="center">
             </el-table-column>
-            <el-table-column prop="spzz" label="收票状态" minWidth="180" align="center">
+            <el-table-column prop="spzt" label="收票状态" minWidth="180" align="center">
             </el-table-column>
             <el-table-column prop="sprq" label="收票日期" minWidth="180" align="center">
             </el-table-column>
@@ -311,10 +311,11 @@ export default {
     handleInit(){
       this.handleGetTableList();
     },
-    async handleGetTableList(){
+    async handleGetTableList(val = {}){
       let parmas = {
         pageNo:this.page.currentPage,
-        pageSize:this.page.pageSize
+        pageSize:this.page.pageSize,
+        ...val,
       }
       try{
         const res = await getPoolCustomsList(parmas);
@@ -354,11 +355,12 @@ export default {
     },
     /* 确认管理 */
     handleStatus(type) {
+      console.log(type,"----")
       if(this.isSelected.length >1){
         this.$message.warning("当前操作只支持单个！")
         return
-      }else if(this.isSelected.find(k=> Number(k.spzt) === type)){
-        this.$message.warning(`当前发票处于${type === 1?'确认收票':'撤销收票'}`)
+      }else if(this.isSelected.some(k=> Number(k.spzt) === type)){
+        this.$message.warning(`当前发票处于${type === 1?'状态处于确认收票':'状态处于撤销收票'}`)
         return
       }else{
         this.dialog.statusTitle = type === 1?'确认收票':'撤销收票';
