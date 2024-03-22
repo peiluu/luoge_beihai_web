@@ -1,6 +1,6 @@
 <template>
   <div class="com-withhold">
-    <form-list :columns="columns" :searchRow="searchList" :api="api" :param="searchParam" :height="height"
+    <form-list :columns="columns" :searchRow="searchList" :api="api" :param="param" :height="height"
       @getSearchParam="getSearchParam" @handleSelection="handleSelection" v-loading="loading" :tableCounterShow="true"
       ref="list"
       :firstLoading="level === '2'">
@@ -70,7 +70,7 @@ export default {
     return {
       inputFplxMap,
       api: require('./Api'),
-      param: {},
+      param: {cljg: '02' },
       loading: false,
       columns: [
         { type: "selection", width: 50, },
@@ -201,9 +201,6 @@ export default {
       totalEntity: {},
       queryParam: {},
       isSelected: [],
-      searchParam: { cljg: '02' },
-
-
     };
   },
   watch: {
@@ -233,7 +230,10 @@ export default {
 
         // bkjnsrsbh: this.$route.query.nsrsbh,
       }
-      this.param = param;
+      this.param = {
+        ...this.param,
+        ...param
+      }
       this.$refs.list.handleGetData(param)
     },
     // 处理多选
