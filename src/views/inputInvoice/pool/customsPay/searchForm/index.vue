@@ -46,8 +46,8 @@
 
         <el-col :span="6">
           <el-form-item label="" label-width="0px">
-            <el-button size="mini">重 置</el-button>
-            <el-button type="primary" size="mini">搜 索</el-button>
+            <el-button size="mini" @click="handleRest">重 置</el-button>
+            <el-button type="primary" size="mini" @click="handleSearch">搜 索</el-button>
             <span class="is_show" @click="handlerIsShow">
               <i :class="!isShow ? 'el-icon-arrow-down' : 'el-icon-arrow-up'">{{
                 !isShow ? "展开" : "收起"
@@ -234,6 +234,15 @@ export default {
     handlerIsShow() {
       this.isShow = !this.isShow;
     },
+    /* 搜索 */
+    handleSearch(){
+      this.$emit('search',this.where)
+    },
+    /* 重置 */
+    handleRest(){
+      this.where = {};
+      this.$emit('resst',this.where)
+    }
   },
   inject: ['optionList'],
   created() {},

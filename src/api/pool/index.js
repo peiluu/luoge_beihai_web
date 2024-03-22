@@ -39,7 +39,7 @@ export const getPoolPayTableSingleDes = data => postJSON(`${config.host}/income/
 
 
 /* 待修改认证科目 */
-export const postPoolEditebook = data => postJSON(`${config.host}/income/queryCustomsPayment`,data);
+export const postPoolEditebook = data => postJSON(`${config.host}/income/updateDrzkm`,data);
 
 /* 入账 */
 export const postPoolInAccount = data => postJSON(`${config.host}/income/invoiceEntry`,data);

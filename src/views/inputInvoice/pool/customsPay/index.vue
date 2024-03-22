@@ -101,7 +101,7 @@
             </el-table-column>
             <el-table-column prop="srzzt" label="入账状态" minWidth="120" align="center">
             </el-table-column>
-            <el-table-column prop="spzz" label="收票状态" minWidth="180" align="center">
+            <el-table-column prop="spzt" label="收票状态" minWidth="180" align="center">
             </el-table-column>
             <el-table-column prop="sprq" label="收票日期" minWidth="180" align="center">
             </el-table-column>
@@ -311,10 +311,11 @@ export default {
     handleInit(){
       this.handleGetTableList();
     },
-    async handleGetTableList(){
+    async handleGetTableList(val = {}){
       let parmas = {
         pageNo:this.page.currentPage,
-        pageSize:this.page.pageSize
+        pageSize:this.page.pageSize,
+        ...val,
       }
       try{
         const res = await getPoolCustomsList(parmas);

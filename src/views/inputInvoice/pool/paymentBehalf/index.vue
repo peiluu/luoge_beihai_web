@@ -304,11 +304,12 @@ export default {
     handleInit(){
       this.handleGetPayTableList()
     },
-  async handleGetPayTableList(){
+  async handleGetPayTableList(val = {}){
     this.loading = true;
     let parmas = {
       pageNo: this.page.currentPage,
       pageSize: this.page.pageSize,
+      ...val,
     };
     try{
       const res = await getPoolPayList(parmas)
@@ -336,12 +337,12 @@ export default {
     /* 搜索 */
     handlerSearch(val){
       this.where = {...val};
-      this.handleGetTableList(val);
+      this.handleGetPayTableList(val);
     },
     /* 重置 */
     handleRest(val){
       this.where = {...val};
-      this.handleGetTableList(val)
+      this.handleGetPayTableList(val)
     },
     /* size change */
     handleBottomSizeChange(val) {

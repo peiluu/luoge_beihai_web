@@ -97,8 +97,10 @@
             </el-table-column>
             <el-table-column prop="kprq" label="开票日期" minWidth="160" align="center">
             </el-table-column>
-            <el-table-column prop="fppzDm" label="发票类型" minWidth="100" align="center">
-
+            <el-table-column prop="fppzDm" label="发票类型" minWidth="140" align="center">
+              <template slot-scope="scope">
+                <span>{{ handleParesTableValue(scope.row.fppzDm,optionList.invoiceType) }}</span>
+              </template>
             </el-table-column>
             <el-table-column prop="tdyslxDm" label="特殊票种" minWidth="100" align="center">
             </el-table-column>
@@ -123,6 +125,9 @@
               <template slot-scope="{row}">{{ formatMoney(row.kce) }} </template>
             </el-table-column>
             <el-table-column prop="fpzt" label="发票状态" minWidth="120" :header-align="'center'" :align="'center'">
+              <template slot-scope="scope">
+                <span>{{ handleParesTableValue(scope.row.fpzt,optionList.invoiceStatus) }}</span>
+              </template>
             </el-table-column>
             <el-table-column prop="sfycpz" label="异常凭证状态" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
@@ -340,6 +345,7 @@ import LgInvoiceRequire from "./invoiceRequire";
 import LgViewInvoice from "../componetns/viewInvoice";
 import LgInvoiceView from "@/components/invoiceView";
 import {getPoolInvoiceList,getPoolInvoiceSingleDes,postDownloadList,postDownloadSelect} from '@/api/pool/index.js'
+
 export default {
   name: "poolPage",
   components: {
@@ -602,8 +608,16 @@ export default {
     /* 返回后刷新状态 */
     handleDone(val){
       this.handleGetTableList()
+    },
+    handleParesTableValue(val,option){
+      if(option.length <=0 || (val??'') ===''){
+        return ''
+      }else{
+       return option.find(k=> k.value === val).label
+      }
     }
   },
+  inject: ['optionList'],
   created() {},
   mounted() {
    this.handleInit()
