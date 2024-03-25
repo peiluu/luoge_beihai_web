@@ -82,34 +82,34 @@
             height="340"
             row-key="id"
           >
-            <el-table-column type="selection" width="55" fixed="left" align="center">
+            <el-table-column type="selection" width="45" fixed="left">
             </el-table-column>
-            <el-table-column type="index" width="55" label="序号" align="center">
+            <el-table-column type="index" width="45" label="序号">
             </el-table-column>
-            <el-table-column prop="dkdjwspzh" label="代扣代缴完税凭证号" minWidth="160" align="center">
+            <el-table-column prop="dkdjwspzh" label="代扣代缴完税凭证号" minWidth="160">
             </el-table-column>
-            <el-table-column prop="pzlx" label="票种类型" minWidth="160" align="center">
+            <el-table-column prop="pzlx" label="票种类型" minWidth="160">
               <template slot-scope="scope">
               <span>{{ handleParesTableValue(scope.row.pzlx,optionList.ticketType) }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="kjywrsbh" label="扣缴义务人识别号（购方）" minWidth="190" align="center">
+            <el-table-column prop="kjywrsbh" label="扣缴义务人识别号（购方）" minWidth="190" show-overflow-tooltip>
             </el-table-column>
-            <el-table-column prop="kjywrmc" label="扣缴义务人名称" minWidth="120" align="center">
+            <el-table-column prop="kjywrmc" label="扣缴义务人名称" minWidth="120" show-overflow-tooltip>
             </el-table-column>
             <el-table-column prop="tfrq" label="填发日期" minWidth="100" align="center">
             </el-table-column>
             <el-table-column prop="kjrq" label="开具日期" minWidth="120" align="center">
             </el-table-column>
-            <el-table-column prop="jsje" label="计税金额" minWidth="120" align="center">
+            <el-table-column prop="jsje" label="计税金额" minWidth="120" align="right">
               <template slot-scope="{row}">{{ formatMoney(row.jsje) }} </template>
             </el-table-column>
-            <el-table-column prop="sjje" label="实缴金额" minWidth="180" align="center">
+            <el-table-column prop="sjje" label="实缴金额" minWidth="180" align="right">
               <template slot-scope="{row}">{{ formatMoney(row.sjje) }} </template>
             </el-table-column>
-            <el-table-column prop="bkjnsrsbh" label="被扣缴纳税人识别号" minWidth="180" align="center">
+            <el-table-column prop="bkjnsrsbh" label="被扣缴纳税人识别号" minWidth="180" show-overflow-tooltip>
             </el-table-column>
-            <el-table-column prop="bkjnsrmc" label="被扣缴纳税人名称" minWidth="200" show-overflow-tooltip :header-align="'center'" :align="'right'">
+            <el-table-column prop="bkjnsrmc" label="被扣缴纳税人名称" minWidth="200" show-overflow-tooltip>
             </el-table-column>
             <el-table-column prop="srzzt" label="入账状态" minWidth="120" :header-align="'center'" :align="'center'">
               <template slot-scope="scope">
@@ -121,20 +121,20 @@
                 <span>{{ handleParesTableValue(scope.row.spzt,optionList.collectTicketStatus) }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="sprq" label="收票日期" minWidth="180" align="center">
+            <el-table-column prop="sprq" label="收票日期" minWidth="160" align="center">
             </el-table-column>
-            <el-table-column prop="zczt" label="转出状态" minWidth="180" align="center">
+            <el-table-column prop="zczt" label="转出状态" minWidth="120" align="center">
               <template slot-scope="scope">
                 <span>{{ handleParesTableValue(scope.row.zczt,optionList.rollOntStatus) }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="cwbz" label="财务备注" minWidth="180" align="center">
+            <el-table-column prop="cwbz" label="财务备注" minWidth="180" show-overflow-tooltip>
             </el-table-column>
-            <el-table-column prop="gjrq" label="归集日期" minWidth="180" align="center">
+            <el-table-column prop="gjrq" label="归集日期" minWidth="160" align="center">
             </el-table-column>
-            <el-table-column prop="createtime" label="创建时间" minWidth="180" align="center">
+            <el-table-column prop="createtime" label="创建时间" minWidth="160" align="center">
             </el-table-column>
-            <el-table-column prop="updatetime" label="修改时间" minWidth="180" align="center">
+            <el-table-column prop="updatetime" label="修改时间" minWidth="160" align="center">
             </el-table-column>
           </el-table>
         </article>

@@ -87,30 +87,30 @@
             v-loading="loading"
             row-key="id"
           >
-            <el-table-column type="selection" width="55" fixed="left" align="center">
+            <el-table-column type="selection" width="45" fixed="left" align="center">
             </el-table-column>
-            <el-table-column type="index" width="55" label="序号" align="center">
+            <el-table-column type="index" width="45" label="序号">
             </el-table-column>
-            <el-table-column prop="fphm" label="发票号码" minWidth="160" align="center">
+            <el-table-column prop="fphm" label="发票号码" minWidth="160">
             </el-table-column>
-            <el-table-column prop="zzfpDm" label="发票代码" minWidth="140" align="center">
+            <el-table-column prop="zzfpDm" label="发票代码" minWidth="140">
             </el-table-column>
             <el-table-column prop="kprq" label="开票日期" minWidth="160" align="center">
             </el-table-column>
-            <el-table-column prop="fppzDm" label="发票类型" minWidth="140" show-overflow-tooltip align="center">
+            <el-table-column prop="fppzDm" label="发票类型" minWidth="140" show-overflow-tooltip>
               <template slot-scope="scope">
                 <span>{{ handleParesTableValue(scope.row.fppzDm,optionList.invoiceType) }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="tdyslxDm" label="特殊票种" minWidth="100" align="center">
+            <el-table-column prop="tdyslxDm" label="特殊票种" minWidth="100">
             </el-table-column>
-            <el-table-column prop="wspzh" label="凭证号" minWidth="180" align="center">
+            <el-table-column prop="wspzh" label="凭证号" minWidth="180">
             </el-table-column>
             <el-table-column prop="zfrq" label="作废日期" minWidth="120" align="center">
             </el-table-column>
-            <el-table-column prop="xsfmc" label="销方名称" minWidth="200" show-overflow-tooltip align="center">
+            <el-table-column prop="xsfmc" label="销方名称" minWidth="200" show-overflow-tooltip>
             </el-table-column>
-            <el-table-column prop="xsfnsrsbh" label="销方税号" minWidth="180" align="center">
+            <el-table-column prop="xsfnsrsbh" label="销方税号" minWidth="180">
             </el-table-column>
             <el-table-column prop="hjje" label="合计金额" minWidth="120" :header-align="'center'" :align="'right'">
               <template slot-scope="{row}">{{ formatMoney(row.hjje) }} </template>
