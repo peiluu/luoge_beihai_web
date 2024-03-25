@@ -133,7 +133,7 @@ export default {
       try {
         const res = await getRatepayingMain();
         if([0,'0'].includes(res.code)){
-          this.optionList.xsfnsrsbhOptions = [... res.data]
+          this.optionList.xsfnsrsbhOptions = [...res.data]
         }
         
       }catch{
@@ -142,7 +142,11 @@ export default {
     },
     async hanldeGetOrgId(){
       try {
-        const res = await getOrganList();
+        let params = {
+          isInvoice:'N',
+          isSelectAll:'N'
+        }
+        const res = await getOrganList(params);
         if([0,'0'].includes(res.code)){
           this.optionList.orgOption = [... res.data]
         }
