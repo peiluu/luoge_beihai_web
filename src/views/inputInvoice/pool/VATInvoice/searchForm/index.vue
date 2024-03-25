@@ -25,7 +25,7 @@
           <el-form-item label="纳税主体：" label-width="85px">
             <el-select
               style="width: 100%"
-              v-model="where.gmfNsrsbh"
+              v-model="where.nszt"
               placeholder="请选择"
               clearable
               filterable
