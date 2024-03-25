@@ -89,7 +89,7 @@
             </el-table-column>
             <el-table-column prop="hgjkshm" label="海关缴款书号码" minWidth="170" show-overflow-tooltip>
             </el-table-column>
-            <el-table-column prop="tprq" label="填发日期" minWidth="140" align="center">
+            <el-table-column prop="tfrq" label="填发日期" minWidth="120" align="center">
             </el-table-column>
             <el-table-column prop="skje" label="税款金额" minWidth="120" align="right">
               <template slot-scope="{row}">{{ formatMoney(row.skje) }} </template>
@@ -98,9 +98,9 @@
             </el-table-column>
             <el-table-column prop="jkdwrnsrmc" label="缴款单位人纳税人名称" minWidth="180" show-overflow-tooltip>
             </el-table-column>
-            <el-table-column prop="sfzhsd" label="是否重号锁定" minWidth="120" align="center">
+            <el-table-column prop="sfchsd" label="是否重号锁定" minWidth="120" align="center">
               <template slot-scope="scope">
-                <span>{{ handleParesTableValue(scope.row.sfzhsd,[{label:'已锁定',vlaue:'Y'},{label:'未锁定',vlaue:'N'}]) }}</span>
+                <span>{{ handleParesTableValue(scope.row.sfchsd,[{label:'已锁定',value:'Y'},{label:'未锁定',value:'N'}]) }}</span>
               </template>
             </el-table-column>
             <el-table-column prop="srzzt" label="入账状态" minWidth="120" align="center">

@@ -133,7 +133,7 @@
             </el-table-column>
             <el-table-column prop="sdzt" label="红字锁定标识" minWidth="120" :header-align="'center'" :align="'center'">
               <template slot-scope="scope">
-                <span>{{ handleParesTableValue(scope.row.sdzt,[{label:'已锁定',vlaue:'Y'},{label:'未锁定',vlaue:'N'}]) }}</span>
+                <span>{{ handleParesTableValue(scope.row.sdzt,[{label:'已锁定',value:'Y'},{label:'未锁定',value:'N'}]) }}</span>
               </template>
             </el-table-column>
             <el-table-column prop="hxyt" label="发票用途" minWidth="120" :header-align="'center'" :align="'center'">
