@@ -113,7 +113,7 @@
             </el-table-column>
             <el-table-column prop="srzzt" label="入账状态" minWidth="120" :header-align="'center'" :align="'center'">
               <template slot-scope="scope">
-                <span>{{ scope.srzzt === '01' ?'未入账':scope.srzzt === '06'?'入账撤销':'已入账' }}</span>
+                <span>{{ scope.rzzt === '01' ?'未入账':scope.rzzt === '06'?'入账撤销':'已入账' }}</span>
               </template>
             </el-table-column>
             <el-table-column prop="spzt" label="收票状态" minWidth="120" :header-align="'center'" :align="'center'">
