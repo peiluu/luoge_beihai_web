@@ -10,14 +10,14 @@
             
             <el-form ref="formTick" :model="pushForm" label-width="180px">
                     <el-form-item label="发票号码：">
-                        <span>{{ pushForm.fphm }}</span>
+                        <span>{{ typeStatus.type === 'HGJKS'?pushForm.hgjkshm:typeStatus.type === 'DKDJWSPZ'?pushForm.dkdjwspzh:pushForm.fphm }}</span>
                     </el-form-item>
                     <el-form-item label="开票日期：">
-                        <span>{{ pushForm.kprq }}</span>
+                        <span>{{ pushForm.tfrq }}</span>
                     </el-form-item>
-                    <el-form-item label="发票类型：">
+                    <!-- <el-form-item label="发票类型：">
                         <span>{{ optionList.invoiceType.find(k=> k.value === pushForm.fppzDm)?.label }}</span>
-                    </el-form-item>
+                    </el-form-item> -->
                     <!-- <el-form-item label="收票状态：">
                         <el-radio-group v-model="pushForm.radio">
                             <el-radio :label="3">备选项</el-radio>
