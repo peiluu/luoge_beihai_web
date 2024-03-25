@@ -118,6 +118,7 @@
                   clearable
                   filterable
                 >
+                  <el-option value="" label="全部"></el-option>
                   <el-option
                     v-for="item in optionList.invoiceStatus"
                     :key="item.value"
@@ -153,6 +154,7 @@
                   clearable
                   filterable
                 >
+                  <el-option value="" label="全部"></el-option>
                   <el-option
                     v-for="item in optionList.authenticationStatus"
                     :key="item.value"
@@ -180,6 +182,7 @@
                   clearable
                   filterable
                 >
+                  <el-option value="" label="全部"></el-option>
                   <el-option
                     v-for="item in optionList.accountantList"
                     :key="item.accSegmentCode"
@@ -199,6 +202,7 @@
                   clearable
                   filterable
                 >
+                  <el-option value="" label="全部"></el-option>
                   <el-option
                     v-for="item in optionList.enterAccountStatus"
                     :key="item.value"
@@ -239,6 +243,7 @@
                   clearable
                   filterable
                 >
+                  <el-option value="" label="全部"></el-option>
                   <el-option
                     v-for="item in optionList.rollOntStatus"
                     :key="item.value"
@@ -258,6 +263,7 @@
                   clearable
                   filterable
                 >
+                  <el-option value="" label="全部"></el-option>
                   <el-option
                     v-for="item in optionList.collectTicketStatus"
                     :key="item.value"
