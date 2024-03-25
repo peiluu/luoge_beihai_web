@@ -65,3 +65,9 @@ export const exportInvoiceCheck = data =>
  */
 export const queryBusinessFormat = data =>
   postJSON(`${config.host}/income/queryBusinessFormat/${data.nsrsbh}`, data);
+
+/**
+ * @desption 查询时候否是物业
+ */
+export const getDetailById = data =>
+  postJSON(`${config.host}/taxBody/getDetailById`, data);

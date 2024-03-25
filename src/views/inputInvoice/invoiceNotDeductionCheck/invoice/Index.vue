@@ -309,7 +309,7 @@ export default {
           this.getList()
         }
       },
-      immediate: true
+      // immediate: true
     }
   },
   computed: {

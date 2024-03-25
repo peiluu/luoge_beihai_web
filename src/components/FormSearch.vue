@@ -196,15 +196,7 @@ export default {
     }
 
     this.$nextTick(() => {
-      Object.keys(this.param).map(key => {
-
-        if (this.param[key] != null) {
-          if (this.param[key].length > 0) {
-            this.$set(this.form, key, this.param[key])
-            // this.form[key] = this.param[key];
-          }
-        }
-      });
+      this.handleReBuildSearchParam()
     });
   },
   watch: {
@@ -220,19 +212,24 @@ export default {
           this.$set(this.form, each.key, each.val)
         });
         this.$nextTick(() => {
-          Object.keys(this.param).map(key => {
-            if (this.param[key] != null) {
-              if (this.param[key].length > 0) {
-                this.form[key] = this.param[key];
-              }
-            }
-          });
+          this.handleReBuildSearchParam()
         });
       },
       deep: true
     }
   },
   methods: {
+    handleReBuildSearchParam() {
+      // const param = { ...this.param, ...this.formSearchParam }
+      const param = { ...this.param }
+      Object.keys(param || {}).map(key => {
+        if (param[key] != null) {
+          if (param[key].length > 0) {
+            this.$set(this.form, key, param[key])
+          }
+        }
+      });
+    },
     handleSwitch(e) {
       this.$emit("handleSwitch", e);
     },
@@ -248,18 +245,22 @@ export default {
       this.form = {}
       // 清空对象的所有属性值
       Object.keys(this.form).forEach(key => { this.form[key] = '' })
-
+      // 清空
       if (this.$refs.numberRange) {
-        this.$refs.numberRange[0].reset();
+        for (let item of Object.values(this.$refs.numberRange)) {
+          item.reset();
+        }
+        // } Array.from(this.$refs.numberRang).forEach((item) => {
+        //   item.reset();
+        // })
       }
-      // 重置
+      // 清空季度选择器
       if (this.$refs.quarterDatePicker) {
         this.$refs.quarterDatePicker[0].reset();
       }
       // 重置级联列表初始值
       this.$emit('getNextList', '', 'reset')
-      this.$emit("search", JSON.parse(JSON.stringify(this.form)), 'reset');
-
+      this.$emit("reset");
     },
     handleBuildForm() {
       let form = {};

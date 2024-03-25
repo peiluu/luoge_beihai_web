@@ -1,7 +1,7 @@
 <template>
   <div class="com-invoice">
     <template>
-      <form-search ref="search" :key="propsKey" :param="searchParam" :searchList="searchList" @search="handleSearch"></form-search>
+      <form-search ref="search" :key="propsKey" :param="searchParam" :searchList="searchList" @search="handleSearch" @reset="handleReset"></form-search>
     </template>
     <div class="custom-table">
       <div class="toolbar">
@@ -143,7 +143,7 @@
 import moment from "moment";
 import TableCounter from '@/components/TableCounter.vue';
 import FormSearch from "@/components/FormSearch.vue";
-import { submitRevokeInvoiceCheck, getOrgList, incomeOutputScale, exportPreCheck, queryScale, queryBusinessFormat, submitRevokePreCheck, calPreCheck, exportInvoiceCheck } from './Api'
+import { submitRevokeInvoiceCheck, getOrgList, incomeOutputScale, exportPreCheck, queryScale, queryBusinessFormat, submitRevokePreCheck, calPreCheck, exportInvoiceCheck, getDetailById } from './Api'
 import { inputFplxList, inputFplxMap } from '@/config/constant'
 import { purchaserstatusList, purchaserstatusMap, fpztMap, fpztList } from '@/views/inputInvoice/constant'
 
@@ -166,7 +166,6 @@ export default {
       purchaserstatusMap,
       fpztMap,
       api: require('./Api'),
-      param: { cljg: '02' },
       loading: false,
       data: [],
       tableSize: "medium", //表格大小 default | medium / small / mini
@@ -314,17 +313,19 @@ export default {
       gxlxDm: '', // 勾选类型代码
       lossTaxRate: '',
       isPerCheck: false,
-      isBusinessFormat: '' // 物业,需要预勾选操作
+      isBusinessFormat: '',// 物业,需要预勾选操作
+      sfqkrzgx: null,
     };
   },
   watch: {
     level: {
       handler: function(newV, oldV){
         if(newV === '1'){
+          if(this.sfqkrzgx === null)this.getSfqkrzgxById()
           this.getData()
         }
       },
-      immediate: true
+      // immediate: true
     }
   },
   computed: {
@@ -335,8 +336,38 @@ export default {
       return this.$route.query.nsrsbh
     }
   },
-
+  activated(){
+    this.getSfqkrzgxById();
+  },
   methods: {
+    async getSfqkrzgxById(){
+      if(!this.sfqkLoading){
+        this.sfqkLoading = true;
+        setTimeout(()=>{
+          this.sfqkLoading = false;
+        },1000)
+        try {
+          const { code = '0', data} = await getDetailById({id: this.$route.query.taxBodyId})
+          this.sfqkrzgx = data.sfqkrzgx || null;
+        } catch (error) {
+          console.log('error', error)
+        }
+      }
+      
+    },
+    handleReset(){
+      this.pagination = {
+        ...this.pagination,
+        pageSize: 10,
+        pageNo: 1,
+      }
+      this.searchParam = {
+        cljg: '02',
+        skssq: this.currentSq.dateValue,
+        gfsbh: this.$route.query.nsrsbh
+      }
+      this.handleGetData(this.searchParam);
+    },
     rowClcik(row, column, event) {
       if (row.purchaserstatus != '42') {
         return
@@ -677,7 +708,7 @@ export default {
       this.queryScale();
       this.queryBusinessFormat();
       this.searchParam = {
-        ...this.param,
+        cljg: '02',
         skssq: this.currentSq.dateValue,
         gfsbh: this.$route.query.nsrsbh
       }
@@ -699,8 +730,17 @@ export default {
       this.form = {}
     },
     checkSelectable(row, index) {
-      return this.$route.query.sfqkrzgx !== 'Y'
-      // return row.purchaserstatus == '42'
+      let t = false;
+      if(this.sfqkrzgx === 'N'){ // 'N' 不校验是否入账, 'Y' 校验是否入账
+        t = true;
+      } else {
+        if( row.purchaserstatus === 'Y'){
+          t = true
+        } else {
+          t = false
+        }
+      }
+      return t
     }
   }
 };
