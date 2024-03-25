@@ -11,9 +11,9 @@
           <div class="toolbar-right">
             <el-button type="success" @click="cancleBatch('02')" v-if="$refs.list && $refs.list.searchParam.cljg == '01'">撤销勾选</el-button>
           <el-button type="success" @click="submitBatch('01')" v-else>提交勾选</el-button>
-            <!-- <el-button @click="exportWithholdList">导出</el-button> -->
-            <el-button @click="downloadNoList">导出查询结果</el-button>
-            <el-button type="" @click="exportSelectedData">导出选中发票</el-button>
+            <el-button @click="exportInvoiceCheck">导出</el-button>
+            <!-- <el-button @click="downloadNoList">导出查询结果</el-button> -->
+            <!-- <el-button type="" @click="exportSelectedData">导出选中发票</el-button> -->
           </div>
         </div>
       </template>
@@ -52,7 +52,7 @@
 <script>
 import moment from "moment";
 import FormList from '@/components/FormList.vue';
-import { checkCustomsPayment,getKjList } from './Api'
+import { checkCustomsPayment,getKjList,exportInvoiceCheck } from './Api'
 import { inputFplxMap } from '@/config/constant'
 
 export default {
@@ -326,9 +326,9 @@ export default {
       }
     },
     // 导出发票数据
-    async exportWithholdList() {
-      const fileName = `代扣代缴信息列表.xlsx`
-      await exportWithholdList({
+    async exportInvoiceCheck() {
+      const fileName = `发票勾选抵扣.xlsx`
+      await exportInvoiceCheck({
         reqData: { ...this.queryParam, sign: 'Y', pageNo: 1, pageSize: 9999999 },
         fileName
       })

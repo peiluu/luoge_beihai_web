@@ -1243,6 +1243,7 @@ export default {
       ceForm: {
         kcje: "0.00",
         hjje: "0.00",
+        hsxse: "",
       },
       ceRules: {
         hsxse: [{ required: true, message: "内容必填", trigger: "blur" }],

@@ -105,9 +105,10 @@ export default {
                 {label:'应交税费/待认证进项税额/费用类',value:'22210402'}
             ],
             rzztOptions:[
+                {label:'未入账',value:'01',},
                 {label:'入账(企业所得税税前扣除)',value:'02',},
                 {label:'入账(企业所得税不扣除)',value:'03',},
-                 {label:'入账撤销',value:'06',disabled:true},
+                {label:'入账撤销',value:'06',disabled:true},
             ],
             editeRules:{
                 accSegment:[{

@@ -83,38 +83,50 @@
             ref="topTableRef"
             row-key="id"
           >
-            <el-table-column type="selection" width="55" fixed="left" align="center">
+            <el-table-column type="selection" width="45" fixed="left">
             </el-table-column>
-            <el-table-column type="index" width="55" label="序号" align="center">
+            <el-table-column type="index" width="45" label="序号">
             </el-table-column>
-            <el-table-column prop="hgjkshm" label="海关缴款书号码" minWidth="170" align="center">
+            <el-table-column prop="hgjkshm" label="海关缴款书号码" minWidth="170" show-overflow-tooltip>
             </el-table-column>
             <el-table-column prop="tprq" label="填发日期" minWidth="140" align="center">
             </el-table-column>
-            <el-table-column prop="skje" label="税款金额" minWidth="160" align="center">
+            <el-table-column prop="skje" label="税款金额" minWidth="120" align="right">
               <template slot-scope="{row}">{{ formatMoney(row.skje) }} </template>
             </el-table-column>
-            <el-table-column prop="jkdwrnsrsbh" label="缴款单位人纳税人识别号" minWidth="160" align="center">
+            <el-table-column prop="jkdwrnsrsbh" label="缴款单位人纳税人识别号" minWidth="160" show-overflow-tooltip>
             </el-table-column>
-            <el-table-column prop="jkdwrnsrmc" label="缴款单位人纳税人名称" minWidth="180" show-overflow-tooltip align="center">
+            <el-table-column prop="jkdwrnsrmc" label="缴款单位人纳税人名称" minWidth="180" show-overflow-tooltip>
             </el-table-column>
             <el-table-column prop="sfzhsd" label="是否重号锁定" minWidth="120" align="center">
+              <template slot-scope="scope">
+                <span>{{ handleParesTableValue(scope.row.sfzhsd,[{label:'已锁定',vlaue:'Y'},{label:'未锁定',vlaue:'N'}]) }}</span>
+              </template>
             </el-table-column>
             <el-table-column prop="srzzt" label="入账状态" minWidth="120" align="center">
+              <template slot-scope="scope">
+                <span>{{ scope.row.rzzt === '01' ?'未入账':scope.row.rzzt === '06'?'入账撤销':'已入账' }}</span>
+              </template>
             </el-table-column>
-            <el-table-column prop="spzt" label="收票状态" minWidth="180" align="center">
+            <el-table-column prop="spzt" label="收票状态" minWidth="120" align="center">
+              <template slot-scope="scope">
+                <span>{{ handleParesTableValue(scope.row.spzt,optionList.collectTicketStatus) }}</span>
+              </template>
             </el-table-column>
-            <el-table-column prop="sprq" label="收票日期" minWidth="180" align="center">
+            <el-table-column prop="sprq" label="收票日期" minWidth="160" align="center">
             </el-table-column>
             <el-table-column prop="zczz" label="转出状态" minWidth="120" :header-align="'center'" :align="'center'">
+              <template slot-scope="scope">
+                <span>{{ handleParesTableValue(scope.row.zczt,optionList.rollOntStatus) }}</span>
+              </template>
             </el-table-column>
-            <el-table-column prop="cwbz" label="财务备注" minWidth="120" :header-align="'center'" :align="'center'">
+            <el-table-column prop="cwbz" label="财务备注" minWidth="120" :header-align="'center'">
             </el-table-column>
-            <el-table-column prop="gjrq" label="归集日期" minWidth="180" :header-align="'center'" :align="'center'">
+            <el-table-column prop="gjrq" label="归集日期" minWidth="160" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="createtime" label="创建时间" minWidth="180" align="center">
+            <el-table-column prop="createtime" label="创建时间" minWidth="160" align="center">
             </el-table-column>
-            <el-table-column prop="updatetime" label="修改时间" minWidth="180" align="center">
+            <el-table-column prop="updatetime" label="修改时间" minWidth="160" align="center">
             </el-table-column>
           </el-table>
         </article>
@@ -470,8 +482,16 @@ export default {
     /* 返回后刷新状态 */
     handleDone(val){
       this.handleGetTableList()
+    },
+    handleParesTableValue(val,option){
+      if(option.length <=0 || (val??'') ===''){
+        return ''
+      }else{
+       return option.find(k=> k.value === val)?.label || ''
+      }
     }
   },
+  inject: ['optionList'],
   created() {},
   mounted() {
     this.handleInit();

@@ -12,7 +12,7 @@
               v-if="$refs.list && $refs.list.searchParam.cljg == '03'">撤销勾选</el-button>
             <el-button type="success" @click="submitBatch('03')" v-else>提交勾选</el-button>
             <el-button @click="exportInvoiceCheck">导出查询结果</el-button>
-            <el-button @click="exportSelectedInvoice">导出选中发票</el-button>
+            <!-- <el-button @click="exportSelectedInvoice">导出选中发票</el-button> -->
           </div>
         </div>
       </template>
@@ -385,7 +385,7 @@ export default {
     },
     // 导出发票数据
     async exportInvoiceCheck() {
-      const fileName = `海关缴款书.xlsx`
+      const fileName = `发票勾选不抵扣.xlsx`
       await exportInvoiceCheck({
         reqData: { ...this.queryParam, sign: 'N', pageNo: 1, pageSize: 9999999 },
         fileName

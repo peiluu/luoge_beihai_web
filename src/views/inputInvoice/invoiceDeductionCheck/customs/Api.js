@@ -17,7 +17,7 @@ export const getOrgList = data => postJSON(`${config.host}/orgnization/getOrgLis
   /**
    * @desption 导出查询结果
    */
-  export const downLoadNoOpenList = data => download(`${config.host}/applyInvoiceUpload/downLoadNoOpenList`, data);
+  export const exportInvoiceCheck = data => download(`${config.host}/income/exportInvoiceCheck`, data);
     /**
    * @desption 获取当前用户会计科目（不分页）
    */
