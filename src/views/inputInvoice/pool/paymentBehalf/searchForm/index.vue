@@ -248,7 +248,7 @@
                 >
                   <el-option value="" label="全部"></el-option>
                   <el-option
-                    v-for="item in options"
+                    v-for="item in optionList.enterAccountStatus"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value"

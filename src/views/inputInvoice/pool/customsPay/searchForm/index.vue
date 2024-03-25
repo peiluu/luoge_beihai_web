@@ -9,7 +9,7 @@
           >
             <el-select
               style="width: 100%"
-              v-model="where.jkdwnsrsbh"
+              v-model="where.jkdwrnsrsbh"
               placeholder="请选择"
               clearable
               filterable
@@ -62,7 +62,7 @@
             <el-form-item label="是否重号锁定:">
               <el-select
                 style="width: 100%"
-                v-model="where.sfzhsd"
+                v-model="where.sfchsd"
                 placeholder="请选择"
                 clearable
                 filterable
@@ -145,7 +145,7 @@
               >
                 <el-option value="" label="全部"></el-option>
                 <el-option
-                  v-for="item in optionList.invoiceStatus"
+                  v-for="item in optionList.collectTicketStatus"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"

@@ -388,7 +388,7 @@ export default {
     // 重置搜索内容
     handleReset() {
       this.searchParam = this.kjywrid == null ? {} : { kjywrid: this.kjywrid };
-      this.handleGetData(this.searchParam);
+      this.handleGetData({...this.param, ...this.searchParam});
     },
     // 刷新
     reload(args) {

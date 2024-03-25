@@ -52,7 +52,7 @@ export const postPoolTick = data => postJSON(`${config.host}/income/receiptStatu
  * @returns {*}
  */
 /* 纳税主体 */
-export const getRatepayingMain = (data = {}) => postJSON(`${config.host}/taxBody/getListAll`,data);
+export const getRatepayingMain = (data = {}) => postJSON(`${config.host}/taxBody/getListByUser`,data);
 /* 受票组织 */
 export const getOrganList = (data = {}) => postJSON(`${config.host}/orgnization/getOrgList`,data);
 /* 会计科目 */

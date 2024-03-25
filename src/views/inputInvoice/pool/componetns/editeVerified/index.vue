@@ -182,7 +182,9 @@ export default {
         /* 所属套账 */
         async handleGetList(){
             let parmas = {
-                nsrsbh:this.pushForm.gmfNsrsbh
+                nsrsbh:this.pushForm.gmfNsrsbh,
+                isInvoice:'N',
+                isSelectAll:'N',
             }
             try{
                 const res = await getOrgnizationList(parmas);

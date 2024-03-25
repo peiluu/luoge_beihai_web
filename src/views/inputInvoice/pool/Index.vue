@@ -73,8 +73,10 @@ export default {
         ],
         /* 入账状态 */
         enterAccountStatus:[
-          {label:'已入账',value:'1'},
-          {label:'未入账',value:'2'},
+          {label:'未入账',value:'01'},
+          {label:'入账（企业所得税税前扣除）',value:'02'},
+          {label:'入账（企业所得税不扣除）',value:'03'},
+          {label:'入账已撤销',value:'06'},
         ],
         /* 转出状态 */
         rollOntStatus:[
@@ -133,7 +135,7 @@ export default {
       try {
         const res = await getRatepayingMain();
         if([0,'0'].includes(res.code)){
-          this.optionList.xsfnsrsbhOptions = [... res.data]
+          this.optionList.xsfnsrsbhOptions = [...res.data]
         }
         
       }catch{
@@ -142,7 +144,11 @@ export default {
     },
     async hanldeGetOrgId(){
       try {
-        const res = await getOrganList();
+        let params = {
+          isInvoice:'N',
+          isSelectAll:'N'
+        }
+        const res = await getOrganList(params);
         if([0,'0'].includes(res.code)){
           this.optionList.orgOption = [... res.data]
         }
