@@ -9,7 +9,7 @@
           >
             <el-select
               style="width: 100%"
-              v-model="where.jkdwnsrsbh"
+              v-model="where.jkdwrnsrsbh"
               placeholder="请选择"
               clearable
               filterable
@@ -62,7 +62,7 @@
             <el-form-item label="是否重号锁定:">
               <el-select
                 style="width: 100%"
-                v-model="where.sfzhsd"
+                v-model="where.sfchsd"
                 placeholder="请选择"
                 clearable
                 filterable
