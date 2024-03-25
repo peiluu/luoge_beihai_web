@@ -104,7 +104,7 @@
             <el-table-column prop="jsje" label="计税金额" minWidth="120" align="right">
               <template slot-scope="{row}">{{ formatMoney(row.jsje) }} </template>
             </el-table-column>
-            <el-table-column prop="sjje" label="实缴金额" minWidth="180" align="right">
+            <el-table-column prop="sjje" label="实缴金额" minWidth="120" align="right">
               <template slot-scope="{row}">{{ formatMoney(row.sjje) }} </template>
             </el-table-column>
             <el-table-column prop="bkjnsrsbh" label="被扣缴纳税人识别号" minWidth="180" show-overflow-tooltip>
@@ -121,7 +121,7 @@
                 <span>{{ handleParesTableValue(scope.row.spzt,optionList.collectTicketStatus) }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="sprq" label="收票日期" minWidth="160" align="center">
+            <el-table-column prop="sprq" label="收票日期" minWidth="120" align="center">
             </el-table-column>
             <el-table-column prop="zczt" label="转出状态" minWidth="120" align="center">
               <template slot-scope="scope">
@@ -130,11 +130,11 @@
             </el-table-column>
             <el-table-column prop="cwbz" label="财务备注" minWidth="180" show-overflow-tooltip>
             </el-table-column>
-            <el-table-column prop="gjrq" label="归集日期" minWidth="160" align="center">
+            <el-table-column prop="gjrq" label="归集日期" minWidth="120" align="center">
             </el-table-column>
-            <el-table-column prop="createtime" label="创建时间" minWidth="160" align="center">
+            <el-table-column prop="createtime" label="创建时间" minWidth="120" align="center">
             </el-table-column>
-            <el-table-column prop="updatetime" label="修改时间" minWidth="160" align="center">
+            <el-table-column prop="updatetime" label="修改时间" minWidth="120" align="center">
             </el-table-column>
           </el-table>
         </article>
