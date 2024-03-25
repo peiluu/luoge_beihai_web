@@ -97,6 +97,20 @@ export default {
           {label:'锁定',value:'Y'},
           {label:'未锁定',value:'N'},
         ],
+        /* 发票用途 */
+        invoiceUse:[
+        {label:'未使用',value:'0'},
+        {label:'已申请抵扣',value:'1'},
+        {label:'已申请退税',value:'2'},
+        {label:'已申请代办退税',value:'3'},
+        {label:'已勾选不抵扣（历史数据）',value:'4'},
+        {label:'已申请代办退税（历史数据）',value:'5'},
+        {label:'已申请不抵扣',value:'6'},
+        {label:'内销转出口',value:'7'},
+        {label:'出口转内销',value:'8'},
+        {label:'准予退税',value:'9'},
+        {label:'不予退税',value:'10'},
+        ],
         /* 销售方纳税主体 */
         xsfnsrsbhOptions:[],
         /* 受票组织 */

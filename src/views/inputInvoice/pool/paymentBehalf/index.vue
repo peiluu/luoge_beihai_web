@@ -88,7 +88,10 @@
             </el-table-column>
             <el-table-column prop="dkdjwspzh" label="代扣代缴完税凭证号" minWidth="160" align="center">
             </el-table-column>
-            <el-table-column prop="pzlx" label="票种类型" minWidth="140" align="center">
+            <el-table-column prop="pzlx" label="票种类型" minWidth="160" align="center">
+              <template slot-scope="scope">
+              <span>{{ handleParesTableValue(scope.row.pzlx,optionList.ticketType) }}</span>
+              </template>
             </el-table-column>
             <el-table-column prop="kjywrsbh" label="扣缴义务人识别号（购方）" minWidth="190" align="center">
             </el-table-column>
@@ -108,13 +111,22 @@
             </el-table-column>
             <el-table-column prop="bkjnsrmc" label="被扣缴纳税人名称" minWidth="200" show-overflow-tooltip :header-align="'center'" :align="'right'">
             </el-table-column>
-            <el-table-column prop="srzzt" label="入账状态" minWidth="120" :header-align="'center'" :align="'right'">
+            <el-table-column prop="srzzt" label="入账状态" minWidth="120" :header-align="'center'" :align="'center'">
+              <template slot-scope="scope">
+                <span>{{ scope.srzzt === '01' ?'未入账':scope.srzzt === '06'?'入账撤销':'已入账' }}</span>
+              </template>
             </el-table-column>
-            <el-table-column prop="spzt" label="收票状态" minWidth="120" :header-align="'center'" :align="'right'">
+            <el-table-column prop="spzt" label="收票状态" minWidth="120" :header-align="'center'" :align="'center'">
+              <template slot-scope="scope">
+                <span>{{ handleParesTableValue(scope.row.spzt,optionList.collectTicketStatus) }}</span>
+              </template>
             </el-table-column>
             <el-table-column prop="sprq" label="收票日期" minWidth="180" align="center">
             </el-table-column>
             <el-table-column prop="zczt" label="转出状态" minWidth="180" align="center">
+              <template slot-scope="scope">
+                <span>{{ handleParesTableValue(scope.row.zczt,optionList.rollOntStatus) }}</span>
+              </template>
             </el-table-column>
             <el-table-column prop="cwbz" label="财务备注" minWidth="180" align="center">
             </el-table-column>
@@ -463,8 +475,16 @@ export default {
     /* 返回后刷新状态 */
     handleDone(val){
       this.handleGetPayTableList()
+    },
+    handleParesTableValue(val,option){
+      if(option.length <=0 || (val??'') ===''){
+        return ''
+      }else{
+       return option.find(k=> k.value === val)?.label || ''
+      }
     }
   },
+  inject: ['optionList'],
   created() {},
   mounted() {
     this.handleInit()

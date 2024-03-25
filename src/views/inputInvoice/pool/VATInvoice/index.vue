@@ -137,14 +137,26 @@
               </template>
             </el-table-column>
             <el-table-column prop="hxyt" label="发票用途" minWidth="120" :header-align="'center'" :align="'center'">
+              <template slot-scope="scope">
+                <span>{{ handleParesTableValue(scope.row.hxyt,optionList.invoiceUse) }}</span>
+              </template>
             </el-table-column>
             <el-table-column prop="srzzt" label="入账状态" minWidth="120" :header-align="'center'" :align="'center'">
+              <template slot-scope="scope">
+                <span>{{ scope.srzzt === '01' ?'未入账':scope.hxyt === '06'?'入账撤销':'已入账' }}</span>
+              </template>
             </el-table-column>
             <el-table-column prop="spzt" label="收票状态" minWidth="120" :header-align="'center'" :align="'center'">
+              <template slot-scope="scope">
+                <span>{{ handleParesTableValue(scope.row.spzt,optionList.collectTicketStatus) }}</span>
+              </template>
             </el-table-column>
             <el-table-column prop="sprq" label="收票日期" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
             <el-table-column prop="zczt" label="转出状态" minWidth="120" :header-align="'center'" :align="'center'">
+              <template slot-scope="scope">
+                <span>{{ handleParesTableValue(scope.row.zczt,optionList.rollOntStatus) }}</span>
+              </template>
             </el-table-column>
             <el-table-column prop="yfphm" label="原发票号码" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>

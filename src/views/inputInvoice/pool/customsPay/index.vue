@@ -99,14 +99,26 @@
             <el-table-column prop="jkdwrnsrmc" label="缴款单位人纳税人名称" minWidth="180" show-overflow-tooltip align="center">
             </el-table-column>
             <el-table-column prop="sfzhsd" label="是否重号锁定" minWidth="120" align="center">
+              <template slot-scope="scope">
+                <span>{{ handleParesTableValue(scope.row.sfzhsd,[{label:'已锁定',vlaue:'Y'},{label:'未锁定',vlaue:'N'}]) }}</span>
+              </template>
             </el-table-column>
             <el-table-column prop="srzzt" label="入账状态" minWidth="120" align="center">
+              <template slot-scope="scope">
+                <span>{{ scope.srzzt === '01' ?'未入账':scope.srzzt === '06'?'入账撤销':'已入账' }}</span>
+              </template>
             </el-table-column>
             <el-table-column prop="spzt" label="收票状态" minWidth="180" align="center">
+              <template slot-scope="scope">
+                <span>{{ handleParesTableValue(scope.row.spzt,optionList.collectTicketStatus) }}</span>
+              </template>
             </el-table-column>
             <el-table-column prop="sprq" label="收票日期" minWidth="180" align="center">
             </el-table-column>
             <el-table-column prop="zczz" label="转出状态" minWidth="120" :header-align="'center'" :align="'center'">
+              <template slot-scope="scope">
+                <span>{{ handleParesTableValue(scope.row.zczt,optionList.rollOntStatus) }}</span>
+              </template>
             </el-table-column>
             <el-table-column prop="cwbz" label="财务备注" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
@@ -470,8 +482,16 @@ export default {
     /* 返回后刷新状态 */
     handleDone(val){
       this.handleGetTableList()
+    },
+    handleParesTableValue(val,option){
+      if(option.length <=0 || (val??'') ===''){
+        return ''
+      }else{
+       return option.find(k=> k.value === val)?.label || ''
+      }
     }
   },
+  inject: ['optionList'],
   created() {},
   mounted() {
     this.handleInit();
