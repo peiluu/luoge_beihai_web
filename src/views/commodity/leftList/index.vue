@@ -4,7 +4,7 @@
       <article >
         <h3>{{useMode?'商品和服务税收分类编码':'项目商品分类名称'}}</h3>
         <el-form ref="form" :model="form" :label-width="useMode?'0px':'80px'">
-          <el-form-item :label="useMode?'':'商品名称'">
+          <el-form-item :label="useMode?'':'分类名称'">
             <el-input v-model="form.name">
             
               <template slot="append">
@@ -139,7 +139,7 @@ export default {
    },
     /* Add 提交 */
     handleSumbit(data){
-        if((this.form.name??'') === '') return this.$message.warning('商品名称不能为空！')
+        if((this.form.name??'') === '') return this.$message.warning('分类名称不能为空！')
         this.loading = true;
         postcommondityAddSingle(data).then(res=>{
             if(res.code === '0'){
