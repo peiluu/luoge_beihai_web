@@ -145,7 +145,7 @@
               >
                 <el-option value="" label="全部"></el-option>
                 <el-option
-                  v-for="item in optionList.invoiceStatus"
+                  v-for="item in optionList.collectTicketStatus"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"

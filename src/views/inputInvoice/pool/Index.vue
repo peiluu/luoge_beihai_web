@@ -73,8 +73,10 @@ export default {
         ],
         /* 入账状态 */
         enterAccountStatus:[
-          {label:'已入账',value:'1'},
-          {label:'未入账',value:'2'},
+          {label:'未入账',value:'01'},
+          {label:'入账（企业所得税税前扣除）',value:'02'},
+          {label:'入账（企业所得税不扣除）',value:'03'},
+          {label:'入账已撤销',value:'06'},
         ],
         /* 转出状态 */
         rollOntStatus:[
