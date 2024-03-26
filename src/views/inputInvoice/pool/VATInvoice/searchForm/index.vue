@@ -228,10 +228,21 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="价税合计：">
-                <el-input
-                  v-model="where.input"
+                <article class="flex">
+                  <article>
+                    <el-input-number :controls="false" :min="0"
+                  v-model="where.jshj[0]"
                   placeholder="请输入内容"
-                ></el-input>
+                ></el-input-number>
+                  </article>&nbsp;~&nbsp;
+                  <article>
+                    <el-input-number :controls="false" :min="0"
+                  v-model="where.jshj[1]"
+                  placeholder="请输入内容"
+                ></el-input-number>
+                  </article>
+                </article>
+               
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -289,7 +300,9 @@ export default {
   components: {},
   data() {
     return {
-      where: {},
+      where: {
+        jshj:[undefined,undefined]
+      },
       options: [],
       isShow: false,
       xsfnsrsbhOptions:[],
@@ -338,6 +351,9 @@ export default {
   margin-left: 15px;
   font-size: 12px;
   cursor: pointer;
+}
+.flex{
+  display:flex;
 }
 /*@import url(); 引入公共css类*/
 </style>

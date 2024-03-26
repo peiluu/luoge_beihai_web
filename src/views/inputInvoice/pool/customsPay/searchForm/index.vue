@@ -115,10 +115,21 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="税款金额：">
-              <el-input
-                v-model="where.skje"
-                placeholder="请输入内容"
-              ></el-input>
+              <article style="display:flex">
+                  <article>
+                    <el-input-number :controls="false" :min="0"
+                  v-model="where.skje[0]"
+                  placeholder="请输入内容"
+                ></el-input-number>
+                  </article>&nbsp;~&nbsp;
+                  <article>
+                    <el-input-number :controls="false" :min="0"
+                  v-model="where.skje[1]"
+                  placeholder="请输入内容"
+                ></el-input-number>
+                  </article>
+                </article>
+            
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -227,7 +238,9 @@ export default {
   components: {},
   data() {
     return {
-      where: {},
+      where: {
+        skje:[undefined,undefined]
+      },
       options: [],
       isShow: false,
     };
