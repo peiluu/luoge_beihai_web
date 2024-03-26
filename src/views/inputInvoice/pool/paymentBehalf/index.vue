@@ -312,8 +312,8 @@ export default {
     },
     height(){
       let h = window.innerHeight - 566;
-      return h;
-      // return h < 368 ? 368 : h;
+      // return h;
+      return h < 300 ? 300 : h;
     }
   },
   watch: {},
