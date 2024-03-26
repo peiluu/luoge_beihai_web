@@ -324,7 +324,7 @@ export default {
     },
     /* 重置 */
     handleRest(){
-      this.where = {};
+      this.where = {jshj:[undefined,undefined]};
       this.$emit('resst',this.where)
     }
   },

@@ -258,7 +258,7 @@ export default {
     },
     /* 重置 */
     handleRest(){
-      this.where = {};
+      this.where = {skje:[undefined,undefined]};
       this.$emit('resst',this.where)
     }
   },

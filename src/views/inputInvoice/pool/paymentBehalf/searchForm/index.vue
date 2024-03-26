@@ -303,7 +303,7 @@ export default {
     },
     /* 重置 */
     handleRest(){
-      this.where = {};
+      this.where = {sjje:[undefined,undefined]};
       this.$emit('resst',this.where)
     }
   },
