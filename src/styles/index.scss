@@ -43,9 +43,9 @@ html {
     display: none;
 }
 
-.el-menu-item i,.el-submenu__title i {
-    color: #FFFFFF !important;
-}
+// .el-menu-item i,.el-submenu__title i {
+//     color: #FFFFFF !important;
+// }
 
 .el-menu-item.is-active {
     // background-color: #2D3E4F !important;
@@ -108,7 +108,15 @@ html {
     height: $sideMenuRowHeight;
     line-height: $sideMenuRowHeight;
 }
-
+.el-submenu {
+    .el-menu {
+        background-color: rgb(250,250,250);
+    }
+}
+.el-submenu__title i {
+    color: #1c1c1c;
+    font-weight: 700;
+}
 .el-divider--horizontal{
     margin: 12px 0;
 }

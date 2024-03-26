@@ -1,12 +1,12 @@
 <template>
-  <aside :class="['aui-sidebar', `aui-sidebar--${$store.state.sidebarLayoutSkin}`]">
+  <aside :class="['aui-sidebar']">
     <div class="aui-sidebar__inner">
       <el-menu
         :default-active="$store.state.app.sidebarMenuActiveName"
         :collapse="$store.state.sidebarFold"
         :unique-opened="true"
         :collapseTransition="false"
-        class="aui-sidebar__menu">
+      >
         <sub-menu v-for="menu in $store.state.app.sidebarMenuList" :key="menu.id" :menu="menu" />
       </el-menu>
     </div>
