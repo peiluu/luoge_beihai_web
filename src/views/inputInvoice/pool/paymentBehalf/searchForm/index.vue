@@ -15,7 +15,7 @@
               <el-option
                 v-for="(item,index) in optionList.xsfnsrsbhOptions"
                 :key="index"
-                :label="item.nsrmc"
+                :label="`${item.nsrmc} ${item.nsrsbh}`"
                 :value="item.nsrsbh"
               >
               </el-option>

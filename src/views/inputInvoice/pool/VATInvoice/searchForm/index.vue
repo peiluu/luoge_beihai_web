@@ -33,7 +33,7 @@
               <el-option
               v-for="item in optionList.xsfnsrsbhOptions"
                 :key="item.id"
-                :label="item.nsrmc"
+                :label="`${item.nsrmc} ${item.nsrsbh}`"
                 :value="item.nsrsbh"
               >
               </el-option>
