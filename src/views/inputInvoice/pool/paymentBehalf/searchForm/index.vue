@@ -15,7 +15,7 @@
               <el-option
                 v-for="(item,index) in optionList.xsfnsrsbhOptions"
                 :key="index"
-                :label="item.nsrmc"
+                :label="`${item.nsrmc} ${item.nsrsbh}`"
                 :value="item.nsrsbh"
               >
               </el-option>
@@ -97,10 +97,21 @@
         </el-col>
         <el-col :span="8">
               <el-form-item label="实缴金额：">
-                <el-input
-                  v-model="where.sjje"
+                <article style="display:flex">
+                  <article>
+                    <el-input-number :controls="false" :min="0"
+                  v-model="where.sjje[0]"
                   placeholder="请输入内容"
-                ></el-input>
+                ></el-input-number>
+                  </article>&nbsp;~&nbsp;
+                  <article>
+                    <el-input-number :controls="false" :min="0"
+                  v-model="where.sjje[1]"
+                  placeholder="请输入内容"
+                ></el-input-number>
+                  </article>
+                </article>
+               
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -271,7 +282,9 @@ export default {
   components: {},
   data() {
     return {
-      where: {},
+      where: {
+        sjje:[undefined,undefined]
+      },
       options: [],
       isShow: false,
     };
@@ -290,7 +303,7 @@ export default {
     },
     /* 重置 */
     handleRest(){
-      this.where = {};
+      this.where = {sjje:[undefined,undefined]};
       this.$emit('resst',this.where)
     }
   },
