@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
+  <div class="main-content">
     <div class="content-tab-header">
       <BackBtn path="/invoiceDownload/download" v-if="$route.query.recordId" align="left" />
       <el-tabs :key="sjlx" class="custom-card-tabs" v-model="sjlx" type="card">
@@ -164,13 +164,10 @@ export default {
 
   computed: {
     height() {
-      return window.innerHeight - 310;
+      return window.innerHeight - 370;
     },
     isDetail() {
       return this.$route.query.operateType === 'detail'
-    },
-    contentHeight() {
-      return window.innerHeight - 132;
     },
     fplxMap() {
       return this.sjlx === '1' ? inputFplxMap : this.outputFplxMap
