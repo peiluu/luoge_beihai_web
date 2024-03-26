@@ -41,7 +41,7 @@
           >
         </el-descriptions>
         <article style="margin-top:15px;">
-          <el-table :data="requireTableData" style="width: 90%" :border="true">
+          <el-table :data="requireTableData" style="width: 100%" :border="true">
             <el-table-column prop="label" label="风险检查项" width="220" :header-align="'center'" :align="'center'">
             </el-table-column>
             <el-table-column prop="value" label="检查结果" minWidth="220" :header-align="'center'" :align="'left'">

@@ -115,14 +115,14 @@
             </el-table-column>
             <el-table-column prop="sprq" label="收票日期" minWidth="160" align="center">
             </el-table-column>
-            <el-table-column prop="zczz" label="转出状态" minWidth="120" :header-align="'center'" :align="'center'">
+            <el-table-column prop="zczz" label="转出状态" minWidth="120" :align="'center'">
               <template slot-scope="scope">
                 <span>{{ handleParesTableValue(scope.row.zczt,optionList.rollOntStatus) }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="cwbz" label="财务备注" minWidth="120" :header-align="'center'">
+            <el-table-column prop="cwbz" label="财务备注" minWidth="120">
             </el-table-column>
-            <el-table-column prop="gjrq" label="归集日期" minWidth="160" :header-align="'center'" :align="'center'">
+            <el-table-column prop="gjrq" label="归集日期" minWidth="160" :align="'center'">
             </el-table-column>
             <el-table-column prop="createtime" label="创建时间" minWidth="160" align="center">
             </el-table-column>

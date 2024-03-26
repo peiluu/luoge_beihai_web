@@ -13,7 +13,7 @@
                         <span>{{ typeStatus.type === 'HGJKS'?pushForm.hgjkshm:typeStatus.type === 'DKDJWSPZ'?pushForm.dkdjwspzh:pushForm.fphm }}</span>
                     </el-form-item>
                     <el-form-item label="开票日期：">
-                        <span>{{ pushForm.tfrq }}</span>
+                        <span>{{ pushForm.kprq || pushForm.tfrq }}</span>
                     </el-form-item>
                     <!-- <el-form-item label="发票类型：">
                         <span>{{ optionList.invoiceType.find(k=> k.value === pushForm.fppzDm)?.label }}</span>
