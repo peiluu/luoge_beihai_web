@@ -151,7 +151,7 @@
         <div id="echart-col"><div class="no-echart" v-if="Object.keys(seriesDataObj).length === 0">暂无数据</div></div>
       </div>
       <div class="echart-r">
-        <p class="echart-mo">{{ ringMonth }}</p>
+        <p class="echart-mo">{{ ringMonth || '--' }}</p>
         <p class="proportion">占图比</p>
         <div id="echart-ring"><div class="no-echart" v-if="Object.keys(seriesDataObj).length === 0">暂无数据</div></div>
       </div>
@@ -413,7 +413,10 @@ export default {
             }
           });
           this.xAxisData = bottomX;
-          this.ringMonth = bottomX[this.echartForm.month - 1];
+          console.log('---bottomX---', bottomX, this.echartForm.month)
+          const index = bottomX.length < this.echartForm.month ? bottomX.length : this.echartForm.month
+          this.ringMonth = bottomX[index - 1];
+          this.xMonth = index - 1;
           this.seriesDataObj = newObj;
           this.initEchart();
           this.initEchartRing();
