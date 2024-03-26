@@ -269,10 +269,12 @@ img {
   &--colorful {
     .aui-navbar__body {
       background-color: transparent;
+      box-shadow: 1px 0 10px 0 rgba(0,0,0,.2);
     }
     .aui-navbar__menu {
       > .el-menu-item,
       > .el-submenu > .el-submenu__title {
+        padding-left: 10px !important;
         color: #fff;
         &:focus,
         &:hover {
@@ -466,6 +468,9 @@ img {
   box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.3);
   overflow: hidden;
   transition: width .3s;
+  .el-menu {
+    margin-left: -10px;
+  }
   &--dark {
     background-color: $sidebar--background-color-dark;
     .aui-sidebar__menu,
