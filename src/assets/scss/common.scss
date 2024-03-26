@@ -313,6 +313,7 @@ img {
     }
   }
   &__header {
+    background-color: #fff;
     position: relative;
     width: $sidebar--width;
     height: $navbar--height;
@@ -335,11 +336,10 @@ img {
     &-lg,
     &-mini {
       max-width: 100%;
-      color: #fff;
       cursor: pointer;
       &:focus,
       &:hover {
-        color: #fff;
+        // color: #fff;
         text-decoration: none;
       }
     }

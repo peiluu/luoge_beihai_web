@@ -2,8 +2,8 @@
   <nav class="aui-navbar" :class="`aui-navbar--${$store.state.navbarLayoutType}`">
     <div class="aui-navbar__header">
       <h1 class="aui-navbar__brand" @click="$router.push({ name: 'home' })">
-        <a class="aui-navbar__brand-lg" href="javascript:;">{{ $t('brand.lg') }}</a>
-        <a class="aui-navbar__brand-mini" href="javascript:;">{{ $t('brand.mini') }}</a>
+        <!-- <a class="aui-navbar__brand-lg" href="javascript:;">{{ $t('brand.lg') }}</a> -->
+        <img src="~@/assets/logo.png" class="nav-logo"/>
       </h1>
     </div>
     <div class="aui-navbar__body">
@@ -91,3 +91,8 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.nav-logo {
+  height: 100%;
+}
+</style>
