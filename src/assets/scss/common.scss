@@ -265,7 +265,7 @@ img {
   align-items: stretch;
   height: $navbar--height;
   background-color: $--color-primary;
-  box-shadow: 0 1px 0 0 rgba(0, 0, 0, .05);
+  // box-shadow: 0 1px 0 0 rgba(0, 0, 0, .05);
   &--colorful {
     .aui-navbar__body {
       background-color: transparent;
@@ -313,6 +313,7 @@ img {
     }
   }
   &__header {
+    background-color: #fff;
     position: relative;
     width: $sidebar--width;
     height: $navbar--height;
@@ -322,7 +323,6 @@ img {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 5px;
     margin: 0;
     width: 100%;
     height: 100%;
@@ -335,11 +335,10 @@ img {
     &-lg,
     &-mini {
       max-width: 100%;
-      color: #fff;
       cursor: pointer;
       &:focus,
       &:hover {
-        color: #fff;
+        // color: #fff;
         text-decoration: none;
       }
     }
@@ -458,13 +457,13 @@ img {
 ------------------------------ */
 .aui-sidebar {
   position: fixed;
-  top: $navbar--height;
+  top: 0;
   left: 0;
   bottom: 0;
-  z-index: 1000;
+  z-index: 1031;
   width: $sidebar--width;
   background-color: #fff;
-  box-shadow: 1px 0 2px 0 rgba(0, 0, 0, .05);
+  box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.3);
   overflow: hidden;
   transition: width .3s;
   &--dark {

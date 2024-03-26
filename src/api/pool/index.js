@@ -60,6 +60,9 @@ export const getAccountantList = (data = {}) => postJSON(`${config.host}/mtc/acc
 /* 所属组织 */
 export const getOrgnizationList = (data = {}) => postJSON(`${config.host}/orgnization/getOrgList`,data);
 
+/* 进项税对应费用会计科目编码与名称 */
+export const getMainList = (data = {}) => postJSON(`${config.host}/mtc/accountingSubjects/listByNsrsbh`,data);
+
 
 /**
  * 导出

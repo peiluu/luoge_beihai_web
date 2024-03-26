@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import {postPoolTick} from '@/api/pool/index.js'
+import {postPoolTick,getMainList} from '@/api/pool/index.js'
 export default {
     name:'collectTicketMagePage',
     props:{
@@ -144,10 +144,26 @@ export default {
                     this.$message.error("提交错误！请联系管理员！")
                 }
             }finally{}
+        },
+        /*进项税对应费用会计科目编码与名称 */
+        async handleGetSelectList(){
+            try{
+                let params = {
+                    nsrsbh:this.pushForm.gmfnsrsbh,
+                }
+                const res = await getMainList(params);
+                if([0,'0'].includes(res.code)){
+                    this.accSegmentOptions = res.data.map(k=> {return {label:k['accSegmentName'],value:k.accSegmentCode}})
+                }
+            }catch{
+
+            }
         }
     },
     inject: ['optionList'],
-    created() {},
+    created() {
+        this.handleGetSelectList()
+    },
     mounted() {
         console.log(this.pushForm,"00")
     },

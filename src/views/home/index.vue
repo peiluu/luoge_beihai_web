@@ -1,5 +1,5 @@
 <template>
-  <el-card shadow="never" class="sjy-home">
+  <el-card shadow="never" class="main-content sjy-home">
     <div class="head-search">
       <!-- <el-select v-model="form.region" placeholder="请选择" class="mr-space">
         <el-option v-for="item in regionOptions" :key="item.value" :label="item.label" :value="item.value"> </el-option>

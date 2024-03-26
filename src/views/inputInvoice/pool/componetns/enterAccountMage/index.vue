@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import {postPoolInAccount,getOrgnizationList} from '@/api/pool/index.js'
+import {postPoolInAccount,getOrgnizationList,getMainList} from '@/api/pool/index.js'
 export default {
     name:'enterAccountMagePage',
     props:{
@@ -204,11 +204,26 @@ export default {
             }finally{}
             
 
+        },
+         /*进项税对应费用会计科目编码与名称 */
+         async handleGetSelectList(){
+            try{
+                let params = {
+                    nsrsbh:this.pushForm.gmfnsrsbh,
+                }
+                const res = await getMainList(params);
+                if([0,'0'].includes(res.code)){
+                    this.accSegmentOptions = res.data.map(k=> {return {label:k['accSegmentName'],value:k.accSegmentCode}})
+                }
+            }catch{
+
+            }
         }
     },
     inject: ['optionList'],
     created() {
         this.handleInit()
+        this.handleGetSelectList();
     },
     mounted() {
         this.handleGetList();

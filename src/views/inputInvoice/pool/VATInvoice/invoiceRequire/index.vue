@@ -29,15 +29,15 @@
             >{{requirdList.fphm}}</el-descriptions-item
           >
           <el-descriptions-item label="发票代码"
-            >{{requirdList.fpdm}}</el-descriptions-item
+            >{{requirdList.zzfpDm}}</el-descriptions-item
           >
           <el-descriptions-item label="开票日期"
             >{{requirdList.kprq}}</el-descriptions-item
           >
-          <el-descriptions-item label="发票金额">{{requirdList.kpje}}</el-descriptions-item>
-          <el-descriptions-item label="发票税额">{{requirdList.kpse}}</el-descriptions-item>
+          <el-descriptions-item label="发票金额">{{requirdList.hjje}}</el-descriptions-item>
+          <el-descriptions-item label="发票税额">{{requirdList.hjse}}</el-descriptions-item>
           <el-descriptions-item label="查验次数"
-            >{{requirdList.cycs}}</el-descriptions-item
+            >{{requirdList.count}}</el-descriptions-item
           >
         </el-descriptions>
         <article style="margin-top:15px;">
