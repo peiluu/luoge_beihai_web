@@ -358,6 +358,7 @@ export default {
     // 获取纳税人主体
     async getList() {
       try {
+        this.loading = true;
         const { data } = await getListByUser({});
         if (data.length) {
           this.taxpayerOptions = data;
@@ -373,7 +374,6 @@ export default {
     async getInvoice() {
       try {
         const { nsrsbh, ssq } = this.form;
-        this.loading = true;
         const { data } = await getInvoiceData({ nsrsbh, ssq });
         // console.log('--data--', data);
         this.fpsj = data;
