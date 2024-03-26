@@ -47,7 +47,7 @@
                             <el-option
                             v-for="item in accSegmentOptions"
                             :key="item.value"
-                            :label="item.label"
+                            :label="`${item.label} ${item.value}`"
                             :value="item.value">
                             </el-option>
                         </el-select>
@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import {postPoolEditebook,getOrgnizationList} from '@/api/pool/index.js'
+import {postPoolEditebook,getOrgnizationList,getMainList} from '@/api/pool/index.js'
 export default {
     name:'editeVerifiedPage',
     props:{
@@ -101,8 +101,8 @@ export default {
                 ...this.rowData,
             },
             accSegmentOptions:[
-                {label:'应交税费/待认证进项税额/工程类',value:'22210401'},
-                {label:'应交税费/待认证进项税额/费用类',value:'22210402'}
+                // {label:'应交税费/待认证进项税额/工程类',value:'22210401'},
+                // {label:'应交税费/待认证进项税额/费用类',value:'22210402'}
             ],
             rzztOptions:[
                 {label:'未入账',value:'01',},
@@ -182,7 +182,7 @@ export default {
         /* 所属套账 */
         async handleGetList(){
             let parmas = {
-                nsrsbh:this.pushForm.gmfNsrsbh,
+                nsrsbh:this.pushForm.gmfnsrsbh,
                 isInvoice:'N',
                 isSelectAll:'N',
             }
@@ -200,6 +200,20 @@ export default {
             }finally{}
             
 
+        },
+        /*进项税对应费用会计科目编码与名称 */
+        async handleGetSelectList(){
+            try{
+                let params = {
+                    nsrsbh:this.pushForm.gmfnsrsbh,
+                }
+                const res = await getMainList(params);
+                if([0,'0'].includes(res.code)){
+                    this.accSegmentOptions = res.data.map(k=> {return {label:k['accSegmentName'],value:k.accSegmentCode}})
+                }
+            }catch{
+
+            }
         }
     },
     inject: ['optionList'],
@@ -207,7 +221,7 @@ export default {
         this.handleGetList()
     },
     mounted() {
-       
+       this.handleGetSelectList()
     },
     beforeCreate() {},
     beforeMount() {},
