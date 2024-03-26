@@ -1,11 +1,11 @@
 <template>
     <div class="">
-        <el-card shadow="never">
-      <app-search-form @search="handlerSearch" @resst="handleRest"></app-search-form>
-    </el-card>
-    <el-card shadow="never">
+      <el-card shadow="never" body-style="padding: 15px 15px 0;">
+        <app-search-form @search="handlerSearch" @resst="handleRest"></app-search-form>
+      </el-card>
+    <el-card shadow="never" style="margin-top: 10px;" body-style="padding: 15px 15px 0;">
       <article>
-        <article style="padding: 2px">
+        <article style="padding: 0 0 15px">
           <el-row>
             <el-col :span="8">
               <div style="visibility: hidden">1</div>
@@ -78,7 +78,7 @@
             :row-class-name="rowClassName"
             @selection-change="handleSelectionChange"
             v-loading="loading"
-            height="340"
+            :height="height"
             style="width: 100%;"
             ref="topTableRef"
             row-key="id"
@@ -150,7 +150,7 @@
         </article>
       </article>
     </el-card>
-    <el-card shadow="never" class="bottom_crad">
+    <el-card shadow="never" class="bottom_crad" style="margin-top: 10px;" body-style="padding: 15px 15px 0;">
       <article>
         <el-table
           ref="bottomTableRef"
@@ -213,7 +213,7 @@
          
         </el-table>
       </article>
-      <article>
+      <article style="padding: 8px 0;">
         <el-pagination
           @size-change="handleBottomSizeChange"
           @current-change="handleBottomCurrentChange"
@@ -317,6 +317,11 @@ export default {
         maximumFractionDigits: 2
       });
       return formattedTotalAmount
+    },
+    height(){
+      let h = window.innerHeight - 566;
+      return h;
+      // return h < 368 ? 368 : h;
     }
   },
   watch: {},
@@ -524,6 +529,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 8px 0;
 }
 .aui-wrapper .el-pagination{
     margin-top: 0;

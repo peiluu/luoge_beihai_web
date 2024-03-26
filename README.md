@@ -91,3 +91,10 @@ npm run serve
 ![捐赠](http://cdn.renren.io/donate.jpg "捐赠")
 <br>
 <br>
+
+
+```bash
+# 项目打包 切换到tax分支
+npm run build:prod
+# 或者
+yarn build:prod

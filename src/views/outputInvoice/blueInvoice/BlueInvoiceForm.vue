@@ -3246,9 +3246,9 @@ export default {
       return this.thirdData?.slotData || this.$route.query ;
     },
     contentHeight() {
-      let h = 250;
+      let h = 252;
       if(this.detailInfo.isFormInvoiced || this.$route.query.isFormInvoiced){
-        h = 160
+        h = 180
       }
       return window.innerHeight - h;
     },
@@ -3394,5 +3394,6 @@ export default {
   align-content: center;
   justify-content: space-around;
   align-items: center;
+  padding-bottom: 8px;
 }
 </style>

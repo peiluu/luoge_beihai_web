@@ -1,14 +1,15 @@
 <template>
-  <div class="">
-    <el-card shadow="never">
+  <div class="main-content">
+    <el-card shadow="never" body-style="padding: 0">
       <article class="table_header">
         <div>
+          <el-button @click="$router.go(-1)">返回</el-button>
           <el-button type="primary" @click="handleAddTask">添加任务</el-button>
           <el-button type="primary" @click="handlerRefers">刷新状态</el-button>
         </div>
       </article>
       <article>
-        <el-table :data="tableData" v-loading="loading" style="width:  100%;height:calc(100vh - 240px);overflow: hidden auto;" :border="true">
+        <el-table :data="tableData" v-loading="loading" :height="height" :border="true">
           <el-table-column type="index" label="序号" width="55" :align="'center'">
           </el-table-column>
           <el-table-column
@@ -159,7 +160,7 @@
           >
           </el-table-column>
          
-          <el-table-column label="操作" width="180" :header-align="'center'" :align="'center'" fixed="right">
+          <el-table-column label="操作" width="120" :header-align="'center'" :align="'center'" fixed="right">
             <template slot-scope="scope">
               <el-button @click="handleViewDes(scope,'')" type="text" size="small">
                 查看
@@ -218,7 +219,11 @@ export default {
       loading:false,
     };
   },
-  computed: { },
+   computed: {
+    height() {
+      return window.innerHeight - 230;
+    },
+  },
   watch: {},
   methods: {
     /* 分页事件 */
@@ -377,5 +382,9 @@ export default {
   background: #f5f7fa;
   border: 1px solid #ebeef5;
   border-bottom: none;
+}
+::v-deep .el-pagination{
+  margin: 0;
+  padding: 8px 5px;
 }
 </style>

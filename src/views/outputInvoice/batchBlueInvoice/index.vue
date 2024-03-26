@@ -1,6 +1,6 @@
 <template>
-  <div class="">
-    <el-card shadow="never">
+  <div class="main-content">
+    <el-card shadow="hover" class="f-el-card">
       <el-form :model="form" label-width="80px">
         <el-row>
           <el-col :span="8" :body-style="{ paddingBottom: 0 }">
@@ -20,7 +20,7 @@
         </el-row>
       </el-form>
     </el-card>
-    <el-card shadow="never" :body-style="{height: 'calc(100vh - 220px)'}">
+    <el-card shadow="hover" :body-style="{height: 'calc(100vh - 240px)'}">
       <article>
         <el-table ref="batchBlueInvoiceRef" :data="tableData" style="width: 100%;height: calc(100vh - 320px);overflow:hidden auto;" :border="true" :v-loading="loading">
             <el-table-column type="index" label="序号" width="55" :header-align="'center'" :align="'center'">

@@ -37,9 +37,8 @@
 .ticket-content {
   background-color: #ffffff;
   border-radius: 4px;
-  margin: 8px;
   padding: 12px;
-  max-height: calc(100vh - 110px);
+  // max-height: calc(100vh - 110px);
   overflow: auto;
   .content-bar{
     display: flex;
@@ -204,16 +203,16 @@
   }
 }
 .invoice-tools{
-  position: fixed;
-  bottom: 0;
-  background-color: #ffffff;
-  border-radius: 4px;
-  padding: 12px;
-  width: calc(100% - 230px);
+  // position: fixed;
+  // bottom: 0;
+  // background-color: #ffffff;
+  // border-radius: 4px;
+  // padding: 12px;
+  // width: calc(100% - 230px);
   text-align: center;
-  z-index: 999;
-  right: 16px;
-  left: 230px;
+  // z-index: 999;
+  // right: 16px;
+  // left: 230px;
   .el-button{
     width: 100px;
   }

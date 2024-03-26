@@ -128,7 +128,7 @@
         return this.formInline.isDigital
       },
       contentHeight(){
-        return window.innerHeight - 230;
+        return window.innerHeight - 214;
       }
     },
     watch:{
@@ -238,8 +238,8 @@
 
 <style scoped lang="scss">
  .content-form{
-      border: 1px solid #F2F2F2;
-      border-radius: 5px;
+      // border: 1px solid #F2F2F2;
+      // border-radius: 5px;
       // width: 800px;
       // margin-left: calc(50% - 400px);
       padding: 30px 0 10px 0;
@@ -277,8 +277,8 @@
     border-color: #00B390;
   }
 .choose_footer{
-  position: absolute;
-  bottom: 15px;
-  left: 48%;
+  // position: absolute;
+  // bottom: 35px;
+  // left: 48%;
 }
 </style>

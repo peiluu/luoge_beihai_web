@@ -1,5 +1,5 @@
 <template>
-  <div class="ele_body">
+  <div class="main-content">
     <el-tabs v-model="activeName">
       <el-tab-pane label="增值税发票" name="1">
         <article>
@@ -190,5 +190,8 @@ export default {
 /*@import url(); 引入公共css类*/
 ::v-deep .el-tabs__nav-scroll {
   padding: 0 12px;
+}
+.main-content {
+  padding-top: 0;
 }
 </style>

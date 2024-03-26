@@ -16,7 +16,6 @@
 </template>
 
 <script>
-import { urlMap } from '@/config/constant.js'
 import FormList from '@/components/FormList.vue';
 export default {
   name: "EnterpriseList",
@@ -30,7 +29,7 @@ export default {
         { title: "企业名称", dataIndex: "nsrmc",width:60, align: "left" },
         { title: "纳税人识别号", width:50, dataIndex: "nsrsbh", align: "left" },
         { title: "是否开通数电", width:30, dataIndex: "isDigital", align: "center", slot: 'isDigital' },
-        { title: "操作", key: "action", width: 300, scopedSlots: { customRender: "action" } }
+        { title: "操作", key: "action", width: 180, scopedSlots: { customRender: "action" }, align: "center" }
       ],
       searchList: [
         { index: 0, key: "nsrmc", val: "", type: "input", label: "搜索", placeholder: "企业名称/纳税人识别号" },

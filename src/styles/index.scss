@@ -125,9 +125,12 @@ html {
     background-color: #fff;
     padding: 12px;
     margin: 8px;
-    border-radius: 4px;
+    border-radius: 8px;
     height: calc(100vh - 88px - 16px) !important;
     overflow-y: auto;
+    .f-el-card {
+        margin-bottom: 12px;
+    }
     .toolbar {
         margin-bottom: 15px;
     }
@@ -386,9 +389,6 @@ html {
 }
 table {
     border-collapse: collapse;
-}
-.ele_body{
-    padding: 15px;
 }
 .space_bottom{
     margin-bottom: 15px;
