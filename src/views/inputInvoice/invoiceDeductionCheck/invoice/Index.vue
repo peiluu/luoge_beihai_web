@@ -369,7 +369,8 @@ export default {
       this.handleGetData(this.searchParam);
     },
     rowClcik(row, column, event) {
-      if (row.purchaserstatus != '42') {
+      const f = this.checkSelectable(row)
+      if (!f) {
         return
       }
       this.$refs.table.toggleRowSelection(row);
@@ -729,18 +730,10 @@ export default {
       this.dialogVisible = false;
       this.form = {}
     },
-    checkSelectable(row, index) {
-      let t = false;
-      if(this.sfqkrzgx === 'N'){ // 'N' 不校验是否入账, 'Y' 校验是否入账
-        t = true;
-      } else {
-        if( row.purchaserstatus === 'Y'){
-          t = true
-        } else {
-          t = false
-        }
-      }
-      return t
+    checkSelectable(row) {
+      // 规则一：sfqkrzgx: 'N' 不校验是否入账, 'Y' 校验是否入账。为“N”时不需要校验第二条规则，可以直接勾选
+      // 规则二：row.purchaserstatus === 42 代表已入账，可以勾选，否则不能勾选
+      return this.sfqkrzgx === 'N' || row.purchaserstatus === 42
     }
   }
 };
