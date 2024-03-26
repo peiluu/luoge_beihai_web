@@ -329,7 +329,7 @@ export default {
       let parmas = {
         pageNo:this.page.currentPage,
         pageSize:this.page.pageSize,
-        ...val,
+        ...this.where,
       }
       try{
         const res = await getPoolCustomsList(parmas);
@@ -354,6 +354,7 @@ export default {
     /* 搜索 */
     handlerSearch(val){
       this.where = {...val};
+      this.page.currentPage = 1;
       this.handleGetTableList(val);
     },
     /* 重置 */
