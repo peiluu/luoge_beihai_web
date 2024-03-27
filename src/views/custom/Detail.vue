@@ -10,6 +10,9 @@
             <el-option v-for="(item, index) in taxBodyList" :key="index" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="店铺名称" prop="gmfcode">
+          <el-input v-model="form.gmfcode" placeholder="请输入" maxlength="100" />
+        </el-form-item>
         <el-form-item label="客户名称" prop="gmfMc">
           <el-input v-model="form.gmfMc" placeholder="请输入" maxlength="100" />
         </el-form-item>
@@ -75,6 +78,7 @@ export default {
           regCollection.nsrsbh,
         ],
         gmfMc: [{ required: true, message: "请输入", trigger: "blur" }],
+        gmfcode: [{ required: true, message: "请输入", trigger: "blur" }],
         revemail: [{ validator: this.verify_email, message: "邮箱格式不正确", trigger: "blur" }],
         // address: [{ required: true, message: "请输入", trigger: "blur" }],
         // phone: [{ required: true, message: "请输入", trigger: "blur" }, regCollection.phone],
@@ -128,6 +132,7 @@ export default {
             this.form = {
               id: data.id,
               orgids: ids,
+              gmfcode: data.gmfcode,
               gmfMc: data.gmfMc,
               gmfNsrsbh: data.gmfNsrsbh,
               dzdh: data.dzdh,
