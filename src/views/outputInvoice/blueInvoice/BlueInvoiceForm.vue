@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="ticket-content" :style="'height: ' + contentHeight + 'px;'">
+  <div :class="{ticketEdit: detailInfo.isFormInvoiced || $route.query.isFormInvoiced}">
+    <div class="ticket-content">
       <!--<Step :stepData="{current:3,total:3,title:'发票开具'}"></Step>-->
       <el-form
         ref="form"
@@ -3320,7 +3320,7 @@ export default {
     contentHeight() {
       let h = 252;
       if(this.detailInfo.isFormInvoiced || this.$route.query.isFormInvoiced){
-        h = 180
+        h = 110
       }
       return window.innerHeight - h;
     },
@@ -3467,5 +3467,24 @@ export default {
   justify-content: space-around;
   align-items: center;
   padding-bottom: 8px;
+}
+
+.ticket-content {
+  height: calc(100vh - 88px - 16px - 145px);
+  overflow: hidden;
+  overflow-y: auto;
+
+}
+.ticketEdit {
+  .ticket-content {
+    margin: 8px;
+    height: calc(100vh - 88px - 16px) !important;
+    padding-bottom: 50px;
+  }
+  .invoice-tools {
+    right: 8px !important;
+    left: calc(#{$sidebar--width} + 8px) !important;
+    border-radius: 0 !important;
+  }
 }
 </style>

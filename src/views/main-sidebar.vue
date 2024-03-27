@@ -32,7 +32,7 @@ export default {
   margin-bottom: 5px;
   padding: 3px 0 7px;
   text-align: center;
-  box-shadow:1px 0 10px 0 rgba(0, 0, 0, 0.2);
+  // box-shadow:1px 0 10px 0 rgba(0, 0, 0, 0.2);
   .nav-img {
     height: 40px;
   }
