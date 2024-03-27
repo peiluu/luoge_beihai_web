@@ -462,6 +462,39 @@
                           ></i>
                         </template>
                       </vxe-input>
+                      <!-- <span v-if="row.fphxz == '00'">
+                        <el-select
+                        v-model="row.hwhyslwfwmc"
+                        :disabled="!canEdit"
+                        filterable
+                        remote
+                        size="small"
+                        reserve-keyword
+                        placeholder=""
+                        :remote-method="(query)=> handleTableremoteMethod(query,row)"
+                        @change="()=> handleTableChage(val,row)"
+                        :loading="loading" style="width:calc(100% - 16px)">
+                        <el-option
+                          v-for="(item,index) in row.option || []"
+                          :key="`${item.value}${index}`"
+                          :label="item.label"
+                          :value="item.value">
+                          <span>{{ item.label }}&nbsp;{{ item.value }}</span>
+                        </el-option>
+                        
+                      </el-select>
+                      <i style="cursor: pointer;
+                              color: #409eff;
+                              font-size: 16px;
+                              position: absolute;
+                              right: 34px;
+                              top: 9px;
+                            "
+                            class="vxe-icon-menu"
+                            @click="showGoodsDlg(row, $rowIndex)"
+                            v-show="canEdit"></i>
+                      </span> -->
+                     
                       <span v-else-if="row.fphxz == '02'">{{
                         row.hwhyslwfwmc
                       }}</span>
@@ -1977,7 +2010,7 @@ export default {
   methods: {
     /* 搜索 */
    async handleremoteMethod(query){
-    console.log(query,"009")
+    
       if ((query??'')!=='') {
           this.loading = true;
           let params = {
@@ -2001,6 +2034,30 @@ export default {
           this.gmfmcOptions = [];
         }
     },
+    async handleTableremoteMethod(query,row){
+      if ((query??'')!=='') {
+          this.loading = true;
+          let params = {
+            ...this.customerQuery,
+            pageNo:1,
+            pageSize:9999,
+            gmfMc:query,
+          }
+          try{
+            const res = await this.api.getCustomerPage(params)
+            if([0,'0'].includes(res.code)){
+              row.option = res.data.map(k=> {return{...k,label:`${k.gmfMc}`,value:k.gmfNsrsbh}})
+             
+            }else{
+              row.option = [];
+            }
+          }finally{
+            this.loading = false;
+          }
+        } else {
+          row.option = [];
+        }
+    },
     /* 赋值 */
     handleGMFMCChage(val){
       console.log(val,"000")
@@ -2011,6 +2068,9 @@ export default {
       this.$set(this.form, "gmfkhh", val.yhzh);
       this.$set(this.form, "gmfzh", val.bankaccount);
       this.$set(this.form, "email", val.revemail);
+    },
+    handleTableChage(val,row){
+      console.log(val,row)
     },
     init(){
       this.getSellerInfoById(this.query.orgid);
