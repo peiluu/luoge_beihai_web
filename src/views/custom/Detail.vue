@@ -78,7 +78,7 @@ export default {
           regCollection.nsrsbh,
         ],
         gmfMc: [{ required: true, message: "请输入", trigger: "blur" }],
-        gmfcode: [{ required: true, message: "请输入", trigger: "blur" }],
+        //gmfcode: [{ required: true, message: "请输入", trigger: "blur" }],
         revemail: [{ validator: this.verify_email, message: "邮箱格式不正确", trigger: "blur" }],
         // address: [{ required: true, message: "请输入", trigger: "blur" }],
         // phone: [{ required: true, message: "请输入", trigger: "blur" }, regCollection.phone],
