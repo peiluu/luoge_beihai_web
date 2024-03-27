@@ -12,7 +12,7 @@
                     <el-form-item label="发票号码：">
                         <span>{{ typeStatus.type === 'HGJKS'?pushForm.hgjkshm:typeStatus.type === 'DKDJWSPZ'?pushForm.dkdjwspzh:pushForm.fphm }}</span>
                     </el-form-item>
-                    <el-form-item label="开票日期：">
+                    <el-form-item :label="typeStatus.type==='ZZSFP'?'开票日期：':'填发日期'">
                         <span>{{ pushForm.kprq || pushForm.tfrq }}</span>
                     </el-form-item>
                     <!-- <el-form-item label="发票类型：">
