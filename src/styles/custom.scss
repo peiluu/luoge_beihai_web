@@ -203,16 +203,14 @@
   }
 }
 .invoice-tools{
-  // position: fixed;
-  // bottom: 0;
-  // background-color: #ffffff;
-  // border-radius: 4px;
-  // padding: 12px;
-  // width: calc(100% - 230px);
+  position: fixed;
+  background-color: #ffffff;
+  border-radius: 8px;
   text-align: center;
-  // z-index: 999;
-  // right: 16px;
-  // left: 230px;
+  z-index: 999;
+  right: 31px;
+  left: calc(#{$sidebar--width} + 31px);
+  bottom: 8px;
   .el-button{
     width: 100px;
   }
