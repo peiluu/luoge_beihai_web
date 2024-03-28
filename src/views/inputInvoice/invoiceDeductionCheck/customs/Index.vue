@@ -1,26 +1,25 @@
 <template>
   <div class="com-withhold">
     <form-list :columns="columns" :searchRow="searchList" :api="api" :param="param" :height="height"
-      @getSearchParam="getSearchParam" @handleSelection="handleSelection" v-loading="loading" :tableCounterShow="true"
-      ref="list"
-      :firstLoading="level === '2'">
+      @getSearchParam="getSearchParam" @selection-change="handleSelectionChange" @handleSelection="handleSelection" v-loading="loading" :tableCounterShow="true"
+      ref="list" :firstLoading="level === '2'">
       <!-- 中间部分 -->
       <template #topTool>
         <div class="toolbar">
           <div class="toolbar-left" />
           <div class="toolbar-right">
-            <el-button type="success" @click="cancleBatch('02')" v-if="$refs.list && $refs.list.searchParam.cljg == '01'">撤销勾选</el-button>
-          <el-button type="success" @click="submitBatch('01')" v-else>提交勾选</el-button>
+            <el-button type="success" @click="cancleBatch('02')"
+              v-if="$refs.list && $refs.list.searchParam.cljg == '01'">撤销勾选</el-button>
+            <el-button type="success" @click="submitBatch('01')" v-else>提交勾选</el-button>
             <el-button @click="exportInvoiceCheck">导出</el-button>
-            <!-- <el-button @click="downloadNoList">导出查询结果</el-button> -->
+            <el-button @click="importExcel" v-if="$refs.list.searchParam.cljg == '02'">导入</el-button>
             <!-- <el-button type="" @click="exportSelectedData">导出选中发票</el-button> -->
           </div>
         </div>
       </template>
-      
+
       <template #sfchsd="{ data }"> {{ data.sfchsd == 'Y' ? '锁定' : '未锁定' }}</template>
-      <template #rzzt="{ data }"> {{ data.rzzt == '01' ? '未入账' : data.rzzt == '02' ? '已入账' : data.rzzt == '03' ?
-      '已入账撤销' : '' }}</template>
+      <template #rzzt="{ data }"> {{ data.rzzt == '01' ? '未入账' : '已入账' }}</template>
       <template #fplx="{ data }"> {{ inputFplxMap[data.fplx] }} </template>
       <template #tfrq="{ data }"> {{ data.tfrq ? dateFormat('YYYY-MM-DD', data.tfrq) : '' }} </template>
       <template #gxsj="{ data }"> {{ data.gxsj ? dateFormat('YYYY-MM-DD', data.gxsj) : '' }} </template>
@@ -46,19 +45,33 @@
         <el-button type="success" @click="checkCustomsPayment">确 认</el-button>
       </span>
     </el-dialog>
+    <custom-import
+      dialogTitle="发票勾选"
+      :dialogVisible="dialogImportVisible"
+      @handleClose="handleImportClose"
+      @handleOk="handleImportOk"
+      downloadTemplateApi="/taxConfig/downExcel"
+      downloadTemplateName="发票勾选_导入模板"
+      upApi="/taxBody/importTaxBodyExcelInfo"
+      importApi="/taxConfig/importPreferentialInfo"
+      upTitle="上传发票勾选数据"
+      :importColumns="importColumns"
+    ></custom-import>
   </div>
 </template>
 
 <script>
 import moment from "moment";
 import FormList from '@/components/FormList.vue';
-import { checkCustomsPayment,getKjList,exportInvoiceCheck } from './Api'
+import { checkCustomsPayment, getKjList, exportInvoiceCheck } from './Api'
 import { inputFplxMap } from '@/config/constant'
+import CustomImport from '@/components/CustomImport';
 
 export default {
   name: 'customs',
   components: {
-    FormList
+    FormList,
+    CustomImport
   },
   props: {
     level: {
@@ -68,9 +81,10 @@ export default {
   },
   data() {
     return {
+      dialogImportVisible: false, // 导入
       inputFplxMap,
       api: require('./Api'),
-      param: {cljg: '02' },
+      param: { cljg: '02' },
       loading: false,
       columns: [
         { type: "selection", width: 50, },
@@ -82,17 +96,27 @@ export default {
         { title: "加计扣除剩余额 ", width: 160, dataIndex: "jjkcsye", },
         { title: "缴款单位人纳税人识别号", dataIndex: "jkdwrnsrsbh", width: 160, },
         { title: "缴款单位人纳税人名称", width: 150, dataIndex: "jkdwrnsrmc", slot: 'jkdwrnsrmc', align: 'center' },
-        { title: "是否重号锁定", width: 130, dataIndex: "sfchsd",slot:'sfchsd' },
+        { title: "是否重号锁定", width: 130, dataIndex: "sfchsd", slot: 'sfchsd' },
         { title: "认证状态", width: 130, dataIndex: "createrName" },
         { title: "勾选失败原因", width: 130, dataIndex: "createrName" },
         { title: "勾选人", width: 130, dataIndex: "createrName" },
         { title: "勾选时间", width: 130, dataIndex: "updateTime" },
-        { title: "入账状态", width: 130, dataIndex: " rzzt",slot:'rzzt' },
+        { title: "入账状态", width: 130, dataIndex: " rzzt", slot: 'rzzt' },
         { title: "入账日期", width: 130, dataIndex: "createrName" },
         { title: "入账属期", width: 130, dataIndex: "createrName" },
 
       ],
       searchList: [
+        {
+          label: "勾选状态",
+          key: "cljg",
+          val: "02",
+          type: "select",
+          options: [
+            { value: "02", label: "未勾选" },
+            { value: "01", label: "已勾选" },
+          ],
+        },
         {
           label: "受票组织",
           key: "orgid",
@@ -154,39 +178,51 @@ export default {
           key: "spzt",
           val: "",
           type: "select",
-          options: [],
+          options: [
+          { value: "", label: "全部" },
+          { value: "01", label: "已收票" },
+          { value: "02", label: "未收票" },
+
+          ],
         },
         {
           label: "认证状态",
           key: "rz",
           val: "",
           type: "select",
-          options: [],
+          options: [
+          { value: "", label: "全部" },
+          { value: "01", label: "已认证" },
+          { value: "02", label: "未认证" },
+          ],
         },
         {
           label: "入帐状态",
           key: "rzzt",
           val: "",
           type: "select",
-          options: [],
+          options: [
+          { value: "", label: "全部" },
+          { value: "01", label: "已入账" },
+          { value: "02", label: "未入账" },
+          ],
         },
         {
           label: "转出状态",
           key: "zczt",
           val: "",
           type: "select",
-          options: [],
-        },
-        {
-          label: "勾选状态",
-          key: "cljg",
-          val: "02",
-          type: "select",
           options: [
-          { value: "02", label: "未勾选" },
-            { value: "01", label: "已勾选" },
+          { value: "", label: "全部" },
+          { value: "01", label: "已转出" },
+          { value: "02", label: "未转出" },
           ],
         },
+
+      ],
+      importColumns: [
+        { title: '敏感货物名称', width: 200, dataIndex: 'nsrmc' },
+        { title: '风险等级', width: 200, dataIndex: 'orgName' },
       ],
       selecedInfo: {
         number: 0,
@@ -201,11 +237,12 @@ export default {
       totalEntity: {},
       queryParam: {},
       isSelected: [],
+      selectedRowKeys: []
     };
   },
   watch: {
-    level(newV, oldV){
-      if(newV === '2'){
+    level(newV, oldV) {
+      if (newV === '2') {
         this.init()
       }
     }
@@ -217,7 +254,7 @@ export default {
   },
 
   methods: {
-    init(){
+    init() {
       this.getKjList();
       this.form = this.$route.query;
 
@@ -294,7 +331,7 @@ export default {
 
     // 提交数据
     async checkCustomsPayment() {
-      const hgjksmx = this.selections.map(item=> ({jkshm: item.hgjkshm , tfrq: item.tfrq}))
+      const hgjksmx = this.selections.map(item => ({ jkshm: item.hgjkshm, tfrq: item.tfrq }))
       const { code = '' } = await checkCustomsPayment({
         gfsbh: this.$route.query.nsrsbh,
         gxlx: this.gxlxDm,
@@ -322,7 +359,7 @@ export default {
           }
         }))
         // debugger;
-        this.$set(this.searchList[index],'options',options)
+        this.$set(this.searchList[index], 'options', options)
       }
     },
     // 导出发票数据
@@ -332,6 +369,35 @@ export default {
         reqData: { ...this.queryParam, sign: 'Y', pageNo: 1, pageSize: 9999999 },
         fileName
       })
+    },
+    // 导入
+    importExcel() {
+      this.dialogImportVisible = true;
+    },
+    handleImportClose() {
+      this.dialogImportVisible = false;
+    },
+    handleImportOk() {
+      this.handleImportClose();
+      this.getList();
+      this.updateTableSelection();
+    },
+    updateTableSelection() {
+      this.$nextTick(() => {
+        this.tableData.forEach(row => {
+          if (this.selectedRowKeys.includes(row.id)) {
+            this.$refs.table.toggleRowSelection(row, true);
+          }
+        });
+      });
+    },
+    handleSelectionChange(selection) {
+      const newSelectedRowKeys = selection.map(item => item.id);
+      if (newSelectedRowKeys.length < this.selectedRowKeys.length) {
+        // 如果当前选中行的数量小于之前记录的，说明有取消勾选的操作
+        this.getList();
+      }
+      this.selectedRowKeys = newSelectedRowKeys;
     },
     handleClose() {
       this.dialogVisible = false;

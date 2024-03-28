@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="ticket-content" :style="'height: ' + contentHeight + 'px;'">
+  <div :class="{ticketEdit: detailInfo.isFormInvoiced || $route.query.isFormInvoiced}">
+    <div class="ticket-content">
       <!--<Step :stepData="{current:3,total:3,title:'发票开具'}"></Step>-->
       <el-form
         ref="form"
@@ -118,12 +118,12 @@
                   </div>
                   <el-col :span="24">
                     <el-form-item label="名称" prop="gmfmc">
-                      <vxe-input
+                      <!-- <vxe-input
                         size="small"
                         v-model="form.gmfmc"
                         :disabled="!canEdit"
                       >
-                        <template #suffix>
+                         <template #suffix>
                           <i
                             style="
                               cursor: pointer;
@@ -135,7 +135,39 @@
                             v-show="canEdit"
                           ></i>
                         </template>
-                      </vxe-input>
+                      </vxe-input> -->
+                      <el-select
+                        v-model="form.gmfmc"
+                        filterable
+                        remote
+                        size="small"
+                        reserve-keyword
+                        placeholder=""
+                        :remote-method="handleremoteMethod"
+                        @change="handleGMFMCChage"
+                        :loading="nameLoading" style="width:calc(100% - 16px)">
+                        <el-option
+                          v-for="(item,index) in gmfmcOptions"
+                          :key="`${item.value}${index}`"
+                          :label="item.label"
+                          :value="item">
+                          <span>{{ item.label }}&nbsp;{{ item.value }}</span>
+                        </el-option>
+                        
+                      </el-select>
+                      <i
+                            style="
+                              cursor: pointer;
+                              color: #409eff;
+                              font-size: 16px;
+                              position: absolute;
+                              right: 20px;
+                              top: 7px;
+                            "
+                            class="vxe-icon-menu"
+                            @click="showBuyerDlg"
+                            v-show="canEdit"
+                          ></i>
                     </el-form-item>
                   </el-col>
                   <el-col :span="24">
@@ -407,9 +439,9 @@
                     field="xmmc"
                     min-width="300"
                     title="项目名称"
-                    :edit-render="{}"
+                    :edit-render="{name: 'EditDown'}"
                   >
-                    <template #edit="{ row, rowIndex, $rowIndex }">
+                    <!-- <template #edit="{ row, rowIndex, $rowIndex }">
                       <vxe-input
                         readonly
                         v-model="row.hwhyslwfwmc"
@@ -429,8 +461,41 @@
                             v-show="canEdit"
                           ></i>
                         </template>
-                      </vxe-input>
-                      <span v-else-if="row.fphxz == '02'">{{
+                      </vxe-input> -->
+                      <!-- <span v-if="row.fphxz == '00'">
+                        <el-select
+                        v-model="row.hwhyslwfwmc"
+                        :disabled="!canEdit"
+                        filterable
+                        remote
+                        size="small"
+                        reserve-keyword
+                        placeholder=""
+                        :remote-method="(query)=> handleTableremoteMethod(query,row)"
+                        @change="()=> handleTableChage(val,row)"
+                        :loading="loading" style="width:calc(100% - 16px)">
+                        <el-option
+                          v-for="(item,index) in row.option || []"
+                          :key="`${item.value}${index}`"
+                          :label="item.label"
+                          :value="item.value">
+                          <span>{{ item.label }}&nbsp;{{ item.value }}</span>
+                        </el-option>
+                        
+                      </el-select>
+                      <i style="cursor: pointer;
+                              color: #409eff;
+                              font-size: 16px;
+                              position: absolute;
+                              right: 34px;
+                              top: 9px;
+                            "
+                            class="vxe-icon-menu"
+                            @click="showGoodsDlg(row, $rowIndex)"
+                            v-show="canEdit"></i>
+                      </span> -->
+                     
+                      <!-- <span v-else-if="row.fphxz == '02'">{{
                         row.hwhyslwfwmc
                       }}</span>
                       <span v-else
@@ -446,7 +511,7 @@
                         ><el-tag type="danger">折扣</el-tag
                         >{{ row.hwhyslwfwmc }}</span
                       >
-                    </template>
+                    </template> -->
                   </vxe-column>
                   <vxe-column
                     min-width="120"
@@ -1393,6 +1458,8 @@ import { dynamicUrlMap } from "@/config/constant.js";
 import {Calc} from '@/utils/calc';
 import AppAddTheme from './component/addTheme'
 import AppUseTheme from './component/useTheme'
+import EditDown from './component/editDown'
+import VXETable from 'vxe-table';
 //import { getArrayName } from '@/utils'
 export default {
   name: "BlueInvoiceForm",
@@ -1507,6 +1574,7 @@ export default {
         cezslxDm: "", //差额征税类型代码，空：非差额发票；01：全额开票；02：差额开票
         sfhs: "N",
         lzfpbz: "0",
+        gmfmc:""
       },
       rules: {
         gmfmc: [
@@ -1569,15 +1637,15 @@ export default {
         dj: [
           { type: "number", min: 0, message: "请填写正确数字" },
           {
-            pattern: /^([-+])?\d+(\.[0-9]{1,10})?$/,
-            message: "请输入最多10位小数的数字",
+            pattern: /^([-+])?\d+(\.[0-9]{1,15})?$/,
+            message: "请输入最多15位小数的数字",
           },
         ],
         sl: [
           { type: "number", min: 0, message: "请填写正确数字" },
           {
-            pattern: /^([-+])?\d+(\.[0-9]{1,10})?$/,
-            message: "请输入最多10位小数的数字",
+            pattern: /^([-+])?\d+(\.[0-9]{1,15})?$/,
+            message: "请输入最多15位小数的数字",
           },
         ],
         je: [
@@ -1611,6 +1679,9 @@ export default {
       saving: false,
       addVisible:false,
       useVisible:false,
+      gmfmcOptions:[],
+      GMFMC:{},
+      nameLoading: false,
     };
   },
   watch: {
@@ -1940,6 +2011,70 @@ export default {
     },
   },
   methods: {
+    /* 搜索 */
+   async handleremoteMethod(query){
+    
+      if ((query??'')!=='') {
+          this.nameLoading = true;
+          let params = {
+            ...this.customerQuery,
+            pageNo:1,
+            pageSize:9999,
+            gmfMc:query,
+          }
+          try{
+            const res = await this.api.getCustomerPage(params)
+            if([0,'0'].includes(res.code)){
+              this.gmfmcOptions = res.data.map(k=> {return{...k,label:`${k.gmfMc}`,value:k.gmfNsrsbh}})
+             
+            }else{
+              this.gmfmcOptions = [];
+            }
+          }finally{
+            this.nameLoading = false;
+          }
+        } else {
+          this.gmfmcOptions = [];
+        }
+    },
+    async handleTableremoteMethod(query,row){
+      if ((query??'')!=='') {
+          this.loading = true;
+          let params = {
+            ...this.customerQuery,
+            pageNo:1,
+            pageSize:9999,
+            gmfMc:query,
+          }
+          try{
+            const res = await this.api.getCustomerPage(params)
+            if([0,'0'].includes(res.code)){
+              row.option = res.data.map(k=> {return{...k,label:`${k.gmfMc}`,value:k.gmfNsrsbh}})
+             
+            }else{
+              row.option = [];
+            }
+          }finally{
+            this.loading = false;
+          }
+        } else {
+          row.option = [];
+        }
+    },
+    /* 赋值 */
+    handleGMFMCChage(val){
+      console.log(val,"000")
+      this.$set(this.form,'gmfmc',val.label)
+      this.$set(this.form,'gmfnsrsbh',val.value)
+      this.$set(this.form, "gmfdz", val.dzdh);
+      this.$set(this.form, "gmfdh", val.phone);
+      this.$set(this.form, "gmfkhh", val.yhzh);
+      this.$set(this.form, "gmfzh", val.bankaccount);
+      this.$set(this.form, "email", val.revemail);
+    },
+    handleTableChage(val,row){
+      console.log(val,row)
+    },
     init(){
       this.getSellerInfoById(this.query.orgid);
    
@@ -1988,7 +2123,7 @@ export default {
             this.$refs.xTable.remove();
             this.form = res.data;
             delete this.form.bdczldz;
-            if (this.form.status != "02" && this.form.status != "04") {
+            if (res.data.status != "02" && res.data.status != "04") {
               this.canEdit = false;
             }
             this.mideaInfo.orgid = res.data.orgid + "";
@@ -3239,7 +3374,10 @@ export default {
     handleUseTheme(){
       this.useVisible = true;
     },
-
+    /* 可编辑table单元格点击后缀icon回调事件 */
+    editDownShowGoodsDlg(row, index){
+      this.showGoodsDlg(row, index)
+    }
   },
   computed: {
     query() {
@@ -3248,7 +3386,7 @@ export default {
     contentHeight() {
       let h = 252;
       if(this.detailInfo.isFormInvoiced || this.$route.query.isFormInvoiced){
-        h = 180
+        h = 110
       }
       return window.innerHeight - h;
     },
@@ -3260,7 +3398,16 @@ export default {
     if(!this.$route.query.isFormInvoiced){
       this.init()
     }
-    
+    // 创建一个下拉表格渲染
+    const _this = this;
+    VXETable.renderer.add('EditDown', {
+      autofocus: '.vxe-input--inner',
+      renderEdit (h, renderOpts, params) {
+        return [
+          <EditDown params={ params } canEdit={_this.canEdit} showGoodsDlg={_this.editDownShowGoodsDlg} handleSubmitProduct={_this.handleSubmitProduct} orgid={_this.form.orgid} tdys={_this.form.tdys}></EditDown>
+        ]
+      }
+    })
   },
   activated() {
     if(this.$route.query.isFormInvoiced){
@@ -3395,5 +3542,24 @@ export default {
   justify-content: space-around;
   align-items: center;
   padding-bottom: 8px;
+}
+
+.ticket-content {
+  height: calc(100vh - 88px - 16px - 145px);
+  overflow: hidden;
+  overflow-y: auto;
+
+}
+.ticketEdit {
+  .ticket-content {
+    margin: 8px;
+    height: calc(100vh - 88px - 16px) !important;
+    padding-bottom: 50px;
+  }
+  .invoice-tools {
+    right: 8px !important;
+    left: calc(#{$sidebar--width} + 8px) !important;
+    border-radius: 0 !important;
+  }
 }
 </style>

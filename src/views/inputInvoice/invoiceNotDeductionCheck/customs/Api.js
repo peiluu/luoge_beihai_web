@@ -45,3 +45,8 @@ export const getList = data => postJSON(`${config.host}/income/queryCustomsPayme
 * @desption 提交勾选
 */
 export const checkCustomsPayment = data => postJSON(`${config.host}/income/checkCustomsPayment`, data);
+/**
+ * @desption 【组织管理】纳税主体列表Excel导入
+ */
+export const importTaxBodyExcelInfo = (data) =>
+  download(`${config.host}/taxBody/importTaxBodyExcelInfo`, data);

@@ -12,7 +12,7 @@
             </el-form-item>
           <!-- </div> -->
           <el-form-item label="组织编码" prop="code">
-            <el-input v-model="form.code" placeholder="请输入" />
+            <el-input v-model="form.code" placeholder="请输入" @input="handleInput"/>
           </el-form-item>
           <el-form-item label="名称" prop="name">
             <el-input v-model="form.name" placeholder="请输入" />
@@ -67,7 +67,7 @@ export default {
       billingStationAddDto: {},
       rules: {
         taxBodyId: [{ required: true, message: "请选择", trigger: "blur" }],
-        code: [{ required: true, message: "请输入", trigger: "blur" }],
+        code: [{ required: true, message: "请输入数字或字母", trigger: "blur" }],
         name: [{ required: true, message: "请输入", trigger: "blur" }],
         // phone: [regCollection.phone],
         enable: [{ required: true, message: "请选择", trigger: "blur" }],
@@ -99,6 +99,10 @@ export default {
   },
 
   methods: {
+    handleInput(value) {
+      // 只允许输入数字和字母，其他字符将被替换为空字符串
+      this.form.code = value.replace(/[^a-zA-Z0-9]/g, '');
+    },
     // 获取纳税主体
     async getListAll() {
       const { code = '', data = [] } = await getListAll({})
