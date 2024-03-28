@@ -98,6 +98,11 @@ export default {
       type: String,
       default: '',
     },
+    downloadTemplateApiParams: {
+      // 模版下载参数
+      type: Object,
+      default: () => ({type: 1})
+    },
     downloadTemplateName: {
       // 下载模版名称
       type: String,
@@ -171,7 +176,7 @@ export default {
     async downloadTemplate() {
       const fileName = `${this.downloadTemplateName}.xlsx`;
       await download(config.host + this.downloadTemplateApi, {
-        reqData: { type: 1 },
+        reqData: this.downloadTemplateApiParams,
         fileName,
       });
     },
