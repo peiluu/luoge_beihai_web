@@ -92,7 +92,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.nav-logo {
-  height: 100%;
-}
+// .nav-logo {
+//   height: 100%;
+// }
 </style>
