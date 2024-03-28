@@ -206,5 +206,21 @@ export const getRequest = (url='') => {
   }
     
 }
+
+ /* 时间格式 时间、需要的格式 */
+ export function formatCustomDate(dateInput, format = 'YYYY-MM-DD') {
+ 
+  const date = new Date(dateInput);
+  const map = {
+    YYYY: date.getFullYear(),
+    MM: ('0' + (date.getMonth() + 1)).slice(-2),
+    DD: ('0' + date.getDate()).slice(-2),
+    HH: ('0' + date.getHours()).slice(-2),
+    mm: ('0' + date.getMinutes()).slice(-2),
+    ss: ('0' + date.getSeconds()).slice(-2),
+  };
+  
+  return format.replace(/YYYY|MM|DD|HH|mm|ss/g, match => map[match]);
+}
   
   
