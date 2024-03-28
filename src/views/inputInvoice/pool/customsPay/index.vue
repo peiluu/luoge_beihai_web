@@ -382,11 +382,11 @@ export default {
         this.$message.warning("当前操作只支持单个！")
         return
       }
-      if(type=== 1 && this.isSelected[0].spzt === '2'){
+      if(type=== 1 && this.isSelected[0].spzt === '1'){
         this.$message.warning(`当前发票已确认收票`)
         return
       }
-      if(type=== 2 && this.isSelected[0].spzt === '1'){
+      if(type=== 2 && this.isSelected[0].spzt === '2'){
         this.$message.warning(`当前发票还未确认收票`)
         return
       }
