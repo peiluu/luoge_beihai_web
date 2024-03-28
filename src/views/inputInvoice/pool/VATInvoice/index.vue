@@ -341,7 +341,7 @@
     >
     </lg-invoice-require>
     <!-- 查看发票 -->
-    <lg-view-invoice title="发票预览" width="60%" :visible.sync="dialog.viewVisible" v-if="dialog.viewVisible">
+    <lg-view-invoice title="发票预览" width="1024px" :visible.sync="dialog.viewVisible" v-if="dialog.viewVisible">
       <template v-slot:main>
         <article style="min-height: 450px; max-height: 550px;">
           <lg-invoice-view :invoice-id="invoiceId" v-if="dialog.viewVisible"></lg-invoice-view>

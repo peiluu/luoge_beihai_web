@@ -140,7 +140,7 @@
             <el-col :span="8">
               <el-form-item label="发票代码：">
                 <el-input
-                  v-model="where.fpdm"
+                  v-model="where.fpDm"
                   placeholder="请输入内容"
                 ></el-input>
               </el-form-item>
@@ -222,6 +222,7 @@
                   range-separator="至"
                   start-placeholder="开始日期"
                   end-placeholder="结束日期"
+                  format="yyyy-MM-dd"
                 >
                 </el-date-picker>
               </el-form-item>
@@ -320,12 +321,31 @@ export default {
     
     /* 搜索 */
     handleSearch(){
+      if((this?.where?.kprq??'') !==''){
+        this.where.kprq[0] = this.formatCustomDate(this?.where?.kprq[0])
+        this.where.kprq[1] = this.formatCustomDate(this?.where?.kprq[1])
+      }
       this.$emit('search',this.where)
     },
     /* 重置 */
     handleRest(){
       this.where = {jshj:[undefined,undefined]};
       this.$emit('resst',this.where)
+    },
+    /* 格式pareson */
+    formatCustomDate(dateInput, format = 'YYYY-MM-DD') {
+      console.log(dateInput,"234234")
+      const date = new Date(dateInput);
+      const map = {
+        YYYY: date.getFullYear(),
+        MM: ('0' + (date.getMonth() + 1)).slice(-2),
+        DD: ('0' + date.getDate()).slice(-2),
+        HH: ('0' + date.getHours()).slice(-2),
+        mm: ('0' + date.getMinutes()).slice(-2),
+        ss: ('0' + date.getSeconds()).slice(-2),
+      };
+      
+      return format.replace(/YYYY|MM|DD|HH|mm|ss/g, match => map[match]);
     }
   },
   inject: ['optionList'],
