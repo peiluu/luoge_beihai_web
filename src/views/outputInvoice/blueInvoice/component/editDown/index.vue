@@ -8,7 +8,7 @@
           v-model="row[column.property]"
           suffix-icon="fa fa-caret-down"
           @focus="focusEvent"
-          @change="keyupEvent"
+          v-chineseInput="keyupEvent"
           @blur="blurEvent"
           :disabled="!canEdit"
         >
@@ -62,7 +62,7 @@
 
 <script>
 import { queryProductProfile } from '@/components/ProductProfileModal/Api';
-import { throttle } from '@/utils/tool.js';
+import { debounce } from '@/utils/tool.js';
 export default {
   name: 'EditDownTable',
   props: {
@@ -229,7 +229,7 @@ export default {
       }
     },
     // 输入动态搜索
-    keyupEvent: throttle(function () {
+    keyupEvent: debounce(function () {
       const { row, column } = this;
       const cellValue = row[column.property];
       this.loading = true;

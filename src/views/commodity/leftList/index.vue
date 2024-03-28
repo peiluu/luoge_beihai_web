@@ -216,7 +216,7 @@ export default {
    filterNode(value, data) {
    
     if (!value || !this.useMode) return true;
-    return data.sphfwmc.indexOf(value) !== -1;
+    return data.sphfwmc.indexOf(value) !== -1 || data.sphfwssflhbbm.indexOf(value) !== -1;
   },
    /* 递归返回数据 */
    handlerPrsoneData(data) {
