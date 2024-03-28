@@ -9,6 +9,7 @@
           suffix-icon="fa fa-caret-down"
           @focus="focusEvent"
           @change="keyupEvent"
+          @blur="blurEvent"
           :disabled="!canEdit"
         >
           <template #suffix>
@@ -17,7 +18,7 @@
         </vxe-input>
       </template>
       <template v-slot:dropdown>
-        <div class="edit-down-wrapper"  v-loading="loading">
+        <div class="edit-down-wrapper" v-loading="loading">
           <vxe-table
             size="mini"
             border
@@ -38,14 +39,7 @@
                   {{ getTaxDesc(row) }}
                 </template>
               </vxe-column>
-              <vxe-column
-                v-else-if="item.field === 'dj'"
-                :field="item.field"
-                :width="item.width"
-                :formatter="timeFormat"
-                :title="item.columnZh"
-                :key="index"
-              />
+              <vxe-column v-else-if="item.field === 'dj'" :field="item.field" :width="item.width" :formatter="timeFormat" :title="item.columnZh" :key="index" />
               <vxe-column v-else :field="item.field" :width="item.width" :title="item.columnZh" :key="index" show-overflow />
             </template>
           </vxe-table>
@@ -91,6 +85,8 @@ export default {
     },
   },
   data() {
+    this.currentCell = {}; // 当前点击cell选中的值
+    this.isClickCell = false; // 是否点击cell，100毫秒自动清空
     return {
       row: null,
       column: null,
@@ -163,7 +159,7 @@ export default {
       const { row, column } = this.params;
       this.row = row;
       this.column = column;
-      this.queryProductProfile();
+      if(row.fphxz == '00')this.queryProductProfile();
     },
     timeFormat(row) {
       if ((row.cellValue ?? '') !== '') {
@@ -199,14 +195,18 @@ export default {
         this.loading = false;
       }
     },
+    blurEvent() {
+      this.setRowName();
+    },
     getTaxDesc(row) {
       return row.sl == null ? '' : row.lslbs == 2 || (row.taxclasscode || '').substring(0, 1) == '6' ? '不征税' : row.lslbs == 1 ? '免税' : row.sl * 100 + '%';
     },
     // 选中商品
     cellClick({ row }) {
-      // console.log(row);
-       try {
-        this.handleSubmitProduct(row)
+      console.log(row, this.row);
+      // return
+      try {
+        this.handleSubmitProduct(row);
         this.$refs.xDown.hidePanel();
       } catch (error) {
         console.log('---error---', error);
@@ -214,10 +214,22 @@ export default {
     },
     // 输入框获取焦点事件
     focusEvent() {
+      this.setRowName();
       this.$refs.xDown.showPanel();
     },
+    setRowName() {
+      try {
+        if (this.row.hwhyslwfwmc) {
+          // 赋值项目名称，防止搜索的不到数据，以及非第一次编辑项目名称时没有点击cell，只是删除名称
+          const rnArr = this.row.hwhyslwfwmc.split('*');
+          this.$set(this.row, this.column.property, rnArr[rnArr.length - 1]);
+        }
+      } catch (error) {
+        
+      }
+    },
     // 输入动态搜索
-    keyupEvent: throttle(function(){
+    keyupEvent: throttle(function () {
       const { row, column } = this;
       const cellValue = row[column.property];
       this.loading = true;

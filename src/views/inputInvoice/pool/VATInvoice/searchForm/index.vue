@@ -140,7 +140,7 @@
             <el-col :span="8">
               <el-form-item label="发票代码：">
                 <el-input
-                  v-model="where.fpdm"
+                  v-model="where.fpDm"
                   placeholder="请输入内容"
                 ></el-input>
               </el-form-item>
@@ -218,10 +218,11 @@
                 <el-date-picker
                   style="width: 100%"
                   v-model="where.kprq"
-                  type="daterange"
+                  type="datetimerange"
                   range-separator="至"
                   start-placeholder="开始日期"
                   end-placeholder="结束日期"
+                  :value-format="'yyyy-MM-dd HH:mm:ss'"
                 >
                 </el-date-picker>
               </el-form-item>
@@ -294,7 +295,7 @@
   </div>
 </template>
 <script>
-
+import {formatCustomDate} from '@/utils/index.js'
 export default {
   name: "poolsearcFormPage",
   components: {},
@@ -320,13 +321,15 @@ export default {
     
     /* 搜索 */
     handleSearch(){
+     
       this.$emit('search',this.where)
     },
     /* 重置 */
     handleRest(){
       this.where = {jshj:[undefined,undefined]};
       this.$emit('resst',this.where)
-    }
+    },
+    
   },
   inject: ['optionList'],
   created() {},

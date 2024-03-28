@@ -34,9 +34,9 @@
                                         <el-form-item label="当前商品和服务税收分类编码" prop="orgids">
                                           <span style="">{{ isActiveName }}</span>
                                         </el-form-item>
-                                        <el-form-item label="所属开票点" prop="orgids">
-                                            <el-select style="width:100%" v-model="addForm.orgids" filterable 
-                                            placeholder="请选择" multiple @change="handlerOrgidsChange" @remove-tag="handlerRemoveTag">
+                                        <el-form-item label="所属开票点" prop="orgids" >
+                                            <el-select style="width:100%;" v-model="addForm.orgids" filterable 
+                                            placeholder="请选择" clearable multiple @change="handlerOrgidsChange" @remove-tag="handlerRemoveTag">
                                                 <el-option
                                                 v-for="item in buillingOptions"
                                                 :key="item.value"
@@ -486,4 +486,10 @@ export default {
     margin-bottom: 26px !important;
 }
  
+</style>
+<style>
+.demo-ruleForm .el-select__tags{
+    max-height: 100px;
+    overflow: hidden auto;
+}
 </style>

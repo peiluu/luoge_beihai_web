@@ -364,14 +364,18 @@ export default {
           this.taxpayerOptions = data;
           this.$set(this.form, 'nsrsbh', data[0].nsrsbh);
           this.getInvoice();
+        } else {
+          this.loading = false;
         }
       } catch (error) {
         console.log('-error-', error);
+        this.loading = false;
         this.$message.error(error.msg || '获取纳税人主体失败');
       }
     },
     // 获取发票数据
     async getInvoice() {
+      this.loading = true;
       try {
         const { nsrsbh, ssq } = this.form;
         const { data } = await getInvoiceData({ nsrsbh, ssq });

@@ -130,6 +130,9 @@
               </template>
             </el-table-column>
             <el-table-column prop="sfycpz" label="异常凭证状态" minWidth="120" :header-align="'center'" :align="'center'">
+              <template slot-scope="scope">
+                <span>{{ handleParesTableValue(scope.row.sfycpz,sfycpzOption) }}</span>
+              </template>
             </el-table-column>
             <el-table-column prop="sdzt" label="红字锁定标识" minWidth="120" :header-align="'center'" :align="'center'">
               <template slot-scope="scope">
@@ -166,9 +169,9 @@
             </el-table-column>
             <el-table-column prop="gjrq" label="归集日期" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="creattime" label="创建时间" minWidth="120" :header-align="'center'" :align="'center'">
+            <el-table-column prop="creattime" label="创建时间" minWidth="140" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="updatetime" label="修改时间" minWidth="120" :header-align="'center'" :align="'center'">
+            <el-table-column prop="updatetime" label="修改时间" minWidth="140" :header-align="'center'" :align="'center'">
             </el-table-column>
             <el-table-column prop="aciton" fixed="right" label="操作" width="120" :header-align="'center'" :align="'center'">
               <template slot-scope="scope">
@@ -341,7 +344,7 @@
     >
     </lg-invoice-require>
     <!-- 查看发票 -->
-    <lg-view-invoice title="发票预览" width="60%" :visible.sync="dialog.viewVisible" v-if="dialog.viewVisible">
+    <lg-view-invoice title="发票预览" width="1024px" :visible.sync="dialog.viewVisible" v-if="dialog.viewVisible">
       <template v-slot:main>
         <article style="min-height: 450px; max-height: 550px;">
           <lg-invoice-view :invoice-id="invoiceId" v-if="dialog.viewVisible"></lg-invoice-view>
@@ -407,6 +410,11 @@ export default {
       typeStatus:{},
       where:{},
       loading_1:false,
+      sfycpzOption:[
+        {label:'正常',value:'01'},
+        {label:'异常凭证',value:'02'},
+        {label:'疑似异常凭证',value:'03'},
+      ]
     };
   },
   computed: { 

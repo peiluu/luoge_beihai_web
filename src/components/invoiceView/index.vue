@@ -10,7 +10,7 @@
         </div>
     <div class="invoice_header flex" v-loading="loading">
       <div>
-        <span class="font_famaily font_color font_size">发票代码：</span><span class="font_famaily_1">{{ viewForm.zzfpdm }}</span>
+        <span class="font_famaily font_color font_size">发票代码：</span><span class="font_famaily_1">{{ viewForm.zzfpDm }}</span>
       </div>
       <div >
         <div>
@@ -91,8 +91,8 @@
                 <span class="font_famaily font_color font_size">备注</span>
             </div>
             <div class="des">
-                <div class="flex justify_content_spaceAround" v-if="(viewForm.xsfkhh??'') !==''">
-                    <div>
+                <div class="flex justify_content_spaceAround des_top" v-if="(viewForm.xsfkhh??'') !==''">
+                    <div class="margin_right">
                         <span class="font_famaily font_color font_size">购方开户银行:</span><span class="font_famaily_1">{{ viewForm.xsfkhh.split(' ')[0] }}</span>
                     </div>
                     <div>
@@ -100,8 +100,8 @@
                     </div>
                    
                 </div>
-                <div class="flex justify_content_spaceAround" v-if="(viewForm.gmfkhh??'')!==''">
-                    <div>
+                <div class="flex justify_content_spaceAround des_top" v-if="(viewForm.gmfkhh??'')!==''">
+                    <div class="margin_right">
                         <span class="font_famaily font_color font_size">购方开户银行:</span><span class="font_famaily_1">{{ viewForm.gmfkhh.split(' ')[0] }}</span>
                     </div>
                     <div>
@@ -373,11 +373,15 @@ table{
 }
 .des{
     display: flex;
-    width: 50%;
+    width: 100%;
     flex-direction: column;
     align-items: flex-start;
     padding: 0 30px;
 }
+.margin_right{
+    margin-right: 5px;
+}
+
 </style>
 <style lang="scss">
 

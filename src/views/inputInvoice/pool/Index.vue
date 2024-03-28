@@ -86,8 +86,8 @@ export default {
         ],
         /* 收票状态 */
         collectTicketStatus:[
-          {label:'未收票',value:'1'},
-          {label:'已收票',value:'2'},
+          {label:'未收票',value:'2'},
+          {label:'已收票',value:'1'},
           
         ],
         /* 票种类型 */
