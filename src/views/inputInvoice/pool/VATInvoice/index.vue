@@ -341,7 +341,7 @@
     >
     </lg-invoice-require>
     <!-- 查看发票 -->
-    <lg-view-invoice title="发票预览" width="60%" :visible.sync="dialog.viewVisible" v-if="dialog.viewVisible">
+    <lg-view-invoice title="发票预览" width="1024px" :visible.sync="dialog.viewVisible" v-if="dialog.viewVisible">
       <template v-slot:main>
         <article style="min-height: 450px; max-height: 550px;">
           <lg-invoice-view :invoice-id="invoiceId" v-if="dialog.viewVisible"></lg-invoice-view>
@@ -504,11 +504,11 @@ export default {
         this.$message.warning("当前操作只支持单个！")
         return
       } 
-      if(type=== 1 && this.isSelected[0].spzt === '2'){
+      if(type=== 1 && this.isSelected[0].spzt === '1'){
         this.$message.warning(`当前发票已确认收票`)
         return
       }
-      if(type=== 2 && this.isSelected[0].spzt === '1'){
+      if(type=== 2 && this.isSelected[0].spzt === '2'){
         this.$message.warning(`当前发票还未确认收票`)
         return
       }
