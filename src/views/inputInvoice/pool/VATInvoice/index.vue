@@ -130,6 +130,9 @@
               </template>
             </el-table-column>
             <el-table-column prop="sfycpz" label="异常凭证状态" minWidth="120" :header-align="'center'" :align="'center'">
+              <template slot-scope="scope">
+                <span>{{ handleParesTableValue(scope.row.sfycpz,sfycpzOption) }}</span>
+              </template>
             </el-table-column>
             <el-table-column prop="sdzt" label="红字锁定标识" minWidth="120" :header-align="'center'" :align="'center'">
               <template slot-scope="scope">
@@ -407,6 +410,11 @@ export default {
       typeStatus:{},
       where:{},
       loading_1:false,
+      sfycpzOption:[
+        {label:'正常',value:'01'},
+        {label:'异常凭证',value:'02'},
+        {label:'疑似异常凭证',value:'03'},
+      ]
     };
   },
   computed: { 

@@ -138,6 +138,8 @@
                       </vxe-input> -->
                       <el-select
                         v-model="form.gmfmc"
+                        allow-create
+                        default-first-option
                         filterable
                         remote
                         size="small"
@@ -2064,13 +2066,18 @@ export default {
     /* 赋值 */
     handleGMFMCChage(val){
       console.log(val,"000")
-      this.$set(this.form,'gmfmc',val.label)
-      this.$set(this.form,'gmfnsrsbh',val.value)
-      this.$set(this.form, "gmfdz", val.dzdh);
-      this.$set(this.form, "gmfdh", val.phone);
-      this.$set(this.form, "gmfkhh", val.yhzh);
-      this.$set(this.form, "gmfzh", val.bankaccount);
-      this.$set(this.form, "email", val.revemail);
+      if(Object.prototype.toString.call(val) ==='object'){
+        this.$set(this.form,'gmfmc',val.label)
+        this.$set(this.form,'gmfnsrsbh',val.value)
+        this.$set(this.form, "gmfdz", val.dzdh);
+        this.$set(this.form, "gmfdh", val.phone);
+        this.$set(this.form, "gmfkhh", val.yhzh);
+        this.$set(this.form, "gmfzh", val.bankaccount);
+        this.$set(this.form, "email", val.revemail);
+      }else{
+        this.$set(this.form,'gmfmc',val)
+      }
+      
     },
     handleTableChage(val,row){
       console.log(val,row)
