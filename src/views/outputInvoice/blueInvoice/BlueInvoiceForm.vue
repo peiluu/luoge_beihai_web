@@ -145,7 +145,7 @@
                         placeholder=""
                         :remote-method="handleremoteMethod"
                         @change="handleGMFMCChage"
-                        :loading="loading" style="width:calc(100% - 16px)">
+                        :loading="nameLoading" style="width:calc(100% - 16px)">
                         <el-option
                           v-for="(item,index) in gmfmcOptions"
                           :key="`${item.value}${index}`"
@@ -439,9 +439,9 @@
                     field="xmmc"
                     min-width="300"
                     title="项目名称"
-                    :edit-render="{}"
+                    :edit-render="{name: 'EditDown'}"
                   >
-                    <template #edit="{ row, rowIndex, $rowIndex }">
+                    <!-- <template #edit="{ row, rowIndex, $rowIndex }">
                       <vxe-input
                         readonly
                         v-model="row.hwhyslwfwmc"
@@ -461,7 +461,7 @@
                             v-show="canEdit"
                           ></i>
                         </template>
-                      </vxe-input>
+                      </vxe-input> -->
                       <!-- <span v-if="row.fphxz == '00'">
                         <el-select
                         v-model="row.hwhyslwfwmc"
@@ -495,7 +495,7 @@
                             v-show="canEdit"></i>
                       </span> -->
                      
-                      <span v-else-if="row.fphxz == '02'">{{
+                      <!-- <span v-else-if="row.fphxz == '02'">{{
                         row.hwhyslwfwmc
                       }}</span>
                       <span v-else
@@ -511,7 +511,7 @@
                         ><el-tag type="danger">折扣</el-tag
                         >{{ row.hwhyslwfwmc }}</span
                       >
-                    </template>
+                    </template> -->
                   </vxe-column>
                   <vxe-column
                     min-width="120"
@@ -1458,6 +1458,8 @@ import { dynamicUrlMap } from "@/config/constant.js";
 import {Calc} from '@/utils/calc';
 import AppAddTheme from './component/addTheme'
 import AppUseTheme from './component/useTheme'
+import EditDown from './component/editDown'
+import VXETable from 'vxe-table';
 //import { getArrayName } from '@/utils'
 export default {
   name: "BlueInvoiceForm",
@@ -1679,6 +1681,7 @@ export default {
       useVisible:false,
       gmfmcOptions:[],
       GMFMC:{},
+      nameLoading: false,
     };
   },
   watch: {
@@ -2012,7 +2015,7 @@ export default {
    async handleremoteMethod(query){
     
       if ((query??'')!=='') {
-          this.loading = true;
+          this.nameLoading = true;
           let params = {
             ...this.customerQuery,
             pageNo:1,
@@ -2028,7 +2031,7 @@ export default {
               this.gmfmcOptions = [];
             }
           }finally{
-            this.loading = false;
+            this.nameLoading = false;
           }
         } else {
           this.gmfmcOptions = [];
@@ -2120,7 +2123,7 @@ export default {
             this.$refs.xTable.remove();
             this.form = res.data;
             delete this.form.bdczldz;
-            if (this.form.status != "02" && this.form.status != "04") {
+            if (res.data.status != "02" && res.data.status != "04") {
               this.canEdit = false;
             }
             this.mideaInfo.orgid = res.data.orgid + "";
@@ -3371,7 +3374,10 @@ export default {
     handleUseTheme(){
       this.useVisible = true;
     },
-
+    /* 可编辑table单元格点击后缀icon回调事件 */
+    editDownShowGoodsDlg(row, index){
+      this.showGoodsDlg(row, index)
+    }
   },
   computed: {
     query() {
@@ -3392,7 +3398,16 @@ export default {
     if(!this.$route.query.isFormInvoiced){
       this.init()
     }
-    
+    // 创建一个下拉表格渲染
+    const _this = this;
+    VXETable.renderer.add('EditDown', {
+      autofocus: '.vxe-input--inner',
+      renderEdit (h, renderOpts, params) {
+        return [
+          <EditDown params={ params } canEdit={_this.canEdit} showGoodsDlg={_this.editDownShowGoodsDlg} handleSubmitProduct={_this.handleSubmitProduct} orgid={_this.form.orgid} tdys={_this.form.tdys}></EditDown>
+        ]
+      }
+    })
   },
   activated() {
     if(this.$route.query.isFormInvoiced){

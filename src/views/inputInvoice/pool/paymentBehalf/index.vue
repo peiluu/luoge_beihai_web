@@ -132,9 +132,9 @@
             </el-table-column>
             <el-table-column prop="gjrq" label="归集日期" minWidth="120" align="center">
             </el-table-column>
-            <el-table-column prop="createtime" label="创建时间" minWidth="120" align="center">
+            <el-table-column prop="createtime" label="创建时间" minWidth="140" align="center">
             </el-table-column>
-            <el-table-column prop="updatetime" label="修改时间" minWidth="120" align="center">
+            <el-table-column prop="updatetime" label="修改时间" minWidth="140" align="center">
             </el-table-column>
           </el-table>
         </article>
