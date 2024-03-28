@@ -400,6 +400,22 @@ export const getssqArr = (ssq, tbzq) => {
   // 按季度
   }
 };
+// 节流throttle代码（定时器）：
+export const throttle = (func, delay, type = false) => {
+  var timer = null;
+  return function () {
+      var context = this;
+      var args = arguments;
+
+      if (!timer) {
+          timer = setTimeout(function () {
+              func.apply(context, args);
+              clearTimeout(timer);
+              timer = null;
+          }, delay);
+      }
+  }
+};
 export {
     getUUID,
     getFontFamily,

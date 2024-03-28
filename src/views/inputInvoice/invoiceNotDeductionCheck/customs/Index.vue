@@ -18,8 +18,8 @@
       </template>
 
       <template #sfchsd="{ data }"> {{ data.sfchsd == 'Y' ? '锁定' : '未锁定' }}</template>
-      <template #rzzt="{ data }"> {{ data.rzzt == '01' ? '未入账' : data.rzzt == '02' ? '已入账' : data.rzzt == '03' ?
-      '已入账撤销' : '' }}</template>
+      <!-- <template #rzzt="{ data }"> {{ data.rzzt == '01' ? '未入账' : data.rzzt == '02' ? '已入账' : data.rzzt == '03' ?
+      '已入账撤销' : '' }}</template> -->
       <template #fplx="{ data }"> {{ inputFplxMap[data.fplx] }} </template>
       <template #fpzt="{ data }">{{ data.fpzt ? fpztMap[data.fpzt] : '' }} </template>
       <template #bdklx="{ data, index }">
@@ -37,9 +37,7 @@
       </template>
       <template #syncInvoice="{ data }"> {{ data.syncInvoice == 'Y' ? '是' : '否' }}</template> -->
 
-      <template #purchaserstatus="{ data }">
-        {{ data.purchaserstatus ? purchaserstatusMap[data.purchaserstatus] : '' }}
-      </template>
+      <template #purchaserstatus="{ data }">{{ data.purchaserstatus ? purchaserstatusMap[data.purchaserstatus] : '' }}</template>
       <template #jshj="{ data }">{{ formatMoney(data.jshj) }}</template>
       <template #hjse="{ data }">{{ formatMoney(data.hjse) }}</template>
       <template #yxdkse="{ data }">{{ formatMoney(data.yxdkse) }}</template>
@@ -127,7 +125,7 @@ export default {
         { title: "勾选失败原因", dataIndex: "syncInvoice", width: 100, slot: 'syncInvoice' },
         { title: "勾选人", dataIndex: "createrName", width: 100, slot: 'createrName' },
         { title: "勾选时间", dataIndex: "createTime", width: 100, slot: 'createTime' },
-        { title: "入账状态", dataIndex: "rzzt", width: 100, slot: 'rzzt' },
+        { title: "入账状态", dataIndex: "purchaserstatus", align: "center", width: 100, slot: 'purchaserstatus' },
         { title: "入账日期", dataIndex: "syncInvoice", width: 100, slot: 'syncInvoice' },
         { title: "入账属期", dataIndex: "skssq", width: 100, slot: 'skssq' },
 
@@ -229,13 +227,11 @@ export default {
           options: [],
         },
         {
-          label: "入帐状态",
-          key: "rzzt",
-          val: "",
+          label: "入账状态",
+          key: "purchaserstatus",
+          val: '',
           type: "select",
-          options: [
-            
-          ],
+          options: [{ value: "", label: "全部" }].concat(purchaserstatusList)
         },
 
         {
@@ -454,6 +450,18 @@ export default {
         }))
         // debugger;
         this.$set(this.searchList[index], 'options', options)
+      }
+    },
+    onOk() {
+      this.getList()
+      this.onClose()
+    },
+    onClose() {
+      this.detailVisible = false;
+      this.dialogImportVisible = false;
+      this.detailInfo = {
+        operateType: '',
+        id: null,
       }
     },
   }

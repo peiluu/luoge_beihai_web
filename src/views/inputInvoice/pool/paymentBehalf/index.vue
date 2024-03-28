@@ -132,9 +132,9 @@
             </el-table-column>
             <el-table-column prop="gjrq" label="归集日期" minWidth="120" align="center">
             </el-table-column>
-            <el-table-column prop="createtime" label="创建时间" minWidth="120" align="center">
+            <el-table-column prop="createtime" label="创建时间" minWidth="140" align="center">
             </el-table-column>
-            <el-table-column prop="updatetime" label="修改时间" minWidth="120" align="center">
+            <el-table-column prop="updatetime" label="修改时间" minWidth="140" align="center">
             </el-table-column>
           </el-table>
         </article>
@@ -376,11 +376,11 @@ export default {
         this.$message.warning("当前操作只支持单个！")
         return
       }
-      if(type=== 1 && this.isSelected[0].spzt === '1'){
+      if(type=== 1 && this.isSelected[0].spzt === '2'){
         this.$message.warning(`当前发票已确认收票`)
         return
       }
-      if(type=== 2 && this.isSelected[0].spzt === '2'){
+      if(type=== 2 && this.isSelected[0].spzt === '1'){
         this.$message.warning(`当前发票还未确认收票`)
         return
       }
