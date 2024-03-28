@@ -463,48 +463,15 @@
                             v-show="canEdit"
                           ></i>
                         </template>
-                      </vxe-input> -->
-                      <!-- <span v-if="row.fphxz == '00'">
-                        <el-select
-                        v-model="row.hwhyslwfwmc"
-                        :disabled="!canEdit"
-                        filterable
-                        remote
-                        size="small"
-                        reserve-keyword
-                        placeholder=""
-                        :remote-method="(query)=> handleTableremoteMethod(query,row)"
-                        @change="()=> handleTableChage(val,row)"
-                        :loading="loading" style="width:calc(100% - 16px)">
-                        <el-option
-                          v-for="(item,index) in row.option || []"
-                          :key="`${item.value}${index}`"
-                          :label="item.label"
-                          :value="item.value">
-                          <span>{{ item.label }}&nbsp;{{ item.value }}</span>
-                        </el-option>
-                        
-                      </el-select>
-                      <i style="cursor: pointer;
-                              color: #409eff;
-                              font-size: 16px;
-                              position: absolute;
-                              right: 34px;
-                              top: 9px;
-                            "
-                            class="vxe-icon-menu"
-                            @click="showGoodsDlg(row, $rowIndex)"
-                            v-show="canEdit"></i>
-                      </span> -->
-                     
-                      <!-- <span v-else-if="row.fphxz == '02'">{{
+                      </vxe-input>
+                      <span v-else-if="row.fphxz == '02'">{{
                         row.hwhyslwfwmc
                       }}</span>
                       <span v-else
                         ><el-tag type="danger">折扣</el-tag
                         >{{ row.hwhyslwfwmc }}</span
                       >
-                    </template>
+                    </template> -->
                     <template #default="{ row, rowIndex, $rowIndex }">
                       <span v-if="row.fphxz == '00' || row.fphxz == '02'">{{
                         row.hwhyslwfwmc
@@ -513,7 +480,7 @@
                         ><el-tag type="danger">折扣</el-tag
                         >{{ row.hwhyslwfwmc }}</span
                       >
-                    </template> -->
+                    </template>
                   </vxe-column>
                   <vxe-column
                     min-width="120"
@@ -2778,6 +2745,7 @@ export default {
       this.goodsDlgVisible = false;
     },
     handleSubmitProduct(row) {
+      console.log('---handleSubmitProduct---', row)
       //差额开票不支持免税和不征税
       if (this.form.cezslxDm) {
         if (row.pubZzstsgl == "免税" || row.pubZzstsgl == "不征税") {
