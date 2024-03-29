@@ -103,10 +103,10 @@
                 <span>{{ handleParesTableValue(scope.row.sfchsd,[{label:'已锁定',value:'Y'},{label:'未锁定',value:'N'}]) }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="srzzt" label="入账状态" minWidth="120" align="center">
-              <template slot-scope="scope">
+            <el-table-column prop="srzzt" label="入账状态" minWidth="120" show-overflow-tooltip>
+              <!-- <template slot-scope="scope">
                 <span>{{ scope.row.rzzt === '01' ?'未入账':scope.row.rzzt === '06'?'入账撤销':'已入账' }}</span>
-              </template>
+              </template> -->
             </el-table-column>
             <el-table-column prop="spzt" label="收票状态" minWidth="120" align="center">
               <template slot-scope="scope">
