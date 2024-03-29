@@ -86,7 +86,9 @@
                                     </el-col>
                                     <el-col :span="24">
                                         <!-- 优惠政策及简易计税类型 -->
-                                        <el-form-item label="增值税特殊管理类型" prop="zzstsgl">
+                                        <el-form-item label="增值税特殊管理类型" prop="zzstsgl" :rules="[
+                                        { required: (addForm.xsyhzc??'')!=='' === 'Y'? true : false, message: '请选择增值税特殊管理类型'},
+                                        ]">
                                             <el-select style="width:100%" :disabled="addForm.xsyhzc === 'N'" 
                                             v-model="addForm.zzstsgl" placeholder="请选择" @change="handlertaxAess">
                                                 <el-option
@@ -201,7 +203,7 @@ export default {
             ruleAddForm:{
                 name:[{ required: true, message: '项目商品名称', trigger: 'blur' },],
                 xsyhzc:[{ required: true, message: '请选择优惠政策及简易计税', trigger: 'blur' },],
-                //zzstsgl:[{ required: this.addForm.xsyhzc === 'Y'?true:false, message: '请选择优惠政策及简易计税类型', trigger: 'blur' },],
+                //zzstsgl:[{ required: , message: '请选择优惠政策及简易计税类型', trigger: 'blur' },],
                 sl:[{ required: true, message: '请选择税率', trigger: 'blur' },]
             },
             dwOptions:[
@@ -237,7 +239,7 @@ export default {
             ],
             buillingOptions:[],
             taxAssOptions:[
-                {lable:'免税',value:'免税'}
+                //{lable:'免税',value:'免税'}
             ],
             taxRateOption:[],
             
@@ -275,28 +277,36 @@ export default {
        handlerEditDes(data){
         getCommondityDes(data).then(res=>{
             if(res.code === '0'){
-                const {zsl,zzssl} = res.data || {}
+                const {zsl,zzssl,zzstsgl} = res.data || {}
                 this.addForm = {...res.data,taxclasscode:res.data.sphfwssflhbbm}
                 this.addForm.orgids = this.addForm.orgids.map(k=> `${k}`);
                 if(this.xsyhzc === 'N'){
                     this.addForm.zzstsgl = null;
                     this.addForm.ls = '';
+
                 }
                 if(this.addForm.orgids === '0'){
                     this.buillingOptions = this.buillingOptions.map(k=> {return {...k,disabled:true}})
                 }
+                if((zzstsgl??'') !==''){
+                    let arr = zzstsgl.split('、');
+                    this.taxAssOptions = arr.map(i=> {return {lable:i,value:i}})
+                    console.log(zzstsgl.split(','))
+                }
                 if((zsl??'')!=='' && (zzssl??'')!==''){
-                        let arr_ls = zsl.split('、');
-                        let arr_ss = zzssl.split('、');
-                        this.taxRateOption = [
-                            ...arr_ls.map(k=>{ return {label:k,value:Number(k.split('%')[0]) / 100}}),
-                            ...arr_ss.map(i=> {return {label:i,value:Number(i.split('%')[0]) / 100}})
-                        ]
-                        this.deepOption = this.deepClone([
-                            ...arr_ls.map(k=>{ return {label:k,value:Number(k.split('%')[0]) / 100}}),
-                            ...arr_ss.map(i=> {return {label:i,value:Number(i.split('%')[0]) / 100}})
-                        ])
-                    }
+                    let arr_ls = zsl.split('、');
+                    let arr_ss = zzssl.split('、');
+                    
+                    this.deepOption = this.deepClone([
+                        ...arr_ls.map(k=>{ return {label:k,value:Number(k.split('%')[0]) / 100}}),
+                        ...arr_ss.map(i=> {return {label:i,value:Number(i.split('%')[0]) / 100}})
+                    ])
+                }
+                if(zzstsgl === '免税' || zzstsgl === '不征税'){
+                    zzstsgl === '免税'?this.$set(this,'taxRateOption',[{label:'免税',value:0}]):this.$set(this,'taxRateOption',[{label:'不征税',value:0}])
+                }else{
+                    this.taxRateOption = [...this.deepOption];
+                }
                 
             }
         })
@@ -315,7 +325,7 @@ export default {
             this.loadings = true;
             getNameDes({spmc:data??''}).then(res=>{
                 if(res.code === '0'){
-                const {id,sphfwssflhbbm,sphfwmc,sphfwfljc,zzstsgl,sm} = res.data || {};
+                const {id,zsl,sphfwssflhbbm,sphfwmc,sphfwfljc,zzstsgl,sm,zzssl} = res.data || {};
                 this.addForm ={
                         ...this.addForm,
                         sm:sm,
@@ -328,6 +338,18 @@ export default {
                     this.taxAssOptions = arr.map(i=> {return {lable:i,value:i}})
                     console.log(zzstsgl.split(','))
                 }
+                if((zsl??'')!=='' && (zzssl??'')!==''){
+                        let arr_ls = zsl.split('、');
+                        let arr_ss = zzssl.split('、');
+                        this.taxRateOption = [
+                            ...arr_ls.map(k=>{ return {label:k,value:Number(k.split('%')[0]) / 100}}),
+                            ...arr_ss.map(i=> {return {label:i,value:Number(i.split('%')[0]) / 100}})
+                        ]
+                        this.deepOption = this.deepClone([
+                            ...arr_ls.map(k=>{ return {label:k,value:Number(k.split('%')[0]) / 100}}),
+                            ...arr_ss.map(i=> {return {label:i,value:Number(i.split('%')[0]) / 100}})
+                        ])
+                    }
             }
             }).finally(()=>{
                 this.loadings = false
@@ -344,11 +366,18 @@ export default {
         this.$refs.ruleAddForm.validate(async (valid) => {
             if(valid){
                 this.loading = true;
-                const res = Object.keys(this.rowData).length <=0? await  addCommonditySingle(data) : await updateCommondityRow(data)
-                if(res.code === '0'){
-                    this.$message.success("操作成功！")
+                try{
+                    const res = Object.keys(this.rowData).length <=0? await  addCommonditySingle(data) : await updateCommondityRow(data)
+                        if(res.code === '0'){
+                            this.$message.success("操作成功！")
+                            this.updateVisible(false)
+                            this.$emit('saveDone',true)
+                        }
+                }finally{
+                    this.loading = false;
                 }
-                this.loading = false;
+               
+                
             }
         })
           
@@ -380,8 +409,10 @@ export default {
                         }
                     if((zzstsgl??'') !==''){
                         let arr = zzstsgl.split('、');
-                        this.taxAssOptions = arr.map(i=> {return {lable:i,value:i}})
+                        this.taxAssOptions = arr.map(i=> {return {lable:i,value:i}}) ||  []
                         console.log(zzstsgl.split(','))
+                    }else{
+                        this.taxAssOptions = [];
                     }
                     if((zsl??'')!=='' && (zzssl??'')!==''){
                         let arr_ls = zsl.split('、');
@@ -432,6 +463,13 @@ export default {
             if(val === 'N'){
                 //this.taxRateOption = [...this.deepOption]
                 this.$set(this,'taxRateOption',this.deepOption)
+            }else{
+               
+               if(this.taxAssOptions.map(k=> k.value).includes('免税')){
+                this.$set(this,'taxRateOption',[{label:'免税',value:0}])
+               }else if(this.taxAssOptions.map(k=> k.value).includes('免征税')){
+                this.$set(this,'taxRateOption',[{label:'不征税',value:0}])
+               }
             }
             
         },
@@ -439,8 +477,8 @@ export default {
         handlertaxAess(val){
             console.log(val)
             if(val === '免税' || val === '免征税'){
-                this.$set(this,'taxRateOption',[{label:'0% (免税 / 免征税)',value:0}])
-                
+                //this.$set(this,'taxRateOption',[{label:'0% (免税 / 免征税)',value:0}])
+                val === '免税'?this.$set(this,'taxRateOption',[{label:'免税',value:0}]):this.$set(this,'taxRateOption',[{label:'不征税',value:0}])
             }else{
                 this.taxRateOption = [...this.deepOption]
             }
