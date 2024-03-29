@@ -76,7 +76,7 @@ export default {
           {label:'未入账',value:'01'},
           {label:'入账（企业所得税税前扣除）',value:'02'},
           {label:'入账（企业所得税不扣除）',value:'03'},
-          {label:'入账已撤销',value:'06'},
+          {label:'已入账撤销',value:'06'},
         ],
         /* 转出状态 */
         rollOntStatus:[

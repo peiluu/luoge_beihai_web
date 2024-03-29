@@ -95,7 +95,7 @@
             </el-table-column>
             <el-table-column prop="kjywrsbh" label="扣缴义务人识别号（购方）" minWidth="190" show-overflow-tooltip>
             </el-table-column>
-            <el-table-column prop="kjywrmc" label="扣缴义务人名称" minWidth="120" show-overflow-tooltip>
+            <el-table-column prop="kjywrmc" label="扣缴义务人名称" minWidth="190" show-overflow-tooltip>
             </el-table-column>
             <el-table-column prop="tfrq" label="填发日期" minWidth="100" align="center">
             </el-table-column>
@@ -111,10 +111,10 @@
             </el-table-column>
             <el-table-column prop="bkjnsrmc" label="被扣缴纳税人名称" minWidth="200" show-overflow-tooltip>
             </el-table-column>
-            <el-table-column prop="srzzt" label="入账状态" minWidth="120" :header-align="'center'" :align="'center'">
-              <template slot-scope="scope">
+            <el-table-column prop="srzzt" label="入账状态" minWidth="120" show-overflow-tooltip>
+              <!-- <template slot-scope="scope">
                 <span>{{ scope.row.rzzt === '01' ?'未入账':scope.row.rzzt === '06'?'入账撤销':'已入账' }}</span>
-              </template>
+              </template> -->
             </el-table-column>
             <el-table-column prop="spzt" label="收票状态" minWidth="120" :header-align="'center'" :align="'center'">
               <template slot-scope="scope">
