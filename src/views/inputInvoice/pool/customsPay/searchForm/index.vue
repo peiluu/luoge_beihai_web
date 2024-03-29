@@ -67,6 +67,7 @@
                 clearable
                 filterable
               >
+                <el-option value="" label="全部"></el-option>
                 <el-option
                   v-for="item in optionList.lockOption"
                   :key="item.value"
