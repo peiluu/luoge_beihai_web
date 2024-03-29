@@ -161,9 +161,14 @@
                         </template>
                         <template v-slot:dropdown>
                           <div class="xmmc-dropdown" v-loading="nameLoading">
-                            <p class="list" :class="{xmmcActive: form.gmfmc === item.label}" v-for="item in gmfmcOptions" :key="item.value" @click="handleGMFMCChage(item)">
-                              {{ item.label }}&nbsp;{{ item.value }}
-                            </p>
+                            <template v-if="gmfmcOptions.length > 0">
+                              <p class="list" :class="{xmmcActive: form.gmfmc === item.label}" v-for="item in gmfmcOptions" :key="item.value" @click="handleGMFMCChage(item)">
+                                {{ item.label }}&nbsp;{{ item.value }}
+                              </p>
+                            </template>
+                            <template v-else>
+                              <el-empty :image-size="70"></el-empty>
+                            </template>
                           </div>
                         </template>
                       </vxe-pulldown>
