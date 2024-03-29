@@ -107,7 +107,8 @@
           </el-card>
     <app-add-commodity v-if="addVisible" :commodity-active-id="activeId"  
     :data-ls="taxOption" :visible.sync="addVisible" 
-    :title="title" :row-data="rowData"  
+    :title="title" :row-data="rowData"
+    @saveDone="handleSaveDone"
     width="75%" ></app-add-commodity>
   </div>
 </template>
@@ -205,6 +206,12 @@ export default {
       }).catch(e=>{
         this.loading = false;
       })
+    },
+    handleSaveDone(val){
+      console.log(val);
+      if(val){
+        this.handleGetList();
+      }
     },
     /* 获取点击ID */
     // handleNodeClick(val){
