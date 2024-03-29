@@ -136,7 +136,38 @@
                           ></i>
                         </template>
                       </vxe-input> -->
-                      <el-select
+                      <vxe-pulldown ref="xDown1" style="width: 100%">
+                        <template v-slot>
+                          <vxe-input 
+                            size="small"
+                            v-model="form.gmfmc"
+                            :disabled="!canEdit"
+                            @focus="focusEvent1"
+                            v-chineseInput="keyupEvent1"
+                          >
+                            <template #suffix>
+                              <i
+                                style="
+                                  cursor: pointer;
+                                  color: #409eff;
+                                  font-size: 16px;
+                                "
+                                class="vxe-icon-menu"
+                                @click="showBuyerDlg"
+                                v-show="canEdit"
+                              ></i>
+                            </template>
+                          </vxe-input>
+                        </template>
+                        <template v-slot:dropdown>
+                          <div class="xmmc-dropdown" v-loading="nameLoading">
+                            <p class="list" :class="{xmmcActive: form.gmfmc === item.label}" v-for="item in gmfmcOptions" :key="item.value" @click="handleGMFMCChage(item)">
+                              {{ item.label }}&nbsp;{{ item.value }}
+                            </p>
+                          </div>
+                        </template>
+                      </vxe-pulldown>
+                      <!-- <el-select
                         v-model="form.gmfmc"
                         allow-create
                         default-first-option
@@ -155,9 +186,8 @@
                           :value="item">
                           <span>{{ item.label }}&nbsp;{{ item.value }}</span>
                         </el-option>
-                        
-                      </el-select>
-                      <i
+                      </el-select> -->
+                                            <!-- <i
                             style="
                               cursor: pointer;
                               color: #409eff;
@@ -169,7 +199,7 @@
                             class="vxe-icon-menu"
                             @click="showBuyerDlg"
                             v-show="canEdit"
-                          ></i>
+                          ></i> -->
                     </el-form-item>
                   </el-col>
                   <el-col :span="24">
@@ -1429,6 +1459,7 @@ import AppAddTheme from './component/addTheme'
 import AppUseTheme from './component/useTheme'
 import EditDown from './component/editDown'
 import VXETable from 'vxe-table';
+import { debounce } from '@/utils/tool.js';
 //import { getArrayName } from '@/utils'
 export default {
   name: "BlueInvoiceForm",
@@ -1980,10 +2011,22 @@ export default {
     },
   },
   methods: {
+    focusEvent1 (e) {
+      this.$refs.xDown1.showPanel()
+      this.handleremoteMethod(e.value);
+    },
+    keyupEvent1: debounce(function (e) {
+      // console.log(e)
+      this.handleremoteMethod(e);
+    }, 300),
     /* 搜索 */
    async handleremoteMethod(query){
     
       if ((query??'')!=='') {
+          const isGmfMc = this.gmfmcOptions.find(item => item.gmfMc === query)
+          if(isGmfMc){
+            return 
+          }
           this.nameLoading = true;
           let params = {
             ...this.customerQuery,
@@ -2032,19 +2075,29 @@ export default {
     },
     /* 赋值 */
     handleGMFMCChage(val){
-      console.log(val,"000")
-      if(Object.prototype.toString.call(val) ==='object'){
-        this.$set(this.form,'gmfmc',val.label)
-        this.$set(this.form,'gmfnsrsbh',val.value)
-        this.$set(this.form, "gmfdz", val.dzdh);
-        this.$set(this.form, "gmfdh", val.phone);
-        this.$set(this.form, "gmfkhh", val.yhzh);
-        this.$set(this.form, "gmfzh", val.bankaccount);
-        this.$set(this.form, "email", val.revemail);
+      console.log(val,"000", Object.prototype.toString.call(val))
+      if(Object.prototype.toString.call(val) === '[object Object]'){
+        this.form = {
+          ...this.form,
+          gmfmc: val.gmfMc,
+          gmfnsrsbh: val.gmfNsrsbh,
+          gmfdz: val.dzdh,
+          gmfdh: val.phone,
+          gmfkhh: val.yhzh,
+          gmfzh: val.bankaccount,
+          email: val.revemail,
+        }
+        // this.$set(this.form,'gmfmc',val.label)
+        // this.$set(this.form,'gmfnsrsbh',val.value)
+        // this.$set(this.form, "gmfdz", val.dzdh);
+        // this.$set(this.form, "gmfdh", val.phone);
+        // this.$set(this.form, "gmfkhh", val.yhzh);
+        // this.$set(this.form, "gmfzh", val.bankaccount);
+        // this.$set(this.form, "email", val.revemail);
       }else{
         this.$set(this.form,'gmfmc',val)
       }
-      
+      this.$refs.xDown1.hidePanel();
     },
     handleTableChage(val,row){
       console.log(val,row)
@@ -3535,6 +3588,29 @@ export default {
     right: 8px !important;
     left: calc(#{$sidebar--width} + 8px) !important;
     border-radius: 0 !important;
+  }
+}
+.xmmc-dropdown {
+  height: 230px;
+  overflow: hidden;
+  overflow-y: scroll;
+  background: #fff;
+  border: 1px solid #EBEEF5;
+  border-radius: 4px;
+  box-shadow: 1px 1px 5px 0 #EBEEF5;
+  .list {
+    padding: 0 8px;
+    margin: 0;
+    height: 34px;
+    line-height: 34px;
+    white-space: nowrap;
+    cursor: pointer;
+    &:hover {
+      background-color: #d3efec;
+    }
+    &.xmmcActive {
+      background-color: #d3efec;
+    }
   }
 }
 </style>

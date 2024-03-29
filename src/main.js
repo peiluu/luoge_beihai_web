@@ -406,5 +406,31 @@ Vue.directive("thousands", {
   },
 
 });
+// 中文输入过程中，阻止input触发change事件
+Vue.directive('chineseInput',{
+  bind(el, binding) {
+    let composing = false;
+    let value = "";
 
+    el.addEventListener('compositionstart', () => {
+      composing = true;
+      console.log(12)
+      value = el.value;
+    });
 
+    el.addEventListener('compositionend', () => {
+      composing = false;
+      if(value !== el.value){
+        binding.value(el.value)
+      }
+    });
+
+    el.addEventListener('input', (event) => {
+      setTimeout(()=>{
+        if (!composing) {
+          binding.value(event.target.value)
+        }
+      },50)
+    });
+  }
+})

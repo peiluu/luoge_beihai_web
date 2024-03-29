@@ -404,17 +404,38 @@ export const getssqArr = (ssq, tbzq) => {
 export const throttle = (func, delay, type = false) => {
   var timer = null;
   return function () {
-      var context = this;
-      var args = arguments;
+    var context = this;
+    var args = arguments;
 
-      if (!timer) {
-          timer = setTimeout(function () {
-              func.apply(context, args);
-              clearTimeout(timer);
-              timer = null;
-          }, delay);
-      }
-  }
+    if (!timer) {
+      timer = setTimeout(function () {
+        func.apply(context, args);
+        clearTimeout(timer);
+        timer = null;
+      }, delay);
+    }
+  };
+};
+// 防抖
+export const debounce = (func, wait, immediate) => {
+  let timer;
+  return function () {
+    let context = this;
+    let args = arguments;
+
+    if (timer) clearTimeout(timer);
+    if (immediate) {
+      var callNow = !timer;
+      timer = setTimeout(() => {
+        timer = null;
+      }, wait);
+      if (callNow) func.apply(context, args);
+    } else {
+      timer = setTimeout(function () {
+        func.apply(context, args);
+      }, wait);
+    }
+  };
 };
 export {
     getUUID,
