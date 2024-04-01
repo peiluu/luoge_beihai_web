@@ -1,5 +1,5 @@
 <template>
-  <div class="" :style="'height: ' + contentHeight + 'px;'">
+  <div :class="{'main-content': $route.query.invoiceId && $route.path.indexOf('/buleInvoice/ApplySuccess') !== -1}" :style="'height: ' + contentHeight + 'px;'">
     <!-- <Step :stepData="{ current: 4, total: 4, title: '提交成功' }"></Step> -->
     <div class="content-header"> <img src="@/assets/success.png" alt=""></div>
     <div class="conetent-tip">
@@ -53,7 +53,7 @@
     },
     computed: {
       invoiceId(){
-        return this.invoiceSucId
+        return this.invoiceSucId || this.$route.query.invoiceId
       },
       contentHeight() {
         return window.innerHeight - 240;
@@ -72,11 +72,14 @@
         this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
       },
       make(){
-        // this.$router.push({
-        //   path: '/buleInvoice/index'
-        // })
-        // this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
-        this.$emit('handleResume',true)
+        if(this.$route.query.invoiceId){
+          this.$router.push({
+            path: '/outputInvoice/blueInvoice/Index'
+          })
+          this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+        } else {
+          this.$emit('handleResume',true)
+        }
       }
     }
   };
