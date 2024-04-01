@@ -2343,15 +2343,19 @@ export default {
     reChooseFplx() {
       this.clearProject();
       this.clearAll();
-      this.$emit('handleBack',this.query);
-      // this.$router.push({
-      //   path: "/buleInvoice/ChooseInvoiceType",
-      //   query: {
-      //     orgid: this.mideaInfo.orgid,
-      //     isDigital: "Y",
-      //     ...this.$route.query,
-      //   },
-      // });
+      if(this.query.isFormInvoiced == "Y"){
+        this.$router.push({
+          path: "/buleInvoice/ChooseInvoiceType",
+          query: {
+            orgid: this.mideaInfo.orgid,
+            isDigital: "Y",
+            ...this.$route.query,
+          },
+        });
+      } else {
+        this.$emit('handleBack',this.query);
+      }
+      
     },
     /**
      * 清空重填
@@ -3123,7 +3127,8 @@ export default {
         this.$refs.frequentTable.getRadioRecord();
        
       this.buyerVisible = false;
-      this.$set(this.form, "gmfmc", selectedRow.gmfMc);
+      
+      this.$set(this.form, "gmfmc", this.form.gmfzrrbz === 'Y' ? selectedRow.gmfMc +'（个人）':selectedRow.gmfMc);
       this.$set(this.form, "gmfnsrsbh", selectedRow.gmfNsrsbh);
       this.$set(this.form, "gmfdz", selectedRow.dzdh);
       this.$set(this.form, "gmfdh", selectedRow.phone);
@@ -3221,17 +3226,20 @@ export default {
                                   type: "success",
                                 });
                                 that.clearAll();
-                                this.$emit("handeDoneOk",{type:'makeInvoice',data:res.data})
-                                // that.$router.push({
-                                //   path: "/buleInvoice/ApplySuccess",
-                                //   query: {
-                                //     invoiceId: res.data,
-                                //   },
-                                // });
-                                // that.$store.dispatch(
-                                //   "app/removeTab",
-                                //   that.$store.getters.activeTab
-                                // );
+                                if(this.query.isFormInvoiced == "Y"){
+                                  that.$router.push({
+                                    path: "/buleInvoice/ApplySuccess",
+                                    query: {
+                                      invoiceId: res.data,
+                                    },
+                                  });
+                                  that.$store.dispatch(
+                                    "app/removeTab",
+                                    that.$store.getters.activeTab
+                                  );
+                                } else {
+                                  this.$emit("handeDoneOk",{type:'makeInvoice',data:res.data})
+                                }
                               }else{
                                 that.$notify({
                                   message: res.msg,
@@ -3257,17 +3265,20 @@ export default {
                               type: "success",
                             });
                             that.clearAll();
-                            this.$emit("handeDoneOk",{type:'makeInvoice',data:res.data})
-                            // that.$router.push({
-                            //   path: "/buleInvoice/ApplySuccess",
-                            //   query: {
-                            //     invoiceId: res.data,
-                            //   },
-                            // });
-                            // that.$store.dispatch(
-                            //   "app/removeTab",
-                            //   that.$store.getters.activeTab
-                            // );
+                            if(this.query.isFormInvoiced == "Y"){
+                              that.$router.push({
+                                path: "/buleInvoice/ApplySuccess",
+                                query: {
+                                  invoiceId: res.data,
+                                },
+                              });
+                              that.$store.dispatch(
+                                "app/removeTab",
+                                that.$store.getters.activeTab
+                              );
+                            } else {
+                              this.$emit("handeDoneOk",{type:'makeInvoice',data:res.data})
+                            }
                           }else{
                            
                             that.$notify({
