@@ -270,9 +270,11 @@ export default {
 .tree_main {
   height: calc(100vh - 262px);
 }
-.el-icon-circle-plus-outline {
+.el-icon-circle-plus-outline, .el-icon-edit-outline, .el-icon-delete,.el-icon-zoom-in {
   cursor: pointer;
+  font-size: 16px;
 }
+
 ::v-deep .tree_main{
     overflow: hidden auto;
 }

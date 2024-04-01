@@ -216,6 +216,14 @@ export const mainChildrenRoutes = [
     meta: { title: '蓝字发票填写', isTab: true, },
     component: () => import('@/views/outputInvoice/blueInvoice/BlueInvoiceForm.vue'),
   },
+  //蓝字开具成功
+  {
+    path: '/buleInvoice/ApplySuccess',
+    name: 'buleInvoiceApplySucce',
+    meta: { title: '蓝票提交成功', isTab: true, },
+    component: () =>
+      import('@/views/outputInvoice/blueInvoice/ApplySuccess'),
+  },
   {
     path: '/taxDeclaration/fillDeclaration',
     name: 'fillDeclaration',
