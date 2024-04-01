@@ -5,7 +5,7 @@
         <h3>{{useMode?'商品和服务税收分类编码':'项目商品分类名称'}}</h3>
         <el-form ref="form" :model="form" :label-width="useMode?'0px':'80px'">
           <el-form-item :label="useMode?'':'分类名称'">
-            <el-input v-model="form.name">
+            <el-input v-model="form.name" @keyup.enter.native="!useMode ?handleAddClassification('', '', 1):handleSearchClassification('', '', 1)">
             
               <template slot="append">
                 <div v-if="!useMode" @click="() => handleAddClassification('', '', 1)">
@@ -274,7 +274,9 @@ export default {
   cursor: pointer;
   font-size: 16px;
 }
-
+::v-deep .el-input-group__append, .el-input-group__prepend{
+  padding: 0 10px;
+}
 ::v-deep .tree_main{
     overflow: hidden auto;
 }
