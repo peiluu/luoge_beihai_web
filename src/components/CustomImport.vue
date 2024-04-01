@@ -54,7 +54,7 @@
           </el-table>
           <div class="footer-button">
             <el-button type="default" @click="initData">上一步</el-button>
-            <el-button type="primary" @click="handleConfirm" :disabled="failCount > 0 || importing">导入</el-button>
+            <el-button type="primary" @click="handleConfirm" :disabled="getDisabled">导入</el-button>
           </div>
         </template>
       </div>
@@ -133,6 +133,11 @@ export default {
       type: Array,
       default: () => [],
     },
+    effImport: {
+      // 只要有有效数据就可以导入
+      type: Boolean,
+      default: false,
+    }
   },
   data() {
     return {
@@ -147,6 +152,19 @@ export default {
     height() {
       return window.innerHeight - 500;
     },
+    getDisabled(){
+      const { importing, effImport, successCount, failCount } = this;
+      if(importing){
+       return true
+      } 
+      if(effImport && successCount > 0){
+        return false;
+      } 
+      if (failCount > 0) {
+        return true
+      }
+      return true
+    }
   },
   methods: {
     //ajax上传
@@ -167,9 +185,10 @@ export default {
           type: 'success',
         });
         that.importing = false;
-        that.tableData = res.data.list;
+        that.tableData = res.data.failList;
         that.successCount = res.data.successCount;
         that.failCount = res.data.failCount;
+        that.successList = res.data.successList;
       });
     },
     //下载模板
@@ -184,9 +203,14 @@ export default {
     handleConfirm() {
       let that = this;
       that.importing = true;
-      customPost(config.host + this.importApi, { 'Content-Type': 'application/json; charset=utf-8' }, {}, res => {
+      let params = {};
+      if(this.successList && this.successList.length){
+        params = JSON.stringify(that.successList);
+      }
+      customPost(config.host + this.importApi, { 'Content-Type': 'application/json; charset=utf-8' }, params, res => {
+        // console.log(res,123)
+        that.importing = false;
         if (res.code !== '0') {
-          that.importing = false;
           return;
         }
         that.$message({
@@ -197,7 +221,8 @@ export default {
         that.$emit('handleOk');
       });
     },
-    handleSuccess() {
+    handleSuccess(response, file, fileList) {
+      console.log(response, file, fileList,111)
       //上传成功之后清除历史记录
       this.$refs.fileUpload.clearFiles();
     },

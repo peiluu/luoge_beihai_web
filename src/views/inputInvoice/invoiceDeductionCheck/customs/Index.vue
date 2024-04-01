@@ -12,7 +12,7 @@
               v-if="$refs.list && $refs.list.searchParam.cljg == '01'">撤销勾选</el-button>
             <el-button type="success" @click="submitBatch('01')" v-else>提交勾选</el-button>
             <el-button @click="exportInvoiceCheck">导出</el-button>
-            <el-button @click="importExcel" v-if="$refs.list.searchParam.cljg == '02'">导入</el-button>
+            <el-button @click="importExcel" v-if="$refs.list && $refs.list.searchParam.cljg == '02'">导入</el-button>
             <!-- <el-button type="" @click="exportSelectedData">导出选中发票</el-button> -->
           </div>
         </div>
@@ -50,11 +50,13 @@
       :dialogVisible="dialogImportVisible"
       @handleClose="handleImportClose"
       @handleOk="handleImportOk"
-      downloadTemplateApi="/taxConfig/downExcel"
+      downloadTemplateApi="/income/downExcel"
+      :downloadTemplateApiParams="{ type: 'HGJKS' }"
       downloadTemplateName="发票勾选_导入模板"
-      upApi="/taxBody/importTaxBodyExcelInfo"
+      :upApi="`/income/uploadHgjks/${nsrsbh}`"
       importApi="/taxConfig/importPreferentialInfo"
       upTitle="上传发票勾选数据"
+      effImport
       :importColumns="importColumns"
     ></custom-import>
   </div>
@@ -98,12 +100,12 @@ export default {
         { title: "缴款单位人纳税人名称", width: 150, dataIndex: "jkdwrnsrmc", slot: 'jkdwrnsrmc', align: 'center' },
         { title: "是否重号锁定", width: 130, dataIndex: "sfchsd", slot: 'sfchsd' },
         { title: "认证状态", width: 130, dataIndex: "createrName" },
-        { title: "勾选失败原因", width: 130, dataIndex: "createrName" },
-        { title: "勾选人", width: 130, dataIndex: "createrName" },
+        // { title: "勾选失败原因", width: 130, dataIndex: "createrName" },
+        // { title: "勾选人", width: 130, dataIndex: "createrName" },
         { title: "勾选时间", width: 130, dataIndex: "updateTime" },
         { title: "入账状态", width: 130, dataIndex: " rzzt", slot: 'rzzt' },
-        { title: "入账日期", width: 130, dataIndex: "createrName" },
-        { title: "入账属期", width: 130, dataIndex: "createrName" },
+        // { title: "入账日期", width: 130, dataIndex: "createrName" },
+        // { title: "入账属期", width: 130, dataIndex: "createrName" },
 
       ],
       searchList: [
@@ -221,8 +223,21 @@ export default {
 
       ],
       importColumns: [
-        { title: '敏感货物名称', width: 200, dataIndex: 'nsrmc' },
-        { title: '风险等级', width: 200, dataIndex: 'orgName' },
+      { title: "海关缴款书号码", width: 140, dataIndex: "hgjkshm", slot: 'hgjkshm', align: 'center' },
+        { title: "填发日期", width: 180, dataIndex: 'tfrq' },
+        { title: "有效抵扣税额", width: 150, dataIndex: "yxdkse", slot: 'yxdkse' },
+        { title: "加计扣除额合计", width: 160, dataIndex: "jjkcehj", },
+        { title: "加计扣除剩余额 ", width: 160, dataIndex: "jjkcsye", },
+        { title: "缴款单位人纳税人识别号", dataIndex: "jkdwrnsrsbh", width: 160, },
+        { title: "缴款单位人纳税人名称", width: 150, dataIndex: "jkdwrnsrmc", slot: 'jkdwrnsrmc', align: 'center' },
+        { title: "是否重号锁定", width: 130, dataIndex: "sfchsd", slot: 'sfchsd' },
+        // { title: "认证状态", width: 130, dataIndex: "createrName" },
+        // { title: "勾选失败原因", width: 130, dataIndex: "createrName" },
+        // { title: "勾选人", width: 130, dataIndex: "createrName" },
+        { title: "勾选时间", width: 130, dataIndex: "updateTime" },
+        { title: "入账状态", width: 130, dataIndex: " rzzt", slot: 'rzzt' },
+        // { title: "入账日期", width: 130, dataIndex: "createrName" },
+        // { title: "入账属期", width: 130, dataIndex: "createrName" },
       ],
       selecedInfo: {
         number: 0,
@@ -251,6 +266,9 @@ export default {
     height() {
       return window.innerHeight - 460;
     },
+    nsrsbh() {
+      return this.$route.query.nsrsbh
+    }
   },
 
   methods: {
@@ -380,17 +398,17 @@ export default {
     handleImportOk() {
       this.handleImportClose();
       this.getList();
-      this.updateTableSelection();
+      // this.updateTableSelection();
     },
-    updateTableSelection() {
-      this.$nextTick(() => {
-        this.tableData.forEach(row => {
-          if (this.selectedRowKeys.includes(row.id)) {
-            this.$refs.table.toggleRowSelection(row, true);
-          }
-        });
-      });
-    },
+    // updateTableSelection() {
+    //   this.$nextTick(() => {
+    //     this.tableData.forEach(row => {
+    //       if (this.selectedRowKeys.includes(row.id)) {
+    //         this.$refs.table.toggleRowSelection(row, true);
+    //       }
+    //     });
+    //   });
+    // },
     handleSelectionChange(selection) {
       const newSelectedRowKeys = selection.map(item => item.id);
       if (newSelectedRowKeys.length < this.selectedRowKeys.length) {
@@ -418,13 +436,7 @@ export default {
         fileName
       })
     },
-    async exportSelectedData() {
-      const fileName = `海关缴款书.xlsx`
-      await this.api.downLoadNoOpenList({
-        reqData: { ...this.queryParam },
-        fileName
-      })
-    }
+
   }
 };
 </script>./Index.vue

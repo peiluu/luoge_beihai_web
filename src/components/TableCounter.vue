@@ -77,7 +77,9 @@ export default {
         jshj: this.formatMoney(jshj) || 0
       };
     },
-
+    setInfo(selecedInfo){
+      this.selecedInfo = selecedInfo
+    }
   }
 
 };

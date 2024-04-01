@@ -51,8 +51,8 @@ export const calPreCheck = data =>
 /**
  * @desption 提交撤销预勾选
  */
-export const submitRevokePreCheck = data =>
-  postJSON(`${config.host}/income/submitRevokePreCheck`, data);
+export const checkPreOneZzsfp = data =>
+  postJSON(`${config.host}/income/checkPreOneZzsfp`, data);
 
 /**
  * @desption 导出
@@ -71,3 +71,7 @@ export const queryBusinessFormat = data =>
  */
 export const getDetailById = data =>
   postJSON(`${config.host}/taxBody/getDetailById`, data);
+
+export const cstateZzsfp = data =>
+  postJSON(`${config.host}/income/cstateZzsfp/${data.nsrsbh}`, data);
+  

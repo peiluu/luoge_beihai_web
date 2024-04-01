@@ -160,16 +160,25 @@
           >
           </el-table-column>
          
-          <el-table-column label="操作" width="120" :header-align="'center'" :align="'center'" fixed="right">
+          <el-table-column label="操作" width="180" :header-align="'center'" :align="'center'" fixed="right">
             <template slot-scope="scope">
-              <el-button @click="handleViewDes(scope,'')" type="text" size="small">
+              <el-link @click="handleViewDes(scope,'')" type="parmariy" size="small">
                 查看
-              </el-button>
+              </el-link>
+              <el-divider direction="vertical"></el-divider>
+              <!-- :disabled="handleParesZT(scope).ty -->
               <el-popconfirm
                 title="是否确认开票？" @confirm="handleOpen(scope)" :disabled="handleParesZT(scope).type!==4">
-                    <el-button slot="reference" type="text" size="small" :disabled="handleParesZT(scope).type!==4">开票</el-button>
+                    <el-link slot="reference" :type=" handleParesZT(scope).type!==4 ? 'info' : 'parmariy' " size="small" :disabled="handleParesZT(scope).type!==4">开票</el-link>
+                </el-popconfirm>
+                <el-divider direction="vertical"></el-divider>
+                <el-popconfirm
+                title="是否确认删除票？" @confirm="handleDel(scope)" :disabled="scope.row.kpz ===0 || scope.row.kpcg === 0">
+                    <el-link slot="reference" :type="scope.row.kpz ===0 || scope.row.kpcg === 0 ? 'info' : 'danger' " :disabled="scope.row.kpz ===0 || scope.row.kpcg === 0" size="small">删除</el-link>
                 </el-popconfirm>
             </template>
+            
+            
           </el-table-column>
         </el-table>
       </article>
@@ -195,7 +204,7 @@
 <script>
 import AppAddTask from './addTask';
 import AppIntoExcel from '../intoExcel';
-import {getBatchTaskData,postBatchDoOnvoice} from '../api'
+import {getBatchTaskData,postBatchDoOnvoice,delBatchSingleData} from '../api'
 export default {
   name: "blueTaskMagePage",
   components: {AppAddTask,AppIntoExcel},
@@ -238,7 +247,8 @@ export default {
     /* 添加任务 */
     handleAddTask(){
         const {orgId,fppz} = this.$route.query || {}
-        this.title = fppz === '01' ? '批量专票任务添加': '批量普票任务添加';
+        // this.title = fppz === '01' ? '添加开批量任务': '批量普票任务添加';
+        this.title = '添加开批量任务';
         this.respData = {orgId,fppz};
         this.addVisible = true;
     },
@@ -356,6 +366,20 @@ export default {
         }).catch(() => {
                   
         });
+      },
+     async handleDel({row}){
+        const {pch} = row || {};
+        try{
+          const res = await delBatchSingleData(pch);
+          if([0,'0'].includes(res.code)){
+            this.$message.success("操作成功！")
+          }else{
+            this.$message.error("操作失败！")
+          }
+        }catch{
+          this.$message.error("操作失败！")
+        }
+        
       }
   },
   created() {
