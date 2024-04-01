@@ -78,6 +78,7 @@
   import {urlMap} from '@/config/constant';
   import Step from '@/components/Step.vue';
   import StepFooter from '@/components/StepFooter.vue';
+  import { getOrgDetail } from './Api.js'
   export default {
     name: "ChooseInvoiceType",
     props:{
@@ -144,6 +145,15 @@
       nextObj:{
         handler(val){
           console.log(val,"2222")
+          if(!val.nsrmc){
+            this.form = {
+              fppz: '',
+              tdys: '',
+              cezslxDm: '',
+              jazs: '',
+            }
+            this.getSellerInfoById(val.orgid)
+          }
           this.formInline = {...val};
         },
         deep:true
@@ -169,6 +179,24 @@
      
     },
     methods: {
+      async getSellerInfoById(orgid) {
+        try {
+          const { code = "", data = {} } = await getOrgDetail({id: orgid});
+          sessionStorage.removeItem('reChooseFplx')
+          if(code === "0") {
+            this.formInline = {
+              ...this.formInline,
+              nsrmc: data.nsrmc,
+              nsrsbh: data.nsrsbh,
+              ssztCode: data.ssztCode,
+              ssztName: data.ssztName,
+              orgid,
+            };
+          }
+        } catch (error) {
+          console.log('error', error)
+        }
+      },
       handlePre(){
         console.log(this.$route.query,"luyou")
         this.$router.push({
@@ -183,9 +211,9 @@
           this.$refs.form.validate((valid) => {
             if (valid) {
               this.$router.push({
-                path: '/buleInvoice/BlueInvoiceForm',
+                path: '/outputInvoice/blueInvoice/BlueInvoiceForm',
                 query: {
-                  orgid: this.orgid,
+                  orgid: this.$route.query.orgid,
                   ...this.form
                 }
               })
