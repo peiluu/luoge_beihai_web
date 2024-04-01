@@ -18,5 +18,8 @@ export const getBatchTaskData = data => postJSON(`${config.host}/invoiceExcelTas
 
 export const postBatchDoOnvoice = data => getJSON(`${config.host}/excelInvoice/openInvoice`, data);
 
+/* del */
+export const delBatchSingleData = data => getJSON(`${config.host}/mtclq-mtclqback/invoiceExcelTask/remove?pch=excel20240401101556uoxgj`, data);
+
 
 

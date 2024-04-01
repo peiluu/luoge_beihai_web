@@ -41,6 +41,17 @@
               </el-form-item>
             </el-col>
             <el-col :span="24">
+              <el-form-item label="明细限制" prop="mxxz">
+                <el-input-number
+                  style="width: 100%"
+                  v-model="intoForm.mxxz"
+                  :max="100000000000"
+                  :precision="0"
+                  :controls="false"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
               <el-form-item label="纳税人名称" >
                 <el-input v-model="intoForm.nsrmc" disabled />
               </el-form-item>
@@ -129,18 +140,27 @@ export default {
       }
     };
     return {
-      intoForm: { ...this.respData, fpxe: undefined },
+      intoForm: { ...this.respData, fpxe: undefined,mxxz:10000 },
       rules: {
         fpxe: [
           {
             required: true,
             type: "number",
-            message: "限额不能为空或不能小于等于0",
+            message: "开票限额不能为空或不能小于等于0",
             tigger: "blur",
           },
           { validator: checkFpxe, tigger: "blur" },
         ],
       },
+      mxxz:[
+      {
+            required: true,
+            type: "number",
+            message: "明细限制不能为空或不能小于等于0",
+            tigger: "blur",
+          },
+          { validator: checkFpxe, tigger: "blur" },
+      ],
       fileList: [],
       extraData: {},
       api: `${config.host}/excelInvoice/upload`,
@@ -156,7 +176,7 @@ export default {
   watch: {
     respData: {
       handler(val) {
-        this.intoForm = { ...val };
+        this.intoForm = { ...val,mxxz:10000 };
       },
     },
   },
