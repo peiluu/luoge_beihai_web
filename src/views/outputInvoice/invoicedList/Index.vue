@@ -163,7 +163,7 @@ export default {
 
         { label: "发票号码", key: "fphm", val: "", type: "input", placeholder: "请输入" },
 
-        { label: "发票代码", key: "fpdm", val: "", type: "input", placeholder: "请输入" },
+        // { label: "发票代码", key: "fpdm", val: "", type: "input", placeholder: "请输入" },
         // {
         //   label: "开票组织",
         //   key: "orgid",

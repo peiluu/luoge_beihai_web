@@ -21,6 +21,8 @@
             <el-button type="success" @click="cancleBatch('02')" v-if="$refs.list && $refs.list.searchParam.cljg == '01'">撤销勾选</el-button>
             <el-button type="success" @click="submitBatch('01')" v-else>提交勾选</el-button>
             <el-button @click="exportWithholdList">导出</el-button>
+            <el-button @click="importExcel" v-if="$refs.list && $refs.list.searchParam.cljg == '02'">导入</el-button>
+
           </div>
         </div>
       </template>
@@ -53,6 +55,20 @@
         <el-button type="success" @click="batchWithhold">确 认</el-button>
       </span>
     </el-dialog>
+    <custom-import
+      dialogTitle="发票勾选"
+      :dialogVisible="dialogImportVisible"
+      @handleClose="handleImportClose"
+      @handleOk="handleImportOk"
+      downloadTemplateApi="/income/downExcel"
+      :downloadTemplateApiParams="{ type: 'DKDJWSPZ' }"
+      downloadTemplateName="发票勾选_导入模板"
+      :upApi="`/income/uplodeDkdjwspz/${nsrsbh}`"
+      importApi="/taxConfig/importPreferentialInfo"
+      upTitle="上传发票勾选数据"
+      effImport
+      :importColumns="importColumns"
+    ></custom-import>
   </div>
 </template>
 
@@ -61,11 +77,13 @@ import moment from 'moment';
 import FormList from '@/components/FormList.vue';
 import { batchWithhold, exportWithholdList } from './Api';
 import { inputFplxMap } from '@/config/constant';
+import CustomImport from '@/components/CustomImport';
 
 export default {
   name: 'invoiceDeductionCheckWithhold',
   components: {
     FormList,
+    CustomImport
   },
   props: {
     level: {
@@ -75,6 +93,7 @@ export default {
   },
   data() {
     return {
+      dialogImportVisible: false, // 导入
       inputFplxMap,
       api: require('./Api'),
       param: {},
@@ -135,6 +154,17 @@ export default {
           },
         },
       ],
+      importColumns: [
+        { title: '勾选状态', width: 200, dataIndex: 'nsrmc' },
+        { title: '代扣代缴完税凭证号', width: 200, dataIndex: 'orgName' },
+        // { title: '填发日期', width: 200, dataIndex: 'orgName' },
+        // { title: '被扣缴义务人识别号', width: 200, dataIndex: 'orgName' },
+        // { title: '被扣缴义务人名称', width: 200, dataIndex: 'orgName' },
+        // { title: '有效抵扣税额', width: 200, dataIndex: 'orgName' },
+        // { title: '勾选时间', width: 200, dataIndex: 'orgName' },
+        // { title: '勾选人', width: 200, dataIndex: 'orgName' },
+
+      ],
       selecedInfo: {
         number: 0,
         hjje: 0,
@@ -160,6 +190,9 @@ export default {
     height() {
       return window.innerHeight - 460;
     },
+    nsrsbh() {
+      return this.$route.query.nsrsbh
+    }
   },
 
   methods: {
@@ -255,9 +288,38 @@ export default {
         fileName,
       });
     },
+      // 导入
+      importExcel() {
+      this.dialogImportVisible = true;
+    },
+    handleImportClose() {
+      this.dialogImportVisible = false;
+    },
+    handleImportOk() {
+      this.handleImportClose();
+      this.getList();
+      this.updateTableSelection();
+    },
+    updateTableSelection() {
+      this.$nextTick(() => {
+        this.tableData.forEach(row => {
+          if (this.selectedRowKeys.includes(row.id)) {
+            this.$refs.table.toggleRowSelection(row, true);
+          }
+        });
+      });
+    },
+    handleSelectionChange(selection) {
+      const newSelectedRowKeys = selection.map(item => item.id);
+      if (newSelectedRowKeys.length < this.selectedRowKeys.length) {
+        // 如果当前选中行的数量小于之前记录的，说明有取消勾选的操作
+        this.getList();
+      }
+      this.selectedRowKeys = newSelectedRowKeys;
+    },
     handleClose() {
       this.dialogVisible = false;
-      this.form = {};
+      this.form = {}
     },
     dateFormat(fmt, val) {
       return moment(val).format(fmt);

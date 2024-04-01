@@ -1,6 +1,6 @@
 <template>
   <div class="main-content">
-    <form-list :columns="columns" :searchRow="searchList" :api="api" :height="height" ref="list">
+    <form-list :columns="columns" :searchRow="searchList" :api="api" :height="height" ref="list" @handleSelection="handleSelection">
       <template #gxfsf="row"> {{ row.data.gxfsf == 0 ? '销售方' : '购买方' }}</template>
       <template #ykjhzfpbz="row">{{ row.data.ykjhzfpbz === 'Y' ? '已开具' : '未开具' }}</template>
       <template #shzt="row">
@@ -28,14 +28,20 @@
           <div class="toolbar-right">
             <el-button @click="addOrEdit({})">新增</el-button>
             <el-button @click="dels">删除</el-button>
-            <el-button @click="importExc">导入</el-button>
+            <el-button @click="importExcel">导入</el-button>
             <el-button @click="downloadNoList">导出</el-button>
           </div>
         </div>
       </template>
     </form-list>
     <!-- 新增 -->
-    <el-dialog :title="`${editForm.id ? '修改' : '新增'}失信人员黑名单`" :visible.sync="addVisible" width="1000px" :before-close="handleAddClose" class="black-dialog">
+    <el-dialog
+      :title="`${editForm.id ? '修改' : '新增'}失信人员黑名单`"
+      :visible.sync="addVisible"
+      width="1000px"
+      :before-close="handleAddClose"
+      class="black-dialog"
+    >
       <el-form :inline="true" :model="editForm" ref="editForm" :rules="rules">
         <el-form-item label="纳税人识别号" prop="nsrsbh">
           <el-input v-model="editForm.nsrsbh" placeholder="请输入" />
@@ -72,10 +78,10 @@
           <el-date-picker value-format="yyyyMMdd" v-model="editForm.shixrq" type="date" placeholder="请选择" />
         </el-form-item>
         <el-form-item label="备注" prop="bz" class="full-item">
-          <el-input v-model="editForm.bz" type="textarea" :rows="2" maxlength="200" show-word-limit placeholder="请输入" />
+          <el-input v-model="editForm.bz" type="textarea" :rows="2" maxlength="100" show-word-limit placeholder="请输入" />
         </el-form-item>
         <el-form-item label="案件描述" prop="ajms" class="full-item">
-          <el-input v-model="editForm.ajms" type="textarea" :rows="2" maxlength="200" show-word-limit placeholder="请输入" />
+          <el-input v-model="editForm.ajms" type="textarea" :rows="2" maxlength="100" show-word-limit placeholder="请输入" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -83,16 +89,30 @@
         <el-button type="success" @click="saveData">提 交</el-button>
       </span>
     </el-dialog>
+    <custom-import
+      dialogTitle="导入失信人员黑名单"
+      :dialogVisible="dialogImportVisible"
+      @handleClose="handleImportClose"
+      @handleOk="handleImportOk"
+      downloadTemplateApi="/taxConfig/downExcel"
+      downloadTemplateName="失信人员黑名单_导入模板"
+      upApi="/taxBody/importTaxBodyExcelInfo"
+      importApi="/taxConfig/importPreferentialInfo"
+      upTitle="上传失信人员黑名单"
+      :importColumns="importColumns"
+    ></custom-import>
   </div>
 </template>
 
 <script>
+import CustomImport from '@/components/CustomImport';
 import FormList from '@/components/FormList.vue';
 import { confirmStatusMap, chyyDmMap, examineStatusMap } from '@/views/outputInvoice/redInvoice/constant';
 export default {
   name: 'WaitConfirm',
   components: {
     FormList,
+    CustomImport,
   },
 
   data() {
@@ -106,6 +126,7 @@ export default {
       { value: '2', label: '黑名单企业' },
     ];
     return {
+      dialogImportVisible: false, // 导入
       api: require('./Api'),
       // 待处理的发票数量
       confirmStatusMap,
@@ -137,6 +158,10 @@ export default {
           scopedSlots: { customRender: 'action' },
         },
       ],
+      importColumns: [
+        { title: '敏感货物名称', width: 200, dataIndex: 'nsrmc' },
+        { title: '风险等级', width: 200, dataIndex: 'orgName' },
+      ],
       searchList: [
         { label: '企业名称', key: 'qymc', val: '', type: 'input', placeholder: '请输入' },
         { label: '纳税人识别号', key: 'nsrsbh', val: '', type: 'input', placeholder: '请输入' },
@@ -163,6 +188,7 @@ export default {
         qylb: [{ required: true, message: '请选择', trigger: 'change' }],
         fxlx: [{ required: true, message: '请选择', trigger: 'change' }],
       },
+      selections: [],
     };
   },
   mounted() {
@@ -178,7 +204,16 @@ export default {
 
   methods: {
     // 导入
-    importExc() {},
+    importExcel() {
+      this.dialogImportVisible = true;
+    },
+    handleImportClose() {
+      this.dialogImportVisible = false;
+    },
+    handleImportOk() {
+      this.handleImportClose();
+      this.$refs.list.reload();
+    },
     // 新增/修改
     addOrEdit(row = {}) {
       console.log('----row----', row);
@@ -186,13 +221,23 @@ export default {
       this.addVisible = true;
     },
     // 批量删除
-    dels() {},
+    dels() {
+      const { selections } = this;
+      if (selections.length === 0) {
+        this.$message.warning('请至少选择一条');
+        return;
+      }
+      console.log(this.selections);
+    },
     // 关闭弹窗
     handleAddClose() {
       this.addVisible = false;
       setTimeout(() => {
         this.$refs.editForm.resetFields();
       }, 100);
+    },
+    handleSelection(rows) {
+      this.selections = rows;
     },
     // 保存
     saveData() {
