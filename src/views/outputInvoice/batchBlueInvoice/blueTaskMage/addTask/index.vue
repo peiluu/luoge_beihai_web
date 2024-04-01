@@ -63,7 +63,11 @@
             </el-col>
             <el-col :span="24">
               <el-form-item label="文件上传" prop="fileList">
-                <el-upload
+                <article style="margin-bottom: 2px;">
+                  <el-button type="primary" plain @click="handleDownTel"> 下载模板</el-button>
+                </article>
+                <article>
+                  <el-upload
                   ref="uploadRef"
                   class="upload-demo"
                   drag
@@ -85,6 +89,8 @@
                   </div>
                   <!-- <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div> -->
                 </el-upload>
+                </article>
+                
               </el-form-item>
             </el-col>
             <!-- <el-col :span="6">
@@ -105,9 +111,10 @@
 </template>
 
 <script>
-import { getInvoiceQuota, } from "../../api";
+import { getInvoiceQuota, downBatchTelleData} from "../../api";
 import { config } from "@/config";
-import { customPost } from "@/utils/request.js";
+import { customPost,} from "@/utils/request.js";
+
 export default {
   name: "addTaskPage",
   props: {
@@ -156,10 +163,10 @@ export default {
       {
             required: true,
             type: "number",
-            message: "明细限制不能为空或不能小于等于0",
+            message: "明细限制不能为空",
             tigger: "blur",
           },
-          { validator: checkFpxe, tigger: "blur" },
+         
       ],
       fileList: [],
       extraData: {},
@@ -279,6 +286,11 @@ export default {
         }).catch(() => {
                  
         });
+      },
+      /* 模板下载 */
+      handleDownTel(){
+        const fileName = `蓝字发票批量开具任务模板.xlsx`;
+        downBatchTelleData('/mtclq-mtclqback/invoiceExcelTask/downLoadTemplate',{fileName},null,true)
       }
   },
   created() {},

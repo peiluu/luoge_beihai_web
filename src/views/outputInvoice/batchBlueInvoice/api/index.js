@@ -1,5 +1,6 @@
 import {
     getJSON,
+    download,
     postJSON
 } from '@/utils/request.js'
 import { config } from "@/config"
@@ -19,7 +20,10 @@ export const getBatchTaskData = data => postJSON(`${config.host}/invoiceExcelTas
 export const postBatchDoOnvoice = data => getJSON(`${config.host}/excelInvoice/openInvoice`, data);
 
 /* del */
-export const delBatchSingleData = data => getJSON(`${config.host}/mtclq-mtclqback/invoiceExcelTask/remove?pch=excel20240401101556uoxgj`, data);
+export const delBatchSingleData = data => getJSON(`${config.host}/invoiceExcelTask/remove?pch=excel20240401101556uoxgj`, data);
+
+/* down */
+export const downBatchTelleData = data => download(`${config.host}/invoiceExcelTask/downLoadTemplate`, data,null,true);
 
 
 

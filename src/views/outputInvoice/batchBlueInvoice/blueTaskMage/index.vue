@@ -247,7 +247,8 @@ export default {
     /* 添加任务 */
     handleAddTask(){
         const {orgId,fppz} = this.$route.query || {}
-        this.title = fppz === '01' ? '批量专票任务添加': '批量普票任务添加';
+        // this.title = fppz === '01' ? '添加开批量任务': '批量普票任务添加';
+        this.title = '添加开批量任务';
         this.respData = {orgId,fppz};
         this.addVisible = true;
     },
