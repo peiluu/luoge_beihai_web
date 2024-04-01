@@ -238,11 +238,11 @@ export default {
     /* 分页事件 */
     handleSizeChange(val) {
       this.page.pageSize = val;
-      //this.handleGetUploadData()
+      this.handlerGetTaskList()
     },
     handleCurrentChange(val) {
       this.page.currentPage = val;
-      //this.handleGetUploadData()
+      this.handlerGetTaskList()
     },
     /* 添加任务 */
     handleAddTask(){
@@ -272,6 +272,7 @@ export default {
         let data = {
           "pageNo": this.page.currentPage,
           "pageSize": this.page.pageSize,
+        nsrsbh:this?.$route?.query?.nsrsbh || '',
         }
         getBatchTaskData(data).then(res=>{
             if([0,'0'].includes(res.code)){
