@@ -54,7 +54,7 @@
       :downloadTemplateApiParams="{ type: 'HGJKS' }"
       downloadTemplateName="发票勾选_导入模板"
       :upApi="`/income/uploadHgjks/${nsrsbh}`"
-      importApi="/taxConfig/importPreferentialInfo"
+      importApi="/income/checkPreCheckHgjks"
       upTitle="上传发票勾选数据"
       effImport
       :importColumns="importColumns"
@@ -65,7 +65,7 @@
 <script>
 import moment from "moment";
 import FormList from '@/components/FormList.vue';
-import { checkCustomsPayment, getKjList, exportInvoiceCheck } from './Api'
+import { checkCustomsPayment, getKjList, exportInvoiceCheck,checkPreOneHgjks } from './Api'
 import { inputFplxMap } from '@/config/constant'
 import CustomImport from '@/components/CustomImport';
 
@@ -92,6 +92,7 @@ export default {
         { type: "selection", width: 50, },
         { title: '序号', type: "index", width: 50, },
         { title: "海关缴款书号码", width: 140, dataIndex: "hgjkshm", slot: 'hgjkshm', align: 'center' },
+        // { title: "入账状态", width: 120, dataIndex: 'rzzt' },
         { title: "填发日期", width: 180, dataIndex: 'tfrq' },
         { title: "有效抵扣税额", width: 150, dataIndex: "yxdkse", slot: 'yxdkse' },
         { title: "加计扣除额合计", width: 160, dataIndex: "jjkcehj", },
@@ -279,7 +280,7 @@ export default {
       const param = {
         cljg: '02',
         skssq: this.$route.query.skssq,
-        kjywrsbh: this.$route.query.nsrsbh,
+        jkdwrnsrsbh: this.$route.query.nsrsbh,
         // gfsbh: this.$route.query.gfsbh,
         // gxlx: this.$route.query.gxlx,
 
@@ -397,7 +398,7 @@ export default {
     },
     handleImportOk() {
       this.handleImportClose();
-      this.getList();
+      // this.getList();
       // this.updateTableSelection();
     },
     // updateTableSelection() {
@@ -437,6 +438,7 @@ export default {
       })
     },
 
+    
   }
 };
 </script>./Index.vue

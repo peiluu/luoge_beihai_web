@@ -25,6 +25,8 @@
         class="table-body-warpper"
         :row-class-name="tableSelectedRow"
         @selection-change="handleSelection"
+        @select="handleSelected"
+        @select-all="selectAll"
       >
         <template v-for="(column, columnIndex) in columns">
           <template v-if="!column.hidden">
@@ -211,6 +213,10 @@ export default {
     otherParam: {
       type: Object,
       default: ()=>({}),
+    },
+    preCheck: {
+      type: Boolean,
+      default: false,
     }
   },
   watch: {
@@ -268,6 +274,13 @@ export default {
         this.$refs.tableCounter.getSelecedInfo(e)
       }
       this.$emit("handleSelection", e);
+    },
+    handleSelected(selection, row){
+      this.$emit("select", selection, row);
+    },
+    selectAll(e){
+      console.log(123,e)
+      this.$emit("selectAll", e);
     },
     handleSizeChange(size) {
       this.pagination.pageSize = size;
@@ -343,7 +356,10 @@ export default {
                 index: index + 1,
               };
             });
-            // this.setSelections(data || []);
+            if(vm.preCheck){
+              const checkList = data.filter((item) => item.preCheck == "Y");
+              this.setSelections(checkList);
+            }
           } else {
             vm.data = []
           }
@@ -448,10 +464,13 @@ export default {
     },
     // 初始化多选数据
     setSelections(list) {
-      list?.map((item) => {
-        this.$refs.table.toggleRowSelection(item)
-      })
-
+      try {
+        list?.map((item) => {
+          this.$refs.table.toggleRowSelection(item)
+        })
+      } catch (error) {
+        console.log(error)
+      }
     },
     // 清空多选
     clearSelection() {

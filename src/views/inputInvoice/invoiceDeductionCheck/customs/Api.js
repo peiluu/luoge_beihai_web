@@ -26,3 +26,8 @@ export const getOrgList = data => postJSON(`${config.host}/orgnization/getOrgLis
    * @desption 提交勾选
    */
        export const checkCustomsPayment = data => postJSON(`${config.host}/income/checkCustomsPayment`, data);
+       /**
+ * @desption 提交撤销预勾选
+ */
+export const checkPreOneZzsfp = data =>
+postJSON(`${config.host}/income/checkPreOneHgjks`, data);

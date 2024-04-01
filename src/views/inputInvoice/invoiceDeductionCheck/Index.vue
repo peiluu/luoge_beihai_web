@@ -19,11 +19,11 @@
 
 
     <!-- 发票下载 -->
-    <Invoice v-show="level === '1'" :level="level" :currentSq="currentSq" />
+    <Invoice v-show="level === '1'" :level="level" :currentSq="currentSq" :skssq="currentSq.dateValue"/>
     <!-- 海关缴款书 -->
-    <Customs v-show="level === '2'"  :level="level"/>
+    <Customs v-show="level === '2'"  :level="level" :skssq="currentSq.dateValue" />
     <!-- 代扣代缴完税凭证 -->
-    <Withhold v-show="level === '3'" :level="level"/>
+    <Withhold v-show="level === '3'" :level="level" :skssq="currentSq.dateValue" />
   </div>
 </template>
 <script>
