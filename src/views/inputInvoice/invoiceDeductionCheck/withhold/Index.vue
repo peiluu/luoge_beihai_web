@@ -17,8 +17,8 @@
       ref="list"
       :firstLoading="level === '3'"
       type="selection"
-          :selectable="checkSelectable"
-          :reserve-selection="true"
+      :selectable="checkSelectable"
+      :reserve-selection="true"
     >
       <!-- 中间部分 -->
       <template #topTool>
@@ -119,7 +119,7 @@
 <script>
 import moment from "moment";
 import FormList from "@/components/FormList.vue";
-import { batchWithhold, exportWithholdList, checkPreOneDkdj } from "./Api";
+import { batchWithhold, exportWithholdList, checkPreOneDkdj,cstateDkdj } from "./Api";
 import { inputFplxMap } from "@/config/constant";
 import CustomImport from "@/components/CustomImport";
 
@@ -226,9 +226,9 @@ export default {
       ],
       selecedInfo: {
         number: 0,
-        hjje: 0,
-        hjse: 0,
-        jshj: 0,
+        sjje: 0,
+        jsje: 0,
+        yxdkse: 0,
       },
       selections: [],
       dialogVisible: false,
@@ -267,7 +267,8 @@ export default {
       this.$refs.list.handleGetData(param);
     },
     getTableData(data){
-      this.data = data
+      this.data = data;
+      this.getHjje();
     },
     // 点击勾选icon触发handleSelected
     handleSelected(selection, row) {
@@ -477,6 +478,102 @@ export default {
         reqData: { nsrsbh: this.nsrsbh },
         fileName,
       });
+    },
+        // 统计
+        async handleGetData(obj, args, keepSelections) {
+      // this.keepSelections = false;
+      this.searchParam = obj;
+      let param = {};
+      Object.keys(obj).map((key) => {
+        if (obj[key] != null) {
+          // 用obj[key].length > 0 只能判断字符串，会过滤掉数字
+          // if (obj[key].length > 0) {
+          //   param[key] = obj[key];
+          // }
+          if (obj && obj[key]) {
+            param[key] = obj[key];
+          }
+        }
+      });
+
+      let res;
+      const vm = this;
+      let data = [];
+      let pagination = this.pagination;
+      this.loading = true;
+      for (var field in args) {
+        param[field] = args[field];
+      }
+
+      try {
+        res = await this.api.getList({
+          // startNumber: startNumber,
+          ...param,
+          pageNo: pagination.pageNo,
+          pageSize: pagination.pageSize,
+        });
+        vm.getHjje();
+        if (res && res.code == "0") {
+          this.isPerCheck = false;
+          // 在切换页面时不清空选中的数据
+          if (!keepSelections) {
+            this.$refs.table.clearSelection();
+          }
+          if (vm.buildFunction) {
+            data = vm.buildFunction(res.data);
+          } else {
+            data = res.data;
+          }
+          if (data && data.length > 0) {
+            const checkList = data.filter((item) => item.preCheck == "Y");
+            this.setSelections(checkList);
+            vm.data = data.map((each, index) => {
+              return {
+                ...each,
+                index: index + 1,
+              };
+            });
+          } else {
+            vm.data = [];
+          }
+          vm.pagination.total = res.totalCount;
+          if (res.total) {
+            vm.$emit("sumTotal", res.total);
+          }
+        } else {
+          // vm.$message.error(res.msg);
+        }
+        vm.loading = false;
+      } catch (e) {
+        vm.loading = false;
+      }
+    },
+    async getHjje() {
+      try {
+        this.totalLoading = true;
+        const { code = "0", data } = await cstateDkdj({
+          nsrsbh: this.$route.query.nsrsbh,
+          skssq: this.skssq,
+        });
+        if (code === "0") {
+          this.selecedInfo = {
+            number: data.ygxts,
+            hjje: data.sjje,
+            hjse: data.jsje,
+            jshj: data.yxdkse,
+          };
+          this.$refs.list.handleTotalCounst({
+            number: data.ygxts,
+            hjje: data.jsje,
+            hjse: data.sjje,
+            jshj: data.yxdkse,
+          })
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.totalLoading = false;
+      }
     },
   },
 };

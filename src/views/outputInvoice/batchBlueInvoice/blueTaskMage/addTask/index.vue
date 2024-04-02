@@ -41,6 +41,17 @@
               </el-form-item>
             </el-col>
             <el-col :span="24">
+              <el-form-item label="明细限制" prop="mxxz">
+                <el-input-number
+                  style="width: 100%"
+                  v-model="intoForm.mxxz"
+                  :max="100000000000"
+                  :precision="0"
+                  :controls="false"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
               <el-form-item label="纳税人名称" >
                 <el-input v-model="intoForm.nsrmc" disabled />
               </el-form-item>
@@ -52,7 +63,11 @@
             </el-col>
             <el-col :span="24">
               <el-form-item label="文件上传" prop="fileList">
-                <el-upload
+                <article style="margin-bottom: 2px;">
+                  <el-button type="primary" plain @click="handleDownTel"> 下载模板</el-button>
+                </article>
+                <article>
+                  <el-upload
                   ref="uploadRef"
                   class="upload-demo"
                   drag
@@ -74,6 +89,8 @@
                   </div>
                   <!-- <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div> -->
                 </el-upload>
+                </article>
+                
               </el-form-item>
             </el-col>
             <!-- <el-col :span="6">
@@ -94,9 +111,10 @@
 </template>
 
 <script>
-import { getInvoiceQuota, } from "../../api";
+import { getInvoiceQuota, downBatchTelleData} from "../../api";
 import { config } from "@/config";
-import { customPost } from "@/utils/request.js";
+import { customPost,} from "@/utils/request.js";
+
 export default {
   name: "addTaskPage",
   props: {
@@ -123,24 +141,41 @@ export default {
   data() {
     const checkFpxe = (rule, value, callback) => {
       if (value <= 0) {
-        callback(new Error("限额不能小于等于0"));
+        callback(new Error("开票限额不能小于等于0"));
       } else {
         callback();
       }
     };
     return {
-      intoForm: { ...this.respData, fpxe: undefined },
+      intoForm: { ...this.respData, fpxe: undefined,mxxz:undefined,fppz:'' },
       rules: {
+        fppz:[
+          {
+            required: true,
+            message: "请选择发票类型",
+            tigger: "blur",
+          },
+        ],
         fpxe: [
           {
             required: true,
             type: "number",
-            message: "限额不能为空或不能小于等于0",
+            message: "开票限额不能为空或不能小于等于0",
             tigger: "blur",
           },
           { validator: checkFpxe, tigger: "blur" },
         ],
+        mxxz:[
+        {
+          required: true,
+          type: 'number',
+          message: "明细限制不能为空",
+          tigger: ["blur",'change']
+        },
+      
+      ],
       },
+     
       fileList: [],
       extraData: {},
       api: `${config.host}/excelInvoice/upload`,
@@ -156,7 +191,7 @@ export default {
   watch: {
     respData: {
       handler(val) {
-        this.intoForm = { ...val };
+        this.intoForm = { ...val,mxxz:1000,fppz:'' };
       },
     },
   },
@@ -174,7 +209,7 @@ export default {
         const res = await getInvoiceQuota(params);
         if (res.code === "0") {
           this.intoForm.fpxe = res.data.amount || 0;
-          
+          this.intoForm.mxxz = 1000;
         }
         
       } catch (e) {
@@ -249,7 +284,8 @@ export default {
       //销售方为 ${this.queryData.nsrmc},纳税人识别号为 ${this.queryData.nsrsbh} 
         this.$confirm(`<div>请确认开票主体！</div>
           <div>销售方名称：${this.queryData.nsrmc}</div>
-          <div>纳税人识别号：${this.queryData.nsrsbh}</div>`, '提示', {
+          <div>纳税人识别号：${this.queryData.nsrsbh}</div>
+          <div>销售方名称：${this.queryData.fppz === '01'? '增值税专用发票':'增值税普通发票'}</div>`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           dangerouslyUseHTMLString: true,
@@ -259,6 +295,11 @@ export default {
         }).catch(() => {
                  
         });
+      },
+      /* 模板下载 */
+      handleDownTel(){
+       const fileName = `蓝字发票批量开具任务模板.xlsx`;
+        downBatchTelleData({fileName},null,true)
       }
   },
   created() {},

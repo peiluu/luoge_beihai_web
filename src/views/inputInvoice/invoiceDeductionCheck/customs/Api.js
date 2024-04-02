@@ -29,5 +29,10 @@ export const getOrgList = data => postJSON(`${config.host}/orgnization/getOrgLis
        /**
  * @desption 提交撤销预勾选
  */
-export const checkPreOneZzsfp = data =>
+export const checkPreOneHgjks = data =>
 postJSON(`${config.host}/income/checkPreOneHgjks`, data);
+/**
+ * @desption 计算税额
+ */
+export const cstateHgjks = data =>
+  postJSON(`${config.host}/income/cstateHgjks/${data.nsrsbh}/${data.skssq}`, data);

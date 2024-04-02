@@ -71,9 +71,11 @@ export const queryBusinessFormat = data =>
  */
 export const getDetailById = data =>
   postJSON(`${config.host}/taxBody/getDetailById`, data);
-
+/**
+ * @desption 计算税额
+ */
 export const cstateZzsfp = data =>
-  postJSON(`${config.host}/income/cstateZzsfp/${data.nsrsbh}`, data);
+  postJSON(`${config.host}/income/cstateZzsfp/${data.nsrsbh}/${data.skssq}`, data);
   /**
  * @desption 提交撤销预勾选
  */

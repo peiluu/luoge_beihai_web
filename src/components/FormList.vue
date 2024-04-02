@@ -66,7 +66,9 @@
       <!-- 表尾 -->
       <slot name="tableFooter"></slot>
       <!-- 表尾合计 -->
-      <TableCounter ref="tableCounter" :totalEntity="totalEntity" v-if="tableCounterShow" :tableCounterConfig="tableCounterConfig"/>
+      <TableCounter ref="tableCounter" :totalEntity="totalEntity" 
+      v-if="tableCounterShow" 
+      :tableCounterConfig="tableCounterConfig"/>
 
       <div class="pagination" v-if="showPagination">
         <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.pageNo" :page-sizes="pageSizes" :page-size="pagination.pageSize"
@@ -506,6 +508,10 @@ export default {
     getNextList(val, type) {
       this.$emit('getNextList', val, type)
     },
+    /* 设置总计函数 */
+    handleTotalCounst(val){
+      this.$refs.tableCounter.setInfo(val);
+    }
   },
   activated() {
     if (this.firstLoading) {

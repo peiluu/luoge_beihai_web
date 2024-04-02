@@ -446,18 +446,18 @@ export default {
             },
           },
         },
-        {
-          label: "会计期间",
-          key: "accountPeriod",
-          type: "monthrange",
-          val: [],
-          placeholder: "请选择",
-          pickerOptions: {
-            disabledDate(time) {
-              return time.getTime() > Date.now();
-            },
-          },
-        },
+        // {
+        //   label: "会计期间",
+        //   key: "accountPeriod",
+        //   type: "monthrange",
+        //   val: [],
+        //   placeholder: "请选择",
+        //   pickerOptions: {
+        //     disabledDate(time) {
+        //       return time.getTime() > Date.now();
+        //     },
+        //   },
+        // },
         {
           label: "入账状态",
           key: "purchaserstatus",
@@ -465,17 +465,17 @@ export default {
           type: "select",
           options: [{ value: "", label: "全部" }].concat(purchaserstatusList),
         },
-        {
-          label: "是否入发票池",
-          key: "syncInvoice",
-          val: "",
-          type: "select",
-          options: [
-            { value: "", label: "全部" },
-            { value: "Y", label: "是" },
-            { value: "N", label: "否" },
-          ],
-        },
+        // {
+        //   label: "是否入发票池",
+        //   key: "syncInvoice",
+        //   val: "",
+        //   type: "select",
+        //   options: [
+        //     { value: "", label: "全部" },
+        //     { value: "Y", label: "是" },
+        //     { value: "N", label: "否" },
+        //   ],
+        // },
         {
           label: "预勾选状态",
           key: "preCheck",
@@ -715,6 +715,7 @@ export default {
         this.totalLoading = true;
         const { code = "0", data } = await cstateZzsfp({
           nsrsbh: this.$route.query.nsrsbh,
+          skssq: this.currentSq.dateValue,
         });
         if (code === "0") {
           this.selecedInfo = {

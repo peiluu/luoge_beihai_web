@@ -28,3 +28,8 @@ export const exportWithholdList = data =>
  */
 export const checkPreOneDkdj = data =>
   postJSON(`${config.host}/income/checkPreOneDkdj`, data);
+  /**
+ * @desption 计算税额
+ */
+export const cstateDkdj = data =>
+postJSON(`${config.host}/income/cstateDkdj/${data.nsrsbh}/${data.skssq}`, data);
