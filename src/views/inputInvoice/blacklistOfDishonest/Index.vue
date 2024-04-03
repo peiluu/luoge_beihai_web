@@ -145,8 +145,8 @@ export default {
       columns: [
         { type: 'selection', width: 50 },
         { title: '序号', type: 'index' },
-        { title: '企业类别', dataIndex: 'qylb', width: 130 },
-        { title: '风险类型', width: 130, dataIndex: 'fxlx' },
+        { title: '企业类别', dataIndex: 'qylbStr', width: 130 },
+        { title: '风险类型', width: 130, dataIndex: 'fxlxStr' },
         { title: '企业名称', width: 200, dataIndex: 'nsrmc' },
         { title: '地区', width: 130, dataIndex: 'szdq' },
         { title: '所属税务机关名称', width: 200, dataIndex: 'swjgdm' },

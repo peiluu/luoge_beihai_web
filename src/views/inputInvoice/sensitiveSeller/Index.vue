@@ -59,7 +59,7 @@
         <template #myscope="{ data }">
           <template>
             <!-- 待我确认的 -->
-            <el-button @click.stop="handleAdd(data)" type="text">编辑</el-button>
+            <el-button @click.stop="handleAdd(data)" type="text">修改</el-button>
           </template>
         </template>
         <template #xmje="{ data }">{{ formatMoney(data.xmje) }}</template>
@@ -80,7 +80,7 @@
       upTitle="上传敏感销方名称"
       :importColumns="importColumns"
     ></custom-import>
-    <el-dialog :title="editForm.id ? '新增' : '编辑'" :visible.sync="addVisible" width="690px" :before-close="handleAddClose" class="form-dialog">
+    <el-dialog :title="editForm.id ? '修改' : '新增'" :visible.sync="addVisible" width="690px" :before-close="handleAddClose" class="form-dialog">
       <el-form :inline="true" :model="editForm" ref="editForm" :rules="rules">
         <el-form-item label="敏感销方名称" prop="nsrmc">
           <el-input v-model="editForm.nsrmc" placeholder="请输入" />
@@ -258,7 +258,7 @@ export default {
         };
         let apiFn = addMghw;
         if (this.editForm.id) {
-          // 编辑
+          // 修改
           apiFn = updateMghw;
           params.id = this.editForm.id;
         }
