@@ -4,9 +4,28 @@ import { config } from "@/config"
 
 // 获取列表
 export const getList = (data) =>
-  postJSON(`${config.host}/applyInvoiceUpload/queryNotInvoiced`, data);
-   /**
-   * @desption 导出
-   */
-   export const downLoadNoOpenList = data => download(`${config.host}/applyInvoiceUpload/downLoadNoOpenList`, data);
+  postJSON(`${config.host}/dishonest/sxryhmdPage`, data);
+
+/**
+ * @desption Excel导出
+ */
+export const exportMghw = data =>
+download(`${config.host}/dishonest/exportSxryhmd `, data);
+
+/**
+* @desption 删除
+*/
+export const delById = data =>
+postJSON(`${config.host}/dishonest/deleteSxryhmd`, data);
+
+/**
+* @desption 新增
+*/
+export const addMghw = data => postJSON(`${config.host}/dishonest/addSxryhmd`, data);
+
+/**
+* @desption 编辑
+*/
+export const updateMghw = data => postJSON(`${config.host}/dishonest/updateSxryhmd`, data);
+
 
