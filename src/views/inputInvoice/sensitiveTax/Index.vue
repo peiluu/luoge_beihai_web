@@ -73,12 +73,13 @@
       :dialogVisible="dialogImportVisible"
       @handleClose="handleImportClose"
       @handleOk="handleImportOk"
-      downloadTemplateApi="/taxConfig/downExcel"
+      downloadTemplateApi="/dishonest/downExcel"
+      :downloadTemplateApiParams="{type:'MGSSFLBM'}"
       downloadTemplateName="敏感税收分类编码_导入模板"
-      upApi="/taxBody/importTaxBodyExcelInfo"
-      importApi="/taxConfig/importPreferentialInfo"
+      upApi=""
+      importApi="/dishonest/importIncomeDishonestTaxcode"
+      :importParams="{nsrsbh}"
       upTitle="上传敏感税收分类编码"
-      :importColumns="importColumns"
     ></custom-import>
     <el-dialog :title="editForm.id ? '修改' : '新增'" :visible.sync="addVisible" width="690px" :before-close="handleAddClose" class="form-dialog">
       <el-form :inline="true" :model="editForm" ref="editForm" :rules="rules">
@@ -193,10 +194,6 @@ export default {
           width: 80,
           scopedSlots: { customRender: 'action' },
         },
-      ],
-      importColumns: [
-        { title: '敏感税收分类编码', width: 200, dataIndex: 'ssflbm' },
-        { title: '风险等级', width: 200, dataIndex: 'fxlxStr' },
       ],
       searchList: [
         { label: '敏感税收分类编码', key: 'ssflbm', val: '', type: 'input', placeholder: '请选择' },

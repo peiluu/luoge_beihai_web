@@ -69,15 +69,17 @@
       </form-list>
     </div>
     <custom-import
-      dialogTitle="导入敏感货物名称表"
+      dialogTitle="导入敏感货物信息表"
       :dialogVisible="dialogImportVisible"
       @handleClose="handleImportClose"
       @handleOk="handleImportOk"
-      downloadTemplateApi="/taxConfig/downExcel"
-      downloadTemplateName="敏感货物名称_导入模板"
-      upApi="/taxBody/importTaxBodyExcelInfo"
-      importApi="/taxConfig/importPreferentialInfo"
-      upTitle="上传敏感货物名称"
+      downloadTemplateApi="/dishonest/downExcel"
+      :downloadTemplateApiParams="{type:'MGHWXX'}"
+      downloadTemplateName="敏感货物信息_导入模板"
+      upApi=""
+      importApi="/dishonest/importIncomeSensitiveGoods"
+      :importParams="{nsrsbh}"
+      upTitle="上传敏感货物信息"
       :importColumns="importColumns"
     ></custom-import>
     <el-dialog :title="editForm.id ? '修改' : '新增'" :visible.sync="addVisible" width="690px" :before-close="handleAddClose" class="form-dialog">

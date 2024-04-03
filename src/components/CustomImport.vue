@@ -137,6 +137,10 @@ export default {
       // 只要有有效数据就可以导入
       type: Boolean,
       default: false,
+    },
+    importParams: {
+      type: Object,
+      default: null
     }
   },
   data() {
@@ -172,6 +176,16 @@ export default {
       let that = this;
       let formData = new FormData();
       formData.append('file', content.file);
+      if(this.importParams){
+        for(let key in this.importParams){
+          formData.append(key, this.importParams[key]);
+        }
+      } 
+      if(!this.upApi){
+        // 直接导入
+        this.importExl(formData)
+        return
+      }
       that.importing = true;
       customPost(config.host + this.upApi, { 'Content-Type': 'multipart/form-data' }, formData, res => {
         if (res.code !== '0') {
@@ -189,6 +203,22 @@ export default {
         that.successCount = res.data.successCount;
         that.failCount = res.data.failCount;
         that.successList = res.data.successList;
+      });
+    },
+    // 直接导入模版
+    importExl(formData){
+      let that = this;
+      that.importing = true;
+      customPost(config.host + this.importApi, { 'Content-Type': 'multipart/form-data' }, formData, res => {
+        that.importing = false;
+        this.handleSuccess();
+        if (res.code === '0') {
+          that.$message({
+            message: '文件导入成功',
+            type: 'success',
+          });
+          that.$emit('handleOk');
+        }
       });
     },
     //下载模板

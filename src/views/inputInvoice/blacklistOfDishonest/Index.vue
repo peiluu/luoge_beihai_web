@@ -101,12 +101,13 @@
       :dialogVisible="dialogImportVisible"
       @handleClose="handleImportClose"
       @handleOk="handleImportOk"
-      downloadTemplateApi="/taxConfig/downExcel"
+      downloadTemplateApi="/dishonest/downExcel"
+      :downloadTemplateApiParams="{type:'SXRHMD'}"
       downloadTemplateName="失信人员黑名单_导入模板"
-      upApi="/taxBody/importTaxBodyExcelInfo"
-      importApi="/taxConfig/importPreferentialInfo"
+      upApi=""
+      importApi="/dishonest/importIncomeDishonestBlackList"
+      :importParams="{nsrsbh:''}"
       upTitle="上传失信人员黑名单"
-      :importColumns="importColumns"
     ></custom-import>
   </div>
 </template>
@@ -165,10 +166,6 @@ export default {
           width: 80,
           scopedSlots: { customRender: 'action' },
         },
-      ],
-      importColumns: [
-        { title: '敏感货物名称', width: 200, dataIndex: 'nsrmc' },
-        { title: '风险等级', width: 200, dataIndex: 'orgName' },
       ],
       searchList: [
         { label: '企业名称', key: 'nsrmc', val: '', type: 'input', placeholder: '请输入' },
