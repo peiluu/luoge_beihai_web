@@ -238,6 +238,7 @@ export default {
     },
     handleSubmit() {
       this.$set(this.form, "pageNo", 1);
+      console.log(this.form)
       this.$emit("search", JSON.parse(JSON.stringify(this.form)));
     },
     resetForm() {
