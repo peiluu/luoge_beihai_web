@@ -9,8 +9,17 @@
     >
       <article v-loading="loading">
         <article class="require_tag">
-            <div class="require_img_main"><img src="@/assets/img/pass.png" alt=""></div>
-            <div>发票合规性校验通过！</div>
+            <template v-if="isFailed === null">
+              <div>努力校验中...</div>
+            </template>
+            <template v-if="isFailed === true">
+              <div class="require_img_main"><img src="@/assets/img/u535.png" alt=""></div>
+              <div style="color: red">发票存在合规性风险！</div>
+            </template>
+            <template v-if="isFailed === false">
+              <div class="require_img_main"><img src="@/assets/img/pass.png" alt=""></div>
+              <div>发票合规性校验通过！</div>
+            </template>
         </article>
         <el-descriptions :column="2">
           <el-descriptions-item label="销方纳税人识别号"
@@ -41,10 +50,13 @@
           >
         </el-descriptions>
         <article style="margin-top:15px;">
-          <el-table :data="requireTableData" style="width: 100%" :border="true">
-            <el-table-column prop="label" label="风险检查项" width="220" :header-align="'center'" :align="'center'">
+          <el-table :data="requirdList.resultList" style="width: 100%" :border="true">
+            <el-table-column prop="title" label="风险检查项" width="220" :header-align="'center'" :align="'center'">
             </el-table-column>
-            <el-table-column prop="value" label="检查结果" minWidth="220" :header-align="'center'" :align="'left'">
+            <el-table-column prop="result" label="检查结果" minWidth="220" :header-align="'center'" :align="'left'">
+              <template slot-scope="scope">
+                <span :class="{redColor: scope.row.type === '0'}">{{ scope.row.result }}</span>
+              </template>
             </el-table-column
           ></el-table>
         </article>
@@ -85,11 +97,14 @@ export default {
   components: {},
   data() {
     return {
-        requireTableData:[
-            {label:'失信人黑名单检查',value:'销方税号是XXXX，为失信人黑名风险！',require:false}
-        ],
-        requirdList:{},
+        // requireTableData:[
+        //     {label:'失信人黑名单检查',value:'销方税号是XXXX，为失信人黑名风险！',require:false}
+        // ],
+        requirdList:{
+          resultList:[]
+        },
         loading:false,
+        isFailed: null, //校验是否不通过 true 校验不通过，false 校验通过, 默认值null
     };
   },
   computed: {},
@@ -114,6 +129,7 @@ export default {
             const res = await getRequiredInvoice({fphm:this.invoiceNumber})
             if([0,'0'].includes(res.code)){
                 this.requirdList = {...res.data}
+                this.isFailed = res.data.resultList.some(item => item.type === "0")
             }else{
                 this.$message.error("检查发票失败！请重试")
             }
@@ -172,5 +188,8 @@ export default {
         width: 100%;
         height: 100%;
     }
+}
+.redColor {
+  color: red;
 }
 </style>
