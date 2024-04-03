@@ -47,7 +47,7 @@
       <template #purchaserstatus="{ data }"> {{ data.purchaserstatus == '30' ? '未收票' : data.purchaserstatus == '36' ? '报帐中' : data.purchaserstatus == '42' ? '已记账' : '' }}</template>
       <template #verifyStatus="{ data }"> {{ data.verifyStatus == '1' ? '未勾选' : data.verifyStatus == '2' ? '已勾选' : data.verifyStatus == '3' ? '已认证' : data.verifyStatus == '4' ? '已统计' : '' }}</template>
       <template #spzt="{ data }">
-        {{ data.spzt == "01" ? "已收票" : "未收票" }}</template
+        {{ data.spzt == "1" ? "已收票" : "未收票" }}</template
       >
       <!-- <template #sfzt="{ data }"> {{ data.sfzt == '1' ? '已收票' : data.sfzt == '2' ? '未收票' : '' }}</template> -->
       <template #sfchsd="{ data }">
@@ -289,13 +289,13 @@ export default {
           type: "select",
           options: [
             { value: "", label: "全部" },
-            { value: "01", label: "已收票" },
-            { value: "02", label: "未收票" },
+            { value: "1", label: "已收票" },
+            { value: "2", label: "未收票" },
           ],
         },
         {
           label: "认证状态",
-          key: "verifystatus",
+          key: "verifyStatus",
           val: "",
           type: "select",
           options: [
@@ -325,8 +325,10 @@ export default {
           type: "select",
           options: [
             { value: "", label: "全部" },
-            { value: "01", label: "已转出" },
-            { value: "02", label: "未转出" },
+            { value: "1", label: "未进项转出" },
+            { value: "2", label: "已全额转出" },
+            { value: "3", label: "已部署转出" },
+
           ],
         },
       ],
@@ -426,6 +428,7 @@ export default {
     handleSelected(selection, row) {
       this.setPre({
         ids: [row.id],
+        nsrsbh: this.nsrsbh,
         preCheck: row.preCheck === "Y" ? "N" : "Y",
       });
     },
@@ -451,7 +454,7 @@ export default {
       console.log("ids----", ids, preCheck);
       try {
         this.loading = true;
-        const { code = "0", data } = await checkPreOneHgjks({ ids, preCheck });
+        const { code = "0", data } = await checkPreOneHgjks({ ids, preCheck,nsrsbh:this.nsrsbh });
         if (code === "0") {
           this.init();
         }
@@ -524,7 +527,7 @@ export default {
         tfrq: item.tfrq,
       }));
       const { code = "" } = await checkCustomsPayment({
-        gfsbh: this.$route.query.nsrsbh,
+        gfsbh: this.nsrsbh,
         gxlx: this.gxlxDm,
         hgjksmx,
       });
@@ -616,7 +619,7 @@ export default {
       this.searchParam = {
         cljg: "02",
         skssq: this.skssq,
-        gfsbh: this.$route.query.nsrsbh,
+        gfsbh: this.nsrsbh,
       };
       this.handleGetData(this.searchParam);
     },
@@ -745,7 +748,7 @@ export default {
       try {
         this.totalLoading = true;
         const { code = "0", data } = await cstateHgjks({
-          nsrsbh: this.$route.query.nsrsbh,
+          nsrsbh: this.nsrsbh,
           skssq: this.skssq,
         });
         if (code === "0") {

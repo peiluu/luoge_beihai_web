@@ -76,8 +76,3 @@ export const getDetailById = data =>
  */
 export const cstateZzsfp = data =>
   postJSON(`${config.host}/income/cstateZzsfp/${data.nsrsbh}/${data.skssq}`, data);
-  /**
- * @desption 提交撤销预勾选
- */
-export const checkPreOneDkdj = data =>
-postJSON(`${config.host}/income/checkPreOneDkdj`, data);

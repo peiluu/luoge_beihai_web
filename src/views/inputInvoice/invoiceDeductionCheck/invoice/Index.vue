@@ -604,7 +604,7 @@ export default {
       this.searchParam = {
         cljg: "02",
         skssq: this.currentSq.dateValue,
-        gfsbh: this.$route.query.nsrsbh,
+        gfsbh: this.nsrsbh,
       };
       this.handleGetData(this.searchParam);
     },
@@ -714,7 +714,7 @@ export default {
       try {
         this.totalLoading = true;
         const { code = "0", data } = await cstateZzsfp({
-          nsrsbh: this.$route.query.nsrsbh,
+          nsrsbh: this.nsrsbh,
           skssq: this.currentSq.dateValue,
         });
         if (code === "0") {
@@ -762,7 +762,7 @@ export default {
     },
     async getOrgList() {
       const { code = "", data = [] } = await getOrgList({
-        nsrsbh: this.$route.query.nsrsbh,
+        nsrsbh: this.nsrsbh,
         isInvoice: "N",
       });
       const index = this.searchList.findIndex((item) => item.key === "orgid");
@@ -780,7 +780,7 @@ export default {
     },
     // 点击勾选icon触发handleSelected
     handleSelected(selection, row) {
-      this.setPre({ids:[row.id], preCheck:row.preCheck === 'Y'?'N':'Y'});
+      this.setPre({ids:[row.id],nsrsbh: this.nsrsbh, preCheck:row.preCheck === 'Y'?'N':'Y'});
     },
     seleceAll(rows) {
       let ids = [];
@@ -803,7 +803,7 @@ export default {
       console.log("ids----", ids,preCheck);
       try {
         this.loading = true;
-        const { code = "0", data } = await checkPreOneZzsfp({ids,preCheck});
+        const { code = "0", data } = await checkPreOneZzsfp({ids,preCheck,nsrsbh:this.nsrsbh});
         if (code === "0") {
           this.handleGetData(this.searchParam);
         }
@@ -888,6 +888,7 @@ export default {
           const { code = "" } = await checkPreOneZzsfp({
             type,
             ids,
+            nsrsbh: this.nsrsbh,
             gfsbh: this.nsrsbh,
             skssq: this.currentSq.dateValue,
             bz: this.searchParam.cljg == "01" ? "Y" : "N",
@@ -1001,10 +1002,10 @@ export default {
       this.searchParam = {
         cljg: "02",
         skssq: this.currentSq.dateValue,
-        gfsbh: this.$route.query.nsrsbh,
+        gfsbh: this.nsrsbh,
       };
       this.handleGetData(this.searchParam);
-      this.propsKey = this.$route.query.nsrsbh + "_" + this.currentSq.dateValue;
+      this.propsKey = this.nsrsbh + "_" + this.currentSq.dateValue;
       // const { code = '', data } = await getList({
       //   ...this.param
       // })

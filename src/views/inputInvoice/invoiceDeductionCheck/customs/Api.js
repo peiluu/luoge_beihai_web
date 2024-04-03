@@ -30,7 +30,7 @@ export const getOrgList = data => postJSON(`${config.host}/orgnization/getOrgLis
  * @desption 提交撤销预勾选
  */
 export const checkPreOneHgjks = data =>
-postJSON(`${config.host}/income/checkPreOneHgjks`, data);
+postJSON(`${config.host}/income/checkPreOneHgjks/`, data);
 /**
  * @desption 计算税额
  */

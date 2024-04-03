@@ -272,7 +272,7 @@ export default {
     },
     // 点击勾选icon触发handleSelected
     handleSelected(selection, row) {
-      this.setPre({ids:[row.id], preCheck:row.preCheck === 'Y'?'N':'Y'});
+      this.setPre({ids:[row.id], preCheck:row.preCheck === 'Y'?'N':'Y',nsrsbh: this.nsrsbh});
     },
     selectAll(rows) {
       console.log('----rows---',rows,rows.length)
@@ -296,7 +296,7 @@ export default {
       console.log("ids----", ids,preCheck);
       try {
         this.loading = true;
-        const { code = "0", data } = await checkPreOneDkdj({ids,preCheck});
+        const { code = "0", data } = await checkPreOneDkdj({ids,preCheck,nsrsbh:this.nsrsbh});
         if (code === "0") {
           this.init();
         }
@@ -365,7 +365,7 @@ export default {
     // 提交数据
     async batchWithhold() {
       const { code = "" } = await batchWithhold({
-        kjywrsbh: this.$route.query.nsrsbh,
+        kjywrsbh: this.nsrsbh,
         gxlxDm: this.gxlxDm,
         skssq: this.$route.query.skssq,
         dkdjmx: this.selections,
@@ -435,7 +435,7 @@ export default {
       this.searchParam = {
         cljg: "02",
         skssq: this.currentSq.dateValue,
-        gfsbh: this.$route.query.nsrsbh,
+        gfsbh: this.nsrsbh,
       };
       this.handleGetData(this.searchParam);
     },
@@ -552,7 +552,7 @@ export default {
       try {
         this.totalLoading = true;
         const { code = "0", data } = await cstateDkdj({
-          nsrsbh: this.$route.query.nsrsbh,
+          nsrsbh: this.nsrsbh,
           skssq: this.skssq,
         });
         if (code === "0") {
