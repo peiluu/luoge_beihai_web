@@ -69,8 +69,8 @@
         <el-form-item label="地区" prop="szdq">
           <el-input v-model="editForm.szdq" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="所属税务机关名称" prop="swjgdm">
-          <el-input v-model="editForm.swjgdm" placeholder="请输入" />
+        <el-form-item label="所属税务机关名称" prop="swjgmc">
+          <el-input v-model="editForm.swjgmc" placeholder="请输入" />
         </el-form-item>
         <el-form-item label="经营地点" prop="jydz">
           <el-input v-model="editForm.jydz" placeholder="请输入" />
@@ -150,7 +150,7 @@ export default {
         { title: '风险类型', width: 130, dataIndex: 'fxlxStr' },
         { title: '企业名称', width: 200, dataIndex: 'nsrmc' },
         { title: '地区', width: 130, dataIndex: 'szdq' },
-        { title: '所属税务机关名称', width: 200, dataIndex: 'swjgdm' },
+        { title: '所属税务机关名称', width: 200, dataIndex: 'swjgmc' },
         { title: '纳税人识别号', width: 180, dataIndex: 'nsrsbh' },
         { title: '经营地点', width: 180, dataIndex: 'jydz' },
         { title: '案件描述', width: 180, dataIndex: 'ajms' },
