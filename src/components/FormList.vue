@@ -375,10 +375,10 @@ export default {
             vm.$emit('sumTotal', res.total);
           }
         } else {
-          vm.$message.error(res.msg);
+          // vm.$message.error(res.msg);
         }
       } catch (e) {
-        vm.$message.error(e.msg);
+        // vm.$message.error(e.msg);
       } finally {
         vm.loading = false
       }
