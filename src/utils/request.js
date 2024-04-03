@@ -144,7 +144,7 @@ http.interceptors.response.use(response => {
       code,
       msg
     }
-    Message.warning(err.msg)
+    Message.error(err.msg)
     return Promise.reject(err);
   }
 })
