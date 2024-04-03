@@ -14,9 +14,9 @@
         ref="tree"
         node-key="nsrsbh"
         :expand-on-click-node="false"
-        highlight-current
         check-on-click-node
         @node-click="nodeClick"
+        @check="nodeClick"
         :current-node-key="nsrsbh"
         :default-checked-keys="[nsrsbh]"
         v-loading="leftLoading"

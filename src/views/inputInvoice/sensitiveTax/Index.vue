@@ -13,7 +13,6 @@
         :filter-node-method="filterNode"
         ref="tree"
         node-key="nsrsbh"
-        highlight-current
         check-on-click-node
         @node-click="nodeClick"
         @check="nodeClick"

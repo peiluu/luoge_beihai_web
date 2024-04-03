@@ -269,7 +269,6 @@ export default {
     getTableData(data){
       this.data = data;
       this.getHjje();
-      this.loading = false;
     },
     // 点击勾选icon触发handleSelected
     handleSelected(selection, row) {
@@ -300,12 +299,13 @@ export default {
         const { code = "0", data } = await checkPreOneDkdj({ids,preCheck,nsrsbh:this.nsrsbh});
         if (code === "0") {
           this.init();
-        } else {
-          this.loading = false;
         }
       } catch (error) {
         console.log(error);
-        this.loading = false;
+      } finally {
+        setTimeout(()=>{
+          this.loading = false;
+        },10)
       }
     },
     // 处理多选
