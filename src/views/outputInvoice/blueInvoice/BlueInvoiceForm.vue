@@ -2343,15 +2343,16 @@ export default {
     reChooseFplx() {
       this.clearProject();
       this.clearAll();
-      if(this.query.isFormInvoiced == "Y"){
+      if(this.query.isFormInvoiced){
+        sessionStorage.setItem('reChooseFplx', JSON.stringify({
+          orgid: this.mideaInfo.orgid,
+          isDigital: "Y",
+          active: 1,
+        }))
         this.$router.push({
-          path: "/buleInvoice/ChooseInvoiceType",
-          query: {
-            orgid: this.mideaInfo.orgid,
-            isDigital: "Y",
-            ...this.$route.query,
-          },
+          path: "/outputInvoice/blueInvoice/Index"
         });
+        this.$store.dispatch("app/removeTab", this.$store.getters.activeTab);
       } else {
         this.$emit('handleBack',this.query);
       }
@@ -3226,7 +3227,7 @@ export default {
                                   type: "success",
                                 });
                                 that.clearAll();
-                                if(this.query.isFormInvoiced == "Y"){
+                                if(this.query.isFormInvoiced){
                                   that.$router.push({
                                     path: "/buleInvoice/ApplySuccess",
                                     query: {
@@ -3265,7 +3266,7 @@ export default {
                               type: "success",
                             });
                             that.clearAll();
-                            if(this.query.isFormInvoiced == "Y"){
+                            if(this.query.isFormInvoiced){
                               that.$router.push({
                                 path: "/buleInvoice/ApplySuccess",
                                 query: {

@@ -275,8 +275,12 @@ export default {
     /* 路由是否有参数 */
     handlerInit(){
       let route = this.$route.query || {};
-      
-      if(route?.isFormInvoiced){
+      let reChooseFplx = sessionStorage.getItem('reChooseFplx')
+      if(reChooseFplx && reChooseFplx.indexOf('orgid') != -1){
+        reChooseFplx = JSON.parse(reChooseFplx)
+        this.active = Number(reChooseFplx.active)
+        this.nextObj = {orgid:reChooseFplx.orgid, isDigital: reChooseFplx.isDigital};
+      }else if(route?.isFormInvoiced){
         this.thirdData = {};
         const {invoiceId,isFormInvoiced} = route || {}
         this.thirdData.slotData = {invoiceId,isFormInvoiced};

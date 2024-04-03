@@ -1,35 +1,43 @@
 <template>
   <div class="main-content SensitiveCargo">
     <div class="left-nav">
-      <el-input placeholder="输入关键字进行过滤" v-model="filterText"> </el-input>
-
+      <div class="nav-search"><el-input placeholder="输入纳税人名称/纳税人识别号" v-model="filterText"> </el-input></div>
       <el-tree
         class="filter-tree"
         :data="data"
-        :props="defaultProps"
+        :props="{
+          // children: 'children',
+          label: 'nsrmc',
+        }"
         default-expand-all
         :filter-node-method="filterNode"
         ref="tree"
-        node-key="id"
-        :expand-on-click-node="false"
-        highlight-current
+        node-key="nsrsbh"
         check-on-click-node
         @node-click="nodeClick"
-        :current-node-key="currentNodeKey"
+        @check="nodeClick"
+        :current-node-key="nsrsbh"
+        :default-checked-keys="[nsrsbh]"
+        v-loading="leftLoading"
+        show-checkbox
       >
+        <span class="custom-tree-node" slot-scope="{ node, data }">
+          <el-tooltip effect="light" :content="`${node.label} ${data.nsrsbh}`" placement="right">
+            <span>{{ node.label }}</span>
+          </el-tooltip>
+        </span>
       </el-tree>
     </div>
     <div class="right-content">
       <!-- <h3 class="company-name">杉杉股份</h3> -->
       <form-list
         :columns="columns"
-        :searchKey="propsKey"
         :searchRow="searchList"
         :api="api"
         :param="param"
         v-loading="loading"
         @getSearchParam="getSearchParam"
-        @getNextList="getOrgList"
+        @handleSelection="handleSelection"
         :firstLoading="false"
         ref="list"
         :height="height"
@@ -40,6 +48,7 @@
             <div class="toolbar-left" />
             <div class="toolbar-right">
               <el-button type="primary" @click="handleAdd">新增</el-button>
+              <el-button @click="del">删除</el-button>
               <el-button @click="importExcel">导入</el-button>
               <el-button @click="handleExport">导出</el-button>
             </div>
@@ -49,8 +58,7 @@
         <template #myscope="{ data }">
           <template>
             <!-- 待我确认的 -->
-            <el-button @click.stop="handleInvoice(data)" type="success">编辑</el-button>
-            <el-button @click.stop="handleInvoice(data)" type="success">删除</el-button>
+            <el-button @click.stop="handleAdd(data)" type="text">修改</el-button>
           </template>
         </template>
         <template #xmje="{ data }">{{ formatMoney(data.xmje) }}</template>
@@ -64,37 +72,80 @@
       :dialogVisible="dialogImportVisible"
       @handleClose="handleImportClose"
       @handleOk="handleImportOk"
-      downloadTemplateApi="/taxConfig/downExcel"
+      downloadTemplateApi="/dishonest/downExcel"
+      :downloadTemplateApiParams="{type:'MGSSFLBM'}"
       downloadTemplateName="敏感税收分类编码_导入模板"
-      upApi="/taxBody/importTaxBodyExcelInfo"
-      importApi="/taxConfig/importPreferentialInfo"
+      upApi=""
+      importApi="/dishonest/importIncomeDishonestTaxcode"
+      :importParams="{nsrsbh}"
       upTitle="上传敏感税收分类编码"
-      :importColumns="importColumns"
     ></custom-import>
-    <el-dialog title="新增" :visible.sync="addVisible" width="50%" :before-close="handleAddClose" class="form-dialog">
+    <el-dialog :title="editForm.id ? '修改' : '新增'" :visible.sync="addVisible" width="690px" :before-close="handleAddClose" class="form-dialog">
       <el-form :inline="true" :model="editForm" ref="editForm" :rules="rules">
-        <el-form-item label="敏感税收分类编码" prop="mghwmc">
-          <el-input v-model="editForm.mghwmc" placeholder="请输入" />
+        <el-form-item label="敏感税收分类编码" prop="ssflbm">
+          <el-input v-model="editForm.ssflbm" placeholder="请选择" readonly />
+          <span @click="showCodeTree" style="position: absolute; left: 0; right: 0; top: 0; bottom: 0"></span>
         </el-form-item>
-        <el-form-item label="风险等级" prop="fxdj">
-          <el-select v-model="editForm.fxdj" placeholder="请选择">
-            <el-option label="强" :value="1"></el-option>
-            <el-option label="弱" :value="0"></el-option>
+        <el-form-item label="商品和服务分类简称" prop="spfwfljc">
+          <el-input v-model="editForm.spfwfljc" placeholder="" disabled />
+        </el-form-item>
+        <el-form-item label="风险等级" prop="fxlx">
+          <el-select v-model="editForm.fxlx" placeholder="请选择">
+            <el-option v-for="item in fxlxOpts" :key="item.value" :value="item.value" :label="item.label"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="生效日期" prop="sxrq">
-          <el-date-picker value-format="yyyyMMdd" v-model="editForm.sxrq" type="date" placeholder="请选择" />
+        <el-form-item label="生效日期" prop="sxrqq">
+          <el-date-picker value-format="yyyy-MM-dd" v-model="editForm.sxrqq" type="date" placeholder="请选择" />
         </el-form-item>
-        <el-form-item label="失效日期" prop="invalidrq">
-          <el-date-picker value-format="yyyyMMdd" v-model="editForm.sxrq" type="date" placeholder="请选择" />
+        <el-form-item label="失效日期" prop="sxrqz">
+          <el-date-picker value-format="yyyy-MM-dd" v-model="editForm.sxrqz" type="date" placeholder="请选择" />
         </el-form-item>
         <el-form-item label="备注" prop="bz">
-          <el-input v-model="editForm.bz" maxlength="100" placeholder="请输入" />
+          <el-input v-model="editForm.bz" maxlength="100" placeholder="请输入" type="textarea" :rows="4" show-word-limit />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleAddClose">取 消</el-button>
-        <el-button type="success" @click="saveData">提 交</el-button>
+        <el-button type="success" @click="saveData" :loading="saveLoading">提 交</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog title="税收分类编码设置" :visible.sync="codeVisible" width="1000px" :before-close="handleCodeClose" class="form-dialog">
+      <div class="code-tree">
+        <div class="left">
+          <div class="nav-search"><el-input placeholder="输入货物和劳务名称/税收分类合并编码" v-model="filterCode"> </el-input></div>
+          <el-tree
+            class="code-el-tree"
+            :data="ssflbmTree"
+            :props="{
+              children: 'childList',
+              label: 'sphfwmc',
+            }"
+            :filter-node-method="filterNodeCode"
+            ref="codeTree"
+            node-key="sphfwssflhbbm"
+            @check="nodeClickCode"
+            v-loading="leftLoading"
+            :default-expanded-keys="expandedKeys"
+            :current-node-key="codeInfo.sphfwssflhbbm"
+            :default-checked-keys="[codeInfo.sphfwssflhbbm]"
+            show-checkbox
+            check-strictly
+          >
+          </el-tree>
+        </div>
+
+        <div class="right">
+          <el-descriptions title="" :column="1" border size="medium" :labelStyle="{ width: '182px' }">
+            <el-descriptions-item label="税收分类合并编码">{{ codeInfo.sphfwssflhbbm }}</el-descriptions-item>
+            <el-descriptions-item label="货物和劳务名称">{{ codeInfo.sphfwmc }}</el-descriptions-item>
+            <el-descriptions-item label="商品和服务分类简称">{{ codeInfo.sphfwfljc }}</el-descriptions-item>
+            <el-descriptions-item label="增值税率">{{ codeInfo.zzssl }}</el-descriptions-item>
+          </el-descriptions>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="handleCodeClose">取 消</el-button>
+        <el-button type="success" @click="saveCode">提 交</el-button>
       </span>
     </el-dialog>
   </div>
@@ -102,8 +153,8 @@
 <script>
 import CustomImport from '@/components/CustomImport';
 import FormList from '@/components/FormList.vue';
-import { dateFormat } from '@/utils/tool';
-import { getListByUser, getOrgList, exportInvoiceDetailList } from './Api.js';
+import { dateFormat, findAllAncestors } from '@/utils/tool';
+import { getListByUser, exportMghw, delById, addMghw, updateMghw, getInvoiceTaxCode } from './Api.js';
 export default {
   name: 'SensitiveCargo',
   components: {
@@ -111,201 +162,249 @@ export default {
     CustomImport,
   },
   data() {
+    const fxlxOpts = [
+      { value: '1', label: '强' },
+      { value: '2', label: '弱' },
+    ];
     return {
       dialogImportVisible: false, // 导入
       filterText: '',
-      currentNodeKey: 1,
-      data: [
-        {
-          id: 1,
-          label: '一级 1',
-          children: [
-            {
-              id: 4,
-              label: '二级 1-1',
-              children: [
-                {
-                  id: 9,
-                  label: '三级 1-1-1',
-                },
-                {
-                  id: 10,
-                  label: '三级 1-1-2',
-                },
-              ],
-            },
-          ],
-        },
-        {
-          id: 2,
-          label: '一级 2',
-          children: [
-            {
-              id: 5,
-              label: '二级 2-1',
-            },
-            {
-              id: 6,
-              label: '二级 2-2',
-            },
-          ],
-        },
-        {
-          id: 3,
-          label: '一级 3',
-          children: [
-            {
-              id: 7,
-              label: '二级 3-1',
-            },
-            {
-              id: 8,
-              label: '二级 3-2',
-            },
-          ],
-        },
-      ],
-      defaultProps: {
-        children: 'children',
-        label: 'label',
-      },
+      filterCode: '',
+      nsrsbh: '',
+      data: [],
       param: {},
       api: require('./Api'),
       loading: false,
+      fxlxOpts,
       columns: [
         { type: 'selection', width: 50 },
         { title: '序号', type: 'index', width: 50 },
-        { title: '敏感税收分类编码', width: 200, dataIndex: 'nsrmc' },
-        { title: '风险等级', width: 200, dataIndex: 'orgName' },
-        { title: '备注', width: 150, dataIndex: 'fplxMc' },
-        { title: '生效日期', width: 150, dataIndex: 'fphm' },
-        { title: '失效日期', width: 100, dataIndex: 'kplx', slot: 'kplx' },
-        { title: '维护人', width: 100, dataIndex: 'kprq', slot: 'kprq', align: 'center' },
+        { title: '商品和服务分类简称', width: 200, dataIndex: 'spfwfljc' },
+        { title: '敏感税收分类编码', width: 200, dataIndex: 'ssflbm' },
+        { title: '风险等级', width: 200, dataIndex: 'fxdjStr' },
+        { title: '备注', width: 150, dataIndex: 'bz' },
+        { title: '生效日期', width: 150, dataIndex: 'sxrqq' },
+        { title: '失效日期', width: 100, dataIndex: 'sxrqz' },
+        { title: '维护人', width: 100, dataIndex: 'updaterName', align: 'center' },
         {
           title: '操作',
           key: 'action',
-          width: 100,
+          fixed: 'right',
+          width: 80,
           scopedSlots: { customRender: 'action' },
         },
       ],
-      importColumns: [
-        { title: '敏感税收分类编码', width: 200, dataIndex: 'nsrmc' },
-        { title: '风险等级', width: 200, dataIndex: 'orgName' },
-      ],
       searchList: [
-        {
-          label: '敏感税收分类编码',
-          key: 'nsrsbh',
-          val: '',
-          type: 'select',
-          placeholder: '请选择',
-          options: [],
-          isQueryNext: true,
-          nextPropskey: 'orgid',
-        },
-        {
-          label: '有效日期',
-          key: 'kprq',
-          val: [],
-          type: 'daterange',
-          placeholder: '请选择',
-          pickerOptions: {
-            disabledDate(time) {
-              return time.getTime() > Date.now();
-            },
-          },
-        },
-        { label: '风险等级', key: 'orgid', val: '', type: 'select', placeholder: '请选择' },
+        { label: '敏感税收分类编码', key: 'ssflbm', val: '', type: 'input', placeholder: '请选择' },
+        // {
+        //   label: '有效日期',
+        //   key: 'yxrq',
+        //   val: [],
+        //   type: 'daterange',
+        //   placeholder: '请选择',
+        // pickerOptions: {
+        //   disabledDate(time) {
+        //     return time.getTime() > Date.now();
+        //   },
+        // },
+        // },
+        { label: '风险等级', key: 'fxlx', val: '', type: 'select', placeholder: '请选择', options: [{ value: '', label: '全部' }, ...fxlxOpts] },
       ],
       taxBodyList: [],
+      selections: [], // 选中的行数据
       queryParam: {},
-      propsKey: '',
       addVisible: false,
-      editForm: {},
-      rules: {
-        mghwmc: [{ required: true, message: '请输入', trigger: 'change' }],
-        fxdj: [{ required: true, message: '请选择', trigger: 'change' }],
+      editForm: {
+        // ssflbm: '1100302030000000000', // 调试设置税收分类编码弹窗默认值可以打开
+        ssflbm: '',
+        spfwfljc: '',
+        fxlx: null,
+        sxrqq: null,
+        sxrqz: null,
+        bz: '',
       },
+      rules: {
+        ssflbm: [{ required: true, message: '请输入', trigger: 'change' }],
+        fxlx: [{ required: true, message: '请选择', trigger: 'change' }],
+      },
+      leftLoading: false,
+      saveLoading: false,
+      codeVisible: false,
+      expandedKeys: null, // 默认需要展开的节点
+      ssflbmTree: [],
+      codeInfo: {},
     };
   },
   watch: {
     filterText(val) {
+      console.log(val);
       this.$refs.tree.filter(val);
+    },
+    filterCode(val) {
+      this.$refs.codeTree.filter(val);
     },
   },
   methods: {
-    handleAdd() {
+    nodeClickCode(rows) {
+      const { childList, ...reset } = rows;
+      this.codeInfo = reset;
+      this.$refs.codeTree.setCheckedKeys([reset.sphfwssflhbbm]);
+    },
+    showCodeTree() {
+      this.codeVisible = true;
+      this.$nextTick(() => {
+        this.setssflbmDefaultVal();
+      });
+    },
+    // 弹出税收分类编码选择窗，设置默认展示的节点和选中的值
+    setssflbmDefaultVal() {
+      if (!this.editForm.ssflbm) {
+        this.expandedKeys = [this.ssflbmTree[0].sphfwssflhbbm];
+        return;
+      }
+      // 修改的情况下：this.editForm.ssflbm有值，且this.editForm.ssflbm !== this.codeInfo.sphfwssflhbbm 需要重新校准默认值
+      if (this.editForm.ssflbm && this.editForm.ssflbm !== this.codeInfo.sphfwssflhbbm) {
+        const exArr = findAllAncestors(this.ssflbmTree, { fieldName: 'sphfwssflhbbm', value: this.editForm.ssflbm }, 'childList');
+        // console.log('----exArr----', exArr);
+        // 需要校验ssflbmTree中是否存在
+        if (exArr.length) {
+          this.expandedKeys = exArr.map(item => item.sphfwssflhbbm);
+          this.$refs.codeTree.setCheckedKeys([this.editForm.ssflbm]);
+          this.codeInfo = exArr[exArr.length - 1];
+        }
+      }
+    },
+    handleCodeClose() {
+      this.codeVisible = false;
+    },
+    async getInvoiceTaxCodes() {
+      try {
+        const { code, data } = await getInvoiceTaxCode();
+        if (code === '0') {
+          this.ssflbmTree = data || [];
+        }
+      } catch (error) {}
+    },
+    handleAdd(item) {
+      if (item.id) {
+        this.editForm = item;
+      }
       this.addVisible = true;
+    },
+    del() {
+      if (this.selections.length === 0) {
+        return this.$message.error('请先勾选要删除的数据');
+      }
+      this.$confirm('此操作将永久删除勾选的数据, 您确定要删除?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      })
+        .then(() => {
+          this.goDel();
+        })
+        .catch(() => {
+          // this.$message({
+          //   type: 'info',
+          //   message: '已取消删除'
+          // });
+        });
+    },
+    async goDel() {
+      try {
+        const ids = this.selections.map(item => item.id);
+        const { code = '0', data } = await delById(ids);
+        if (code === '0') {
+          this.$message.success('删除成功');
+          this.getList();
+        }
+      } catch (error) {}
     },
     handleAddClose() {
       this.addVisible = false;
+      this.editForm = {
+        ssflbm: '',
+        spfwfljc: '',
+        fxlx: null,
+        sxrqq: null,
+        sxrqz: null,
+        bz: '',
+      };
+      this.codeInfo = {};
+      this.expandedKeys = null;
+      this.$refs.codeTree.setCheckedKeys([]);
+      this.$refs.editForm.resetFields();
+    },
+    handleSelection(e) {
+      this.selections = e;
+    },
+    saveCode() {
+      if (!this.codeInfo.sphfwssflhbbm) {
+        return this.$message.error('请先勾选分类数据');
+      }
+      this.editForm = {
+        ...this.editForm,
+        ssflbm: this.codeInfo.sphfwssflhbbm,
+        spfwfljc: this.codeInfo.sphfwfljc,
+      };
+      this.codeVisible = false;
     },
     saveData() {
       this.$refs['editForm'].validate(async valid => {
         if (!valid) return;
-        // const { code = '' } = await updateDrawback([{ ...this.editForm }]);
-        // if (code === '0') {
-        //   this.$message.success('操作成功');
-        //   this.handleClose();
-        //   this.getList();
-        // }
+        // console.log(this.editForm);
+        this.saveLoading = true;
+        const params = {
+          ssflbm: this.editForm.ssflbm,
+          spfwfljc: this.editForm.spfwfljc,
+          fxlx: this.editForm.fxlx,
+          sxrqq: this.editForm.sxrqq,
+          sxrqz: this.editForm.sxrqz,
+          bz: this.editForm.bz,
+          nsrsbh: this.nsrsbh,
+        };
+        let apiFn = addMghw;
+        if (this.editForm.id) {
+          // 修改
+          apiFn = updateMghw;
+          params.id = this.editForm.id;
+        }
+
+        const { code = '' } = await apiFn(params);
+        this.saveLoading = false;
+        if (code === '0') {
+          this.$message.success('操作成功');
+          this.handleAddClose();
+          this.getList();
+        }
       });
     },
     filterNode(value, data) {
       if (!value) return true;
-      return data.label.indexOf(value) !== -1;
+      return data.nsrmc.indexOf(value) !== -1 || data.nsrsbh.indexOf(value) !== -1;
+    },
+    filterNodeCode(value, data) {
+      if (!value) return true;
+      return data.sphfwmc.indexOf(value) !== -1 || data.sphfwssflhbbm.indexOf(value) !== -1;
     },
     dateFormat,
-    // 获取纳税主体
-    async getListByUser() {
+    // 获取左侧公司树
+    async getLeftTree() {
+      this.leftLoading = true;
       const { code = '', data = [] } = await getListByUser({});
-      if (code === '0') {
-        this.searchList[0].options = [{ value: '', label: '全部' }].concat(
-          data.map(item => {
-            return {
-              ...item,
-              value: item.nsrsbh,
-              label: `${item.nsrmc} ${item.nsrsbh}`,
-            };
-          }),
-        );
-        if (!this.$route.query.nsrsbh) {
-          // 直接访问
-          this.getOrgList('');
-          // this.getList();
-        }
+      this.leftLoading = false;
+      if (code === '0' && data.length) {
+        this.data = data.map(item => {
+          return { ...item, children: [] };
+        });
+        const nsrsbh = data[0].nsrsbh;
+        this.nsrsbh = nsrsbh;
+        this.param = {
+          nsrsbh,
+        };
+        // this.$refs.tree.setCurrentKey(nsrsbh);
+        this.$refs.list.handleGetData({ nsrsbh }); // 查询右侧list
       }
-    },
-    // 获取会计主体
-    async getOrgList(nsrsbh) {
-      const { code = '', data = [] } = await getOrgList({
-        nsrsbh,
-        isInvoice: 'N', // 关联受票组织
-      });
-      if (code === '0') {
-        this.searchList[1].options = [{ value: '', label: '全部' }].concat(
-          data.map(item => {
-            return {
-              ...item,
-              value: item.id,
-              label: item.name + ' ' + item.code,
-            };
-          }),
-        );
-        this.searchList[1].val = '';
-        this.param.orgid = '';
-        this.$set(this.param, 'nsrsbh', nsrsbh);
-        const { ssq, tbzq } = this.$route.query;
-        this.propsKey = `${nsrsbh}_${ssq}_${tbzq}`;
-      }
-    },
-    // 初始化纳税申报查询进入所携带的参数
-    initQueryParam() {
-      const { nsrsbh } = this.$route.query;
-      this.$set(this.param, 'nsrsbh', nsrsbh);
-      this.searchList[0].val = nsrsbh;
-      this.$refs.list.handleGetData(this.param);
-      this.getOrgList(nsrsbh);
     },
     // 导入
     importExcel() {
@@ -320,8 +419,8 @@ export default {
     },
     // 导出
     async handleExport() {
-      const fileName = `销项发票明细.xlsx`;
-      await exportInvoiceDetailList({
+      const fileName = `敏感税收分类编码明细.xlsx`;
+      await exportMghw({
         reqData: {
           ...this.queryParam,
         },
@@ -335,12 +434,15 @@ export default {
       this.queryParam = param;
     },
     nodeClick(v, p, n) {
-      console.log(v);
-      this.currentNodeKey = v.id;
+      this.$refs.tree.setCheckedKeys([v.nsrsbh]);
+      this.nsrsbh = v.nsrsbh;
+      this.param = { nsrsbh: v.nsrsbh };
+      this.$refs.list.handleGetData({ nsrsbh: v.nsrsbh });
     },
   },
   mounted() {
-    this.getListByUser();
+    this.getLeftTree();
+    this.getInvoiceTaxCodes();
   },
 
   computed: {
@@ -359,9 +461,8 @@ export default {
   .left-nav {
     width: 240px;
     flex-shrink: 0;
-    padding: 12px;
     border-right: 8px solid #f1f4f5;
-    overflow: hidden;
+    height: 100%;
   }
   .right-content {
     flex: 1;
@@ -371,6 +472,35 @@ export default {
     //   margin: 8px auto;
     //   color: #666;
     // }
+  }
+  .nav-search {
+    padding: 12px;
+  }
+  .filter-tree {
+    height: calc(100% - 55px);
+    overflow: hidden;
+    overflow-y: scroll;
+    // overflow-x: auto ;
+  }
+}
+.toolbar-right {
+  /deep/ .el-button {
+    margin-left: 10px;
+  }
+}
+.code-tree {
+  display: flex;
+  .left {
+    flex: 1;
+  }
+  .code-el-tree {
+    height: 400px;
+    overflow: hidden;
+    overflow-y: scroll;
+  }
+  .right {
+    width: 460px;
+    padding: 12px;
   }
 }
 </style>

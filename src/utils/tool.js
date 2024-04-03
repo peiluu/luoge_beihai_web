@@ -437,6 +437,40 @@ export const debounce = (func, wait, immediate) => {
     }
   };
 };
+/**
+   * 根据自身节点寻找上级，并返回所有上级和自身
+   * 类多叉树查找如：[ {id:1,children:[{id:11},{id: 12}],... }, {id:2,children:[{id:21,...},{id: 22,...}],...} ]
+   * 查找id===22, 返回 [{id:2, ...},{id:22, ...}]
+   * @param {数据源} data 
+   * @param {查询目标：对象形式{fieldName: '查询比较的字段名',value: '要查询的值'}} target 
+   * @param {子元素key名称 有的树并不是用children名称做子节点} child 
+   * @param {数组：[]} indexArray 
+   * @returns 查询到则返回数组：[..., targetGrandfather, targetParent, target] ，否则返回 布尔类型 false
+   */
+export const findAllAncestors = (data, target, child = 'children', indexArray = []) => {
+  let arr = Array.from(indexArray); // 数组浅拷贝
+  for (let i = 0, len = data.length; i < len; i++) {
+    const item = data[i];
+    // 过滤掉children节点，避免返回数据过大
+    const targetArr = Object.keys(item).reduce((pre, curr) => {
+      if (curr !== child) {
+        pre[curr] = item[curr]
+      }
+      return pre;
+    }, {})
+    arr.push(targetArr);
+    if (item[target.fieldName] === target.value) {
+      return arr;
+    }
+    let children = item[child];
+    if (children && children.length) {
+      let result = findAllAncestors(children, target, child, arr);
+      if (result) return result;
+    }
+    arr.pop();
+  }
+  return false;
+}
 export {
     getUUID,
     getFontFamily,

@@ -23,3 +23,13 @@ export const getOrgList = data => postJSON(`${config.host}/orgnization/getOrgLis
  */
 export const exportWithholdList = data =>
   download(`${config.host}/income/exportWithholdList`, data);
+/**
+ * @desption 提交撤销预勾选
+ */
+export const checkPreOneDkdj = data =>
+  postJSON(`${config.host}/income/checkPreOneDkdj`, data);
+  /**
+ * @desption 计算税额
+ */
+export const cstateDkdj = data =>
+postJSON(`${config.host}/income/cstateDkdj/${data.nsrsbh}/${data.skssq}`, data);

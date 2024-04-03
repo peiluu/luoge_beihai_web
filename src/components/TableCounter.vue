@@ -36,6 +36,7 @@ export default {
         hjje: 0,
         hjse: 0,
         jshj: 0,
+        
       },
       totalData: {},
       totalEntity: {}
@@ -46,12 +47,13 @@ export default {
       console.log(val.totalHjseSum)
       if (val) {
         this.totalData = val;
+        
       }
     }
   },
   activated() {
 
-    // console.log(this.tableCounterConfig)
+     console.log(this.tableCounterConfig,"-=-=-=")
   },
 
 
@@ -78,6 +80,7 @@ export default {
       };
     },
     setInfo(selecedInfo){
+      console.log(selecedInfo,"--")
       this.selecedInfo = selecedInfo
     }
   }
