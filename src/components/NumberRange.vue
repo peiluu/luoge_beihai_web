@@ -1,21 +1,12 @@
 <template>
-  <div class="input-number-range" :class="{ 'is-disabled': disabled }">
-    <div class="flex">
-      <el-input ref="inputFromRef" clearable v-model="startValue" :disabled="disabled" :placeholder="startPlaceholder" @blur="handleBlurFrom" @focus="handleFocusFrom" @input="handleInputFrom"
-        @change="handleInputChangeFrom" v-bind="$attrs" v-on="$listeners">
-        <template v-for="(value, name) in startSlots" #[name]="slotData">
-          <slot :name="name" v-bind="slotData || {}"></slot>
-        </template>
-      </el-input>
-      <div class="center">
+  <div class="com-number-range" :class="{ 'is-disabled': disabled }">
+    <div class="range-content">
+      <el-input ref="inputFromRef" type="number" v-model="startValue" :disabled="disabled" :placeholder="startPlaceholder" @blur="handleBlur" @change="handleInputChangeFrom" />
+
+      <div class="content-center">
         <span>-</span>
       </div>
-      <el-input ref="inputToRef" clearable v-model="endValue" :disabled="disabled" :placeholder="endPlaceholder" @blur="handleBlurTo" @focus="handleFocusTo" @input="handleInputTo" @change="handleInputChangeTo"
-        v-bind="$attrs" v-on="$listeners">
-        <template v-for="(value, name) in endSlots" #[name]="slotData">
-          <slot :name="name" v-bind="slotData || {}"></slot>
-        </template>
-      </el-input>
+      <el-input ref="inputToRef" type="number" v-model="endValue" :disabled="disabled" :placeholder="endPlaceholder" @blur="handleBlur" @change="handleInputChangeTo" />
     </div>
   </div>
 </template>
@@ -93,100 +84,69 @@ export default {
       this.startValue = ''
       this.endValue = ''
     },
-    handleInputFrom(value) {
-      this.$emit("update:startValue", value);
-    },
-    handleInputTo(value) {
-      this.$emit("update:endValue", value);
-    },
     // from输入框change事件
     handleInputChangeFrom(value) {
       // 如果是非数字空返回null
       if (value == "" || isNaN(value)) {
-        this.$emit("update:startValue", null);
         return;
       }
       // 初始化数字精度
-      const newStartValue = this.setPrecisionValue(value);
+      const newStartValue = parseFloat(value).toFixed(2)
       // 如果from > to 将from值替换成to
-      if (
-        typeof newStartValue === "number" &&
-        parseFloat(newStartValue) > parseFloat(this.endValue)
-      ) {
+      if (this.endValue && newStartValue > this.endValue) {
         this.startValue = this.endValue;
       } else {
         this.startValue = newStartValue;
-      }
-      if (this.startValue !== value) {
-        this.$emit("update:startValue", this.startValue);
       }
     },
     // to输入框change事件
     handleInputChangeTo(value) {
       // 如果是非数字空返回null
       if (value == "" || isNaN(value)) {
-        this.$emit("update:endValue", null);
         return;
       }
-      // 初始化数字精度
-      const newEndValue = this.setPrecisionValue(value);
+      const newEndValue = parseFloat(value).toFixed(2)
       // 如果from > to 将from值替换成to
-      if (
-        typeof newEndValue === "number" &&
-        parseFloat(newEndValue) < parseFloat(this.startValue)
-      ) {
+      if (this.startValue && newEndValue < this.startValue) {
         this.endValue = this.startValue;
       } else {
         this.endValue = newEndValue;
       }
-      if (this.endValue !== value) {
-        this.$emit("update:endValue", this.endValue);
+    },
+    handleBlur() {
+      // this.fillData();
+      this.$nextTick(() => {
+        this.$emit("getNumberRangeForm", this.propsParam, [this.startValue, this.endValue]);
+      })
+    },
+    fillData() {
+      // 如果一方有数据，另一方没有，填平
+      if (!this.endValue && this.startValue) {
+        this.endValue = this.startValue
       }
-    },
-    handleBlurFrom(event) {
-      this.$emit("blurNumberFrom", this.propsParam, 0, this.startValue);
-    },
-
-    handleFocusFrom(event) {
-      this.$emit("focus-from", event);
-    },
-    handleBlurTo(event) {
-      this.$emit("blurNumberFrom", this.propsParam, 1, this.endValue);
-    },
-    handleFocusTo(event) {
-      this.$emit("focus-to", event);
-    },
-    // 根据精度保留数字
-    toPrecision(num, precision) {
-      if (precision === undefined) precision = 0;
-      return parseFloat(
-        Math.round(num * Math.pow(10, precision)) / Math.pow(10, precision)
-      );
-    },
-    // 设置精度
-    setPrecisionValue(value) {
-      if (this.precision === undefined) return value;
-      return this.toPrecision(parseFloat(value), this.precision);
+      if (!this.startValue && this.endValue) {
+        this.startValue = this.endValue
+      }
     },
   },
 };
 </script>
 <style lang="scss" scoped>
 // 取消element原有的input框样式
-::v-deep .el-input__inner {
+/deep/ .el-input__inner {
   border: 0px;
   margin: 0;
   padding: 0 15px;
   background-color: transparent;
 }
 
-.input-number-range {
+.com-number-range {
   background-color: #fff;
   border: 1px solid #dcdfe6;
   border-radius: 4px;
 }
 
-.flex {
+.range-content {
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -194,7 +154,7 @@ export default {
   justify-content: center;
   align-items: center;
 
-  .center {
+  .content-center {
     margin-top: 1px;
   }
 }
@@ -204,5 +164,16 @@ export default {
   border-color: #e4e7ed;
   color: #c0c4cc;
   cursor: not-allowed;
+}
+
+//去除input的type为number时的上下箭头
+
+/deep/input::-webkit-outer-spin-button,
+/deep/input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+/deep/input[type="number"] {
+  -moz-appearance: textfield;
 }
 </style>

@@ -22,13 +22,13 @@
             </template>
         </article>
         <el-descriptions :column="2">
-          <el-descriptions-item label="销方纳税人识别号"
+          <el-descriptions-item label="销方纳税人名称"
             >{{requirdList.xsfmc}}</el-descriptions-item
           >
           <el-descriptions-item label="销方纳税人识别号"
             >{{requirdList.xsfnsrsbh}}</el-descriptions-item
           >
-          <el-descriptions-item label="购方纳税人识别号"
+          <el-descriptions-item label="购方纳税人名称"
             >{{requirdList.gmfmc}}</el-descriptions-item
           >
           <el-descriptions-item label="购方纳税人识别号"
