@@ -66,7 +66,7 @@
 
             <!-- 数字范围 -->
             <template v-if="each.type == 'numberRange'">
-              <NumberRange :propsParam="each.key" @blurNumberFrom="blurNumberFrom" :startPlaceholder="each.placeholder[0] || ''" :endPlaceholder="each.placeholder[1] || ''" ref="numberRange" />
+              <NumberRange :propsParam="each.key" @getNumberRangeForm="getNumberRangeForm" :startPlaceholder="each.placeholder[0] || ''" :endPlaceholder="each.placeholder[1] || ''" ref="numberRange" />
             </template>
             <!-- 地区选择器 -->
             <template v-if="each.type == 'areaCascader'">
@@ -78,7 +78,6 @@
                 :nextDateDisabled="each.nextDateDisabled" @getQuarterPickerFrom="getQuarterPickerFrom" ref="quarterDatePicker" />
             </template>
           </el-form-item>
-
         </template>
       </el-form>
 
@@ -87,7 +86,6 @@
         <el-button @click="resetForm">重置</el-button>
         <el-button v-if="exportLabel" type="primary" @click="handleExport">{{ exportLabel }}</el-button>
         <span style="margin: 0 10px;" v-if="switchLabel">{{ switchLabel }}:</span><el-switch v-if="switchLabel" class="switch" v-model="checkLockM" @change="handleSwitch" active-text="是" inactive-text="否"></el-switch>
-
         <el-button v-show="showMore && !notSearchContract && searchList.length > 3" :class="moreStatus == 'down' ? 'more' : 'more-down'" icon="el-icon-d-arrow-right" circle @click="handleMore"></el-button>
       </div>
     </div>
@@ -127,6 +125,10 @@ export default {
       type: Array,
       default: () => [],
     },
+    formSearchParam: {
+      type: Object,
+      default: () => ({}),
+    },
     param: {
       type: Object,
       default: () => ({}),
@@ -153,17 +155,7 @@ export default {
     searchKey: {
       type: String,
       default: "",
-    },
-    // 重新渲染表单
-    // rebulidForm: {
-    //   type: Boolean,
-    //   default: false,
-    // },
-    resetAll: {
-      type: Boolean,
-      default: false,
-    },
-
+    }
   },
   data() {
     return {
@@ -184,7 +176,6 @@ export default {
     };
   },
   mounted() {
-
     this.handleBuildForm();
     if (this.searchList.length > 3 && !this.notSearchContract) {
       this.showMore = true;
@@ -194,9 +185,8 @@ export default {
         }
       });
     }
-
     this.$nextTick(() => {
-      this.handleReBuildSearchParam()
+      this.handleReBuildSearchParam();
     });
   },
   watch: {
@@ -206,30 +196,19 @@ export default {
       }
     },
     searchList: {
-      // 初始化查询表单
-      handler(val, oldVal) {
+      handler() {
         this.searchList.forEach((each, index) => {
+          each.show = index > 2 ? false : true
           this.$set(this.form, each.key, each.val)
         });
         this.$nextTick(() => {
-          this.handleReBuildSearchParam()
+          this.handleReBuildSearchParam();
         });
       },
       deep: true
-    }
+    },
   },
   methods: {
-    handleReBuildSearchParam() {
-      // const param = { ...this.param, ...this.formSearchParam }
-      const param = { ...this.param }
-      Object.keys(param || {}).map(key => {
-        if (param[key] != null) {
-          if (param[key].length > 0) {
-            this.$set(this.form, key, param[key])
-          }
-        }
-      });
-    },
     handleSwitch(e) {
       this.$emit("handleSwitch", e);
     },
@@ -237,8 +216,6 @@ export default {
       this.$emit("handleExport");
     },
     handleSubmit() {
-      this.$set(this.form, "pageNo", 1);
-      console.log(this.form)
       this.$emit("search", JSON.parse(JSON.stringify(this.form)));
     },
     resetForm() {
@@ -262,6 +239,7 @@ export default {
       // 重置级联列表初始值
       this.$emit('getNextList', '', 'reset')
       this.$emit("reset");
+
     },
     handleBuildForm() {
       let form = {};
@@ -305,10 +283,15 @@ export default {
     },
     // 是否需要联级查询
     selectChange(value, each) {
-      // 查询下级前，先初始化下级
+
+      // 查询下级前，先清空下级
       if (each.isQueryNext) {
-        this.form[each.nextPropskey] = ''
+        const row = each.options.find((item) => item[each.key] === value)
         this.$emit('getNextList', value)
+        this.$emit('getNextListRow', row)
+        if (each.nextPropskey) {
+          this.form[each.nextPropskey] = ''
+        }
       }
     },
     mutFilterValue({ searchValue, option, group }) {
@@ -349,6 +332,17 @@ export default {
         this.form[each.key] = each.options.filter((item => item?.slots?.default != 'checkAll' && item.label.toUpperCase().indexOf(this.selectFilterValue.toUpperCase()) > - 1)).map((item) => item.value)
       }
     },
+    handleReBuildSearchParam() {
+      // const param = { ...this.param, ...this.formSearchParam }
+      const param = { ...this.param }
+      Object.keys(param || {}).map(key => {
+        if (param[key] != null) {
+          if (param[key].length > 0) {
+            this.form[key] = param[key];
+          }
+        }
+      });
+    },
     toggleSelect(value, each, item) {
       item.checked = value
       if (item.checked) {
@@ -360,12 +354,14 @@ export default {
         }
       }
     },
+
     // 接收数字范围组件的参数
-    blurNumberFrom(propsParam, index, data) {
-      this.form[propsParam][index] = data
+    getNumberRangeForm(propsParam, data) {
+      this.form[propsParam] = data
     },
     getQuarterPickerFrom(propsParam, data) {
       this.form[propsParam] = data
+      this.$set(this.form, propsParam, data)
     },
   },
 };
@@ -394,7 +390,7 @@ Array.prototype.indexOf = function (val) {
   // width: 170px;
 }
 
-::v-deep .el-form-item {
+/deep/ .el-form-item {
   width: calc(33.3% - 10px);
   margin-bottom: 4px !important;
 
