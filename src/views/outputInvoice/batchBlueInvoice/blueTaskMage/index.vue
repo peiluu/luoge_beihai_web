@@ -387,7 +387,7 @@ export default {
    // this.handleStartPolling();
   },
   mounted() {
-    this.handlerGetTaskList();
+    
   },
   beforeCreate() {},
   beforeMount() {},
@@ -397,7 +397,9 @@ export default {
   destroyed() {
     this.handleStopPolling();
   },
-  activated() {},
+  activated() {
+    this.handlerGetTaskList();
+  },
 };
 </script>
 <style scoped lang="scss">
