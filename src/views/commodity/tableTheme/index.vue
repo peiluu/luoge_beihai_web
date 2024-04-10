@@ -2,7 +2,7 @@
   <div class="">
     <article class="top_margin_common">
             <el-card shadow="never">
-              <el-form ref="where" :model="where" label-width="100px">
+              <el-form ref="where" :model="where" label-width="105px">
                 <el-row :gutter="12">
                     <el-col :span="8">
                         <el-form-item label="商品/服务名称">
