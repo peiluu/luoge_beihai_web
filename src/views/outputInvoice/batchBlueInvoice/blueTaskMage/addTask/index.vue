@@ -236,7 +236,7 @@ export default {
     },
     /* 上传文件 */
     handleUploadFile(option) {
-      const { orgId, fppz, fpxe,nsrmc,nsrsbh } = this.intoForm || {};
+      const { orgId, fppz, fpxe,nsrmc,nsrsbh,mxxz } = this.intoForm || {};
       const formData = new FormData();
       formData.append("file", option.file);
       formData.append("orgId", orgId);
@@ -244,6 +244,7 @@ export default {
       formData.append("fpxe", fpxe);
       formData.append("nsrmc", nsrmc);
       formData.append("nsrsbh", nsrsbh);
+      formData.append("nsrsbh", mxxz);
       customPost(
         this.api,
         { "Content-Type": "multipart/form-data" },
@@ -285,7 +286,7 @@ export default {
         this.$confirm(`<div>请确认开票主体！</div>
           <div>销售方名称：${this.queryData.nsrmc}</div>
           <div>纳税人识别号：${this.queryData.nsrsbh}</div>
-          <div>销售方名称：${this.queryData.fppz === '01'? '增值税专用发票':'增值税普通发票'}</div>`, '提示', {
+          <div>发票类型：${this.queryData.fppz === '01'? '增值税专用发票':'增值税普通发票'}</div>`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           dangerouslyUseHTMLString: true,
