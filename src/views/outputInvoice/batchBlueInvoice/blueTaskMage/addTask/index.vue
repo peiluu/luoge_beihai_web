@@ -244,7 +244,7 @@ export default {
       formData.append("fpxe", fpxe);
       formData.append("nsrmc", nsrmc);
       formData.append("nsrsbh", nsrsbh);
-      formData.append("nsrsbh", mxxz);
+      formData.append("mxxz", mxxz);
       customPost(
         this.api,
         { "Content-Type": "multipart/form-data" },
