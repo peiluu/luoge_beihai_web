@@ -175,7 +175,7 @@ export default {
           val: "",
           type: "input",
           label: "搜索",
-          placeholder: "请输入纳税人名称/账套名称/开票点名称",
+          placeholder: "请输入纳税人名称/账套名称/开票点名称/纳税人识别号",
         },
       ],
       pre: false,
