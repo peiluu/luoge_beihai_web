@@ -45,7 +45,7 @@ export default {
     return {
       form: {},
       api: require('./Api'),
-      param: {},
+      param: {type:'0'},
       fplxMap,
       showAddRecord: false, // 是否能够手工补录
       propsKey: '',
@@ -127,8 +127,12 @@ export default {
   },
   activated() {
     this.getOrgList()
-    this.param = {};
-    this.param.taxBodyId = this.$route.query.taxBodyId;
+    // this.param = {};
+    // this.param.taxBodyId = this.$route.query.taxBodyId;
+    this.param = {
+      ...this.param,
+      taxBodyId: this.$route.query.taxBodyId
+    }
     this.propsKey = this.$route.query.taxBodyId
     this.$nextTick(() => {
       this.$refs.list.reload()
@@ -185,10 +189,10 @@ export default {
       }
     },
     getTableData(data) {
-      this.searchList[0].options = [
-            { value: '0', label: "我是销售方" },
-            // { value: '1', label: "我是购买方" },
-          ]
+      // this.searchList[0].options = [
+      //       { value: '0', label: "我是销售方" },
+      //       // { value: '1', label: "我是购买方" },
+      //     ]
       this.showAddRecord = !data.length
     },
     //预览发票

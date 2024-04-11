@@ -223,6 +223,8 @@ export default {
       this.form = {}
       // 清空对象的所有属性值
       Object.keys(this.form).forEach(key => { this.form[key] = '' })
+
+      this.handleReBuildSearchParam();
       // 清空
       if (this.$refs.numberRange) {
         for (let item of Object.values(this.$refs.numberRange)) {
@@ -334,7 +336,7 @@ export default {
     },
     handleReBuildSearchParam() {
       // const param = { ...this.param, ...this.formSearchParam }
-      const param = { ...this.param }
+      const { param } = this
       Object.keys(param || {}).map(key => {
         if (param[key] != null) {
           if (param[key].length > 0) {
