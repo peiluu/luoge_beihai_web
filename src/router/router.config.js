@@ -26,7 +26,7 @@ export const mainChildrenRoutes = [
   {
     path: '/redInvoice/addApplyForm',
     name: 'addApplyForm',
-    meta: { title: '新增红色信息表', isTab: true },
+    meta: { title: '新增红字信息表', isTab: true },
     component: () => import('@/views/outputInvoice/redInvoice/addApplyForm/Index.vue'),
   },
   {
