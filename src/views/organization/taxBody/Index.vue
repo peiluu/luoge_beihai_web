@@ -65,10 +65,10 @@
               <el-input v-model="form.czyxm" placeholder="请输入" maxlength="100" />
             </el-form-item>
             <el-form-item label="电子税务局账号" prop="dzswjzh">
-              <el-input v-model="form.dzswjzh" placeholder="请输入" maxlength="100" />
+              <el-input v-model="form.dzswjzh" placeholder="请输入" maxlength="100" auto-complete="off"/>
             </el-form-item>
             <el-form-item label="电子税务局密码" prop="dzswjmm">
-              <el-input show-password v-model="form.dzswjmm" placeholder="请输入" maxlength="100" />
+              <el-input show-password v-model="form.dzswjmm" placeholder="请输入" maxlength="100" auto-complete="new-password"/>
             </el-form-item>
             <el-form-item label="确认密码" prop="confirmDzswjmm">
               <el-input show-password v-model="form.confirmDzswjmm" placeholder="请输入" maxlength="100" />
