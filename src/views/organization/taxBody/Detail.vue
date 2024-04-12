@@ -26,14 +26,44 @@
         <el-form-item label="电话" prop="phone">
           <el-input v-model="form.phone" placeholder="请输入" maxlength="13" />
         </el-form-item>
-        <!-- <template v-if="form.isDigital === 'Y'"> -->
-        <template>
-          <el-form-item label="乐企ID" prop="lqid">
-            <el-input v-model="form.lqid" placeholder="请输入" maxlength="30" />
+        <template v-if="form.isDigital === 'Y'">
+          <el-form-item label="开票方式" prop="djkpfs">
+            <el-select v-model="form.djkpfs" placeholder="请选择">
+              <el-option label="乐企直连" value="0" />
+              <el-option label="RPA开票" value="1" />
+            </el-select>
           </el-form-item>
-          <el-form-item label="乐企秘钥" prop="secretkey">
-            <el-input v-model="form.secretkey" placeholder="请输入" maxlength="100" />
-          </el-form-item>
+          <!-- RPA开票 -->
+          <template v-if="form.djkpfs === '1'">
+            <el-form-item label="电子税务局身份" prop="dzswjsf">
+              <el-select v-model="form.dzswjsf" placeholder="请选择">
+                <el-option v-for="(item, index) in dzswjsfList" :key="index" :label="item.label" :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="操作员姓名" prop="czyxm">
+              <el-input v-model="form.czyxm" placeholder="请输入" maxlength="100" />
+            </el-form-item>
+            <el-form-item label="电子税务局账号" prop="dzswjzh">
+              <el-input v-model="form.dzswjzh" placeholder="请输入" maxlength="100" auto-complete="off"/>
+            </el-form-item>
+            <el-form-item label="电子税务局密码" prop="dzswjmm">
+              <el-input show-password v-model="form.dzswjmm" placeholder="请输入" maxlength="100" auto-complete="new-password"/>
+            </el-form-item>
+            <el-form-item label="确认密码" prop="confirmDzswjmm">
+              <el-input show-password v-model="form.confirmDzswjmm" placeholder="请输入" maxlength="100" />
+            </el-form-item>
+          </template>
+
+          <!-- 乐企直连 -->
+          <template v-if="form.djkpfs === '0'">
+            <el-form-item label="乐企ID" prop="lqid">
+              <el-input v-model="form.lqid" placeholder="请输入" maxlength="30" />
+            </el-form-item>
+            <el-form-item label="乐企秘钥" prop="secretkey">
+              <el-input v-model="form.secretkey" placeholder="请输入" maxlength="100" />
+            </el-form-item>
+          </template>
         </template>
 
         <el-form-item label="开户行名称" prop="bank">
@@ -229,7 +259,7 @@
 </template>
 
 <script>
-import { regCollection } from '@/config/constant.js';
+import { regCollection, dzswjsfList } from '@/config/constant.js';
 import { rgionEnum, cityEnum, provincesEnmu, areaEnum } from '@/config/regionEnums.js';
 import ExtendInfo from './ExtendInfo'
 import { listCascaderDict, getDetailById, getAllZt, selectYtList, selectQyList, addTaxBody, getZgsList, getTaxArea, updateTaxBody } from "./Api";
@@ -258,6 +288,7 @@ export default {
       cityEnum, // 所属城市
       provincesEnmu, // 所属省份
       areaEnum, // 所属市区
+      dzswjsfList,
       rules: {
         nsrsbh: [{ required: true, message: "请输入", trigger: "blur" }, regCollection.nsrsbh],
         oldNsrsbh: [regCollection.nsrsbh],
@@ -275,6 +306,12 @@ export default {
         zgsId: [{ required: true, message: "请选择", trigger: "blur" }],
         areaList: [{ required: true, message: "请选择", trigger: "blur" }],
         withdrawalDate: [{ required: true, message: "请选择", trigger: "blur" }],
+        djkpfs: [{ required: true, message: "请选择", trigger: "blur" }],
+        dzswjsf: [{ required: true, message: "请选择", trigger: "blur" }],
+        dzswjzh: [{ required: true, message: "请输入", trigger: "blur" }],
+        dzswjmm: [{ required: true, message: "请输入", trigger: "blur" }],
+        confirmDzswjmm: [{ required: true, message: "请输入", trigger: "blur" }],
+        czyxm: [{ required: true, message: "请输入", trigger: "blur" }],
       },
       saveLoading: false
     };
