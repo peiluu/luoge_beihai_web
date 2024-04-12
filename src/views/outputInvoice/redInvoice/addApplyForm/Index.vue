@@ -92,11 +92,11 @@ export default {
           label: "购/销方选择",
           placeholder: "请选择",
           disabled: true,
-          key: "type", val: '0', type: "select",
-          options: [
-            { value: '0', label: "我是销售方" },
+          key: "type", val: '我是销售方', type: "text",
+          // options: [
+          //   { value: '0', label: "我是销售方" },
             // { value: '1', label: "我是购买方" },
-          ],
+          // ],
         },
         { label: "对方纳税人名称", key: "dfnsrmc", val: "", type: "input", placeholder: "请输入" },
         { label: "对方纳税人识别号", key: "dfnsrsbh", val: "", type: "input", placeholder: "请输入" },
