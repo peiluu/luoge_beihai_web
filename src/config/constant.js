@@ -309,7 +309,13 @@ export const slListMap = {
   9: '免抵退',
   10: '4%',
 };
-
+function transformList(list) {
+  const map = {};
+  list.forEach(item => {
+    map[item.value] = item.label;
+  });
+  return map;
+}
 /**
  *@description 征税项目映射
  */
@@ -328,3 +334,21 @@ export const zsxmMap = {
  * @description: 路由白名单, 无需登录即可访问
  */
 export const routerWhitelist = /^(\/invoice\/preview)/
+
+/**
+ *@description 电子税务局身份
+ */
+ export const dzswjsfList = [
+  { value: '01', label: '法定代表人' },
+  { value: '02', label: '财务负责人' },
+  { value: '03', label: '办税员' },
+  { value: '05', label: '管理员' },
+  { value: '08', label: '社保经办人' },
+  { value: '09', label: '开票员' },
+  { value: '10', label: '销售人员' },
+];
+
+/**
+ *@description 电子税务局身份
+ */
+ export const dzswjsfMap = transformList(dzswjsfList)

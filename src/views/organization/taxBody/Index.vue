@@ -30,7 +30,7 @@
             <el-button @click.stop="hanldeEnter('detail', data)" type="success">查看</el-button>
             <el-button @click.stop="hanldeEnter('edit', data)" type="info">编辑</el-button>
             <el-button @click.stop="batchOperate('delete', data)" type="danger">删除</el-button>
-            <!-- <el-button @click.stop="batchOperate('digital', data)" type="success">切换数电开通</el-button> -->
+            <el-button @click.stop="batchOperate('digital', data)" type="success">切换数电开通</el-button>
             <el-button @click.stop="hanldeMaintenance(data, '3')" type="success">维护帐套</el-button>
             <el-button @click.stop="hanldeMaintenance(data, '2')" type="success">维护开票点</el-button>
           </template>
@@ -47,12 +47,43 @@
           </el-select>
         </el-form-item>
         <template v-if="form.isDigital === 'Y'">
-          <el-form-item label="乐企ID" prop="lqid">
-            <el-input v-model="form.lqid" placeholder="请输入" maxlength="30" />
+          <el-form-item label="开票方式" prop="djkpfs">
+            <el-select v-model="form.djkpfs" placeholder="请选择">
+              <el-option label="乐企直连" value="0" />
+              <el-option label="RPA开票" value="1" />
+            </el-select>
           </el-form-item>
-          <el-form-item label="乐企秘钥" prop="secretkey">
-            <el-input v-model="form.secretkey" placeholder="请输入" maxlength="100" />
-          </el-form-item>
+           <!-- RPA开票 -->
+          <template v-if="form.djkpfs === '1'">
+            <el-form-item label="电子税务局身份" prop="dzswjsf">
+              <el-select v-model="form.dzswjsf" placeholder="请选择">
+                <el-option v-for="(item, index) in dzswjsfList" :key="index" :label="item.label" :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="操作员姓名" prop="czyxm">
+              <el-input v-model="form.czyxm" placeholder="请输入" maxlength="100" />
+            </el-form-item>
+            <el-form-item label="电子税务局账号" prop="dzswjzh">
+              <el-input v-model="form.dzswjzh" placeholder="请输入" maxlength="100" />
+            </el-form-item>
+            <el-form-item label="电子税务局密码" prop="dzswjmm">
+              <el-input show-password v-model="form.dzswjmm" placeholder="请输入" maxlength="100" />
+            </el-form-item>
+            <el-form-item label="确认密码" prop="confirmDzswjmm">
+              <el-input show-password v-model="form.confirmDzswjmm" placeholder="请输入" maxlength="100" />
+            </el-form-item>
+          </template>
+
+          <!-- 乐企直连 -->
+          <template v-else>
+            <el-form-item label="乐企ID" prop="lqid">
+              <el-input v-model="form.lqid" placeholder="请输入" maxlength="30" />
+            </el-form-item>
+            <el-form-item label="乐企秘钥" prop="secretkey">
+              <el-input v-model="form.secretkey" placeholder="请输入" maxlength="100" />
+            </el-form-item>
+          </template>
         </template>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -92,6 +123,7 @@ import { rgionEnum, cityEnum, provincesEnmu } from '@/config/regionEnums.js';
 import { listCascaderDict, selectYtList, delTaxBodyBatch, setIsDigital, getListAll, selectQyList, downLoadApplyList, exportTaxBodyInfo, } from './Api.js'
 import Detail from './Detail.vue'
 import CustomImport from '@/components/CustomImport'
+import { dzswjsfList } from '@/config/constant.js';
 export default {
   name: 'organizationTaxBody',
   components: {
@@ -106,6 +138,7 @@ export default {
       api: require('./Api'),
       loading: false,
       propKey: '',
+      dzswjsfList,
       columns: [
         { type: "selection", width: 50, fixed: 'left', },
         { title: '序号', type: "index", width: 50, fixed: 'left', },
@@ -210,6 +243,12 @@ export default {
         isDigital: [{ required: true, message: "请选择", trigger: "blur" }],
         lqid: [{ required: true, message: "请输入", trigger: "blur" }],
         secretkey: [{ required: true, message: "请输入", trigger: "blur" }],
+        djkpfs: [{ required: true, message: "请选择", trigger: "blur" }],
+        dzswjsf: [{ required: true, message: "请选择", trigger: "blur" }],
+        dzswjzh: [{ required: true, message: "请输入", trigger: "blur" }],
+        dzswjmm: [{ required: true, message: "请输入", trigger: "blur" }],
+        confirmDzswjmm: [{ required: true, message: "请输入", trigger: "blur" }],
+        czyxm: [{ required: true, message: "请输入", trigger: "blur" }],
       },
       editData: {
         operateType: '',
