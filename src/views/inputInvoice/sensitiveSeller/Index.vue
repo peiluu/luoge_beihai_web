@@ -198,7 +198,7 @@ export default {
   methods: {
     handleAdd(item) {
       if (item.id) {
-        this.editForm = item;
+        this.editForm = {...item};
       }
       this.addVisible = true;
     },
