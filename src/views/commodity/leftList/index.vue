@@ -21,7 +21,7 @@
       </article>
       <article class="tree_main">
         <el-tree
-          ref="treeRef"
+        ref="treeRef"
           :data="treeData"
           :node-key="!useMode?'id':'id'"
           :default-expand-all="useMode?false:true"

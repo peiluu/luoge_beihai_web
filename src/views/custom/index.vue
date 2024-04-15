@@ -78,6 +78,7 @@ export default {
       columns: [
         { type: "selection", width: 50, fixed: 'left', },
         { title: '序号', type: "index", width: 50, fixed: 'left', },
+        { title: "店铺名称", width: 160, dataIndex: "gmfcode" },
         { title: "客户名称", width: 160, dataIndex: "gmfMc", showTooltip: true },
         { title: "纳税人识别号", width: 160, dataIndex: "gmfNsrsbh", },
         { title: "开户行", width: 160, dataIndex: "yhzh", },
