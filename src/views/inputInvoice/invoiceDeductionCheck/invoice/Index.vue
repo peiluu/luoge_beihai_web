@@ -292,7 +292,7 @@
       downloadTemplateApi="/income/downExcel"
       :downloadTemplateApiParams="{ type: 'ZZSFP' }"
       downloadTemplateName="发票勾选_导入模板"
-      :upApi="`/income/uploadZzsfp/${nsrsbh}`"
+      :upApi="`/income/uploadZzsfp/${nsrsbh}/${skssq}`"
       importApi="/income/checkPreCheckZzsfp"
       effImport
       upTitle="上传发票勾选数据"
@@ -332,6 +332,10 @@ export default {
   props: {
     currentSq: {},
     level: {
+      type: String,
+      default: "",
+    },
+    skssq: {
       type: String,
       default: "",
     },

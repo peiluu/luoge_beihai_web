@@ -222,7 +222,7 @@ export default {
     // 新增/修改
     addOrEdit(row = {}) {
       console.log('----row----', row);
-      this.editForm = row;
+      this.editForm = {...row};
       this.addVisible = true;
     },
     // 批量删除
