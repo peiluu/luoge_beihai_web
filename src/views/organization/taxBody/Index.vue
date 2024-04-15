@@ -28,7 +28,7 @@
         <el-popover placement="left" trigger="hover" popper-class="customPopper">
           <template>
             <el-button @click.stop="hanldeEnter('detail', data)" type="success">查看</el-button>
-            <el-button @click.stop="hanldeEnter('edit', data)" type="info">编辑</el-button>
+            <el-button @click.stop="hanldeEnter('edit', data)" type="success">编辑</el-button>
             <el-button @click.stop="batchOperate('delete', data)" type="danger">删除</el-button>
             <el-button @click.stop="batchOperate('digital', data)" type="success">切换数电开通</el-button>
             <el-button @click.stop="hanldeMaintenance(data, '3')" type="success">维护帐套</el-button>
@@ -38,7 +38,7 @@
         </el-popover>
       </template>
     </form-list>
-    <el-dialog title="是否开通数电" :visible.sync="dialogVisible" width="40%" :before-close="handleClose">
+    <el-dialog title="是否开通数电" :visible.sync="dialogVisible" width="40%" :before-close="handleClose" v-loading="digitalLoading">
       <el-form :inline="true" :model="form" :rules="rules" ref="ruleForm" class="dialog-form">
         <el-form-item label="是否开通数电业务" prop="isDigital">
           <el-select v-model="form.isDigital" placeholder="请选择">
@@ -261,7 +261,7 @@ export default {
         id: null
       },
       dialogImportVisible: false,
-
+      digitalLoading: false,
     };
 
   },
@@ -354,7 +354,7 @@ export default {
         this.$message.warning("未选择企业，请选择企业");
         return;
       }
-      this.form = data
+      this.form = {...data, confirmDzswjmm: data.dzswjmm}
       if (type === 'digital') {
         this.dialogVisible = true
         return;
@@ -410,7 +410,9 @@ export default {
     async setIsDigital() {
       this.$refs["ruleForm"].validate(async valid => {
         if (!valid) return;
+        this.digitalLoading = true;
         const { code = '', msg } = await setIsDigital(this.form);
+        this.digitalLoading = false;
         if (code === '0') {
           this.$message.success('操作成功');
           this.dialogVisible = false

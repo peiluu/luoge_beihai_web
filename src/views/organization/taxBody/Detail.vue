@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-loading="detailLoading">
     <div>
       <el-form :inline="true" :model="form" :rules="rules" ref="ruleForm" :disabled="operateType === 'detail'">
         <div class="content-title">基本信息</div>
@@ -217,7 +217,7 @@
       <el-button type="success" @click="submit" v-if="operateType !== 'detail'" :loading="saveLoading">保存</el-button>
     </div>
 
-    <el-dialog title="编辑独立生产经营部门" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
+    <!-- <el-dialog title="编辑独立生产经营部门" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
       <div class="table-tools"><el-button @click="handleAddFun">新增</el-button></div>
 
       <div class="custom-table">
@@ -254,7 +254,7 @@
         <el-button @click="handleClose">取 消</el-button>
         <el-button type="success" @click="saveDlscjybmList">保 存</el-button>
       </span>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
@@ -313,6 +313,7 @@ export default {
         confirmDzswjmm: [{ required: true, message: "请输入", trigger: "blur" }],
         czyxm: [{ required: true, message: "请输入", trigger: "blur" }],
       },
+      detailLoading: false,
       saveLoading: false
     };
   },
@@ -385,11 +386,14 @@ export default {
      * @desption 【组织管理】根据id获取纳税主体详情
      */
     async getDetailById(id) {
+      this.detailLoading = true;
       const { code = '', data = {} } = await getDetailById({ id })
+      this.detailLoading = false;
       if (code === '0') {
         this.form = {
           ...data,
           isInstitution: data.isInstitution == 'Y' ? true : false,
+          confirmDzswjmm: data.dzswjmm
         }
         this.dlscjybmList = data.dlscjybmList || []
 
@@ -419,6 +423,10 @@ export default {
     async submit() {
       this.$refs["ruleForm"].validate(async valid => {
         if (!valid) return;
+        if (this.form.isDigital === 'Y' && this.form.djkpfs == '1' && this.form.confirmDzswjmm !== this.form.dzswjmm) {
+          this.$message.warning('两次输入的密码不一致！请重新输入');
+          return
+        }
         const param = {
           ...this.form,
           dlscjybmList: this.dlscjybmList,
