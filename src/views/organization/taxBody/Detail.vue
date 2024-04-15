@@ -1,5 +1,10 @@
 <template>
-  <div v-loading="detailLoading">
+  <div 
+    v-loading="loading" 
+    :element-loading-text="loadingTxt" 
+    element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(255, 255, 255, 0.5)"
+  >
     <div>
       <el-form :inline="true" :model="form" :rules="rules" ref="ruleForm" :disabled="operateType === 'detail'">
         <div class="content-title">基本信息</div>
@@ -214,7 +219,7 @@
 
     <div class="footer">
       <el-button @click="cancel">取消</el-button>
-      <el-button type="success" @click="submit" v-if="operateType !== 'detail'" :loading="saveLoading">保存</el-button>
+      <el-button type="success" @click="submit" v-if="operateType !== 'detail'" :loading="loading">保存</el-button>
     </div>
 
     <!-- <el-dialog title="编辑独立生产经营部门" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
@@ -313,8 +318,8 @@ export default {
         confirmDzswjmm: [{ required: true, message: "请输入", trigger: "blur" }],
         czyxm: [{ required: true, message: "请输入", trigger: "blur" }],
       },
-      detailLoading: false,
-      saveLoading: false
+      loading: false,
+      loadingTxt: ''
     };
   },
 
@@ -386,9 +391,9 @@ export default {
      * @desption 【组织管理】根据id获取纳税主体详情
      */
     async getDetailById(id) {
-      this.detailLoading = true;
+      this.loading = true;
       const { code = '', data = {} } = await getDetailById({ id })
-      this.detailLoading = false;
+      this.loading = false;
       if (code === '0') {
         this.form = {
           ...data,
@@ -442,7 +447,8 @@ export default {
     */
     async saveTaxBody(param) {
       try {
-        this.saveLoading = true
+        this.loading = true
+        this.loadingTxt = '保存中'
         const api = param.id ? updateTaxBody : addTaxBody
         const { code = '', data = [], msg = '操作失败' } = await api(param)
         if (code === '0') {
@@ -454,7 +460,8 @@ export default {
       } catch (error) {
           this.$message.error(error.msg || '操作失败')
       } finally {
-        this.saveLoading = false;
+        this.loading = false;
+        this.loadingTxt = ''
       }
       
     },
