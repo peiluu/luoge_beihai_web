@@ -27,6 +27,10 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.aui-sidebar {
+  display: flex;
+  flex-direction: column;
+}
 .nav-logo {
   height: 50px;
   margin-bottom: 5px;
@@ -36,5 +40,8 @@ export default {
   .nav-img {
     height: 40px;
   }
+}
+.aui-sidebar__inner {
+  flex: 1;
 }
 </style>
