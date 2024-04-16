@@ -241,8 +241,9 @@ export default {
     },
     // 新增/修改
     addOrEdit(row = {}) {
-      console.log('----row----', row);
+      // console.log('----row----', row);
       this.editForm = {...row};
+      if(item.sxrqz)this.$set(this.rules, 'sxrqq', [{ required: true, message: '请选择', trigger: 'change' }])
       this.addVisible = true;
     },
     // 批量删除

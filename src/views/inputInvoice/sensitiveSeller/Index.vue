@@ -219,6 +219,7 @@ export default {
       if (item.id) {
         this.editForm = {...item};
       }
+      if(item.sxrqz)this.$set(this.rules, 'sxrqq', [{ required: true, message: '请选择', trigger: 'change' }])
       this.addVisible = true;
     },
     del() {
