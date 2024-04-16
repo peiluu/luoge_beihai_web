@@ -53,7 +53,7 @@ export default {
   },
   activated() {
 
-     console.log(this.tableCounterConfig,"-=-=-=")
+    //  console.log(this.tableCounterConfig,"-=-=-=")
   },
 
 
@@ -80,7 +80,7 @@ export default {
       };
     },
     setInfo(selecedInfo){
-      console.log(selecedInfo,"--")
+      // console.log(selecedInfo,"--")
       this.selecedInfo = selecedInfo
     }
   }

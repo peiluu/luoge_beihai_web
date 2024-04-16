@@ -55,7 +55,7 @@
         :height="height"
         border
         stripe
-        @row-click="rowClcik"
+        @row-click="rowClick"
         :header-cell-style="{
           fontWeight: 400,
           borderTop: '1px solid #adb4bc',
@@ -339,6 +339,10 @@ export default {
       type: String,
       default: "",
     },
+    sfqkrzgx: {
+      type: String,
+      default: "",
+    },
   },
   components: { FormSearch, TableCounter, CustomImport },
   data() {
@@ -531,7 +535,6 @@ export default {
       lossTaxRate: "",
       isPerCheck: false,
       isBusinessFormat: "", // 物业,需要预勾选操作
-      sfqkrzgx: null,
       totalLoading: false,
     };
   },
@@ -539,7 +542,6 @@ export default {
     level: {
       handler: function (newV, oldV) {
         if (newV === "1") {
-          if (this.sfqkrzgx === null) this.getSfqkrzgxById();
           this.getData();
         }
       },
@@ -553,9 +555,6 @@ export default {
     nsrsbh() {
       return this.$route.query.nsrsbh;
     },
-  },
-  activated() {
-    this.getSfqkrzgxById();
   },
   methods: {
     // 导入
@@ -583,22 +582,7 @@ export default {
       this.dialogVisible = false;
       this.form = {};
     },
-    async getSfqkrzgxById() {
-      if (!this.sfqkLoading) {
-        this.sfqkLoading = true;
-        setTimeout(() => {
-          this.sfqkLoading = false;
-        }, 1000);
-        try {
-          const { code = "0", data } = await getDetailById({
-            id: this.$route.query.taxBodyId,
-          });
-          this.sfqkrzgx = data.sfqkrzgx || null;
-        } catch (error) {
-          console.log("error", error);
-        }
-      }
-    },
+    
     handleReset() {
       this.pagination = {
         ...this.pagination,
@@ -612,12 +596,13 @@ export default {
       };
       this.handleGetData(this.searchParam);
     },
-    rowClcik(row, column, event) {
+    rowClick(row, column, event) {
       const f = this.checkSelectable(row);
       if (!f) {
         return;
       }
       this.$refs.table.toggleRowSelection(row);
+      this.setPre({ids:[row.id],nsrsbh: this.nsrsbh, preCheck:row.preCheck === 'Y'?'N':'Y'});
     },
     dateFormat(fmt, val) {
       return moment(val).format(fmt);
