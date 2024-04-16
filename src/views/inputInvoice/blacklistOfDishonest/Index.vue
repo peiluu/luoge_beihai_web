@@ -6,6 +6,7 @@
       :api="api"
       :height="height"
       ref="list"
+      @getSearchParam="getSearchParam"
       @handleSelection="handleSelection"
     >
       <template #gxfsf="row"> {{ row.data.gxfsf == 0 ? '销售方' : '购买方' }}</template>
@@ -309,6 +310,9 @@ export default {
         reqData: { ...this.queryParam },
         fileName,
       });
+    },
+    getSearchParam(param) {
+      this.queryParam = param;
     },
   },
 };
