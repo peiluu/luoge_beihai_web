@@ -16,7 +16,7 @@
         :border="border" 
         :height="height"
         stripe 
-        @row-click="rowClcik"
+        @row-click="rowClick"
         :header-cell-style="{fontWeight: 400,borderTop: '1px solid #adb4bc',background: '#f7f9fd',color: '#333333',padding: '7px 0'}"
         tooltip-effect="dark"
         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
@@ -498,7 +498,12 @@ export default {
         }
       }
     },
-    rowClcik(row, column, event) {
+    rowClick(row, column, event, type = false) {
+      // 父组件有传rowClick事件，做额外的校验
+      if(!type && this.$listeners.rowClick && typeof this.$listeners.rowClick === 'function'){
+        this.$listeners.rowClick(row, column, event);
+        return;
+      }
       if (this.singleSelect) {
         this.radioValue = row.id;
         this.selectedRow = row;

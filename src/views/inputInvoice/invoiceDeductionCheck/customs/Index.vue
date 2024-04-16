@@ -1,9 +1,10 @@
 <template>
   <div class="com-withhold">
-    <form-list :columns="columns" :searchRow="searchList" :api="api" :param="param" :height="height"
+    <form-list :columns="dynamicCol" :searchRow="searchList" :api="api" :param="param" :height="height"
       @getSearchParam="getSearchParam" @handleSelection="handleSelection" @select="handleSelected"
       @selectAll="selectAll" @getTableData="getTableData" preCheck v-loading="loading" :tableCounterShow="true"
-      ref="list" :firstLoading="level === '2'" :selectable="checkSelectable" :reserve-selection="true">
+      ref="list" :firstLoading="level === '2'" :selectable="checkSelectable" :reserve-selection="true" 
+      @rowClick="rowClick">
       <!-- 中间部分 -->
       <template #topTool>
         <div class="toolbar">
@@ -133,7 +134,6 @@ export default {
     },
   },
   data() {
-    const sfqkrzgx = this.sfqkrzgx
     return {
       dialogImportVisible: false, // 导入
       inputFplxMap,
@@ -142,15 +142,6 @@ export default {
       loading: false,
 
       columns: [
-        {
-          type: "selection",
-          width: 50,
-          selectable: function (row, index) {
-            // 规则一：sfqkrzgx: 'N' 不校验是否入账, 'Y' 校验是否入账。为“N”时不需要校验第二条规则，可以直接勾选
-
-            return sfqkrzgx === 'N' || row.purchaserstatus === '42';
-          },
-        },
         { title: "序号", type: "index", width: 50 },
         
         {
@@ -407,6 +398,16 @@ export default {
     nsrsbh() {
       return this.$route.query.nsrsbh;
     },
+    dynamicCol(){
+      return [
+        {
+          type: "selection",
+          width: 50,
+          selectable: this.checkSelectable,
+        },
+        ...this.columns
+      ]
+    }
   },
 
   methods: {
@@ -421,7 +422,7 @@ export default {
       this.$refs.list.handleGetData(param);
     },
     getTableData(data) {
-      console.log(3333);
+      // console.log(3333);
       this.data = data;
       this.getHjje();
     },
@@ -434,7 +435,7 @@ export default {
       });
     },
     selectAll(rows) {
-      console.log("----rows---", rows, rows.length);
+      // console.log("----rows---", rows, rows.length);
       let ids = [];
       let preCheck = "";
       if (rows.length === 0) {
@@ -442,7 +443,7 @@ export default {
         preCheck = "N";
       } else {
         rows.forEach((item) => {
-          console.log("--rows--", item.preCheck, item.id);
+          // console.log("--rows--", item.preCheck, item.id);
           if (item.preCheck !== "Y") {
             ids.push(item.id);
             preCheck = "Y";
@@ -452,7 +453,7 @@ export default {
       this.setPre({ ids, preCheck });
     },
     async setPre({ ids, preCheck }) {
-      console.log("ids----", ids, preCheck);
+      // console.log("ids----", ids, preCheck);
       try {
         this.loading = true;
         const { code = "0", data } = await checkPreOneHgjks({ ids, preCheck, nsrsbh: this.nsrsbh });
@@ -599,15 +600,19 @@ export default {
     checkSelectable(row) {
       // 规则一：sfqkrzgx: 'N' 不校验是否入账, 'Y' 校验是否入账。为“N”时不需要校验第二条规则，可以直接勾选
       // 规则二：row.purchaserstatus === 42 代表已入账，可以勾选，否则不能勾选
-      console.log('--this.sfqkrzgx--', this.sfqkrzgx)
       return this.sfqkrzgx === "N" || row.purchaserstatus === 42;
     },
-    rowClcik(row, column, event) {
+    rowClick(row, column, event) {
       const f = this.checkSelectable(row);
       if (!f) {
         return;
       }
-      this.$refs.table.toggleRowSelection(row);
+      this.$refs.list.rowClick(row, column, event, true);
+      this.setPre({
+        ids: [row.id],
+        nsrsbh: this.nsrsbh,
+        preCheck: row.preCheck === "Y" ? "N" : "Y",
+      });
     },
     dateFormat(fmt, val) {
       return moment(val).format(fmt);
