@@ -1,58 +1,60 @@
 <template>
   <div class="com-withhold">
-    <form-list
-      :columns="columns"
-      :searchRow="searchList"
-      :api="api"
-      :param="param"
-      :height="height"
-      @getSearchParam="getSearchParam"
-      @handleSelection="handleSelection"
-      @select="handleSelected"
-      @selectAll="selectAll"
-      @getTableData="getTableData"
-      preCheck
-      v-loading="loading"
-      :tableCounterShow="true"
-      ref="list"
-      :firstLoading="level === '2'"
-      :selectable="checkSelectable"
-      :reserve-selection="true"
-    >
+    <form-list :columns="columns" :searchRow="searchList" :api="api" :param="param" :height="height"
+      @getSearchParam="getSearchParam" @handleSelection="handleSelection" @select="handleSelected"
+      @selectAll="selectAll" @getTableData="getTableData" preCheck v-loading="loading" :tableCounterShow="true"
+      ref="list" :firstLoading="level === '2'" :selectable="checkSelectable" :reserve-selection="true">
       <!-- 中间部分 -->
       <template #topTool>
         <div class="toolbar">
           <div class="toolbar-left" />
           <div class="toolbar-right">
-            <el-button
-              type="success"
-              @click="cancleBatch('02')"
-              v-if="$refs.list && $refs.list.searchParam.cljg == '01'"
-              >撤销勾选</el-button
-            >
-            <el-button type="success" @click="submitBatch('01')" v-else
-              >提交勾选</el-button
-            >
+            <el-button type="success" @click="cancleBatch('02')"
+              v-if="$refs.list && $refs.list.searchParam.cljg == '01'">撤销勾选</el-button>
+            <el-button type="success" @click="submitBatch('01')" v-else>提交勾选</el-button>
             <el-button @click="exportInvoiceCheck">导出</el-button>
-            <el-button
-              @click="importExcel"
-              v-if="$refs.list && $refs.list.searchParam.cljg == '02'"
-              >导入</el-button
-            >
+            <el-button @click="importExcel" v-if="$refs.list && $refs.list.searchParam.cljg == '02'">导入</el-button>
             <!-- <el-button type="" @click="exportSelectedData">导出选中发票</el-button> -->
           </div>
         </div>
       </template>
-      <template #zczt="{ data }"> {{ data.zczt == '1' ? '未进项转出' : data.zczt == '2' ? '已全额转出' : data.zczt == '3' ? '已部署转出' : '' }}</template>
-      <template #purchaserstatus="{ data }"> {{ data.purchaserstatus == '30' ? '未收票' : data.purchaserstatus == '36' ? '报帐中' : data.purchaserstatus == '42' ? '已记账' : '' }}</template>
-      <template #verifyStatus="{ data }"> {{ data.verifyStatus == '1' ? '未勾选' : data.verifyStatus == '2' ? '已勾选' : data.verifyStatus == '3' ? '已认证' : data.verifyStatus == '4' ? '已统计' : '' }}</template>
+      <template #zczt="{ data }">
+        {{
+      data.zczt == "1"
+        ? "未进项转出"
+        : data.zczt == "2"
+          ? "已全额转出"
+          : data.zczt == "3"
+            ? "已部署转出"
+            : ""
+    }}</template>
+      <template #purchaserstatus="{ data }">
+        {{
+      data.purchaserstatus == "30"
+        ? "未收票"
+        : data.purchaserstatus == "36"
+          ? "报帐中"
+          : data.purchaserstatus == "42"
+            ? "已记账"
+            : ""
+    }}</template>
+      <template #verifyStatus="{ data }">
+        {{
+      data.verifyStatus == "1"
+        ? "未勾选"
+        : data.verifyStatus == "2"
+          ? "已勾选"
+          : data.verifyStatus == "3"
+            ? "已认证"
+            : data.verifyStatus == "4"
+              ? "已统计"
+              : ""
+    }}</template>
       <template #spzt="{ data }">
-        {{ data.spzt == "1" ? "已收票" : "未收票" }}</template
-      >
+        {{ data.spzt == "1" ? "已收票" : "未收票" }}</template>
       <!-- <template #sfzt="{ data }"> {{ data.sfzt == '1' ? '已收票' : data.sfzt == '2' ? '未收票' : '' }}</template> -->
       <template #sfchsd="{ data }">
-        {{ data.sfchsd == "Y" ? "锁定" : "未锁定" }}</template
-      >
+        {{ data.sfchsd == "Y" ? "锁定" : "未锁定" }}</template>
       <template #fplx="{ data }"> {{ inputFplxMap[data.fplx] }} </template>
       <template #tfrq="{ data }">
         {{ data.tfrq ? dateFormat("YYYY-MM-DD", data.tfrq) : "" }}
@@ -63,12 +65,7 @@
     </form-list>
 
     <!-- dialog 提交勾选 -->
-    <el-dialog
-      title="请确认"
-      :visible.sync="dialogVisible"
-      width="40%"
-      :before-close="handleClose"
-    >
+    <el-dialog title="请确认" :visible.sync="dialogVisible" width="40%" :before-close="handleClose">
       <template v-if="abnormalList.length > 0">
         <div class="title">
           <i class="el-icon-warning" />您勾选的发票中含有疑点发票，请谨慎勾选
@@ -76,17 +73,15 @@
         <div class="tip">是否确认提交</div>
         <div class="list">
           <span v-for="item in abnormalList" :key="item.fphm">{{
-            item.fphm
-          }}</span>
+      item.fphm
+    }}</span>
         </div>
       </template>
       <template v-else>
         <div class="title title-normal">
           <i class="el-icon-warning" />本次勾选<span>{{
-            selections.length
-          }}</span
-          >张发票，税额合计<span>{{ selecedInfo.hjse }}</span
-          >元
+      selections.length
+    }}</span>张发票，税额合计<span>{{ selecedInfo.hjse }}</span>元
         </div>
         <div class="tip">是否确认提交</div>
       </template>
@@ -96,20 +91,11 @@
         <el-button type="success" @click="checkCustomsPayment">确 认</el-button>
       </span>
     </el-dialog>
-    <custom-import
-      dialogTitle="发票勾选"
-      :dialogVisible="dialogImportVisible"
-      @handleClose="handleImportClose"
-      @handleOk="handleImportOk"
-      downloadTemplateApi="/income/downExcel"
-      :downloadTemplateApiParams="{ type: 'HGJKS' }"
-      downloadTemplateName="发票勾选_导入模板"
-      :upApi="`/income/uploadHgjks/${nsrsbh}/${skssq}`"
-      importApi="/income/checkPreCheckHgjks"
-      upTitle="上传发票勾选数据"
-      effImport
-      :importColumns="importColumns"
-    ></custom-import>
+    <custom-import dialogTitle="发票勾选" :dialogVisible="dialogImportVisible" @handleClose="handleImportClose"
+      @handleOk="handleImportOk" downloadTemplateApi="/income/downExcel" :downloadTemplateApiParams="{ type: 'HGJKS' }"
+      downloadTemplateName="发票勾选_导入模板" :upApi="`/income/uploadHgjks/${nsrsbh}/${skssq}`"
+      importApi="/income/checkPreCheckHgjks" upTitle="上传发票勾选数据" effImport
+      :importColumns="importColumns"></custom-import>
   </div>
 </template>
 
@@ -141,17 +127,32 @@ export default {
       type: String,
       default: "",
     },
+    sfqkrzgx: {
+      type: String,
+      default: "",
+    },
   },
   data() {
+    const sfqkrzgx = this.sfqkrzgx
     return {
       dialogImportVisible: false, // 导入
       inputFplxMap,
       api: require("./Api"),
       param: {},
       loading: false,
+
       columns: [
-        { type: "selection", width: 50 },
+        {
+          type: "selection",
+          width: 50,
+          selectable: function (row, index) {
+            // 规则一：sfqkrzgx: 'N' 不校验是否入账, 'Y' 校验是否入账。为“N”时不需要校验第二条规则，可以直接勾选
+
+            return sfqkrzgx === 'N' || row.purchaserstatus === '42';
+          },
+        },
         { title: "序号", type: "index", width: 50 },
+        
         {
           title: "海关缴款书号码",
           width: 140,
@@ -198,7 +199,7 @@ export default {
         { title: "勾选时间", width: 130, dataIndex: "updateTime" },
         { title: "入账状态", width: 130, dataIndex: " purchaserstatus", slot: "purchaserstatus" },
         { title: "收票状态", width: 130, dataIndex: " spzt", slot: "spzt" },
-        { title: "转出状态", width: 130, dataIndex: "zczt" , slot: "zczt"},
+        { title: "转出状态", width: 130, dataIndex: "zczt", slot: "zczt" },
         // { title: "入账日期", width: 130, dataIndex: "createrName" },
         // { title: "入账属期", width: 130, dataIndex: "createrName" },
       ],
@@ -454,7 +455,7 @@ export default {
       console.log("ids----", ids, preCheck);
       try {
         this.loading = true;
-        const { code = "0", data } = await checkPreOneHgjks({ ids, preCheck,nsrsbh:this.nsrsbh });
+        const { code = "0", data } = await checkPreOneHgjks({ ids, preCheck, nsrsbh: this.nsrsbh });
         if (code === "0") {
           this.init();
         }
@@ -598,6 +599,7 @@ export default {
     checkSelectable(row) {
       // 规则一：sfqkrzgx: 'N' 不校验是否入账, 'Y' 校验是否入账。为“N”时不需要校验第二条规则，可以直接勾选
       // 规则二：row.purchaserstatus === 42 代表已入账，可以勾选，否则不能勾选
+      console.log('--this.sfqkrzgx--', this.sfqkrzgx)
       return this.sfqkrzgx === "N" || row.purchaserstatus === 42;
     },
     rowClcik(row, column, event) {
@@ -664,7 +666,7 @@ export default {
             this.reload();
           }
         })
-        .catch(() => {}); // 添加错误捕获
+        .catch(() => { }); // 添加错误捕获
     },
 
     // 预勾选导出

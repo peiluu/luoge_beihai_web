@@ -138,8 +138,13 @@ export default {
       type: String,
       default: "",
     },
+    sfqkrzgx: {
+      type: String,
+      default: "",
+    },
   },
   data() {
+    const sfqkrzgx = this.sfqkrzgx
     return {
       dialogImportVisible: false, // 导入
       inputFplxMap,
@@ -147,7 +152,12 @@ export default {
       param: {},
       loading: false,
       columns: [
-        { type: "selection", width: 50 },
+        { type: "selection", width: 50, 
+        selectable: function (row, index) {
+            // 规则一：sfqkrzgx: 'N' 不校验是否入账, 'Y' 校验是否入账。为“N”时不需要校验第二条规则，可以直接勾选
+
+            return sfqkrzgx === 'N' || row.purchaserstatus === '42';
+          },},
         { title: "序号", type: "index", width: 50 },
         {
           title: "勾选状态",

@@ -19,11 +19,11 @@
 
 
     <!-- 发票下载 -->
-    <Invoice v-show="level === '1'" :level="level" :currentSq="currentSq" :skssq="currentSq.dateValue"/>
+    <Invoice v-show="level === '1'" :level="level" :currentSq="currentSq" :skssq="currentSq.dateValue" :sfqkrzgx="sfqkrzgx"/>
     <!-- 海关缴款书 -->
-    <Customs v-show="level === '2'"  :level="level" :skssq="currentSq.dateValue" />
+    <Customs v-show="level === '2'"  :level="level" :skssq="currentSq.dateValue" :sfqkrzgx="sfqkrzgx"/>
     <!-- 代扣代缴完税凭证 -->
-    <Withhold v-show="level === '3'" :level="level" :skssq="currentSq.dateValue" />
+    <Withhold v-show="level === '3'" :level="level" :skssq="currentSq.dateValue" :sfqkrzgx="sfqkrzgx"/>
   </div>
 </template>
 <script>
@@ -33,7 +33,7 @@ import BtnTabs from '../components/BtnTabs.vue';
 import Invoice from './invoice/Index.vue';
 import Withhold from './withhold/Index.vue';
 import Customs from './customs/Index.vue';
-import { queryApplyStatisticsStatus } from './invoice/Api'
+import { queryApplyStatisticsStatus, getDetailById } from './invoice/Api'
 
 export default {
   name: 'InvoiceDeductionCheck',
@@ -47,7 +47,8 @@ export default {
   data() {
     return {
       level: '1',
-      applyStatisticsStatus: {}
+      applyStatisticsStatus: {},
+      sfqkrzgx: '',
     };
   },
   computed: {
@@ -68,9 +69,26 @@ export default {
         this.applyStatisticsStatus = data
       }
     },
+    async getSfqkrzgxById() {
+      if (!this.sfqkLoading) {
+        this.sfqkLoading = true;
+        setTimeout(() => {
+          this.sfqkLoading = false;
+        }, 1000);
+        try {
+          const { code = "0", data } = await getDetailById({
+            id: this.$route.query.taxBodyId,
+          });
+          this.sfqkrzgx = data.sfqkrzgx || null;
+        } catch (error) {
+          console.log("error", error);
+        }
+      }
+    },
   },
   activated(){
     this.level = null;
+    this.getSfqkrzgxById();
     this.$nextTick(()=>{
       this.level = '1';
     })
