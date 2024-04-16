@@ -1,7 +1,7 @@
 <template>
   <div class="com-withhold">
     <form-list
-      :columns="columns"
+      :columns="dynamicCol"
       :searchRow="searchList"
       :api="api"
       :param="param"
@@ -11,6 +11,7 @@
       @select="handleSelected"
       @selectAll="selectAll"
       @getTableData="getTableData"
+      @rowClick="rowClick"
       preCheck
       v-loading="loading"
       :tableCounterShow="true"
@@ -152,12 +153,6 @@ export default {
       param: {},
       loading: false,
       columns: [
-        { type: "selection", width: 50, 
-        selectable: function (row, index) {
-            // 规则一：sfqkrzgx: 'N' 不校验是否入账, 'Y' 校验是否入账。为“N”时不需要校验第二条规则，可以直接勾选
-
-            return sfqkrzgx === 'N' || row.purchaserstatus === '42';
-          },},
         { title: "序号", type: "index", width: 50 },
         {
           title: "勾选状态",
@@ -263,6 +258,16 @@ export default {
     nsrsbh() {
       return this.$route.query.nsrsbh;
     },
+    dynamicCol(){
+      return [
+        {
+          type: "selection",
+          width: 50,
+          selectable: this.checkSelectable,
+        },
+        ...this.columns
+      ]
+    }
   },
 
   methods: {
@@ -428,12 +433,17 @@ export default {
       // 规则二：row.purchaserstatus === 42 代表已入账，可以勾选，否则不能勾选
       return this.sfqkrzgx === "N" || row.purchaserstatus === 42;
     },
-    rowClcik(row, column, event) {
+    rowClick(row, column, event) {
       const f = this.checkSelectable(row);
       if (!f) {
         return;
       }
-      this.$refs.table.toggleRowSelection(row);
+      this.$refs.list.rowClick(row, column, event, true);
+      this.setPre({
+        ids: [row.id],
+        nsrsbh: this.nsrsbh,
+        preCheck: row.preCheck === "Y" ? "N" : "Y",
+      });
     },
 
     dateFormat(fmt, val) {
