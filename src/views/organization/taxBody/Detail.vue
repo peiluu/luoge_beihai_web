@@ -60,7 +60,7 @@
         </el-form-item> -->
         <el-form-item label="所属省份" prop="province">
           <el-select v-model="form.province" placeholder="请选择" filterable clearable>
-            <el-option v-for="(item, index) in provincesEnmu" :key="index" :label="item.label" :value="item.value">
+            <el-option v-for="(item, index) in taxAreaList" :key="index" :label="item" :value="item">
             </el-option>
           </el-select>
         </el-form-item>
@@ -96,12 +96,12 @@
           <el-input v-model="form.oldBank" placeholder="请输入" maxlength="90" />
         </el-form-item>
 
-        <el-form-item label="主管税务局" prop="taxArea">
+        <!--<el-form-item label="主管税务局" prop="taxArea">
           <el-select v-model="form.taxArea" placeholder="请选择" filterable clearable>
             <el-option v-for="(item, index) in taxAreaList" :key="index" :label="item" :value="item">
             </el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item>-->
         <!-- <div>
           <el-form-item label="是否为总/分公司" prop="sfzfjg">
             <el-radio v-model="form.sfzfjg" label="N">一般企业</el-radio>
@@ -275,6 +275,7 @@ export default {
         zgsId: [{ required: true, message: "请选择", trigger: "blur" }],
         areaList: [{ required: true, message: "请选择", trigger: "blur" }],
         withdrawalDate: [{ required: true, message: "请选择", trigger: "blur" }],
+        province:[{ required: true, message: "请选择", trigger: "blur" }],
       },
       saveLoading: false
     };
