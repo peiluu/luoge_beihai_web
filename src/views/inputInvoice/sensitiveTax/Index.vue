@@ -305,6 +305,7 @@ export default {
       } catch (error) {}
     },
     handleAdd(item) {
+      console.log(item)
       if (item.id) {
         this.editForm = {...item};
       }
@@ -341,7 +342,6 @@ export default {
       } catch (error) {}
     },
     handleAddClose() {
-      this.addVisible = false;
       this.editForm = {
         ssflbm: '',
         spfwfljc: '',
@@ -354,6 +354,8 @@ export default {
       this.expandedKeys = null;
       this.$refs.codeTree.setCheckedKeys([]);
       this.$refs.editForm.resetFields();
+
+      this.addVisible = false;
     },
     handleSelection(e) {
       this.selections = e;
