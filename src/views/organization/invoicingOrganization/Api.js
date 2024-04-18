@@ -88,3 +88,8 @@ export const exportOrganizationInfo = data =>
 //  * @description 获取当前用户可以开票的组织（不分页）
 //  */
 // export const getOrgList = data => http.get(`${config.host}/taxBody/getListAll`, data);
+
+  /**
+ * @description 获取选中的主体基本信息
+ */
+export const getOrgInfo = data => http.post(`${config.host}/taxBody/getDetailById`, data);
