@@ -243,7 +243,7 @@ export default {
     addOrEdit(row = {}) {
       // console.log('----row----', row);
       this.editForm = {...row};
-      if(item.sxrqz)this.$set(this.rules, 'sxrqq', [{ required: true, message: '请选择', trigger: 'change' }])
+      if(row.sxrqz)this.$set(this.rules, 'sxrqq', [{ required: true, message: '请选择', trigger: 'change' }])
       this.addVisible = true;
     },
     // 批量删除
