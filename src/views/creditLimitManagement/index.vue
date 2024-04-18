@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content" :style="'min-height: ' + contentHeight + 'px;'">
     <el-form :inline="true">
       <el-form-item label="纳税主体" prop="nsrsbh">
         <el-select v-model="form.nsrsbh" placeholder="请选择" @change="getInfo" filterable style="width: 280px; marginRight: 12px">
@@ -30,11 +30,11 @@
     <!-- 按钮行 -->
     <div class="content-tools">
       <div class="tools-left">
-      <!-- ，可延用，发票数量低于设置比例(默认10%)时，自动下载发票 -->
-        <div><i class="el-icon-warning" /> 发票额度以月度更新，不可延用;发票数量以年度更新，可延用</div>
-        <div><i class="el-icon-warning" /> 当存在临时额度时，需更新</div>
+        <div><i class="el-icon-warning" /> 发票额度以月度更新;发票数量以年度更新;</div>
+        <!-- <div><i class="el-icon-warning" /> 当存在临时额度时，需更新</div> -->
       </div>
       <el-button @click="updateCredit" type="success">授信额度更新</el-button>
+      <el-button @click="handleActionCredit" type="success">下载或退回授信额度</el-button>
     </div>
 
     <!-- 数据表格头部 -->
@@ -94,6 +94,7 @@
     >
       <HistoricalDetails :detailInfo="detailInfo"/>
     </el-dialog>
+    <app-down-credit v-if="visible" :visible.sync="visible" title="下载或退回授信额度" :dataObj="dataObj"></app-down-credit>
   </div>
 </template>
 
@@ -101,11 +102,13 @@
 import moment from "moment";
 import { getCurrentMonth } from "@/utils/tool";
 import { getCreditInfo, getListByUser, creditCredit, creditCode, updateCredit } from './Api'
-import HistoricalDetails from './historicalDetails/Index.vue'
+import HistoricalDetails from './historicalDetails/Index.vue';
+import AppDownCredit from './downCredit/index.vue'
 export default {
   name: 'CreditLimitHandle',
   components: {
-    HistoricalDetails
+    HistoricalDetails,
+    AppDownCredit
   },
   data() {
     return {
@@ -114,17 +117,17 @@ export default {
       // 额度数据列表
       quotaDataList: [
         {
-          label: '本期授信总额度',
+          label: '可用授信额度',
           propKey: 'bqzsxed',
           unit: '元',
         },
         {
-          label: '本期已用授信额度',
+          label: '已下载授信额度',
           propKey: 'bqkysxed',
           unit: '元',
         },
         {
-          label: '本期剩余授信额度',
+          label: '已下载未使用授信额度',
           propKey: 'bqsysxed',
           unit: '元',
         },
@@ -159,9 +162,16 @@ export default {
       detailInfo: {},
       loading: true,
       tableLoading: true,
+      visible:false,
+      dataObj:{
+        nszt: null
+      }
     };
   },
   computed: {
+    contentHeight() {
+      return window.innerHeight - 132;
+    },
     height() {
       return window.innerHeight - 406;
     },
@@ -240,6 +250,12 @@ export default {
         }
       })
       
+    },
+    /*操作授信额度 */
+    handleActionCredit(){
+     
+      this.dataObj.nszt = this.form.nsrsbh || null;
+      this.visible = true;
     },
     // 获取数据
     getInfo() {
