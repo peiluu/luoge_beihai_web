@@ -1,19 +1,19 @@
 <template>
   <div class="main-content">
-    <el-tabs v-model="activeName">
+    <el-tabs v-model="activeName" @tab-click="handleChange">
       <el-tab-pane label="增值税发票" name="1">
         <article>
-          <lg-vat-invoice></lg-vat-invoice>
+          <lg-vat-invoice ref="pool1"></lg-vat-invoice>
         </article>
       </el-tab-pane>
       <el-tab-pane label="海关缴款书" name="2">
         <article>
-          <lg-customs-pay></lg-customs-pay>
+          <lg-customs-pay ref="pool2"></lg-customs-pay>
         </article>
       </el-tab-pane>
       <el-tab-pane label="代扣代缴完税凭证" name="3">
         <article>
-          <lg-payment-behalf></lg-payment-behalf>
+          <lg-payment-behalf ref="pool3"></lg-payment-behalf>
         </article>
       </el-tab-pane>
     </el-tabs>
@@ -168,6 +168,9 @@ export default {
         
       }
     },
+    handleChange(e){
+      this.$refs[`pool${e.name}`].refDoLayout();
+    }
   },
   created() {},
   mounted() {
@@ -183,7 +186,9 @@ export default {
   },
   beforeDestroy() {},
   destroyed() {},
-  activated() {},
+  activated() {
+    this.handleChange({name: this.activeName})
+  },
 };
 </script>
 <style scoped lang="scss">

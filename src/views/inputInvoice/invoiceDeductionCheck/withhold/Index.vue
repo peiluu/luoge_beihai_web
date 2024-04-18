@@ -434,16 +434,16 @@ export default {
       return this.sfqkrzgx === "N" || row.purchaserstatus === 42;
     },
     rowClick(row, column, event) {
-      const f = this.checkSelectable(row);
-      if (!f) {
-        return;
-      }
-      this.$refs.list.rowClick(row, column, event, true);
-      this.setPre({
-        ids: [row.id],
-        nsrsbh: this.nsrsbh,
-        preCheck: row.preCheck === "Y" ? "N" : "Y",
-      });
+      // const f = this.checkSelectable(row);
+      // if (!f) {
+      //   return;
+      // }
+      // this.$refs.list.rowClick(row, column, event, true);
+      // this.setPre({
+      //   ids: [row.id],
+      //   nsrsbh: this.nsrsbh,
+      //   preCheck: row.preCheck === "Y" ? "N" : "Y",
+      // });
     },
 
     dateFormat(fmt, val) {
