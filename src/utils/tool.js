@@ -219,14 +219,14 @@ export function dateFormat(fmt, value) {
  */
  const previewPdf = (data, url = '/previewPdf') => {
     const href = `${config.host}${url}/${data.id}`;
-    const openObj = window.open(href);
-    const loop = setInterval(() => {
-      if (window.closed) {
-        clearInterval(loop);
-      } else {
-        openObj.document.title = '发票预览';
-      }
-    }, 1000);
+    const openObj = window.open(href,'发票预览');
+    // const loop = setInterval(() => {
+    //   if (window.closed) {
+    //     clearInterval(loop);
+    //   } else {
+    //     openObj.document.title = '发票预览';
+    //   }
+    // }, 1000);
   };
 
   /**
