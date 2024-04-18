@@ -82,6 +82,7 @@
 import TableCounter from './TableCounter.vue';
 import FormSearch from "./FormSearch.vue";
 import cloneDeep from 'lodash/cloneDeep';
+import { update } from '../views/addedTaxManageNormal/taxDeductionCalculationtTable/Api';
 export default {
   name: "FormList",
   components: {
@@ -528,6 +529,7 @@ export default {
     }
   },
   updated(){
+    console.log("update")
     this.$refs['table'].doLayout()
   }
 };

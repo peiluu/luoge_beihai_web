@@ -359,6 +359,10 @@ export default {
   mounted() {
     this.getLeftTree();
   },
+  activated(){
+    const { nsrsbh } = this;
+    nsrsbh && this.$refs.list.handleGetData({ nsrsbh }); // 查询右侧list
+  },
 
   computed: {
     height() {

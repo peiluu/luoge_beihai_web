@@ -55,7 +55,6 @@
         :height="height"
         border
         stripe
-        @row-click="rowClick"
         :header-cell-style="{
           fontWeight: 400,
           borderTop: '1px solid #adb4bc',
@@ -596,14 +595,14 @@ export default {
       };
       this.handleGetData(this.searchParam);
     },
-    rowClick(row, column, event) {
-      const f = this.checkSelectable(row);
-      if (!f) {
-        return;
-      }
-      this.$refs.table.toggleRowSelection(row);
-      this.setPre({ids:[row.id],nsrsbh: this.nsrsbh, preCheck:row.preCheck === 'Y'?'N':'Y'});
-    },
+    // rowClick(row, column, event) {
+    //   const f = this.checkSelectable(row);
+    //   if (!f) {
+    //     return;
+    //   }
+    //   this.$refs.table.toggleRowSelection(row);
+    //   this.setPre({ids:[row.id],nsrsbh: this.nsrsbh, preCheck:row.preCheck === 'Y'?'N':'Y'});
+    // },
     dateFormat(fmt, val) {
       return moment(val).format(fmt);
     },

@@ -644,6 +644,14 @@ export default {
       }else{
        return option.find(k=> k.value === val).label
       }
+    },
+    refDoLayout(b){
+      !b && (this.loading = true);
+      this.$nextTick(()=>{
+        this.$refs.bottomTableRef && this.$refs.bottomTableRef.doLayout();
+        this.$refs.tableRef && this.$refs.tableRef.doLayout();
+        this.loading = false;
+      })
     }
   },
   inject: ['optionList'],
@@ -655,12 +663,13 @@ export default {
   beforeMount() {},
   beforeUpdate() {},
   updated() {
-    this.$refs.bottomTableRef.doLayout();
-    this.$refs.tableRef.doLayout();
+    this.refDoLayout(true);
   },
   beforeDestroy() {},
   destroyed() {},
-  activated() {},
+  activated() {
+    console.log(1233333)
+  },
 };
 </script>
 <style scoped lang="scss">
