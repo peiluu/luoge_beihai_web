@@ -30,7 +30,7 @@
     <!-- 按钮行 -->
     <div class="content-tools">
       <div class="tools-left">
-        <div><i class="el-icon-warning" /> 发票额度以月度更新，不可延用;发票数量以年度更新，可延用</div>
+        <div><i class="el-icon-warning" /> 发票额度以月度更新;发票数量以年度更新;</div>
         <!-- <div><i class="el-icon-warning" /> 当存在临时额度时，需更新</div> -->
       </div>
       <el-button @click="updateCredit" type="success">授信额度更新</el-button>
