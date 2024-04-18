@@ -205,7 +205,7 @@ export default {
           type: "select",
           options: []
         },
-        {
+        /*{
           label: "所属省份",
           key: "province",
           val: '',
@@ -218,7 +218,7 @@ export default {
           val: '',
           type: "select",
           options: [{ label: '全部', value: '' }, ...cityEnum]
-        },
+        },*/
         // {
         //   label: "所属省市区",
         //   key: "areaList",

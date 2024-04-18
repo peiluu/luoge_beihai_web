@@ -337,7 +337,7 @@ export default {
     handleReBuildSearchParam() {
       // const param = { ...this.param, ...this.formSearchParam }
       const { param } = this
-      console.log('param', param);
+      // console.log('param', param);
       Object.keys(param || {}).map(key => {
         if (param[key] != null) {
           if (param[key].length > 0) {

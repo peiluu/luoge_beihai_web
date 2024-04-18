@@ -6,6 +6,7 @@
       :api="api"
       :height="height"
       ref="list"
+      @getSearchParam="getSearchParam"
       @handleSelection="handleSelection"
     >
       <template #gxfsf="row"> {{ row.data.gxfsf == 0 ? '销售方' : '购买方' }}</template>
@@ -79,10 +80,10 @@
           <el-input v-model="editForm.zrr" placeholder="请输入" />
         </el-form-item>
         <el-form-item label="生效日期" prop="sxrqq">
-          <el-date-picker value-format="yyyy-MM-dd" v-model="editForm.sxrqq" type="date" placeholder="请选择" />
+          <el-date-picker value-format="yyyy-MM-dd" v-model="editForm.sxrqq" type="date" placeholder="请选择" @change="handleSxrqq"/>
         </el-form-item>
         <el-form-item label="失效日期" prop="sxrqz">
-          <el-date-picker value-format="yyyy-MM-dd" v-model="editForm.sxrqz" type="date" placeholder="请选择" />
+          <el-date-picker value-format="yyyy-MM-dd" v-model="editForm.sxrqz" type="date" placeholder="请选择" :picker-options="{disabledDate}" @change="handleSxrqz"/>
         </el-form-item>
         <el-form-item label="备注" prop="bz" class="full-item">
           <el-input v-model="editForm.bz" type="textarea" :rows="2" maxlength="100" show-word-limit placeholder="请输入" />
@@ -192,6 +193,7 @@ export default {
         nsrmc: [{ required: true, message: '请输入', trigger: 'change' }],
         qylb: [{ required: true, message: '请选择', trigger: 'change' }],
         fxlx: [{ required: true, message: '请选择', trigger: 'change' }],
+        sxrqq: [{ required: false, message: '请选择', trigger: 'change' }],
       },
       selections: [],
     };
@@ -208,6 +210,24 @@ export default {
   },
 
   methods: {
+    handleSxrqq(v){
+      if(this.editForm.sxrqz && new Date(this.editForm.sxrqz).getTime() < new Date(v).getTime()){
+        // 生效日期不可以大于失效日期
+        this.$set(this.editForm, 'sxrqz', null)
+      }
+    },
+    handleSxrqz(v){
+      if(v){
+        this.$set(this.rules, 'sxrqq', [{ required: true, message: '请选择', trigger: 'change' }])
+      } else {
+        this.$set(this.rules, 'sxrqq', [{ required: false, message: '请选择', trigger: 'change' }])
+        this.$refs.editForm.clearValidate('sxrqq');
+      }
+    },
+    disabledDate(time) {
+      // 限制失效日期不可以小于生效日期
+      return this.editForm.sxrqq ? time.getTime() < new Date(this.editForm.sxrqq + ' 00:00:00').getTime(): false;
+    },
     // 导入
     importExcel() {
       this.dialogImportVisible = true;
@@ -221,8 +241,9 @@ export default {
     },
     // 新增/修改
     addOrEdit(row = {}) {
-      console.log('----row----', row);
-      this.editForm = row;
+      // console.log('----row----', row);
+      this.editForm = {...row};
+      if(item.sxrqz)this.$set(this.rules, 'sxrqq', [{ required: true, message: '请选择', trigger: 'change' }])
       this.addVisible = true;
     },
     // 批量删除
@@ -277,12 +298,19 @@ export default {
           apiFn = updateMghw;
           params.id = this.editForm.id;
         }
-        const { code = '' } = await apiFn(params);
-        if (code === '0') {
-          this.$message.success('操作成功');
-          this.handleAddClose();
-          this.reloadList();
+        try {
+          const { code = '' } = await apiFn(params);
+          if (code === '0') {
+            this.$message.success('操作成功');
+            this.handleAddClose();
+            this.reloadList();
+          }
+        } catch (error) {
+          
+        } finally {
+          this.saveLoading = false;
         }
+        
       });
     },
     reloadList() {
@@ -309,6 +337,9 @@ export default {
         reqData: { ...this.queryParam },
         fileName,
       });
+    },
+    getSearchParam(param) {
+      this.queryParam = param;
     },
   },
 };
