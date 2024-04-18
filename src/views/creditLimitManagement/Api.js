@@ -24,3 +24,7 @@ export const creditCode = data => postJSON(`${config.host}/InvoiceCredit/creditC
  * @description 授信额度更新
  */
 export const updateCredit = data => postJSON(`${config.host}/InvoiceCredit/updateCredit/${data.nsrsbh}`, data, null, true);
+/**
+ * @description 操作授信额度
+ */
+export const actionCredit = data => postJSON(`${config.host}/InvoiceCredit/downloadQuota`, data, null, true);
