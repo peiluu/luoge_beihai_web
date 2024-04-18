@@ -2471,7 +2471,7 @@ export default {
               //保存
               that.form.fpmxList = tableData;
               that.api.saveInvoicePreview(that.form).then((res) => {
-                if (res.code === 0) {
+                if (['0',0].includes(res.code)) {
                   window.open(
                     dynamicUrlMap[process.env.NODE_ENV].frontUrl +
                       "#/invoice/preview?fpqqlsh=" +

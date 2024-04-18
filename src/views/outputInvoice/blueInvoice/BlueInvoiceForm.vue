@@ -3244,10 +3244,10 @@ export default {
                                   this.$emit("handeDoneOk",{type:'makeInvoice',data:res.data})
                                 }
                               }else{
-                                that.$notify({
-                                  message: res.msg,
-                                  type: "error",
-                                });
+                                // that.$notify({
+                                //   message: res.msg,
+                                //   type: "error",
+                                // });
                               }
                             })
                             .finally(() => {
@@ -3284,25 +3284,25 @@ export default {
                             }
                           }else{
                            
-                            that.$notify({
-                              message: res.msg,
-                              type: "error",
-                            });
+                            // that.$notify({
+                            //   message: res.msg,
+                            //   type: "error",
+                            // });
                           }
                         }).catch((e)=>{
                          
-                          that.$notify({
-                              message: e.msg,
-                              type: "error",
-                            });
+                          // that.$notify({
+                          //     message: e.msg,
+                          //     type: "error",
+                          //   });
                           that.loading = false;
                         });
                       }
                     }else{
-                      that.$notify({
-                        message: result.msg,
-                        type: "error",
-                      });
+                      // that.$notify({
+                      //   message: result.msg,
+                      //   type: "error",
+                      // });
                       that.loading = false;
                     }
                   }).catch((e)=>{
@@ -3324,10 +3324,10 @@ export default {
                       if(this.detailInfo.isFormInvoiced)this.$emit("handeDoneOk");
                     }else{
                       
-                      that.$notify({
-                        message: res.msg,
-                        type: "error",
-                      });
+                      // that.$notify({
+                      //   message: res.msg,
+                      //   type: "error",
+                      // });
                     }
                     
                   }).finally(()=>{
