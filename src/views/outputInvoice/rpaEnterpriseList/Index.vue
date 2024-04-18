@@ -252,7 +252,7 @@ export default {
   },
   computed: {
     height() {
-      return window.innerHeight - 250;
+      return window.innerHeight - 320;
     },
   },
 };

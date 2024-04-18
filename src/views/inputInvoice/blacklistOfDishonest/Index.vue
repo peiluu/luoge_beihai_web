@@ -221,7 +221,7 @@ export default {
         this.$set(this.rules, 'sxrqq', [{ required: true, message: '请选择', trigger: 'change' }])
       } else {
         this.$set(this.rules, 'sxrqq', [{ required: false, message: '请选择', trigger: 'change' }])
-        this.$refs.editForm.clearValidate('sxrqq');
+        this.$refs.editForm && this.$refs.editForm.clearValidate('sxrqq');
       }
     },
     disabledDate(time) {
@@ -243,7 +243,7 @@ export default {
     addOrEdit(row = {}) {
       // console.log('----row----', row);
       this.editForm = {...row};
-      if(item.sxrqz)this.$set(this.rules, 'sxrqq', [{ required: true, message: '请选择', trigger: 'change' }])
+      this.handleSxrqz(row.sxrqz)
       this.addVisible = true;
     },
     // 批量删除
