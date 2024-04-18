@@ -6,7 +6,8 @@
         <div class="content-section">
           <!-- <div> -->
             <el-form-item label="所属主体" prop="taxBodyId">
-              <el-select v-model="form.taxBodyId" placeholder="请选择" filterable clearable @change="getTaxBodyId">
+              <el-select v-model="form.taxBodyId" placeholder="请选择" filterable clearable 
+              @change="getTaxBodyId">
                 <el-option v-for="item in taxBodyList" :label="item.nsrmc" :value="item.id" :key="item.id" />
               </el-select>
             </el-form-item>
@@ -107,7 +108,7 @@
 <script>
 import { regCollection } from '@/config/constant.js';
 import TaxControlEquipment from './TaxControlEquipment.vue';
-import { getListAll, updateOrg, selectKpr, saveOrg, loadOrgDetail, getOrgList } from "./Api";
+import { getListAll, updateOrg, selectKpr, saveOrg, loadOrgDetail, getOrgList, getOrgInfo, } from "./Api";
 
 /**
  * @description  发票确认单 - 可编辑
@@ -238,11 +239,14 @@ export default {
         })
       })
     },
-    getTaxBodyId() {
+    getTaxBodyId(val) {
       const obj = this.taxBodyList.find((item) => item.id == this.form.taxBodyId) || {}
       this.form.nsrsbh = obj.nsrsbh
       this.form.isDigital = obj.isDigital
       this.getOrg();
+      if((val??'') !==''){
+        this.handleGetInfo(val)
+      }
     },
     async getOrg() {
       try {
@@ -262,6 +266,22 @@ export default {
       } catch (error) {
         
       }
+    },
+    async handleGetInfo(val){
+      let data = {id:val??''}
+      try{
+        const res = await getOrgInfo(data);
+        if([0,'0'].includes(res.code)){
+          console.log(res,"2")
+          const {address,bank,bankAccount,phone,kpr,fhr,skr,} = res.data;
+          this.billingStationAddDto = {
+            address,invoicePhone:phone,bank,bankAccount,kpr,fhr,skr,
+          }
+        }
+      }catch(err){
+        console.error(err);
+      }
+        
     },
     handleOrg(e){
       const org = this.selectOrgList.find(item=> item.value === e)

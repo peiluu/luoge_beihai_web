@@ -257,7 +257,7 @@ export default {
         this.$set(this.rules, 'sxrqq', [{ required: true, message: '请选择', trigger: 'change' }])
       } else {
         this.$set(this.rules, 'sxrqq', [{ required: false, message: '请选择', trigger: 'change' }])
-        this.$refs.editForm.clearValidate('sxrqq');
+        this.$refs.editForm && this.$refs.editForm.clearValidate('sxrqq');
       }
     },
     disabledDate(time) {
@@ -305,11 +305,11 @@ export default {
       } catch (error) {}
     },
     handleAdd(item) {
-      console.log(item)
+      // console.log(item)
       if (item.id) {
         this.editForm = {...item};
       }
-      if(item.sxrqz)this.$set(this.rules, 'sxrqq', [{ required: true, message: '请选择', trigger: 'change' }])
+      this.handleSxrqz(item.sxrqz)
       this.addVisible = true;
     },
     del() {
@@ -352,9 +352,8 @@ export default {
       };
       this.codeInfo = {};
       this.expandedKeys = null;
-      this.$refs.codeTree.setCheckedKeys([]);
+      this.$refs.codeTree && this.$refs.codeTree.setCheckedKeys([]);
       this.$refs.editForm.resetFields();
-
       this.addVisible = false;
     },
     handleSelection(e) {
