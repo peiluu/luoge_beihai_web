@@ -81,6 +81,7 @@
             v-loading="loading"
             :height="height"
             row-key="id"
+            ref="topTableRef"
           >
             <el-table-column type="selection" width="45" fixed="left">
             </el-table-column>
@@ -488,6 +489,14 @@ export default {
       }else{
        return option.find(k=> k.value === val)?.label || ''
       }
+    },
+    refDoLayout(b){
+      !b && (this.loading = true);
+      this.$nextTick(()=>{
+        this.$refs.bottomTableRef && this.$refs.bottomTableRef.doLayout();
+        this.$refs.topTableRef && this.$refs.topTableRef.doLayout();
+        this.loading = false;
+      })
     }
   },
   inject: ['optionList'],
@@ -498,9 +507,9 @@ export default {
   beforeCreate() {},
   beforeMount() {},
   beforeUpdate() {},
-  updated() {
-    this.$refs.bottomTableRef.doLayout();
-  },
+  // updated() {
+  //   this.$refs.bottomTableRef.doLayout();
+  // },
   beforeDestroy() {},
   destroyed() {},
   activated() {},
