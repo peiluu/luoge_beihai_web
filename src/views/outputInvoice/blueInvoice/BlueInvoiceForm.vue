@@ -522,7 +522,7 @@
                     min-width="120"
                     field="ggxh"
                     title="规格型号"
-                    :edit-render="{}"
+                    :edit-render="{name: '$input'}"
                   >
                     <template #edit="{ row, rowIndex, $rowIndex }">
                       <vxe-input
@@ -543,7 +543,7 @@
                     min-width="80"
                     field="dw"
                     title="单位"
-                    :edit-render="{}"
+                    :edit-render="{name: '$input'}"
                   >
                     <template #edit="{ row, rowIndex, $rowIndex }">
                       <vxe-input
@@ -564,13 +564,13 @@
                     min-width="80"
                     field="sl"
                     title="数量"
-                    :edit-render="{}"
+                    :edit-render="{name: '$input'}"
                   >
                     <template #edit="{ row, rowIndex, $rowIndex }">
                       <vxe-input
                         :disabled="form.tdys == '03' || !canEdit"
                         v-model="row.sl"
-                        type="text"
+                        type="number"
                         @blur="calcGoodsPrice(row, $rowIndex, 'sl')"
                         v-if="row.fphxz == '00'"
                       ></vxe-input>
@@ -583,7 +583,7 @@
                     :title="
                       form.sfhs == 'Y' ? '单价（含税）' : '单价（不含税）'
                     "
-                    :edit-render="{}"
+                    :edit-render="{name: '$input'}"
                   >
                     <template #edit="{ row, rowIndex, $rowIndex }">
                       <vxe-input
@@ -593,7 +593,7 @@
                           !canEdit
                         "
                         v-model="row.dj"
-                        type="text"
+                        type="number"
                         @blur="calcGoodsPrice(row, $rowIndex, 'dj')"
                         v-if="row.fphxz == '00'"
                       ></vxe-input>
@@ -606,7 +606,7 @@
                     :title="
                       form.sfhs == 'Y' ? '金额（含税）' : '金额（不含税）'
                     "
-                    :edit-render="{}"
+                    :edit-render="{name: '$input'}"
                   >
                     <template #edit="{ row, rowIndex, $rowIndex }">
                       <template v-if="row.fphxz == '00'">
@@ -615,14 +615,15 @@
                           v-if="!isBlank(form.cezslxDm)"
                           readonly
                           v-model="row.je"
-                          type="text"
+                          type="number"
                           @click="showCezsDlg(row)"
                         ></vxe-input>
                         <vxe-input
                           :disabled="!canEdit"
                           v-else
                           v-model="row.je"
-                          type="text"
+                          type="number"
+                          min="0"
                           @blur="calcGoodsPrice(row, $rowIndex, 'je')"
                         ></vxe-input>
                       </template>
@@ -968,8 +969,10 @@
       height="600px"
     >
       <!--客户档案-->
-      <div style="width: 73%">
-        <vxe-toolbar ref="buyerToolbar" custom>
+      <!-- 20240418 按鑫哥要求，暂时注释常用客户 -->
+      <!-- <div style="width: 73%"> -->
+      <div>
+        <vxe-toolbar ref="buyerToolbar" :custom="false">
           <template #buttons>
             <vxe-input
               @keyup.enter.native="getCustomerPage"
@@ -1045,7 +1048,8 @@
         </vxe-pager>
       </div>
       <!--常用客户-->
-      <div
+      <!-- 20240418 按鑫哥要求，暂时注释常用客户 -->
+      <!-- <div
         class="frenquent-customer"
         :style="frequentExpand ? 'width: 73%;' : 'width: 26%;'"
       >
@@ -1129,7 +1133,7 @@
           @page-change="handleFrequentCustomerPageChange"
         >
         </vxe-pager>
-      </div>
+      </div> -->
       <div slot="footer">
         <el-button size="mini" @click="closeCustomerDlg">关闭</el-button>
         <el-button type="success" size="mini" @click="addBuyerToCustomer"
@@ -2216,6 +2220,7 @@ export default {
       }
     },
     validateGoodsJe({ cellValue }) {
+      console.log('--validateGoodsJe--', cellValue)
       if (parseFloat(cellValue) <= 0) {
         return new Error("明细金额需要大于0!");
       }
@@ -2468,6 +2473,7 @@ export default {
      */
     calcGoodsPrice(row, rowIndex, column) {
       // column sl, dj, je, slv
+      console.log('---calcGoodsPrice---',column, row)
       switch (column) {
         // 改变数量会影响金额、单价、税额
         case "sl":
@@ -2484,7 +2490,7 @@ export default {
         // 改变单价, 会改变数量、金额，税额
         case "dj":
           // 如果但是金额存在，数量不存在
-          if (row.je && row.dj != 0 && !row.sl) {
+          if (row.je && row.dj && row.dj != 0 && !row.sl) {
             // 数量 = 金额 / 单价
             row.sl = Calc.Div(row.je || 0, row.dj, 10);
           } else if (row.sl) {
@@ -3052,7 +3058,7 @@ export default {
       this.buyerVisible = true;
       this.$nextTick(() => {
         this.$refs.buyerTable.connect(this.$refs.buyerToolbar);
-        this.$refs.frequentTable.connect(this.$refs.frequentToolbar);
+        // this.$refs.frequentTable.connect(this.$refs.frequentToolbar);
       });
       this.getCustomerPage();
       this.getFrequentCustomerPage();
@@ -3108,7 +3114,7 @@ export default {
       columnIndex,
       $columnIndex,
     }) {
-      this.$refs.frequentTable.clearRadioRow();
+      // this.$refs.frequentTable.clearRadioRow();
       this.$refs.buyerTable.setRadioRow(row);
     },
     frequentClickEvent({
@@ -3120,12 +3126,12 @@ export default {
       $columnIndex,
     }) {
       this.$refs.buyerTable.clearRadioRow();
-      this.$refs.frequentTable.setRadioRow(row);
+      // this.$refs.frequentTable.setRadioRow(row);
     },
     addBuyerToCustomer() {
       let selectedRow =
-        this.$refs.buyerTable.getRadioRecord() ||
-        this.$refs.frequentTable.getRadioRecord();
+        this.$refs.buyerTable.getRadioRecord();// ||
+        // this.$refs.frequentTable.getRadioRecord();
        
       this.buyerVisible = false;
       
