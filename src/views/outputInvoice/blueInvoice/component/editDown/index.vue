@@ -233,6 +233,7 @@ export default {
       const { row, column } = this;
       const cellValue = row[column.property];
       this.loading = true;
+      this.tablePage.currentPage = 1;
       this.queryProductProfile();
     }, 500),
     // 展示商品搜索弹窗
