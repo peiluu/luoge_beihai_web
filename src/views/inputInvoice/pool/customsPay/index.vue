@@ -497,11 +497,11 @@ export default {
       }
     },
     refDoLayout(b){
-      !b && (this.loading = true);
+      // !b && (this.loading = true);
       this.$nextTick(()=>{
         this.$refs.bottomTableRef && this.$refs.bottomTableRef.doLayout();
         this.$refs.topTableRef && this.$refs.topTableRef.doLayout();
-        this.loading = false;
+        // this.loading = false;
       })
     }
   },
