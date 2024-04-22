@@ -152,7 +152,7 @@ export default {
           align: "center",
         },
         // { title: "入账状态", width: 120, dataIndex: 'rzzt' },
-        { title: "填发日期", width: 180, dataIndex: "tfrq" },
+        { title: "填发日期", width: 180, dataIndex: "tfrq", slot: "tfrq" },
         {
           title: "有效抵扣税额",
           width: 150,

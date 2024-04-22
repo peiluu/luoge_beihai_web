@@ -22,6 +22,9 @@
       '已入账撤销' : '' }}</template> -->
       <template #fplx="{ data }"> {{ inputFplxMap[data.fplx] }} </template>
       <template #fpzt="{ data }">{{ data.fpzt ? fpztMap[data.fpzt] : '' }} </template>
+      <template #tfrq="{ data }">
+        {{ data.tfrq ? dateFormat("YYYY-MM-DD", data.tfrq) : "" }}
+      </template>
       <template #bdklx="{ data, index }">
         <span v-if="data.cljg == '01'">{{ data.bdklx ? (data.bdklx == '5' ? data.bdkyy : bdklxMap[data.bdklx]) : '' }}</span>
         <span v-else class="column-text" @click.stop="selectBdklx(data, index)">{{
