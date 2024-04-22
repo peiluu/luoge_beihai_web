@@ -2053,13 +2053,13 @@ export default {
           }
           this.nameLoading = true;
           let params = {}
-          let fn = ''
+          let fn = this.api.getCustomerSelect
           if(this.form.gmfzrrbz === 'Y'){
             params = {...this.frequentCustomerQuery}
-            fn = this.api.getFrequentCustomerPage
+            // fn = this.api.getFrequentCustomerPage
           } else {
             params = { ...this.customerQuery}
-            fn = this.api.getCustomerPage
+            // fn = this.api.getCustomerPage
           }
           params = {
             ...params, 

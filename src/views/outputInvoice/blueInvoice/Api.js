@@ -26,6 +26,12 @@ export const getOrgDetail = data => postJSON(`${config.host}/taxBody/detailByOrg
  */
 export const getCustomerPage = data => postJSON(`${config.host}/Customer/getCustomerPage`, data)
 /**
+ * 客户档案
+ * @param data
+ * @returns {*}
+ */
+export const getCustomerSelect = data => postJSON(`${config.host}/Customer/getCustomerSelect`, data)
+/**
  * 常用客户
  * @param data
  * @returns {*}
