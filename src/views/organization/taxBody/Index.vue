@@ -410,15 +410,24 @@ export default {
     async setIsDigital() {
       this.$refs["ruleForm"].validate(async valid => {
         if (!valid) return;
-        this.digitalLoading = true;
-        const { code = '', msg } = await setIsDigital(this.form);
-        this.digitalLoading = false;
-        if (code === '0') {
-          this.$message.success('操作成功');
-          this.dialogVisible = false
-          this.getList();
-        } else {
-          this.$message.error(msg || '操作失败')
+        if (this.form.isDigital === 'Y' && this.form.djkpfs == '1' && this.form.confirmDzswjmm !== this.form.dzswjmm) {
+          this.$message.warning('两次输入的密码不一致！请重新输入');
+          return
+        }
+        try {
+          this.digitalLoading = true;
+          const { code = '', msg } = await setIsDigital(this.form);
+          if (code === '0') {
+            this.$message.success('操作成功');
+            this.dialogVisible = false
+            this.getList();
+          } else {
+            this.$message.error(msg || '操作失败')
+          }
+        } catch (error) {
+          console.log(error)
+        } finally {
+          this.digitalLoading = false;
         }
       })
     },

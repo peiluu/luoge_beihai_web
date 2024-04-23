@@ -14,11 +14,20 @@
         {{ data.dzswjsf ? dzswjsfMap[data.dzswjsf] : '' }}
       </template>
       <template #myscope="{ data }">
-        <el-button type="success" @click.stop="handleRpaLogin(data)">验证码登录</el-button>
+        <el-button type="success" @click.stop="handleRpaLogin(data)">
+          <CountDown title="验证码登录" :count="rowInfo[data.nsrsbh] ? 60 : 0" @callback="countCb(data)" :isSHowTime="false"/>
+        </el-button>
         <el-button type="success" v-if="data.isCode === 'Y'" @click.stop="getFaceImg(data)">人脸识别</el-button>
       </template>
     </form-list>
-    <el-dialog :title="step === 1 ? '短信验证码' : '身份验证'" :visible.sync="dialogVisible" width="40%" :before-close="handleClose">
+    <el-dialog 
+      :title="step === 1 ? '短信验证码' : '身份验证'" 
+      :visible.sync="dialogVisible" 
+      :close-on-press-escape="false" 
+      :close-on-click-modal="false"
+      width="40%" 
+      :before-close="handleClose"
+    >
       <el-form :inline="true" :model="editForm" :rules="rules" ref="ruleForm" class="dialog-form">
         <template v-if="step === 1">
           <div class="dialog-code-title">
@@ -44,9 +53,7 @@
       <span slot="footer" class="dialog-footer">
         <el-button v-if="step === 1" type="success" @click="saveData">保 存</el-button>
         <!-- <el-button v-if="step === 2" type="success" @click="update">刷 新</el-button> -->
-        <el-button @click="handleClose">{{
-    step === 1 ? "取消" : "关闭"
-          }}</el-button>
+        <el-button @click="handleClose">{{step === 1 ? "取消" : "关闭"}}</el-button>
       </span>
     </el-dialog>
   </div>
@@ -57,10 +64,10 @@ import VueQr from "vue-qr";
 import FormList from "@/components/FormList.vue";
 import { dzswjsfMap } from '@/config/constant.js';
 import { rpaLogin, getFaceImg, refreshLoginState } from "./Api";
-
+import CountDown from "@/components/CountDown.vue"
 export default {
   name: "RpaEnterpriseList",
-  components: { FormList, VueQr },
+  components: { FormList, VueQr, CountDown },
   data() {
     return {
       api: require("./Api"),
@@ -145,23 +152,46 @@ export default {
       rpaLoginFaceImg: "",
       step: 1,
       dzswjsfMap,
+      rowInfo: { // 倒计时配置
+        // "91510107MAC3AYR19R": 60
+      }
     };
   },
   methods: {
+    // 
+    countCb(row){
+      const newTimes = {...this.rowInfo};
+      delete newTimes[row.nsrsbh]
+      this.rowInfo = newTimes;
+    },
     // 发送验证码
     async handleRpaLogin(row, type) {
-      this.step = 1;
-      this.editForm = row;
-      const { code = "", data } = await rpaLogin({ nsrsbh: row.nsrsbh });
-      if (code === "0") {
-        // 有些主体不需要验证验证码，直接走人脸识别
-        if (data.msg === "成功") {
-          this.getFaceImg();
-          return;
+      try {
+        this.step = 1;
+        this.editForm = row;
+        if(this.rowInfo[row.nsrsbh]){
+          this.rpaLoginMsg = this.rowInfo[row.nsrsbh];
+          this.dialogVisible = true;
+          return false;
         }
-        this.rpaLoginMsg = data.msg;
-        this.dialogVisible = true;
+        const { code = "", data } = await rpaLogin({ nsrsbh: row.nsrsbh });
+        if (code === "0") {
+          // 有些主体不需要验证验证码，直接走人脸识别
+          if (data.msg === "成功") {
+            this.getFaceImg();
+            return;
+          }
+          this.rowInfo = {
+            ...this.rowInfo,
+            [row.nsrsbh]: data.msg
+          }
+          this.rpaLoginMsg = data.msg;
+          this.dialogVisible = true;
+        }
+      } catch (error) {
+        console.log(error)
       }
+      
     },
     // 登录
     async saveData() {
