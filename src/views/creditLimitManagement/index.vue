@@ -56,7 +56,7 @@
       }">
         <el-table-column type="index" label="序号" />
         <el-table-column label="主体名称" prop="nsrmc" :min-width="200" />
-        <el-table-column label="纳税人识别号码" prop="nsrsbh" :min-width="150" />
+        <el-table-column label="纳税人识别号码" prop="nsrsbh" :min-width="165" />
 
 
         <!-- 历史授信额度信息 -->
@@ -281,6 +281,9 @@ export default {
       // this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
 
     }
+  },
+  updated(){
+    this.$refs['table'].doLayout();
   }
 };
 </script>

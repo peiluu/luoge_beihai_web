@@ -646,11 +646,11 @@ export default {
       }
     },
     refDoLayout(b){
-      !b && (this.loading = true);
+      // !b && (this.loading = true);
       this.$nextTick(()=>{
         this.$refs.bottomTableRef && this.$refs.bottomTableRef.doLayout();
         this.$refs.tableRef && this.$refs.tableRef.doLayout();
-        this.loading = false;
+        // !b && (this.loading = false);
       })
     }
   },
@@ -667,9 +667,7 @@ export default {
   },
   beforeDestroy() {},
   destroyed() {},
-  activated() {
-    console.log(1233333)
-  },
+  activated() {},
 };
 </script>
 <style scoped lang="scss">
