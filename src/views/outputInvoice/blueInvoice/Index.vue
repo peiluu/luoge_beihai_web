@@ -1,7 +1,8 @@
 <template>
   <div class="main-content">
+   <div v-show="false">
     <el-card shadow="hover" class="f-el-card" :body-style="{padding:'10px 20px'}" v-if="!$route.query.isFormInvoiced">
-      <article class="invoice_header">
+      <article class="invoice_header"  >
         <div class="header_title_content">
           <span>蓝字发票开具</span>
         </div>
@@ -31,6 +32,7 @@
         </div>
       </article>
     </el-card>
+   </div>
     <el-card shadow="hover">
       <!-- 选择主体 -->
       <article v-show="active === 0">
@@ -291,7 +293,7 @@ export default {
   },
   computed: {
     height() {
-      return window.innerHeight - 384;
+      return window.innerHeight - 304;
     },
     // contentHeight(){
     //   return window.innerHeight - 282;

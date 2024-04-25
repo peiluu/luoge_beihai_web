@@ -45,7 +45,7 @@
                 <el-input-number
                   style="width: 100%"
                   v-model="intoForm.mxxz"
-                  :max="100000000000"
+                  :max="2000"
                   :precision="0"
                   :controls="false"
                 ></el-input-number>
