@@ -464,10 +464,11 @@ export default {
                 //this.taxRateOption = [...this.deepOption]
                 this.$set(this,'taxRateOption',this.deepOption)
             }else{
-               
+               console.log(val,"=",this.taxAssOptions.map(k=> k.value))
+               console.log(this.taxAssOptions.map(k=> k.value).includes('不征税'),"00")
                if(this.taxAssOptions.map(k=> k.value).includes('免税')){
                 this.$set(this,'taxRateOption',[{label:'免税',value:0}])
-               }else if(this.taxAssOptions.map(k=> k.value).includes('免征税')){
+               }else if(this.taxAssOptions.map(k=> k.value).includes('免征税') || this.taxAssOptions.map(k=> k.value).includes('不征税')){
                 this.$set(this,'taxRateOption',[{label:'不征税',value:0}])
                }
             }
@@ -475,8 +476,8 @@ export default {
         },
         /* 变化 */
         handlertaxAess(val){
-            console.log(val)
-            if(val === '免税' || val === '免征税'){
+           
+            if(val === '免税' || val === '免征税' || val === '不征税'){
                 //this.$set(this,'taxRateOption',[{label:'0% (免税 / 免征税)',value:0}])
                 val === '免税'?this.$set(this,'taxRateOption',[{label:'免税',value:0}]):this.$set(this,'taxRateOption',[{label:'不征税',value:0}])
             }else{

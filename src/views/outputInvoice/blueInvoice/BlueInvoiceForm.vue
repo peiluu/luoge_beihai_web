@@ -3628,7 +3628,8 @@ export default {
 }
 
 .ticket-content {
-  height: calc(100vh - 88px - 16px - 145px);
+  //height: calc(100vh - 88px - 16px - 145px);
+  height: calc(100vh - 88px - 16px - 62px);
   overflow: hidden;
   overflow-y: auto;
 

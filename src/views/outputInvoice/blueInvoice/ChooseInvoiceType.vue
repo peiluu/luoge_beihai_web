@@ -129,7 +129,7 @@
         return this.formInline.isDigital
       },
       contentHeight(){
-        return window.innerHeight - 214;
+        return window.innerHeight - 134;
       }
     },
     watch:{
