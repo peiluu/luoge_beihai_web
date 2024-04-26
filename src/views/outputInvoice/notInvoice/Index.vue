@@ -34,10 +34,13 @@
       </template>
 
       <template #status="row">
-        <span :class="formatStatus(row.data.status).clazz">
-          <a v-if="row.data.status == '02'" href="javascript:void(0);" @click="showErrorMsg(row.data)">
-            {{ formatStatus(row.data.status).txt }}
-          </a>
+        <span >
+          <el-tooltip v-if="row.data.status == '02'" class="item" effect="dark" :content="row.data.kpsbyy" placement="top-start">
+            <span :class="formatStatus(row.data.status).clazz"   @click="showErrorMsg(row.data)">
+              {{ formatStatus(row.data.status).txt }}
+            </span> 
+          </el-tooltip>
+          
           <template v-else>
             {{ formatStatus(row.data.status).txt }}
           </template>
@@ -478,3 +481,29 @@ export default {
   }
 };
 </script>
+<style scoped lang="scss">
+.blue-cell{
+  color: #008fff;
+  &::before{
+    content: '';
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      opacity: 0.8;
+      border-radius: 50%;
+      background: #008fff;
+  }
+}
+.red-cell{
+  color: #ff0000;
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      opacity: 0.8;
+      border-radius: 50%;
+      background: #ff0000;
+  }
+}
+</style>
