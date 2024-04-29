@@ -173,8 +173,8 @@
                 </el-popconfirm>
                 <el-divider direction="vertical"></el-divider>
                 <el-popconfirm
-                title="是否确认删除票？" @confirm="handleDel(scope)" :disabled="scope.row.kpz ===0 || scope.row.kpcg === 0">
-                    <el-link slot="reference" :type="scope.row.kpz ===0 || scope.row.kpcg === 0 ? 'info' : 'danger' " :disabled="scope.row.kpz ===0 || scope.row.kpcg === 0" size="small">删除</el-link>
+                title="是否确认删除票？" @confirm="handleDel(scope)" :disabled="scope.row.kpz !==0 || scope.row.kpcg === 0">
+                    <el-link slot="reference" :type="scope.row.kpz !==0 || scope.row.kpcg === 0 ? 'info' : 'danger' " :disabled="scope.row.kpz !==0 || scope.row.kpcg === 0" size="small">删除</el-link>
                 </el-popconfirm>
             </template>
             
