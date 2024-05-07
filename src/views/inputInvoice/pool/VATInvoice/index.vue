@@ -383,7 +383,7 @@ export default {
       isSelected: [],
       selectedRow: [],
       bottomTableData:[],
-      total: 1000,
+      total: 0,
       page: {
         currentPage: 1,
         pageSize: 10,
@@ -394,7 +394,7 @@ export default {
         pageSize: 3,
         pageSizes: [3,10, 15, 50, 100, 200],
       },
-      bottom_total: 1000,
+      bottom_total: 0,
       activeName:'first',
       dialog:{
         requireVisbile:false,

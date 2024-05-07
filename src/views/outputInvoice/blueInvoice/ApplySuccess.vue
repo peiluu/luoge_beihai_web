@@ -56,7 +56,7 @@
         return this.invoiceSucId || this.$route.query.invoiceId
       },
       contentHeight() {
-        return window.innerHeight - 240;
+        return window.innerHeight - 160;
       },
 
     },
