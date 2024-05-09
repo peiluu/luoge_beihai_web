@@ -343,7 +343,8 @@ export default {
             status.text = '开票中';
              status.type = 3;
              return status
-        }else if(wkp >0 && zs === wkp ){
+        }/*else if(wkp >0 && zs === wkp ){*/
+        else if(wkp >0){
             status.text = '待开票';
              status.type = 4;
              return status
