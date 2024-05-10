@@ -34,10 +34,13 @@
       </template>
 
       <template #status="row">
-        <span :class="formatStatus(row.data.status).clazz">
-          <a v-if="row.data.status == '02'" href="javascript:void(0);" @click="showErrorMsg(row.data)">
-            {{ formatStatus(row.data.status).txt }}
-          </a>
+        <span >
+          <el-tooltip v-if="row.data.status == '02'" class="item" effect="dark" :content="row.data.kpsbyy" placement="top-start">
+            <span :class="formatStatus(row.data.status).clazz"   @click="showErrorMsg(row.data)">
+              {{ formatStatus(row.data.status).txt }}
+            </span> 
+          </el-tooltip>
+          
           <template v-else>
             {{ formatStatus(row.data.status).txt }}
           </template>
@@ -110,7 +113,7 @@ export default {
         { type: "selection", width: 50 },
         { title: '序号', type: "index", width: 50 },
         { title: "开票类型", dataIndex: "lzfpbz",align:"center", slot: 'lzfpbz' },
-        { title: "发票种类", dataIndex: "fppz", width: 100, slot: 'fppz', showTooltip: true },
+        { title: "发票种类", dataIndex: "fppz", width: 140, slot: 'fppz', showTooltip: true },
         { title: "开票状态", width: 90,align:"center", dataIndex: "status", slot: 'status' },
         // { title: "审核状态", width: 100, dataIndex: "shzt", slot: "shzt" },
         { title: "开票组织名称", width: 180, dataIndex: "orgName", showTooltip: true },
@@ -478,3 +481,29 @@ export default {
   }
 };
 </script>
+<style scoped lang="scss">
+.blue-cell{
+  color: #008fff;
+  &::before{
+    content: '';
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      opacity: 0.8;
+      border-radius: 50%;
+      background: #008fff;
+  }
+}
+.red-cell{
+  color: #ff0000;
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      opacity: 0.8;
+      border-radius: 50%;
+      background: #ff0000;
+  }
+}
+</style>

@@ -203,7 +203,6 @@ export default {
     },
     // 选中商品
     cellClick({ row }) {
-      console.log(row, this.row);
       // return
       try {
         this.handleSubmitProduct(row);
