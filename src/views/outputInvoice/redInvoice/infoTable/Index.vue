@@ -13,7 +13,15 @@
       @getSearchParam="getSearchParam">
       <template #lrfsf="row">{{ row.data.lrfsf === '0' ? '销售方' : '购买方' }}</template>
 
-      <template #ykjhzfpbz="row">{{ row.data.ykjhzfpbz === 'Y' ? '已开具' : row.data.ykjhzfpbz === 'F' ? '开具失败' : '未开具' }}</template>
+      <template #ykjhzfpbz="row">
+       <span :class="row.data.ykjhzfpbz === 'Y'?'blue-cell':''" v-if="row.data.ykjhzfpbz === 'Y'">
+        已开具
+       </span>
+       <el-tooltip class="item" effect="dark" :content="row.data.kjsbyy" placement="top-start" v-else-if="row.data.ykjhzfpbz === 'F'">
+          <span class="red-cell">开具失败</span>
+        </el-tooltip>
+        <span :class="row.data.ykjhzfpbz === 'Y'?'blue-cell':''" v-else>未开具</span>
+      </template>
 
       <template #shzt="row">
         <span :class="row.data.shzt != null ? examineStatusMap[row.data.shzt].class : ''">
@@ -80,12 +88,18 @@
             <el-button v-if="data.shzt == 3" @click.stop="showReason('bhyy', data.shxx)">驳回原因</el-button>
 
             <!-- 开具失败原因: 1.我作为销方发出，局端开票失败10-->
-            <el-button v-if="data.kjsbyy" @click.stop="showReason('kjsbyy', data.kjsbyy)" type="warning">开具失败原因</el-button>
+            <!-- <el-button v-if="data.kjsbyy" @click.stop="showReason('kjsbyy', data.kjsbyy)" type="warning">开具失败原因</el-button> -->
           </template>
           <el-button slot="reference">操作</el-button>
         </el-popover>
       </template>
-
+      <!-- upload statu -->
+      <template #status="row">
+        <span :class="handlePreson(row.data.status)?.classz" v-if="handlePreson(row.data.status) !==' 02'">{{ handlePreson(row.data.status)?.txt }}</span>
+        <el-tooltip class="item" effect="dark" :content="row.data.kjsbyy" placement="top-start" v-else>
+          <span :class="handlePreson(row.data.status)?.classz">{{ handlePreson(row.data.status)?.txt }}</span>
+        </el-tooltip>
+      </template>
       <!-- 批量操作 -->
       <template #topTool>
         <div class="toolbar">
@@ -150,6 +164,7 @@ export default {
         { type: "selection", width: 50 },
         { title: "序号", type: "index" },
         { title: "购/销方发起身份", width: 130, dataIndex: "lrfsf", align: "center", slot: "lrfsf" },
+        { title: "上传状态", width: 130, dataIndex: "status", align: "center", slot: "kjsbyy" },
         { title: "对方纳税人名称", width: 130, dataIndex: "dfnsrmc", slot: 'dfnsrmc' },
         { title: "对方纳税人识别号码", width: 150, dataIndex: "dfnsrsbh", slot: 'dfnsrsbh' },
         { title: "红字通知单编号", width: 130, dataIndex: "hzfpxxqrdbh" },
@@ -409,6 +424,40 @@ export default {
         fileName
       })
     },
+    handlePreson(type){
+      let content = null;
+      switch(type){
+        case '00':{
+          content.txt = '上传成功';
+          content.classz = 'blue-cell'
+          break
+        }
+        case '01':{
+          content.txt = '上传中';
+          content.classz = ''
+          break
+        }
+        case '02':{
+          content.txt = '上传失败';
+          content.classz = 'red-cell'
+          break
+        }
+        case '03':{
+          content.txt = '重复上传';
+          content.classz = ''
+          break
+        }
+        case '04':{
+          content.txt = '草稿';
+          content.classz = ''
+          break
+        }
+        default: {
+          content = null;
+        }
+      }
+      return content
+    },
   }
 };
 </script>
@@ -435,7 +484,30 @@ export default {
     color: green;
   }
 }
-
+.blue-cell{
+  color: #008fff;
+  &::before{
+    content: '';
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      opacity: 0.8;
+      border-radius: 50%;
+      background: #008fff;
+  }
+}
+.red-cell{
+  color: #ff0000;
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      opacity: 0.8;
+      border-radius: 50%;
+      background: #ff0000;
+  }
+}
 </style>
 <style>
 .el-popover{
