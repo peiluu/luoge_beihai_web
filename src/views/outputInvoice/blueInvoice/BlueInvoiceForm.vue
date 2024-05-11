@@ -12,13 +12,13 @@
         :disabled="!canEdit"
       >
         <div class="content-bar" v-if="!detailInfo.isFormInvoiced">
-          <div>
+          <!--<div>
             <vxe-button :loading="loading" icon="el-icon-back" size="mini" @click="handleBack"
               >返回</vxe-button
             >
-            <!-- <el-tag size="mini">电子发票</el-tag> <span style="padding-left:8px"></span>
-            <el-tag size="mini" type="warning">普通发票</el-tag> -->
-          </div>
+            <el-tag size="mini">电子发票</el-tag> <span style="padding-left:8px"></span>
+            <el-tag size="mini" type="warning">普通发票</el-tag>
+          </div>-->
           <div class="midea-form-bar">
             <!-- <el-form-item label="切换开票组织">
               <el-select
