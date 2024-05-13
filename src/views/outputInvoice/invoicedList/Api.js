@@ -62,3 +62,8 @@ export const selectQyList = data => postJSON(`${config.host}/taxBody/selectQyLis
  * @desption 项目名称（房开）
  */
 export const detailByOrgId = data => postJSON(`${config.host}/taxBody/detailByOrgId`, data);
+
+/**
+ * @desption 重新推送
+ */
+export const repushBackJQ = data => postJSON(`${config.host}/invoiceUpload/backJQ`, data);

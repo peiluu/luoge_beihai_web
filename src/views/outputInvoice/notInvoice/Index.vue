@@ -34,16 +34,23 @@
       </template>
 
       <template #status="row">
-        <span :class="formatStatus(row.data.status).clazz">
-          <a v-if="row.data.status == '02'" href="javascript:void(0);" @click="showErrorMsg(row.data)">
-            {{ formatStatus(row.data.status).txt }}
-          </a>
+        <span >
+          <el-tooltip v-if="row.data.status == '02'" class="item" effect="dark" :content="row.data.kpsbyy" placement="top-start">
+            <span :class="formatStatus(row.data.status).clazz"   @click="showErrorMsg(row.data)">
+              {{ formatStatus(row.data.status).txt }}
+            </span> 
+          </el-tooltip>
+          
           <template v-else>
             {{ formatStatus(row.data.status).txt }}
           </template>
         </span>
       </template>
-
+      <template #kprq="row">
+        <span >
+          {{ formatDate(row.data.kprq,'YYYY-MM-DD HH:mm:ss', ) }}
+        </span>
+      </template>
       <template #shzt="row">
         <span :class="formatShzt(row.data.shzt).clazz">
           <a v-if="row.data.shzt == 3" href="javascript:void(0);" @click="showShxxMsg(row.data)">
@@ -93,7 +100,8 @@
 import FormList from '@/components/FormList.vue';
 import { outputFplxList } from '@/config/constant'
 import { previewPdf } from "@/utils/tool";
-import BlueInvoiceForm from '../blueInvoice/BlueInvoiceForm.vue'
+import BlueInvoiceForm from '../blueInvoice/BlueInvoiceForm.vue';
+
 export default {
   name: 'noInvoice',
   components: {
@@ -110,7 +118,7 @@ export default {
         { type: "selection", width: 50 },
         { title: '序号', type: "index", width: 50 },
         { title: "开票类型", dataIndex: "lzfpbz",align:"center", slot: 'lzfpbz' },
-        { title: "发票种类", dataIndex: "fppz", width: 100, slot: 'fppz', showTooltip: true },
+        { title: "发票种类", dataIndex: "fppz", width: 140, slot: 'fppz', showTooltip: true },
         { title: "开票状态", width: 90,align:"center", dataIndex: "status", slot: 'status' },
         // { title: "审核状态", width: 100, dataIndex: "shzt", slot: "shzt" },
         { title: "开票组织名称", width: 180, dataIndex: "orgName", showTooltip: true },
@@ -121,7 +129,7 @@ export default {
         //{ title: "开票失败原因", width: 180, dataIndex: "kpsbyy" },
         { title: "金额", width: 100, dataIndex: "hjje", slot: 'hjje', align: 'right' },
         { title: "税额", width: 100, dataIndex: "hjse", slot: 'hjse', align: 'right' },
-        { title: "开票日期", width: 100,align:"center", dataIndex: "kprq", },
+        { title: "开票日期", width: 180,align:"center", dataIndex: "kprq", slot:'kprq' },
         { title: "备注", width: 120, dataIndex: "bz", showTooltip: true},
         { title: "审核人", width: 100, dataIndex: "shrxm", align: 'center' },
         {
@@ -240,6 +248,25 @@ export default {
         }))
       }
     },
+    formatDate(val, format) {
+      let date = new Date(val);
+    let year = date.getFullYear();
+    let month = String(date.getMonth() + 1).padStart(2, '0');
+    let day = String(date.getDate()).padStart(2, '0');
+    let hours = String(date.getHours()).padStart(2, '0');
+    let minutes = String(date.getMinutes()).padStart(2, '0');
+    let seconds = String(date.getSeconds()).padStart(2, '0');
+
+    let formattedDate = format
+        .replace('YYYY', year)
+        .replace('MM', month)
+        .replace('DD', day)
+        .replace('HH', hours)
+        .replace('mm', minutes)
+        .replace('ss', seconds);
+
+    return formattedDate;
+},
     // 处理多选
     handleSelection(rows) {
       this.selectIds = [];
@@ -470,11 +497,38 @@ export default {
     },
     async downloadNoList() {
       const fileName = `未开票信息列表.xlsx`
+      const ids = this.$refs.list.getSelections().map((item) => item.id)
       await this.api.downLoadNoOpenList({
-        reqData: { ...this.queryParam },
+        reqData: { ...this.queryParam ,idKeys:ids},
         fileName
       })
     }
   }
 };
 </script>
+<style scoped lang="scss">
+.blue-cell{
+  color: #008fff;
+  &::before{
+    content: '';
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      opacity: 0.8;
+      border-radius: 50%;
+      background: #008fff;
+  }
+}
+.red-cell{
+  color: #ff0000;
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      opacity: 0.8;
+      border-radius: 50%;
+      background: #ff0000;
+  }
+}
+</style>

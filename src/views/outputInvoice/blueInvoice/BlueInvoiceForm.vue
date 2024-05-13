@@ -12,13 +12,13 @@
         :disabled="!canEdit"
       >
         <div class="content-bar" v-if="!detailInfo.isFormInvoiced">
-          <div>
+          <!--<div>
             <vxe-button :loading="loading" icon="el-icon-back" size="mini" @click="handleBack"
               >返回</vxe-button
             >
-            <!-- <el-tag size="mini">电子发票</el-tag> <span style="padding-left:8px"></span>
-            <el-tag size="mini" type="warning">普通发票</el-tag> -->
-          </div>
+            <el-tag size="mini">电子发票</el-tag> <span style="padding-left:8px"></span>
+            <el-tag size="mini" type="warning">普通发票</el-tag>
+          </div>-->
           <div class="midea-form-bar">
             <!-- <el-form-item label="切换开票组织">
               <el-select
@@ -2962,6 +2962,7 @@ export default {
       this.chooseGoods(row);
     },
     chooseGoods(row) {
+      console.log("当前的index -- " ,this.currentGoodsIndex)
       this.goodsDlgVisible = false;
       //  let tableData = this.$refs.xTable.getTableData().tableData;
       this.matchCb(row, this.tableData[this.currentGoodsIndex]);
@@ -3488,8 +3489,10 @@ export default {
     VXETable.renderer.add('EditDown', {
       autofocus: '.vxe-input--inner',
       renderEdit (h, renderOpts, params) {
+        _this.currentGoodsIndex = params.$rowIndex;
+      this.currentGoodsIndex = params.$rowIndex;
         return [
-          <EditDown params={ params } canEdit={_this.canEdit} showGoodsDlg={_this.editDownShowGoodsDlg} handleSubmitProduct={_this.handleSubmitProduct} orgid={_this.form.orgid} tdys={_this.form.tdys}></EditDown>
+          <EditDown  params={ params } canEdit={_this.canEdit} showGoodsDlg={_this.editDownShowGoodsDlg} handleSubmitProduct={_this.handleSubmitProduct} orgid={_this.form.orgid} tdys={_this.form.tdys}></EditDown>
         ]
       }
     })
