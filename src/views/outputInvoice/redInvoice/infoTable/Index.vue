@@ -164,7 +164,7 @@ export default {
         { type: "selection", width: 50 },
         { title: "序号", type: "index" },
         { title: "购/销方发起身份", width: 130, dataIndex: "lrfsf", align: "center", slot: "lrfsf" },
-        { title: "上传状态", width: 130, dataIndex: "status", align: "center", slot: "kjsbyy" },
+        { title: "上传状态", width: 130, dataIndex: "status", align: "center", slot: "status" },
         { title: "对方纳税人名称", width: 130, dataIndex: "dfnsrmc", slot: 'dfnsrmc' },
         { title: "对方纳税人识别号码", width: 150, dataIndex: "dfnsrsbh", slot: 'dfnsrsbh' },
         { title: "红字通知单编号", width: 130, dataIndex: "hzfpxxqrdbh" },
