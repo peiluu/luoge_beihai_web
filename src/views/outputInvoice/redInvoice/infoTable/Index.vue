@@ -95,8 +95,9 @@
       </template>
       <!-- upload statu -->
       <template #status="row">
-        <span :class="handlePreson(row.data.status)?.classz" v-if="handlePreson(row.data.status) !==' 02'">{{ handlePreson(row.data.status)?.txt }}</span>
-        <el-tooltip class="item" effect="dark" :content="row.data.kjsbyy" placement="top-start" v-else>
+        
+        <span :class="handlePreson(row.data.status)?.classz" v-if="row.data.status !=='02'">{{ handlePreson(row.data.status)?.txt }}</span>
+        <el-tooltip class="item" effect="dark" :content="row.data.kjsbyy" placement="top" v-else>
           <span :class="handlePreson(row.data.status)?.classz">{{ handlePreson(row.data.status)?.txt }}</span>
         </el-tooltip>
       </template>
@@ -425,7 +426,8 @@ export default {
       })
     },
     handlePreson(type){
-      let content = null;
+      console.log(type);
+      let content = {};
       switch(type){
         case '00':{
           content.txt = '上传成功';
@@ -453,7 +455,7 @@ export default {
           break
         }
         default: {
-          content = null;
+          content = {};
         }
       }
       return content
