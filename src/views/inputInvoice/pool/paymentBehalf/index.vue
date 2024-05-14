@@ -299,6 +299,7 @@ export default {
       rowData:{},
       typeStatus:{},
       where:{},
+      activeId:null,
     };
   },
   computed: {
@@ -366,10 +367,12 @@ export default {
     /* size change */
     handleBottomSizeChange(val) {
       this.page_bottom.pageSize = val;
+      this.handleGetPaySingleDes({id:this.activeId,})
     },
     /* Current change */
     handleBottomCurrentChange(val) {
       this.page_bottom.currentPage = val;
+      this.handleGetPaySingleDes({id:this.activeId,})
     },
     /* 确认管理 */
     handleStatus(type) {
@@ -431,6 +434,7 @@ export default {
     /*点击行事件 */
     handleRowClick(row) {
       this.selectedRow = row;
+      this.activeId = row.id;
       this.handleGetPaySingleDes({id:row.id})
     },
     async handleGetPaySingleDes(val){
