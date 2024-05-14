@@ -414,7 +414,8 @@ export default {
         {label:'正常',value:'01'},
         {label:'异常凭证',value:'02'},
         {label:'疑似异常凭证',value:'03'},
-      ]
+      ],
+      activeId:null,
     };
   },
   computed: { 
@@ -497,14 +498,17 @@ export default {
     handleRest(val){
       this.where = {...val};
       this.handleGetTableList(val)
+     
     },
     /* size change */
     handleBottomSizeChange(val) {
       this.page_bottom.pageSize = val;
+      this.handleGetSingleDes({id:this.activeId,});
     },
     /* Current change */
     handleBottomCurrentChange(val) {
       this.page_bottom.currentPage = val;
+      this.handleGetSingleDes({id:this.activeId,});
     },
     /* 确认管理 */
     handleStatus(type) {
@@ -569,6 +573,7 @@ export default {
     handleRowClick(row) {
       const {id} = row || {};
       this.selectedRow = row;
+      this.activeId = id;
       this.handleGetSingleDes({id});
     },
     /* 请求详情 */

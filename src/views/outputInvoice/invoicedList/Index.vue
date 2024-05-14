@@ -44,7 +44,7 @@
       <template #tdys="row">
         {{ row.data.tdys == '06' ? '不动产经营租赁' : row.data.tdys == '05' ? '不动产销售' : row.data.tdys == '03' ? '建筑服务' : row.data.tdys == '00' ? '通用' : '' }}
       </template>
-      <template #kprq="row">{{ dateFormat('YYYY-mm-dd HH:MM:SS', row.data.kprq) }}</template>
+      <template #kprq="row">{{ dateFormat('YYYY-mm-dd HH:MM:SS',parseDateCompatible(row.data.kprq)) }}</template>
       <!-- <template #rzzt="row">
         {{ row.data.rzzt == '02' ? '已入账' : row.data.rzzt == '03' ? '已入账撤销' : '未入账' }}
       </template> -->
@@ -658,8 +658,16 @@ export default {
       console.log(row)
     },
     handleCellMouseLeave(row) {
+    },
+    parseDateCompatible(dateStr) {
+      if((dateStr ??'') === '') return 
+      // 尝试直接解析日期
+      let parts = dateStr.split(' ');
+      let newDateTime =`${parts[0]}T${parts[1]}`;
+      return newDateTime;
     }
   },
+ 
 };
 </script>
 

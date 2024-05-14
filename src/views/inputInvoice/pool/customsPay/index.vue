@@ -306,6 +306,7 @@ export default {
       rowData:{},
       typeStatus:{},
       where:{},
+      activeId:null,
     };
   },
   computed: {
@@ -354,7 +355,8 @@ export default {
     },
     /* Current change */
     handleCurrentChange(val) {
-      this.page.currentPage = val
+      this.page.currentPage = val;
+      this.handleGetTableList();
     },
     /* 搜索 */
     handlerSearch(val){
@@ -370,10 +372,12 @@ export default {
     /* size change */
     handleBottomSizeChange(val) {
       this.page_bottom.pageSize = val;
+      this.handleGetTableSingleDes({id:this.activeId,})
     },
     /* Current change */
     handleBottomCurrentChange(val) {
       this.page_bottom.currentPage = val;
+      this.handleGetTableSingleDes({id:this.activeId,})
     },
     /* 确认管理 */
     handleStatus(type) {
@@ -465,6 +469,7 @@ export default {
     handleRowClick(row) {
       this.selectedRow = row;
       const {id} = row || {};
+      this.activeId = id;
       this.handleGetTableSingleDes({id})
     },
     async handleGetTableSingleDes(data){
