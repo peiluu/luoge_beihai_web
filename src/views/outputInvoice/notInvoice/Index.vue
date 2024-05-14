@@ -497,8 +497,9 @@ export default {
     },
     async downloadNoList() {
       const fileName = `未开票信息列表.xlsx`
+      const ids = this.$refs.list.getSelections().map((item) => item.id)
       await this.api.downLoadNoOpenList({
-        reqData: { ...this.queryParam },
+        reqData: { ...this.queryParam ,idKeys:ids},
         fileName
       })
     }

@@ -640,8 +640,9 @@ export default {
     },
     async downLoadList() {
       const fileName = `已开票记录导出.xlsx`
+      const ids = this.selections.map((item) => item.id)
       await downLoadInvoiceList({
-        reqData: { ...this.queryParam, scope: this.scope  },
+        reqData: { ...this.queryParam, scope: this.scope ,idKeys:ids },
         fileName
       })
     },
