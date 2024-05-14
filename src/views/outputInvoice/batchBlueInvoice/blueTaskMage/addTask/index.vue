@@ -85,7 +85,7 @@
                   <i class="el-icon-upload"></i>
                   <div class="el-upload__text">
                     将文件拖到此处，或<em>点击获取文件</em><br />
-                    <span> 已添加文件 &nbsp;<em>{{ `${fileList[0]?.name || ''} (${fileList.length})条` }} </em></span>
+                    <span> 已添加文件 &nbsp;<em>{{ `${fileList[0]?.name || ''}` }} </em></span>
                   </div>
                   <!-- <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div> -->
                 </el-upload>
