@@ -10,7 +10,7 @@
     <form-list :key="propsKey" :searchKey="propsKey" :columns="columns" :searchRow="searchList" :api="api" :param="param" @getTableData="getTableData" :height="height" :firstLoading="false" ref="list">
       <template #fplx="{ data }"> {{ fplxMap[data.fplx] }} </template>
       <template #type>销售方</template>
-      <template #kprq="{ data }">{{ dateFormat('YYYY-mm-dd', data.kprq) }}</template>
+      <template #kprq="{ data }">{{ dateFormat('YYYY-mm-dd', parseDateCompatible(data.kprq)) }}</template>
       <template #hjje="{ data }">{{ formatMoney(data.hjje) }}</template>
       <template #hjse="{ data }">{{ formatMoney(data.hjse) }}</template>
       <template #jshj="{ data }">{{ formatMoney(data.jshj) }}</template>
@@ -220,6 +220,13 @@ export default {
       })
       this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
     },
+     parseDateCompatible(dateStr) {
+      if((dateStr ??'') === '') return 
+      // 尝试直接解析日期
+      let parts = dateStr.split(' ');
+      let newDateTime =`${parts[0]}T${parts[1]}`;
+      return newDateTime;
+    }
   }
 };
 </script>
