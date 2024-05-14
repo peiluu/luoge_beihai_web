@@ -29,13 +29,13 @@
     <div class="custom-vxe-table">
       <vxe-table border show-overflow keep-source ref="xTable" v-loading="loading" :data="tableData" :edit-config="{ trigger: 'click', mode: 'cell', showIcon: false, enabled: false }" :edit-rules="validRules" :cell-style="cellStyle">
         <vxe-column type="seq" title="序号" width="50" />
-        <vxe-column field="nsrmc" title="纳税主体名称" />
-        <vxe-column field="ssq" title="税款所属期" align="center">
+        <vxe-column field="nsrmc" title="纳税主体名称" resizable show-overflow="title" />
+        <vxe-column field="ssq" title="税款所属期" align="center" resizable show-overflow="title">
           <template #default="{ row }"> {{ formatAllDate(row.ssq, querySdstbzq) }} </template>
         </vxe-column>
         <vxe-column field="yhsxmc" title="优惠事项名称" />
 
-        <vxe-column field="jmsdse" title="减免所得税额" :edit-render="{}" align="right">
+        <vxe-column field="jmsdse" title="减免所得税额" :edit-render="{}" align="right" resizable show-overflow="title">
           <template #edit="{ row }">
             <vxe-input type="number" v-model="row.jmsdse" min="0" :disabled="row.yhsxlb != 9" placeholder="请输入" />
           </template>

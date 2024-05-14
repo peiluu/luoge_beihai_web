@@ -44,22 +44,22 @@
     </div> -->
       <vxe-table :height="height" :data="tableData" v-loading="loading"  border align="center" ref="xTable">
         <vxe-column type="seq" width="60" title="序号" field="seq" />
-        <vxe-column title="总机构名称" field="zjgmc" min-width="130" />
-        <vxe-column title="总机构纳税人识别号" field="zjgsbh" min-width="140" />
-        <vxe-column title="分支机构名称" field="nsrmc" min-width="180" />
-        <vxe-column title="分支机构纳税人识别号" field="nsrsbh" min-width="140" />
-        <vxe-column title="是否是总机构独立生产经营部门" field="scjybm" min-width="160">
+        <vxe-column title="总机构名称" field="zjgmc" min-width="130" resizable show-overflow="title" />
+        <vxe-column title="总机构纳税人识别号" field="zjgsbh" min-width="140" resizable show-overflow="tooltip" />
+        <vxe-column title="分支机构名称" field="nsrmc" min-width="180" resizable show-overflow="tooltip" />
+        <vxe-column title="分支机构纳税人识别号" field="nsrsbh" min-width="140" resizable show-overflow="tooltip" />
+        <vxe-column title="是否是总机构独立生产经营部门" field="scjybm" min-width="160" resizable show-overflow="tooltip">
           <template #default="{ row }">{{ row.scjybm == 'Y' ? '是' : '否' }}</template>
         </vxe-column>
         <vxe-colgroup title="各分支机构（营收收入\职工薪酬\资产总额）分配表">
-          <vxe-colgroup title="营业收入" field="yysr" min-width="100">
+          <vxe-colgroup title="营业收入" field="yysr" min-width="100" resizable show-overflow="tooltip">
             <template #default="{ row }">{{ formatMoney(row.yysr) }}</template>
           </vxe-colgroup>
-          <vxe-colgroup title="职工薪酬" field="zgyj" min-width="100">
+          <vxe-colgroup title="职工薪酬" field="zgyj" min-width="100" resizable show-overflow="tooltip">
             <template #default="{ row }">{{ formatMoney(row.zgyj) }}</template>
 
           </vxe-colgroup>
-          <vxe-colgroup title="资产总额" field="zcze" min-width="100">
+          <vxe-colgroup title="资产总额" field="zcze" min-width="100" resizable show-overflow="tooltip">
             <template #default="{ row }">{{ formatMoney(row.zcze) }}</template>
           </vxe-colgroup>
           <vxe-column title="分配比例" field="fpbl" min-width="100" align="center" />
