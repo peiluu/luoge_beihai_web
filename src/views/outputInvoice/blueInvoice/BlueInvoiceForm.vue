@@ -3482,6 +3482,9 @@ export default {
     if(!this.$route.query.isFormInvoiced){
       this.init()
     }
+    if(this.query?.isType){
+      this.$set(this.form,'sfhs','Y')
+    }
     // 创建一个下拉表格渲染
     const _this = this;
     VXETable.renderer.add('EditDown', {
@@ -3498,6 +3501,9 @@ export default {
   activated() {
     if(this.$route.query.isFormInvoiced){
       this.init()
+    }
+    if(this.query.isType){
+      this.$set(this.form,'sfhs','Y')
     }
   },
 };

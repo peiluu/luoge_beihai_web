@@ -132,6 +132,12 @@ export default {
     // Step,
     // StepFooter,
   },
+  props:{
+    isType:{
+      type:[Number,String],
+      default:null
+    }
+  },
   data() {
     return {
       api: require("./Api"),
@@ -187,6 +193,7 @@ export default {
       nextObj:{},//第二步数据
       thirdData:{},//第三步数据
       invoiceSucId:null,//第四步数据
+      parentType:this.isType
     };
   },
   methods: {
@@ -212,7 +219,7 @@ export default {
       switch(type){
         case 0:{
          
-          this.nextObj = {...row.data, orgid:row?.data.id, isDigital: row?.data.isDigital};
+          this.nextObj = {...row.data, orgid:row?.data.id, isDigital: row?.data.isDigital,isType:this.parentType};
           if((this.nextObj.id??'')!==''){
             delete this.nextObj.id
           }

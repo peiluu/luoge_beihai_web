@@ -24,11 +24,12 @@
     <article>
       <el-form  class="content-form" ref="form" :inline="false" :model="form" :rules="rules" size="mini">
       <el-form-item label="选择发票类型" prop="fppz">
-        <el-select  class="form-inline-input" v-model="form.fppz" size="small" clearable>
+        <el-select  class="form-inline-input" v-model="form.fppz" :disabled="(formInline.isType??'')!==''" size="small" clearable>
           <el-option key="sdzp" label="数电增值税专用发票" value="01"></el-option>
           <el-option key="sdpp" label="数电增值税普通发票" value="02"></el-option>
         </el-select>
       </el-form-item>
+      <div v-if="!formInline.isType">
       <el-form-item label="是否特定业务" prop="tdys">
         <el-select :disabled="isBlank(form.fppz)"  class="form-inline-input" v-model="form.tdys" size="small" clearable>
         <el-option key="jzfw" label="建筑服务" value="03"></el-option>
@@ -48,6 +49,7 @@
           <el-option key="zfzl" label="住房租赁" value="02"></el-option>
         </el-select>
       </el-form-item>
+    </div>
     </el-form>
     </article>
     
@@ -155,6 +157,9 @@
             this.getSellerInfoById(val.orgid)
           }
           this.formInline = {...val};
+          if(val.isType){
+            this.$set(this.form,'fppz','02')
+          }
         },
         deep:true
       }
@@ -176,7 +181,15 @@
       //     console.log('--error--', error)
       //   }
       // })
-     
+      
+      
+    },
+    mounted(){
+      // console.log(this.formInline?.isType,"2")
+      // if(this.formInline?.isType){
+      //   this.$set(this.form,'fppz','02')
+      // }
+      // this.form.fppz = this.formInline?.isType?'02':'';
     },
     methods: {
       async getSellerInfoById(orgid) {
