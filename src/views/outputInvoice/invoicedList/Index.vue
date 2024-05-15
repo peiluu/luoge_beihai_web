@@ -31,6 +31,14 @@
             : ''
         }}
       </template>
+      <template #kpfs="row">
+        {{ row.data.kpfs == '01'
+          ? 'RPA开票'
+          : row.data.kpfs == '02'
+            ? '乐企直连'
+            : ''
+        }}
+      </template>
       <template #hjje="{ data }">{{ formatMoney(data.hjje) }}</template>
       <template #hjse="{ data }">{{ formatMoney(data.hjse) }}</template>
 
@@ -140,6 +148,7 @@ export default {
         { title: "税额", width: 100, dataIndex: "hjse", slot: 'hjse', align: 'right' },
         { title: "备注", width: 100, dataIndex: "bz", },
         { title: "特定业务", width: 100, dataIndex: "tdys", slot: 'tdys' },
+        { title: "开票方式", width: 100, dataIndex: "kpfs", slot: 'kpfs' },
         {
           title: "操作",
           key: "action",

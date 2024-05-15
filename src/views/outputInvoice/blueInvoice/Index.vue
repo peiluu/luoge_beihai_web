@@ -108,11 +108,13 @@
             @handleNext="handleNext"
           ></StepFooter>
         </template>
+        <template #kpfs="{ data }">
+        {{ data.kpfs == "1" ? "RPA开票" : "乐企直连" }}</template>
       </form-list>
     </article>
     <!-- 脚部 -->
-    
   </div>
+  
 </template>
 
 <script>
@@ -156,12 +158,13 @@ export default {
           dataIndex: "nsrsbh",
           align: "center",
         },
-        // {
-        //   title: "剩余开票额度",
-        //   width: 180,
-        //   dataIndex: "nsrmc",
-        //   align: "center",
-        // },
+        {
+          title: "开票方式",
+          width: 180,
+          dataIndex: "kpfs",
+          align: "center",
+          slot:"kpfs"
+        },
         {
           title: "操作",
           width: 80,
