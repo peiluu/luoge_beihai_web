@@ -185,7 +185,11 @@ export default {
     /* 初始化 */
     handlerInit(){
       this.handleGetList();
-      
+      let query = this.$route.query;
+      if(query?.is_open){
+        this.title = '商品添加'
+        this.addVisible = true;
+      }
     },
     /* 获取table数据 */
     handleGetList(){
@@ -260,7 +264,7 @@ export default {
       this.addVisible = true;
       
     },
-
+    
     /* 查询 */
     handleSerch(){
       this.handleGetList();

@@ -630,14 +630,15 @@
                       <span v-else>{{ row.je }}</span>
                     </template>
                   </vxe-column>
-                  <vxe-column min-width="120" field="slv" title="税率/征收率">
-                    <template #default="{ row, rowIndex, $rowIndex }">
-                      {{ getTaxDesc(row) }}
-                      <!-- <vxe-select :transfer="true" v-model="row.slv" placeholder="请选择" @change="calcGoodsPrice(row, $rowIndex,'slv')" v-if="row.fphxz=='00'">
-                        <vxe-option v-for="(item, index) in taxRates" :key="index" :value="item.slzsl" :label="getTaxDesc(item)"></vxe-option>
+                  <vxe-column min-width="120" field="slv" title="税率/征收率" :edit-render="{}">
+                    <template #default="{ row, rowIndex, $rowIndex }"  >
+                      <!-- <span>{{ getTaxDesc(row) }}</span> -->
+                      <vxe-select :transfer="true" v-model="row.slv" placeholder="请选择" @change="calcGoodsPrice(row, $rowIndex,'slv')" v-if="!query.isType">
+                        <vxe-option v-for="(item, index) in taxRates" :key="index" :value="item.slv" :label="item.name"></vxe-option>
                       </vxe-select>
-                      <span v-else>{{row.slv}}</span> -->
+                      <span v-else>{{getTaxDesc(row)}}</span>
                     </template>
+                   
                   </vxe-column>
                   <vxe-column min-width="80" field="se" title="税额">
                     <template #default="{ row, rowIndex, $rowIndex }">
@@ -977,10 +978,11 @@
             <vxe-input
               @keyup.enter.native="getCustomerPage"
               @clear="getCustomerPage"
-              style="width: 200px"
+              style="width: 260px"
               v-model="customerQuery.gmfMc"
               placeholder="请输入客户名称/纳税人识别号/标签"
               clearable
+              size="small"
             >
               <template #prefix>
                 <i
@@ -990,6 +992,9 @@
                 ></i>
               </template>
             </vxe-input>
+            <span style="display:block;margin-left:15px;">
+              <el-button type="primary" @click="handleAddCustom">添加</el-button>
+            </span>
           </template>
         </vxe-toolbar>
         <vxe-table
@@ -1148,6 +1153,7 @@
       :dialogVisible="goodsDlgVisible"
       @closeDialog="closeGoodsDlg"
       @handleSubmitProduct="handleSubmitProduct"
+      @handleJumpClose="handleJumpClose"
     ></ProductProfileModal>
     <!-- 选择房源信息-->
     <HouseInfoDlg
@@ -1582,7 +1588,7 @@ export default {
         gmfzrrbz: "N", //购买方自然人标志，Y:是
         tdys: "", //特定要素
         cezslxDm: "", //差额征税类型代码，空：非差额发票；01：全额开票；02：差额开票
-        sfhs: "N",
+        sfhs: "Y",
         lzfpbz: "0",
         gmfmc:""
       },
@@ -2399,11 +2405,14 @@ export default {
       }
     },
     async getTaxRates() {
-      const { code = "", data = {} } = await this.api.getTaxRates();
-      if (code === "0") {
-        const { slzslList = [] } = data;
-        this.taxRates = slzslList;
+      //const { code = "", data = {} } = await this.api.getTaxRates();
+      const res = await this.api.getNoIsTypeRates();
+      console.log(res,"098765")
+      if ([0,'0'].includes(res.code)){
+        //const { slzslList = [] } = res.data || {};
+        this.taxRates =  res.data;
       }
+    
     },
     /**
      * 是否含税切换
@@ -3446,7 +3455,7 @@ export default {
       this.$set(this.form, "bz", "");
       this.$set(this.form, "email", "");
       this.$set(this.form, "krpq", "");
-      this.$set(this.form, "sfhs", "N");
+      this.$set(this.form, "sfhs", "Y");
     },
 
     /* 生成模板 */
@@ -3461,6 +3470,19 @@ export default {
     /* 可编辑table单元格点击后缀icon回调事件 */
     editDownShowGoodsDlg(row, index){
       this.showGoodsDlg(row, index)
+    },
+     /* 添加客户信息跳转 */
+     handleAddCustom(){
+      this.buyerVisible = false;
+      this.$router.push({
+        path: '/custom/index',
+        query:{is_open:true}
+      })
+      //this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+     
+    },
+    handleJumpClose(val){
+      this.goodsDlgVisible = val;
     }
   },
   computed: {
@@ -3474,6 +3496,7 @@ export default {
       }
       return window.innerHeight - h;
     },
+   
   },
   // created(){
   //   console.log(this.query,"3")
@@ -3482,9 +3505,10 @@ export default {
     if(!this.$route.query.isFormInvoiced){
       this.init()
     }
-    if(this.query?.isType){
-      this.$set(this.form,'sfhs','Y')
-    }
+    this.getTaxRates();
+    // if(this.query?.isType){
+    //   this.$set(this.form,'sfhs','Y')
+    // }
     // 创建一个下拉表格渲染
     const _this = this;
     VXETable.renderer.add('EditDown', {
@@ -3502,9 +3526,9 @@ export default {
     if(this.$route.query.isFormInvoiced){
       this.init()
     }
-    if(this.query.isType){
-      this.$set(this.form,'sfhs','Y')
-    }
+    // if(this.query.isType){
+    //   this.$set(this.form,'sfhs','Y')
+    // }
   },
 };
 </script>

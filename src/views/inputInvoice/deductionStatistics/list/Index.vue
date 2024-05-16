@@ -18,7 +18,7 @@
     <div class="toolbar">
       <el-button @click="handleEntry('history')">查看历史统计</el-button>
     </div>
-    <div :class="{ 'hidden': tableData.length == 0 || invoiceCheckList.length == 0 }" class="custom-table">
+    <div  class="custom-table">
       <el-table row-key="id" ref="table" :data="tableData" :height="120" border stripe :header-cell-style="{
         fontWeight: 400,
         borderTop: '1px solid #adb4bc',
@@ -170,6 +170,7 @@ export default {
         ...this.form,
         nsrsbh: this.form.gfsbh
       })
+      console.log(data,"0")
       if (code === '0') {
         this.tableData = data
       }
@@ -236,6 +237,7 @@ export default {
     // 进入页面
     handleEntry(operateType, data) {
       let route = {};
+      console.log(this.form,"-")
       switch (operateType) {
         case 'history':
           route = {
@@ -281,7 +283,7 @@ export default {
               nsrsbh: this.form.gfsbh,
               nsrmc: this.form.nsrmc,
               skssq: this.skssq,
-              pclsh: this.tableData[0].pclsh
+              pclsh: this.tableData[0]?.pclsh
             }
           }
           break;

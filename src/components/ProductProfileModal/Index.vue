@@ -1,5 +1,12 @@
 <template>
-  <el-dialog :title="title" :visible.sync="dialogVisible" min-height="600px;" width="80%" :show-close="!loading" :before-close="handleClose">
+  <el-dialog  :visible.sync="dialogVisible" min-height="600px;" width="80%" :show-close="!loading" :before-close="handleClose">
+    <template slot="title">
+      <span>{{title}}</span>
+      <span style="display:inline-block;margin-left:15px;">
+        <el-button type="primary" @click="handleAddCustom" size="mini">添 加</el-button>
+      </span>
+    </template>
+    
     <div  class="dialog_content" v-loading="loading">
     <div class="content-left">
       <vxe-table max-height="500" show-overflow :show-header="false" row-key :row-config="{ isHover: true, isCurrent: true }" border ref="xTree" row-id="id" :data="treeData" :tree-config="{
@@ -246,6 +253,13 @@ export default {
       }else{
         return row.cellValue
       }
+    },
+    handleAddCustom(){
+      this.$emit("handleJumpClose",false)
+      this.$router.push({
+        path: '/commodity/index',
+        query:{is_open:true}
+      })
     }
   }
 };
