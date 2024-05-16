@@ -87,7 +87,7 @@
                                     <el-col :span="24">
                                         <!-- 优惠政策及简易计税类型 -->
                                         <el-form-item label="增值税特殊管理类型" prop="zzstsgl" :rules="[
-                                        { required: (addForm.xsyhzc??'')!=='' === 'Y'? true : false, message: '请选择增值税特殊管理类型'},
+                                        { required: (addForm.xsyhzc??'')=== 'Y'? true : false, message: '请选择增值税特殊管理类型'},
                                         ]">
                                             <el-select style="width:100%" :disabled="addForm.xsyhzc === 'N'" 
                                             v-model="addForm.zzstsgl" placeholder="请选择" @change="handlertaxAess">
