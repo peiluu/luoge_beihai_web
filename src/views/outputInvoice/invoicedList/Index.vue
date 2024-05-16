@@ -143,7 +143,7 @@ export default {
         { title: "购买方名称", width: 100, dataIndex: "gmfmc", showTooltip: true },
         { title: "购买方识别号/身份证号", width: 180, dataIndex: "gmfnsrsbh", },
         { title: "发票请求流水号", width: 180, dataIndex: "fpqqlsh" },
-        { title: "开票日期", width: 100, dataIndex: "kprq",align:"center", slot: 'kprq' },
+        { title: "开票日期", width: 180, dataIndex: "kprq",align:"center", slot: 'kprq' },
         { title: "开票人", width: 100, dataIndex: "kpr" },
         { title: "金额", width: 100, dataIndex: "hjje", slot: 'hjje', align: 'right' },
         { title: "税额", width: 100, dataIndex: "hjse", slot: 'hjse', align: 'right' },
