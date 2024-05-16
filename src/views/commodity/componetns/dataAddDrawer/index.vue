@@ -153,7 +153,7 @@
 
 <script>
 import AppLeftList from '../../leftList';
-import {addCommonditySingle,getUnitList,getallBilling,getCommodityDes,getCommondityDes,updateCommondityRow,getNameDes} from '../../api.js';
+import {addCommonditySingle,getUnitList,getallBilling,getCommodityDes,getCommondityDes,updateCommondityRow,getNameDes,getSelectdatas} from '../../api.js';
 export default {
     name:'addcommodityPage',
     props:{
@@ -193,10 +193,8 @@ export default {
             mode:1,
             isShow: false,
             addForm:{
-                
                 xsyhzc:'N',
                 classid: this.commodityActiveId,
-                
             },
             ruleAddForm:{
                 name:[{ required: true, message: '项目商品名称', trigger: 'blur' },],
@@ -281,7 +279,7 @@ export default {
         this.$refs.addForm.clearValidate(['zzstsgl']);
       }
       // 重新验证表单
-      this.$refs.addForm.validateField('zzstsgl');
+      this.$refs.addForm?.validateField('zzstsgl');
     }
     },
     methods: {
@@ -289,14 +287,19 @@ export default {
        handlerEditDes(data){
         getCommondityDes(data).then(res=>{
             if(res.code === '0'){
+                
                 const {zsl,zzssl,zzstsgl} = res.data || {}
                 this.addForm = {...res.data,taxclasscode:res.data.sphfwssflhbbm}
                 this.addForm.orgids = this.addForm.orgids.map(k=> `${k}`);
+                if((res.data.sphfwssflhbbm??'') !==''){
+                    this.handlerGetSelect(res.data.sphfwssflhbbm)
+                }
                 if(this.xsyhzc === 'N'){
                     this.addForm.zzstsgl = null;
                     this.addForm.ls = '';
 
                 }
+
                 if(this.addForm.orgids === '0'){
                     this.buillingOptions = this.buillingOptions.map(k=> {return {...k,disabled:true}})
                 }
@@ -322,6 +325,33 @@ export default {
                 
             }
         })
+       },
+       /* 编辑获取下拉 */
+       async handlerGetSelect(data){
+        
+        const res = await getSelectdatas(data);
+        const {zsl,zzssl,zzstsgl} = res.data || {}
+        if([0,'0'].includes(res.code)){
+            if((zzstsgl??'') !==''){
+                    let arr = zzstsgl.split('、');
+                    this.taxAssOptions = arr.map(i=> {return {lable:i,value:i}})
+                    console.log(zzstsgl.split(','))
+                }
+                if((zsl??'')!=='' && (zzssl??'')!==''){
+                    let arr_ls = zsl.split('、');
+                    let arr_ss = zzssl.split('、');
+                    
+                    this.deepOption = this.deepClone([
+                        ...arr_ls.map(k=>{ return {label:k,value:Number(k.split('%')[0]) / 100}}),
+                        ...arr_ss.map(i=> {return {label:i,value:Number(i.split('%')[0]) / 100}})
+                    ])
+                }
+                if(zzstsgl === '免税' || zzstsgl === '不征税'){
+                    zzstsgl === '免税'?this.$set(this,'taxRateOption',[{label:'免税',value:0}]):this.$set(this,'taxRateOption',[{label:'不征税',value:0}])
+                }else{
+                    this.taxRateOption = [...this.deepOption];
+                }
+        }
        },
        /* 离开焦点事件 */
        handleBlurEvent(){
@@ -349,6 +379,8 @@ export default {
                     let arr = zzstsgl.split('、');
                     this.taxAssOptions = arr.map(i=> {return {lable:i,value:i}})
                     console.log(zzstsgl.split(','))
+                }else{
+                   
                 }
                 if((zsl??'')!=='' && (zzssl??'')!==''){
                         let arr_ls = zsl.split('、');
@@ -362,6 +394,7 @@ export default {
                             ...arr_ss.map(i=> {return {label:i,value:Number(i.split('%')[0]) / 100}})
                         ])
                     }
+                    
             }
             }).finally(()=>{
                 this.loadings = false
@@ -397,7 +430,7 @@ export default {
         },
         /* 点击回调 */
         handleNodeClick(val){
-           
+           console.log(val,"00000")
             if(val.sfhzx === '是') return
             this.isActiveName = val.sphfwmc || ''
             this.handleGetCommodiyDes(val)

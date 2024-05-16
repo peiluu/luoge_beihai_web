@@ -630,15 +630,22 @@
                       <span v-else>{{ row.je }}</span>
                     </template>
                   </vxe-column>
-                  <vxe-column min-width="120" field="slv" title="税率/征收率" :edit-render="{}">
-                    <template #default="{ row, rowIndex, $rowIndex }"  >
+                  <vxe-column min-width="120" field="slv" title="税率/征收率" :edit-render="{}" v-if="!query.isType">
+                    <template #edit="{ row, rowIndex, $rowIndex }"  >
                       <!-- <span>{{ getTaxDesc(row) }}</span> -->
-                      <vxe-select :transfer="true" v-model="row.slv" placeholder="请选择" @change="calcGoodsPrice(row, $rowIndex,'slv')" v-if="!query.isType">
+                      <vxe-select :transfer="true" v-model="row.slv" placeholder="请选择" @change="calcGoodsPrice(row, $rowIndex,'slv')" >
                         <vxe-option v-for="(item, index) in taxRates" :key="index" :value="item.slv" :label="item.name"></vxe-option>
                       </vxe-select>
-                      <span v-else>{{getTaxDesc(row)}}</span>
                     </template>
-                   
+                    <template #default="{ row }" >
+                      <span >{{getTaxDesc(row)}}</span>
+                    </template>
+                  </vxe-column>
+                  <vxe-column min-width="120" field="slv" title="税率/征收率"  v-else>
+                    <template #default="{ row }" >
+                      <span >{{getTaxDesc(row)}}</span>
+                    </template>
+                    
                   </vxe-column>
                   <vxe-column min-width="80" field="se" title="税额">
                     <template #default="{ row, rowIndex, $rowIndex }">
@@ -2527,6 +2534,7 @@ export default {
       row.bhsje = this.getBhsje(row);
       row.se = this.getSe(row);
       this.$refs.xTable.updateFooter();
+      this.$forceUpdate();
     },
     /**
      * 选择商品

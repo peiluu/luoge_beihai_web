@@ -42,6 +42,8 @@ export const getCommondityDes = data=> postJSON(`${config.host}/material/detail`
 /* 离开请求 */
 export const getNameDes = data=> getJSON(`${config.host}/invoiceTaxCode/getBySpmc`,data);
 
+/* 编辑获取下拉 */
+export const getSelectdatas = data=> postJSON(`${config.host}/invoiceTaxCode/getOneByCode?code=${data}`);
 //   /**
 //  * @desption 获取当前用户可以开票的开票点（不分页）
 //  */
