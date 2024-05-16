@@ -70,8 +70,13 @@
                 <el-table-column prop="sl" label="税率/征收率" min-width="200">
                 </el-table-column>
                 <el-table-column prop="xsyhzc" label="优惠政策以及简易计税" min-width="200">
+                  <template slot-scope="scope">
+                   
+                   {{ scope.row.xsyhzc === 'Y'?'是':scope.row.xsyhzc === 'N'?'否':'' }}
+                 </template>
                 </el-table-column>
                 <el-table-column prop="zzstsgl" label="优惠政策及简易计税类型" min-width="200">
+                 
                 </el-table-column>
                 <el-table-column prop="dj" label="单价" min-width="120">
                 </el-table-column>
@@ -169,7 +174,8 @@ export default {
       handler(val){
         this.commodityName = val;
       }
-    }
+    },
+   
   },
   methods: {
     handleSizeChange(e) {

@@ -86,9 +86,7 @@
                                     </el-col>
                                     <el-col :span="24">
                                         <!-- 优惠政策及简易计税类型 -->
-                                        <el-form-item label="增值税特殊管理类型" prop="zzstsgl" :rules="[
-                                        { required: (addForm.xsyhzc??'')=== 'Y'? true : false, message: '请选择增值税特殊管理类型'},
-                                        ]">
+                                        <el-form-item label="增值税特殊管理类型" prop="zzstsgl" >
                                             <el-select style="width:100%" :disabled="addForm.xsyhzc === 'N'" 
                                             v-model="addForm.zzstsgl" placeholder="请选择" @change="handlertaxAess">
                                                 <el-option
@@ -203,7 +201,7 @@ export default {
             ruleAddForm:{
                 name:[{ required: true, message: '项目商品名称', trigger: 'blur' },],
                 xsyhzc:[{ required: true, message: '请选择优惠政策及简易计税', trigger: 'blur' },],
-                //zzstsgl:[{ required: , message: '请选择优惠政策及简易计税类型', trigger: 'blur' },],
+                zzstsgl:[],
                 sl:[{ required: true, message: '请选择税率', trigger: 'blur' },]
             },
             dwOptions:[
@@ -270,7 +268,21 @@ export default {
                 }
             },
             deep:true
-        }
+        },
+    'addForm.xsyhzc'(newVal) {
+      // 当 xsyhzc 的值发生变化时，动态更新验证规则
+      if (newVal === 'Y') {
+        this.ruleAddForm.zzstsgl = [
+          { required: true, message: '请选择增值税特殊管理类型', trigger: 'blur' }
+        ];
+      } else {
+        this.ruleAddForm.zzstsgl = [];
+        // 手动清除验证错误信息
+        this.$refs.addForm.clearValidate(['zzstsgl']);
+      }
+      // 重新验证表单
+      this.$refs.addForm.validateField('zzstsgl');
+    }
     },
     methods: {
        /* 编辑详情 */
