@@ -18,6 +18,7 @@
             <!-- 无开票组织 -->
             <el-button v-if="row.data.lzfpbz == 0" @click.stop="invoiceUsedStatus(row.data)" type="danger">红冲</el-button>
             <el-button v-if="row.data.lzfpbz == 0" @click.stop="copyInvoice(row.data)" type="warning">复制</el-button>
+            <el-button v-if="row.data.tszt == 2" :loading="repushLoading" @click.stop="repush(row.data)" type="warning" dec="推送状态：0无需推送，1推送成功，2推送失败">重新推送</el-button>
           </template>
           <el-button slot="reference">操作</el-button>
         </el-popover>
@@ -58,16 +59,23 @@
       <template #orgName="row"> {{ row.data.orgName || '无开票组织' }}</template>
 
       <template #status="row">
+       
         <span :class="formatStatus(row.data.status).clazz">
-          <a v-if="row.data.status == '02'" href="javascript:void(0);" @click="showErrorMsg(row.data)">
-            {{ formatStatus(row.data.status).txt }}
-          </a>
+          <el-tooltip v-if="row.data.status == '02'" class="item" effect="dark" :content="row.data.kpsbyy" placement="top-start">
+            <span :class="formatStatus(row.data.status).clazz"   @click="showErrorMsg(row.data)">
+              {{ formatStatus(row.data.status).txt }}
+            </span> 
+          </el-tooltip>
           <template v-else>
             {{ formatStatus(row.data.status).txt }}
           </template>
         </span>
       </template>
-
+      <template #tsztstatus="row">
+        <span :class="formatTsztStatus(row.data.tszt).clazz">
+          {{ formatTsztStatus(row.data.tszt).txt }}
+        </span>
+      </template>
       <!-- 中间按钮部分 -->
       <template #topTool>
         <div class="toolbar">
@@ -113,7 +121,7 @@
 import { dateFormat, previewPdf } from "@/utils/tool";
 import FormList from '@/components/FormList.vue';
 import { outputFplxList } from '@/config/constant'
-import { invoiceUsedStatus, downLoadPdf, downLoadPdfZip, detailByOrgId, sendPdf, getOrgList, selectKpr, updateInvoiceOrgId, downLoadInvoiceList, selectQyList } from './Api'
+import { invoiceUsedStatus, downLoadPdf, downLoadPdfZip, detailByOrgId, sendPdf, getOrgList, selectKpr, updateInvoiceOrgId, downLoadInvoiceList, selectQyList, repushBackJQ } from './Api'
 
 export default {
   name: 'InvoicedList',
@@ -136,17 +144,18 @@ export default {
         { title: "开票类型", dataIndex: "lzfpbz",align:"center", slot: 'lzfpbz' },
         { title: "发票种类", dataIndex: "fppz", slot: 'fppz', width: 150 },
         { title: "开票状态", width: 100, dataIndex: "status",align:"center", slot: 'status' },
+        { title: "推送状态", width: 100, dataIndex: "tszt",align:"center", slot: 'tsztstatus' },
         // { title: "发票代码", width: 100, dataIndex: "fpdm" },
-        { title: "发票号码", width: 100, dataIndex: "fphm", slot: 'fphm', showTooltip: true},
-        { title: "开票组织名称", width: 100, dataIndex: "orgName", slot: "orgName" },
-        { title: "购买方名称", width: 100, dataIndex: "gmfmc", },
+        { title: "发票号码", width: 180, dataIndex: "fphm", slot: 'fphm', showTooltip: true},
+        { title: "开票组织名称", width: 180, dataIndex: "orgName", slot: "orgName", showTooltip: true},
+        { title: "购买方名称", width: 100, dataIndex: "gmfmc", showTooltip: true },
         { title: "购买方识别号/身份证号", width: 180, dataIndex: "gmfnsrsbh", },
         { title: "发票请求流水号", width: 180, dataIndex: "fpqqlsh" },
         { title: "开票日期", width: 100, dataIndex: "kprq",align:"center", slot: 'kprq' },
         { title: "开票人", width: 100, dataIndex: "kpr" },
         { title: "金额", width: 100, dataIndex: "hjje", slot: 'hjje', align: 'right' },
         { title: "税额", width: 100, dataIndex: "hjse", slot: 'hjse', align: 'right' },
-        { title: "备注", width: 100, dataIndex: "bz", },
+        { title: "备注", width: 100, dataIndex: "bz", showTooltip: true},
         { title: "特定业务", width: 100, dataIndex: "tdys", slot: 'tdys' },
         { title: "开票方式", width: 100, dataIndex: "kpfs", slot: 'kpfs' },
         {
@@ -324,6 +333,7 @@ export default {
       currentOrgList: [],
       isUpdateInvoiceOrgId: false,
       queryParam: {},
+      repushLoading: false,
     };
 
   },
@@ -567,6 +577,21 @@ export default {
       this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
 
     },
+    // 重新推送
+    async repush(row){
+      try {
+        this.repushLoading = true;
+        const {code, data = []} = await repushBackJQ({id: row.id})
+        if(code === '0'){
+          this.$message.success('操作成功')
+          this.$refs.list.reload()
+        }
+      } catch (error) {
+        console.log(error)
+      } finally {
+        this.repushLoading = false;
+      }
+    },
     dateFormat(fmt, date) {
       return dateFormat(fmt, date)
     },
@@ -582,6 +607,15 @@ export default {
         return { txt: '开票中', clazz: 'orange-cell' }
       } else if (cellValue == '04') {
         return { txt: '待开票', clazz: 'grey-cell' }
+      }
+    },
+     formatTsztStatus(cellValue) {
+      if (cellValue == 0) {
+        return { txt: '无需推送', clazz: '' }
+      } else if (cellValue == 1) {
+        return { txt: '推送成功', clazz: 'blue-cell' }
+      } else if (cellValue == 2) {
+        return { txt: '推送失败', clazz: 'red-cell' }
       }
     },
     formatShzt(cellValue) {
@@ -615,8 +649,9 @@ export default {
     },
     async downLoadList() {
       const fileName = `已开票记录导出.xlsx`
+      const ids = this.selections.map((item) => item.id)
       await downLoadInvoiceList({
-        reqData: { ...this.queryParam, scope: this.scope  },
+        reqData: { ...this.queryParam, scope: this.scope ,idKeys:ids },
         fileName
       })
     },
@@ -688,6 +723,30 @@ export default {
     .el-input {
       width: 100%;
     }
+  }
+}
+.blue-cell{
+  color: #008fff;
+  &::before{
+    content: '';
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      opacity: 0.8;
+      border-radius: 50%;
+      background: #008fff;
+  }
+}
+.red-cell{
+  color: #ff0000;
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      opacity: 0.8;
+      border-radius: 50%;
+      background: #ff0000;
   }
 }
 </style>
