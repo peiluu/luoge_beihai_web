@@ -99,7 +99,7 @@
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="24">
-                                        <el-form-item label="税率/征收率" prop="sl">
+                                        <el-form-item label="税率" prop="sl">
                                             <el-select style="width:100%" v-model="addForm.sl" placeholder="请选择">
                                                 <el-option
                                                 v-for="item in taxRateOption"
@@ -317,8 +317,8 @@ export default {
                         ...arr_ss.map(i=> {return {label:i,value:Number(i.split('%')[0]) / 100}})
                     ])
                 }
-                if(zzstsgl === '免税' || zzstsgl === '不征税'){
-                    zzstsgl === '免税'?this.$set(this,'taxRateOption',[{label:'免税',value:0}]):this.$set(this,'taxRateOption',[{label:'不征税',value:0}])
+                if(zzstsgl === '免税'){
+                    this.$set(this,'taxRateOption',[{label:'免税',value:0}])
                 }else{
                     this.taxRateOption = [...this.deepOption];
                 }
@@ -347,7 +347,7 @@ export default {
                     ])
                 }
                 if(zzstsgl === '免税' || zzstsgl === '不征税'){
-                    zzstsgl === '免税'?this.$set(this,'taxRateOption',[{label:'免税',value:0}]):this.$set(this,'taxRateOption',[{label:'不征税',value:0}])
+                    this.$set(this,'taxRateOption',[{label:'免税',value:0}])
                 }else{
                     this.taxRateOption = [...this.deepOption];
                 }
