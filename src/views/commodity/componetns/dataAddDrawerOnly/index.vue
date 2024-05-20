@@ -31,7 +31,7 @@
                             <el-form :model="addForm" :rules="ruleAddForm" ref="ruleAddForm" label-width="200px" class="demo-ruleForm">
                                 <el-row :gutter="20" >
                                     <el-col :span="24">
-                                        <el-form-item label="当前商品和服务税收分类编码" prop="orgids">
+                                        <el-form-item label="当前商品和服务税收分类编码" >
                                           <span style="">{{ isActiveName }}</span>
                                         </el-form-item>
                                         <el-form-item label="所属开票点" prop="orgids" >
@@ -200,7 +200,8 @@ export default {
                 name:[{ required: true, message: '项目商品名称', trigger: 'blur' },],
                 xsyhzc:[{ required: true, message: '请选择优惠政策及简易计税', trigger: 'blur' },],
                 zzstsgl:[],
-                sl:[{ required: true, message: '请选择税率', trigger: 'blur' },]
+                sl:[{ required: true, message: '请选择税率', trigger: 'blur' },],
+                orgids:[{ required: true, message: '请选择所属开票点', trigger: 'blur' },]
             },
             dwOptions:[
                 {
@@ -371,6 +372,7 @@ export default {
             getNameDes({spmc:data??''}).then(res=>{
                 if(res.code === '0'){
                 const {id,zsl,sphfwssflhbbm,sphfwmc,sphfwfljc,zzstsgl,sm,zzssl} = res.data || {};
+                this.isActiveName = sphfwfljc || ''
                 this.addForm ={
                         ...this.addForm,
                         sm:sm,
@@ -431,7 +433,7 @@ export default {
           
           
         },
-        /* 点击回调 */
+        /* 点击回调 sphfwfljc */
         handleNodeClick(val){
            console.log(val,"00000")
             if(val.sfhzx === '是') return

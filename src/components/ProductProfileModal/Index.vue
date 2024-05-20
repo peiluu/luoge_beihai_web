@@ -4,7 +4,7 @@
     <template slot="title">
       <span>{{title}}</span>
       <span style="display:inline-block;margin-left:15px;">
-        <el-button type="primary" @click="handleAddCustom" size="mini" :disabled="!activeId">添 加</el-button>
+        <el-button type="primary" @click="handleAddCustom" size="mini" >添 加</el-button>
       </span>
     </template>
     
@@ -279,7 +279,13 @@ export default {
       //   path: '/commodity/index',
       //   query:{is_open:true}
       // })
-      this.addVisible = true;
+      if((this.activeId??'') ===''){
+        this.$message.warning("请先选择商品分类！")
+        return
+      }else{
+        this.addVisible = true;
+      }
+      
     },
     /* 返回 */
     handleSaveDone(val){
