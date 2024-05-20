@@ -1152,6 +1152,7 @@
           >添加至发票</el-button
         >
       </div>
+      <blue-add-custom :visible.sync="addCustomVisible" title="添加客户" width="50%" v-if="addCustomVisible" @handleDone="handeAddCustomDone"></blue-add-custom>
     </el-dialog>
     <!--选择商品-->
     <ProductProfileModal
@@ -1483,6 +1484,7 @@ import AppUseTheme from './component/useTheme'
 import EditDown from './component/editDown'
 import VXETable from 'vxe-table';
 import { debounce } from '@/utils/tool.js';
+import blueAddCustom from './component/addCustom'
 //import { getArrayName } from '@/utils'
 export default {
   name: "BlueInvoiceForm",
@@ -1501,7 +1503,8 @@ export default {
     HouseInfoDlg,
     ProductProfileModal,
     AppAddTheme,
-    AppUseTheme
+    AppUseTheme,
+    blueAddCustom
   },
   data() {
     const validatePass = (rule, value, callback) => {
@@ -1705,6 +1708,7 @@ export default {
       gmfmcOptions:[],
       GMFMC:{},
       nameLoading: false,
+      addCustomVisible:false,
     };
   },
   watch: {
@@ -3481,13 +3485,19 @@ export default {
     },
      /* 添加客户信息跳转 */
      handleAddCustom(){
-      this.buyerVisible = false;
-      this.$router.push({
-        path: '/custom/index',
-        query:{is_open:true}
-      })
-      //this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
+      // this.buyerVisible = false;
+      // this.$router.push({
+      //   path: '/custom/index',
+      //   query:{is_open:true}
+      // })handleDone
+      this.addCustomVisible = true;
      
+    },
+    /* 添加完毕刷新 */
+    handeAddCustomDone(){
+      this.$nextTick(()=>{
+        this.handeAddCustomDone();
+      })
     },
     handleJumpClose(val){
       this.goodsDlgVisible = val;

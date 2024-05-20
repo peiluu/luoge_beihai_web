@@ -119,7 +119,8 @@
 </template>
 
 <script>
-import AppAddCommodity from '../componetns/dataAddDrawer/index.vue';
+// import AppAddCommodity from '../componetns/dataAddDrawer/index.vue';
+import AppAddCommodity from '../componetns/dataAddDrawerOnly/index.vue';
 import {getTableSourceList,getTaxrateList,delTableRowSingle} from '../api.js';
 const RESET_FORM = {
   name:'',
