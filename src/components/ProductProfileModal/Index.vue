@@ -4,7 +4,7 @@
     <template slot="title">
       <span>{{title}}</span>
       <span style="display:inline-block;margin-left:15px;">
-        <el-button type="primary" @click="handleAddCustom" size="mini">添 加</el-button>
+        <el-button type="primary" @click="handleAddCustom" size="mini" :disabled="!activeId">添 加</el-button>
       </span>
     </template>
     
@@ -87,7 +87,7 @@
 import { getNextLayer, queryProductProfile, queryColumn } from './Api';
 
 import { defaultHeader, defaultHeaderMotor } from './constant';
-import AddCommindityCom from '@/views/commodity/componetns/dataAddDrawerOnly'
+import addCommindityCom from '@/views/commodity/componetns/dataAddDrawerOnly/index.vue'
 export default {
   name: 'ProductProfileModal',
   props: {
@@ -107,7 +107,9 @@ export default {
       type: String,
     }
   },
-  components:[AddCommindityCom],
+  components: {
+    addCommindityCom
+  },
   data() {
     return {
       treeData: [{
@@ -165,6 +167,7 @@ export default {
      */
     async queryProductProfile(row = {}, type) {
       console.log(row,type,"----")
+      this.activeId = row.id ?? null;
       // 两种查询方法，通过点击查询和搜索查询，如果是通过搜索查询，row无值，需要从data取原有的值，保证查询条件不被覆盖
       const ismotor = type == 'search' ? this.ismotor : row.ismotor
       const marclasscode = type == 'search' ? this.marclasscode : row.code

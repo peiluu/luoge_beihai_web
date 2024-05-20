@@ -308,12 +308,12 @@ export default {
                     this.taxAssOptions = arr.map(i=> {return {lable:i,value:i}})
                     console.log(zzstsgl.split(','))
                 }
-                if((zsl??'')!=='' && (zzssl??'')!==''){
+                if((zzssl??'')!==''){
                     let arr_ls = zsl.split('、');
                     let arr_ss = zzssl.split('、');
                     
                     this.deepOption = this.deepClone([
-                        ...arr_ls.map(k=>{ return {label:k,value:Number(k.split('%')[0]) / 100}}),
+                        // ...arr_ls.map(k=>{ return {label:k,value:Number(k.split('%')[0]) / 100}}),
                         ...arr_ss.map(i=> {return {label:i,value:Number(i.split('%')[0]) / 100}})
                     ])
                 }
@@ -385,15 +385,15 @@ export default {
                 }else{
                    
                 }
-                if((zsl??'')!=='' && (zzssl??'')!==''){
+                if((zzssl??'')!==''){
                         let arr_ls = zsl.split('、');
                         let arr_ss = zzssl.split('、');
                         this.taxRateOption = [
-                            ...arr_ls.map(k=>{ return {label:k,value:Number(k.split('%')[0]) / 100}}),
+                            // ...arr_ls.map(k=>{ return {label:k,value:Number(k.split('%')[0]) / 100}}),
                             ...arr_ss.map(i=> {return {label:i,value:Number(i.split('%')[0]) / 100}})
                         ]
                         this.deepOption = this.deepClone([
-                            ...arr_ls.map(k=>{ return {label:k,value:Number(k.split('%')[0]) / 100}}),
+                            // ...arr_ls.map(k=>{ return {label:k,value:Number(k.split('%')[0]) / 100}}),
                             ...arr_ss.map(i=> {return {label:i,value:Number(i.split('%')[0]) / 100}})
                         ])
                     }
@@ -462,15 +462,15 @@ export default {
                     }else{
                         this.taxAssOptions = [];
                     }
-                    if((zsl??'')!=='' && (zzssl??'')!==''){
+                    if((zzssl??'')!==''){
                         let arr_ls = zsl.split('、');
                         let arr_ss = zzssl.split('、');
                         this.taxRateOption = [
-                            ...arr_ls.map(k=>{ return {label:k,value:Number(k.split('%')[0]) / 100}}),
+                            // ...arr_ls.map(k=>{ return {label:k,value:Number(k.split('%')[0]) / 100}}),
                             ...arr_ss.map(i=> {return {label:i,value:Number(i.split('%')[0]) / 100}})
                         ]
                         this.deepOption = this.deepClone([
-                            ...arr_ls.map(k=>{ return {label:k,value:Number(k.split('%')[0]) / 100}}),
+                            // ...arr_ls.map(k=>{ return {label:k,value:Number(k.split('%')[0]) / 100}}),
                             ...arr_ss.map(i=> {return {label:i,value:Number(i.split('%')[0]) / 100}})
                         ])
                     }
