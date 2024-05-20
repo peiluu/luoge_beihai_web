@@ -1,4 +1,5 @@
 <template>
+  <div>
   <el-dialog  :visible.sync="dialogVisible" min-height="600px;" width="80%" :show-close="!loading" :before-close="handleClose">
     <template slot="title">
       <span>{{title}}</span>
@@ -9,7 +10,10 @@
     
     <div  class="dialog_content" v-loading="loading">
     <div class="content-left">
-      <vxe-table max-height="500" show-overflow :show-header="false" row-key :row-config="{ isHover: true, isCurrent: true }" border ref="xTree" row-id="id" :data="treeData" :tree-config="{
+      <vxe-table max-height="500" show-overflow :show-header="false" row-key 
+      :row-config="{ isHover: true, isCurrent: true }" border ref="xTree" 
+      row-id="id" :data="treeData" 
+      :tree-config="{
         transform: true,
         accordion: true,
         rowField: 'id',
@@ -65,18 +69,25 @@
       </vxe-pager>
     </div>
   </div>
+  
     <span slot="footer" class="dialog-footer">
       <el-button @click="handleClose" :disabled="loading">关 闭</el-button>
       <el-button type="success" @click="handleSubmit" :disabled="loading">添加至发票</el-button>
     </span>
   </el-dialog>
+  <add-commindity-com v-if="addVisible" :commodity-active-id="activeId"  
+     :visible.sync="addVisible" 
+    :title="title" 
+    @saveDone="handleSaveDone"
+    width="75%"></add-commindity-com>
+</div>
 </template>
 
 <script>
 import { getNextLayer, queryProductProfile, queryColumn } from './Api';
 
 import { defaultHeader, defaultHeaderMotor } from './constant';
-
+import AddCommindityCom from '@/views/commodity/componetns/dataAddDrawerOnly'
 export default {
   name: 'ProductProfileModal',
   props: {
@@ -96,6 +107,7 @@ export default {
       type: String,
     }
   },
+  components:[AddCommindityCom],
   data() {
     return {
       treeData: [{
@@ -119,6 +131,9 @@ export default {
       ismotor: '',
       marclasscode: '',
       loading:false,
+      addVisible:false,
+      activeId:  null,
+      title:'添加商品'
     }
   },
 
@@ -149,6 +164,7 @@ export default {
      * @description 查询商品列表
      */
     async queryProductProfile(row = {}, type) {
+      console.log(row,type,"----")
       // 两种查询方法，通过点击查询和搜索查询，如果是通过搜索查询，row无值，需要从data取原有的值，保证查询条件不被覆盖
       const ismotor = type == 'search' ? this.ismotor : row.ismotor
       const marclasscode = type == 'search' ? this.marclasscode : row.code
@@ -255,11 +271,16 @@ export default {
       }
     },
     handleAddCustom(){
-      this.$emit("handleJumpClose",false)
-      this.$router.push({
-        path: '/commodity/index',
-        query:{is_open:true}
-      })
+      // this.$emit("handleJumpClose",false)
+      // this.$router.push({
+      //   path: '/commodity/index',
+      //   query:{is_open:true}
+      // })
+      this.addVisible = true;
+    },
+    /* 返回 */
+    handleSaveDone(val){
+      console.log(val)
     }
   }
 };
