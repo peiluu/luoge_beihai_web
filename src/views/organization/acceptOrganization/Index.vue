@@ -14,7 +14,7 @@
             <el-button @click="batchOperate('batchEnable')">切换启停</el-button>
             <el-button @click="batchOperate('batchMoveOrg')">转移</el-button>
             <el-button @click="handleDelete('batchDel')">删除</el-button>
-            <el-button @click="handleImport">导入</el-button>
+            <!--<el-button @click="handleImport">导入</el-button>-->
             <el-button @click="handleExport">导出</el-button>
           </div>
         </div>
