@@ -9,6 +9,7 @@
           </div>
           <div class="toolbar-right">
             <el-button type="success" @click="hanldeEnter()">新增</el-button>
+            <el-button @click="handleImport">导入</el-button>
             <el-button @click="batchOperate('batchDel',data)">删除</el-button>
             <el-button @click="batchOperate(1)">标记黑名单</el-button>
             <el-button @click="batchOperate(0)">移除黑名单</el-button>
@@ -54,6 +55,18 @@
       class="detail-dialog" destroy-on-close>
       <Detail :detailInfo="detailInfo" @onOk="onOk" @onClose="onClose" />
     </el-dialog>
+    <custom-import 
+      dialogTitle="导入客户信息维护"
+      :dialogVisible="dialogImportVisible"
+      @handleClose="handleonClose"
+      @handleOk="handleonOk"
+      downloadTemplateApi="/Customer/downLoadTemplate"
+      downloadTemplateName="客户信息_导入模板"
+      upApi="/Customer/importExcel"
+      importApi="/Customer/importExcel"
+      upTitle="上传客户信息"
+      :importColumns="importColumns"
+    ></custom-import>
   </div>
 </template>
 
@@ -62,11 +75,13 @@
 import FormList from '@/components/FormList.vue';
 import { deleteBatch, getList, hmdCustomer } from './Api.js';
 import Detail from './Detail.vue'
+import CustomImport from '@/components/CustomImport'
 export default {
   name: 'organizationTaxBody',
   components: {
     FormList,
-    Detail
+    Detail,
+    CustomImport
   },
   data() {
     return {
@@ -137,6 +152,12 @@ export default {
       },
       exportLoading: false,
       detailInfo: {},
+      dialogImportVisible:false,
+      importColumns:[
+        { title: "组织编码", width: 100, dataIndex: "code", },
+        { title: "组织名称", width: 150, dataIndex: "name", },
+        { title: "所属主体", width: 150, dataIndex: "nsrmc", },
+      ],
     };
 
   },
@@ -292,7 +313,19 @@ export default {
     // 表格选择返回
     handleSelection(val) {
       console.log(val)
-    }
+    },
+    /* 导入 */
+    handleImport() {
+      this.dialogImportVisible = true
+    },
+    /* 导入返回 */
+    handleonOk(){
+      this.queryParam = param;
+      this.handleonClose()
+    },
+    handleonClose(){
+      this.dialogImportVisible = false;
+    },
   }
 };
 </script>

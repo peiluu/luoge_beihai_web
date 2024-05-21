@@ -47,12 +47,12 @@
       <template #sendRecords="row">
         <el-popover
           placement="right"
-          width="430"
+          width="650"
           trigger="hover">
           <el-table :data="row.data?.sendRecords">
-            <el-table-column width="150" property="fphm" label="发票号码"></el-table-column>
-            <el-table-column width="100" property="email" label="邮箱"></el-table-column>
-            <el-table-column width="180" property="sendTime" label="日期"></el-table-column>
+            <el-table-column minWidth="180" property="fphm" label="发票号码" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column minWidth="180" property="email" label="邮箱" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column minWidth="180" property="sendTime" label="日期" :show-overflow-tooltip="true"></el-table-column>
           </el-table>
           <el-button slot="reference">详情</el-button>
         </el-popover>
@@ -162,7 +162,7 @@ export default {
         { title: "税额", width: 100, dataIndex: "hjse", slot: 'hjse', align: 'right' },
         { title: "备注", width: 100, dataIndex: "bz", showTooltip: true},
         { title: "特定业务", width: 100, dataIndex: "tdys", slot: 'tdys' },
-        { title: "发送记录", width: 100, dataIndex: "sendRecords", fixed: 'right', slot: 'sendRecords',align: 'center' },
+        { title: "发送记录", width: 80, dataIndex: "sendRecords", fixed: 'right', slot: 'sendRecords',align: 'center' },
         {
           title: "操作",
           key: "action",
