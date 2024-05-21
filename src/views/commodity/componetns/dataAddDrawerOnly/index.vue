@@ -31,9 +31,9 @@
                             <el-form :model="addForm" :rules="ruleAddForm" ref="ruleAddForm" label-width="200px" class="demo-ruleForm">
                                 <el-row :gutter="20" >
                                     <el-col :span="24">
-                                        <!--<el-form-item label="当前商品和服务税收分类编码">
+                                        <el-form-item label="当前商品和服务税收分类编码" >
                                           <span style="">{{ isActiveName }}</span>
-                                        </el-form-item>-->
+                                        </el-form-item>
                                         <el-form-item label="所属开票点" prop="orgids" >
                                             <el-select style="width:100%;" v-model="addForm.orgids" filterable 
                                             placeholder="请选择" clearable multiple @change="handlerOrgidsChange" @remove-tag="handlerRemoveTag">
@@ -52,7 +52,7 @@
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="24">
-                                        <el-form-item label="商品和服务税收分类编码" prop="taxclasscode">
+                                        <el-form-item label="商品和服务税收分类合并编码" prop="taxclasscode">
                                             <el-input v-model="addForm.taxclasscode" disabled></el-input>
                                         </el-form-item>
                                         <!-- <el-form-item label="增值税特殊管理" prop="taxclasscode">
@@ -99,7 +99,7 @@
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="24">
-                                        <el-form-item label="税率/征收率" prop="sl">
+                                        <el-form-item label="税率" prop="sl">
                                             <el-select style="width:100%" v-model="addForm.sl" placeholder="请选择">
                                                 <el-option
                                                 v-for="item in taxRateOption"
@@ -197,12 +197,11 @@ export default {
                 classid: this.commodityActiveId,
             },
             ruleAddForm:{
-                orgids:[{ required: true, message: '请选择所属开票点', trigger: 'blur' },],
-                name:[{ required: true, message: '请填写项目商品名称', trigger: 'blur' },],
-                taxclasscode:[{ required: true, message: '请选择商品和服务税收分类编码', trigger: 'blur' },],
+                name:[{ required: true, message: '项目商品名称', trigger: 'blur' },],
                 xsyhzc:[{ required: true, message: '请选择优惠政策及简易计税', trigger: 'blur' },],
                 zzstsgl:[],
-                sl:[{ required: true, message: '请选择税率', trigger: 'blur' },]
+                sl:[{ required: true, message: '请选择税率', trigger: 'blur' },],
+                orgids:[{ required: true, message: '请选择所属开票点', trigger: 'blur' },]
             },
             dwOptions:[
                 {
@@ -310,17 +309,17 @@ export default {
                     this.taxAssOptions = arr.map(i=> {return {lable:i,value:i}})
                     console.log(zzstsgl.split(','))
                 }
-                if((zsl??'')!=='' && (zzssl??'')!==''){
+                if((zzssl??'')!==''){
                     let arr_ls = zsl.split('、');
                     let arr_ss = zzssl.split('、');
                     
                     this.deepOption = this.deepClone([
-                        ...arr_ls.map(k=>{ return {label:k,value:Number(k.split('%')[0]) / 100}}),
+                        // ...arr_ls.map(k=>{ return {label:k,value:Number(k.split('%')[0]) / 100}}),
                         ...arr_ss.map(i=> {return {label:i,value:Number(i.split('%')[0]) / 100}})
                     ])
                 }
-                if(zzstsgl === '免税' || zzstsgl === '不征税'){
-                    zzstsgl === '免税'?this.$set(this,'taxRateOption',[{label:'免税',value:0}]):this.$set(this,'taxRateOption',[{label:'不征税',value:0}])
+                if(zzstsgl === '免税'){
+                    this.$set(this,'taxRateOption',[{label:'免税',value:0}])
                 }else{
                     this.taxRateOption = [...this.deepOption];
                 }
@@ -349,7 +348,7 @@ export default {
                     ])
                 }
                 if(zzstsgl === '免税' || zzstsgl === '不征税'){
-                    zzstsgl === '免税'?this.$set(this,'taxRateOption',[{label:'免税',value:0}]):this.$set(this,'taxRateOption',[{label:'不征税',value:0}])
+                    this.$set(this,'taxRateOption',[{label:'免税',value:0}])
                 }else{
                     this.taxRateOption = [...this.deepOption];
                 }
@@ -370,36 +369,37 @@ export default {
        /* 请求商品详情 */
        handleGetCommodiyDesNameDes(data){
             this.loadings = true;
-           this.taxRateOption = [];
             getNameDes({spmc:data??''}).then(res=>{
                 if(res.code === '0'){
-                    const {id,zsl,sphfwssflhbbm,sphfwmc,sphfwfljc,zzstsgl,sm,zzssl} = res.data || {};
-                    this.addForm ={
+                const {id,zsl,sphfwssflhbbm,sphfwmc,sphfwfljc,zzstsgl,sm,zzssl} = res.data || {};
+                this.isActiveName = sphfwfljc || ''
+                this.addForm ={
                         ...this.addForm,
                         sm:sm,
                         taxclasscode:sphfwssflhbbm,
                         sphfwmc,
                         sphfwfljc
                     }
-                    if((zzstsgl??'') !==''){
-                        let arr = zzstsgl.split('、');
-                        this.taxAssOptions = arr.map(i=> {return {lable:i,value:i}}) ||  []
-                        console.log(zzstsgl.split(','))
-                    }else{
-                        this.taxAssOptions = [];
-                    }
-                    if((zsl??'')!=='' && (zzssl??'')!==''){
+                if((zzstsgl??'') !==''){
+                    let arr = zzstsgl.split('、');
+                    this.taxAssOptions = arr.map(i=> {return {lable:i,value:i}})
+                    console.log(zzstsgl.split(','))
+                }else{
+                   
+                }
+                if((zzssl??'')!==''){
                         let arr_ls = zsl.split('、');
                         let arr_ss = zzssl.split('、');
                         this.taxRateOption = [
-                            ...arr_ls.map(k=>{ return {label:k,value:Number(k.split('%')[0]) / 100}}),
+                            // ...arr_ls.map(k=>{ return {label:k,value:Number(k.split('%')[0]) / 100}}),
                             ...arr_ss.map(i=> {return {label:i,value:Number(i.split('%')[0]) / 100}})
                         ]
                         this.deepOption = this.deepClone([
-                            ...arr_ls.map(k=>{ return {label:k,value:Number(k.split('%')[0]) / 100}}),
+                            // ...arr_ls.map(k=>{ return {label:k,value:Number(k.split('%')[0]) / 100}}),
                             ...arr_ss.map(i=> {return {label:i,value:Number(i.split('%')[0]) / 100}})
                         ])
                     }
+                    
             }
             }).finally(()=>{
                 this.loadings = false
@@ -433,7 +433,7 @@ export default {
           
           
         },
-        /* 点击回调 */
+        /* 点击回调 sphfwfljc */
         handleNodeClick(val){
            console.log(val,"00000")
             if(val.sfhzx === '是') return
@@ -464,15 +464,15 @@ export default {
                     }else{
                         this.taxAssOptions = [];
                     }
-                    if((zsl??'')!=='' && (zzssl??'')!==''){
+                    if((zzssl??'')!==''){
                         let arr_ls = zsl.split('、');
                         let arr_ss = zzssl.split('、');
                         this.taxRateOption = [
-                            ...arr_ls.map(k=>{ return {label:k,value:Number(k.split('%')[0]) / 100}}),
+                            // ...arr_ls.map(k=>{ return {label:k,value:Number(k.split('%')[0]) / 100}}),
                             ...arr_ss.map(i=> {return {label:i,value:Number(i.split('%')[0]) / 100}})
                         ]
                         this.deepOption = this.deepClone([
-                            ...arr_ls.map(k=>{ return {label:k,value:Number(k.split('%')[0]) / 100}}),
+                            // ...arr_ls.map(k=>{ return {label:k,value:Number(k.split('%')[0]) / 100}}),
                             ...arr_ss.map(i=> {return {label:i,value:Number(i.split('%')[0]) / 100}})
                         ])
                     }
@@ -526,6 +526,7 @@ export default {
         },
         /* 变化 */
         handlertaxAess(val){
+           
             if(val === '免税' || val === '免征税' || val === '不征税'){
                 //this.$set(this,'taxRateOption',[{label:'0% (免税 / 免征税)',value:0}])
                 val === '免税'?this.$set(this,'taxRateOption',[{label:'免税',value:0}]):this.$set(this,'taxRateOption',[{label:'不征税',value:0}])

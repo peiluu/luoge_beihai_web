@@ -11,25 +11,25 @@
           </el-select>
         </el-form-item>
         <el-form-item label="店铺名称" prop="gmfcode">
-          <el-input v-model="form.gmfcode" placeholder="请输入" maxlength="100" />
+          <el-input v-model="form.gmfcode" placeholder="请输入" maxlength="300" />
         </el-form-item>
         <el-form-item label="客户名称" prop="gmfMc">
-          <el-input v-model="form.gmfMc" placeholder="请输入" maxlength="100" />
+          <el-input v-model="form.gmfMc" placeholder="请输入" maxlength="300" />
         </el-form-item>
         <el-form-item label="客户纳税人识别号" prop="gmfNsrsbh">
           <el-input v-model="form.gmfNsrsbh" placeholder="请输入" maxlength="20" />
         </el-form-item>
         <el-form-item label="地址" prop="dzdh">
-          <el-input v-model="form.dzdh" placeholder="请输入" maxlength="80" />
+          <el-input v-model="form.dzdh" placeholder="请输入" maxlength="300" />
         </el-form-item>
         <el-form-item label="电话" prop="phone">
           <el-input v-model="form.phone" placeholder="请输入" maxlength="13" />
         </el-form-item>
         <el-form-item label="开户行" prop="yhzh">
-          <el-input v-model="form.yhzh" placeholder="请输入" maxlength="13" />
+          <el-input v-model="form.yhzh" placeholder="请输入" maxlength="120" />
         </el-form-item>
         <el-form-item label="账号" prop="bankaccount">
-          <el-input v-model="form.bankaccount" placeholder="请输入" maxlength="90" />
+          <el-input v-model="form.bankaccount" placeholder="请输入" maxlength="50" />
         </el-form-item>
         <el-form-item label="联系人" prop="username">
           <el-input v-model="form.username" placeholder="请输入" maxlength="90" />

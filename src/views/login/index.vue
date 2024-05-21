@@ -131,7 +131,6 @@ export default {
       this.$http
         .get('/sys/menu/nav')
         .then((res) => {
-          this.loading = false;
           if (res.code !== 0) {
             this.$message.error(res.msg);
           }
@@ -143,7 +142,10 @@ export default {
           this.$store.commit('app/saveSidebarMenuList', res.data || []);
           // 添加动态路由
           fnAddDynamicMenuRoutes(res.data, [], this.$router);
-          this.$router.replace({ name: 'home' });
+          setTimeout(() => {
+            this.loading = false;
+            this.$router.replace({ name: 'home' });
+          }, 100);
         })
         .catch((e) => {
           this.getCaptcha();

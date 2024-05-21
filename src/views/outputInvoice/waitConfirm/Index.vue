@@ -80,7 +80,7 @@ export default {
         { title: "对应蓝字发票代码", width: 140, dataIndex: "lzfpdm" },
         { title: "不含税金额", dataIndex: "hzcxje", slot: 'hzcxje', align: 'right', width: 100 },
         { title: "税额", dataIndex: "hzcxse", slot: 'hzcxse', align: 'right', width: 100 },
-        { title: "审核人", dataIndex: "hpshr", align: 'center', width: 100 },
+        //{ title: "审核人", dataIndex: "hpshr", align: 'center', width: 100 },
         { title: "提交时间", dataIndex: "lrrqq", align: 'center', slot: 'lrrqq', width: 100 },
         { title: "冲红原因", dataIndex: "chyyDm", align: 'center', slot: "chyyDm", width: 100 },
         { title: "开具状态", dataIndex: "ykjhzfpbz", align: 'center', slot: "ykjhzfpbz", width: 100 },
