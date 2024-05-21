@@ -1,5 +1,5 @@
 <template>
-  <el-card shadow="never" class="aui-card--fill" style="height: 100%;">
+  <el-card shadow="never" class="aui-card--fill" >
     <div class="mod-sys__user">
       <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
         <el-form-item>
@@ -32,7 +32,7 @@
         border
         @selection-change="dataListSelectionChangeHandle"
         @sort-change="dataListSortChangeHandle"
-        height="100%"
+        height="calc(100vh - 230px)"
         style="width: 100%;">
         <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
         <el-table-column prop="username" :label="$t('user.username')" sortable="custom" header-align="center" align="center"></el-table-column>
