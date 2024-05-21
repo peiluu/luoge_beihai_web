@@ -1,5 +1,12 @@
+
 <template>
-  <el-dialog :visible.sync="visible" :title="$t('user.setdatapermission')" :lock-scroll="true" :close-on-click-modal="false" :close-on-press-escape="false" >
+  <el-dialog 
+  :visible="visible" 
+  :title="$t('user.setdatapermission')" 
+  @update:visible="updateVisible"
+  :before-close="handleClose"
+  :close-on-click-modal="false" 
+  :close-on-press-escape="false" >
   <el-container style="height: 450px; border: 1px solid #eee" v-loading="loading">
       <el-header>
         请选择数据权限类型：
@@ -43,8 +50,8 @@
       </el-main>
     </el-container>
     <article slot="footer">
-      <el-button  type="" @click="visible = false" :loading="permissionLoading">取 消</el-button>
-      <el-button  type="primary" @click="setPermission()" :loading="permissionLoading">{{ $t('datapower.setdatapermission') }}</el-button>
+      <el-button  type="" @click="updateVisible(false)" :loading="permissionLoading">取 消</el-button>
+      <el-button  type="primary" @click="setPermission()" :loading="permissionLoading" :disabled="!selectpermissionid || loading">{{ $t('datapower.setdatapermission') }}</el-button>
     </article>
   </el-dialog>
 
@@ -81,6 +88,12 @@
 import debounce from "lodash/debounce"
 export default {
   name: "data-permission-set",
+  props:{
+    visible:{
+      type:Boolean,
+      default:false
+    }
+  },
   data () {
 
     return {
@@ -89,7 +102,7 @@ export default {
       // 选中数据集合
       selectionAllData: [],
       //checkedKeys: false,
-      visible: false,
+      
       selectpermissionid:null,//选中的权限类型id
       selectedPermissionObj:null,//选中的权限类型详细信息
       permissionlist:[],//所有权限类型详细信息列表
@@ -147,6 +160,9 @@ export default {
       }
       bindCheck(this.tableData)
     },
+    updateVisible(value){
+      this.$emit('update:visible', value);
+    },
     //切换权限类型
     changePermissionType(e){
       this.selectionAllData=[];
@@ -166,7 +182,6 @@ export default {
       var permissionBody={"userid":this.dataForm.userid,"permissiontype":this.selectedPermissionObj.powertype,"permissionlist":this.selectionAllData}
       // console.log("permissionBody:",permissionBody);
       this.$http["post"]('/sys/userdatapermission/setUserPermission', permissionBody).then(res => {
-        this.permissionLoading = false;
         if (res.code !== 0) {
           return this.$message.error(res.msg)
         }
@@ -175,8 +190,8 @@ export default {
           type: 'success',
           duration: 500,
           onClose: () => {
-            this.visible = false
-            this.$emit('refreshDataList')
+            this.open();
+           
           }
         })
       }).catch(() => {
@@ -303,7 +318,7 @@ export default {
         if (res.code !== 0) {
           return this.$message.error(res.msg)
         }
-        this.permissionlist = res.data.list
+        this.permissionlist = res.data.list;
         // console.log("permissionlist:",this.permissionlist)
         //if(this.dataForm.pstate==0)this.dataForm.pstate=fasle;else this.dataForm.pstate=true;
       }).catch(() => {})
@@ -350,6 +365,22 @@ export default {
         //if(this.dataForm.pstate==0)this.dataForm.pstate=fasle;else this.dataForm.pstate=true;
       }).catch(() => {})
     },
+    handleClose(){
+    this.updateVisible(false)
+  },
+  open() {
+        this.$confirm('是否继续授权?是将继续停留，否会关闭弹窗！', '提示', {
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          type: 'warning'
+        }).then(() => {
+          this.$emit('refreshDataList')
+          
+        }).catch(() => {
+          this.$emit('refreshDataList')
+          this.updateVisible(false)       
+        });
+      },
     // 表单提交
     dataFormSubmitHandle: debounce(function () {
       this.$refs['dataForm'].validate((valid) => {
@@ -366,14 +397,19 @@ export default {
             type: 'success',
             duration: 500,
             onClose: () => {
-              this.visible = false
+              
+              // this.visible = false
               this.$emit('refreshDataList')
+              this.updateVisible(false)
             }
           })
         }).catch(() => {})
       })
     }, 1000, { 'leading': true, 'trailing': false })
-  }
+   
+  },
+  
+ 
 }
 
 </script>

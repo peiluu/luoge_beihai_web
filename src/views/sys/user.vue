@@ -71,7 +71,7 @@
     </article>
       <!-- 弹窗, 新增 / 修改 -->
       <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
-      <SetDataPermission v-if="setDataPermissionVisible" ref="setDataPermission" @refreshDataList="getDataList"></SetDataPermission>
+      <SetDataPermission :visible.sync="setDataPermissionVisible" v-if="setDataPermissionVisible" ref="setDataPermission" @refreshDataList="getDataList"></SetDataPermission>
     </div>
   </el-card>
 </template>
