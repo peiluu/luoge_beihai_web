@@ -131,7 +131,7 @@ export default {
         { title: "税额", width: 100, dataIndex: "hjse", slot: 'hjse', align: 'right' },
         { title: "开票日期", width: 180,align:"center", dataIndex: "kprq", slot:'kprq' },
         { title: "备注", width: 120, dataIndex: "bz", showTooltip: true},
-        { title: "审核人", width: 100, dataIndex: "shrxm", align: 'center' },
+        //{ title: "审核人", width: 100, dataIndex: "shrxm", align: 'center' },
         {
           title: "操作",
           key: "action",
