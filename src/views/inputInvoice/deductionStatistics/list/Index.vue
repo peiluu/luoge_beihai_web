@@ -283,7 +283,7 @@ export default {
               nsrsbh: this.form.gfsbh,
               nsrmc: this.form.nsrmc,
               skssq: this.skssq,
-              pclsh: this.tableData[0]?.pclsh
+              //pclsh: this.tableData[0]?.pclsh
             }
           }
           break;
