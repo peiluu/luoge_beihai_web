@@ -44,6 +44,19 @@
       <template #tdys="row">
         {{ row.data.tdys == '06' ? '不动产经营租赁' : row.data.tdys == '05' ? '不动产销售' : row.data.tdys == '03' ? '建筑服务' : row.data.tdys == '00' ? '通用' : '' }}
       </template>
+      <template #sendRecords="row">
+        <el-popover
+          placement="right"
+          width="430"
+          trigger="hover">
+          <el-table :data="row.data?.sendRecords">
+            <el-table-column width="150" property="fphm" label="发票号码"></el-table-column>
+            <el-table-column width="100" property="email" label="邮箱"></el-table-column>
+            <el-table-column width="180" property="sendTime" label="日期"></el-table-column>
+          </el-table>
+          <el-button slot="reference">详情</el-button>
+        </el-popover>
+      </template>
       <template #kprq="row">{{ dateFormat('YYYY-mm-dd HH:MM:SS',parseDateCompatible(row.data.kprq)) }}</template>
       <!-- <template #rzzt="row">
         {{ row.data.rzzt == '02' ? '已入账' : row.data.rzzt == '03' ? '已入账撤销' : '未入账' }}
@@ -149,6 +162,7 @@ export default {
         { title: "税额", width: 100, dataIndex: "hjse", slot: 'hjse', align: 'right' },
         { title: "备注", width: 100, dataIndex: "bz", showTooltip: true},
         { title: "特定业务", width: 100, dataIndex: "tdys", slot: 'tdys' },
+        { title: "发送记录", width: 100, dataIndex: "sendRecords", fixed: 'right', slot: 'sendRecords',align: 'center' },
         {
           title: "操作",
           key: "action",
