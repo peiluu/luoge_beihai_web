@@ -140,9 +140,12 @@ export default {
     };
 
   },
+  activated(){
+    
+  },
   mounted() {
     this.getList()
-
+    this.handleInit()
   },
   computed: {
     height() {
@@ -154,6 +157,12 @@ export default {
   },
 
   methods: {
+    handleInit(){
+      let query = this.$route.query;
+      if(query?.is_open){
+        this.detailVisible = true;
+      }
+    },
     onClose() {
       this.detailVisible = false;
       this.detailInfo = {}

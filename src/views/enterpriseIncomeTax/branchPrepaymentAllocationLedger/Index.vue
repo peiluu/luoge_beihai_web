@@ -35,9 +35,9 @@
     <div class="custom-table">
       <el-table border :data="tableData" v-loading="loading" :height="height" :header-cell-style="{ fontWeight: 400, borderTop: '1px solid #adb4bc', background: '#f7f9fd', color: '#333333', padding: '7px 0' }">
         <el-table-column label="序号" type="index" min-width="50" />
-        <el-table-column label="分支机构名称" prop="nsrmc" min-width="200" />
-        <el-table-column label="分支机构纳税识别号" prop="nsrsbh" min-width="180" />
-        <el-table-column label="所属总机构名称" prop="zjgmc" min-width="180" />
+        <el-table-column label="分支机构名称" prop="nsrmc" min-width="200" show-overflow-tooltip />
+        <el-table-column label="分支机构纳税识别号" prop="nsrsbh" min-width="180" show-overflow-tooltip />
+        <el-table-column label="所属总机构名称" prop="zjgmc" min-width="180" show-overflow-tooltip />
         <el-table-column label="税款所属期" prop="ssq" align="center" min-width="100">
           <template slot-scope="{row}">{{ formatAllDate(row.ssq, querySdstbzq) }} </template>
         </el-table-column>

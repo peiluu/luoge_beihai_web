@@ -41,7 +41,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="24">
-              <el-form-item label="明细限制" prop="mxxz">
+              <el-form-item label="发票明细行数限制" prop="mxxz">
                 <el-input-number
                   style="width: 100%"
                   v-model="intoForm.mxxz"
@@ -84,8 +84,8 @@
                 >
                   <i class="el-icon-upload"></i>
                   <div class="el-upload__text">
-                    将文件拖到此处，或<em>点击获取文件</em>
-                    <span> 已添加文件<em>{{ `(${fileList.length})` }} </em></span>
+                    将文件拖到此处，或<em>点击获取文件</em><br />
+                    <span> 已添加文件 &nbsp;<em>{{ `${fileList[0]?.name || ''}` }} </em></span>
                   </div>
                   <!-- <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div> -->
                 </el-upload>
@@ -263,6 +263,7 @@ export default {
     /* 添加文件或者上传文件触发事件 */
     handleOnchange(file, fileList) {
       this.fileList = fileList.filter((k) => k.status === "ready");
+      
     },
     /* 上传回调 */
     handlerUploadDone(value){

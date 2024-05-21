@@ -13,7 +13,7 @@
             <!-- <el-button @click="openDigitalBatch('Y')">开通数电</el-button> -->
             <el-button type="success" @click="hanldeEnter('add')">新增纳税主体</el-button>
             <el-button @click="batchOperate('batchDel')">删除</el-button>
-            <el-button @click="handleImport">导入</el-button>
+            <!--<el-button @click="handleImport">导入</el-button>-->
             <el-button @click="handleExport" :loading="exportLoading">导出</el-button>
           </div>
         </div>

@@ -489,7 +489,7 @@
           this.form = {
             ...this.form,
             ...data,
-            lzkprq: dateFormat('YYYY-mm-dd HH:MM:SS', data.lzkprq),
+            lzkprq: dateFormat('YYYY-mm-dd HH:MM:SS', this.parseDateCompatible(data.lzkprq)),
             lzfptdyslxDm: data.lzfpTdyslxDm, // 蓝字发票特定要素类型代码
           };
 
@@ -522,7 +522,7 @@
             lzhjje: data.hjje,  // 蓝字合计金额额
             lzfphm: data.fpHm,
             lzfpdm: data.fpDm,
-            lzkprq: dateFormat('YYYY-mm-dd HH:MM:SS', data.kprq),
+            lzkprq: dateFormat('YYYY-mm-dd HH:MM:SS', this.parseDateCompatible(data.kprq)),
             lzfptdyslxDm: data.tspz, // 蓝字发票特定要素类型代码
             lzfppzDm: data.fplx, // 发票种类
             invoiceId: id, // 蓝字发票id
@@ -1028,6 +1028,13 @@
         this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
 
       },
+      parseDateCompatible(dateStr) {
+      if((dateStr ??'') === '') return 
+      // 尝试直接解析日期
+      let parts = dateStr.split(' ');
+      let newDateTime =`${parts[0]}T${parts[1]}`;
+      return newDateTime;
+    }
     }
   }
 </script>

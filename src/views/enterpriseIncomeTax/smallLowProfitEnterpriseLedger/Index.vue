@@ -27,14 +27,14 @@
     <div class="custom-vxe-table">
       <vxe-table align="center" border v-loading="loading" show-footer show-overflow keep-source ref="xTable" :data="tableData" :edit-config="{ trigger: 'click', mode: 'cell', showIcon: false, enabled: canEdit }" :cell-style="cellStyle"
         :span-method="footerColspanMethod" :footer-method="() => []">
-        <vxe-column field="ssq" title="税款所属期">
+        <vxe-column field="ssq" title="税款所属期" resizable show-overflow="title">
           <template #default="{ row }"> {{ formatAllDate(row.ssq, '季') }} </template>
         </vxe-column>
-        <vxe-column field="role" title="项目">
+        <vxe-column field="role" title="项目" resizable show-overflow="title">
           <template #default="{ row }"> {{ row.lx == 0 ? '从业人数' : '资产总额（万元）' }}</template>
         </vxe-column>
 
-        <vxe-column field="jc" title="季初值" :edit-render="{}" align="right">
+        <vxe-column field="jc" title="季初值" :edit-render="{}" align="right" resizable show-overflow="title">
           <template #edit="{ row, $rowIndex }">
             <vxe-input type="number" v-model="row.jc" min="0" placeholder="请输入" :disabled="row.sbzt == 'Y' || row.lx != 0" @blur="calcTableData(row, $rowIndex)" />
           </template>
@@ -42,20 +42,20 @@
 
         </vxe-column>
 
-        <vxe-column field="jms" title="季末值" :edit-render="{}" align="right">
+        <vxe-column field="jms" title="季末值" :edit-render="{}" align="right" resizable show-overflow="title">
           <template #edit="{ row, $rowIndex }">
             <!-- <vxe-input type="number" v-model="row.jms" min="0" placeholder="请输入" :disabled="$rowIndex != currentSsqCyrsIndex" @blur="calcTableData(row, $rowIndex)" /> -->
             <vxe-input type="number" v-model="row.jms" min="0" placeholder="请输入" :disabled="row.sbzt == 'Y' || row.lx != 0" @blur="calcTableData(row, $rowIndex)" />
           </template>
           <template #default="{ row }"> {{ getFormatData(row, 'jms') }} </template>
         </vxe-column>
-        <vxe-column field="bjdpjz" title="本季度平均值" align="right">
+        <vxe-column field="bjdpjz" title="本季度平均值" align="right" resizable show-overflow="title">
           <template #default="{ row }"> {{ getFormatData(row, 'bjdpjz') }} </template>
         </vxe-column>
-        <vxe-column field="bnjpjz" title="本年度季度平均值" align="right">
+        <vxe-column field="bnjpjz" title="本年度季度平均值" align="right" resizable show-overflow="title">
           <template #default="{ row }"> {{ getFormatData(row, 'bnjpjz') }} </template>
         </vxe-column>
-        <vxe-column field="sffhyq" title="是否符合小型微利企业单项指标" width="200">
+        <vxe-column field="sffhyq" title="是否符合小型微利企业单项指标" width="200" resizable show-overflow="title">
           <template #default="{ row }"> {{ row.sffhyq == 1 ? '是' : '否' }} </template>
         </vxe-column>
         <template #empty>

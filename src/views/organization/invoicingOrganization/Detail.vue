@@ -125,7 +125,9 @@ export default {
   data() {
     return {
       tableData: [],
-      form: {},
+      form: {
+        enable:null,
+      },
       ssztName:'',
       // 开票点信息
       billingStationAddDto: {},
@@ -134,17 +136,17 @@ export default {
       isAddKp: false,
       bmb_bbhList: [],
       rules: {
-        taxBodyId: [{ required: true, message: "请选择", trigger: "blur" }],
-        code: [{ required: true, message: "请输入数字或字母", trigger: "blur" }],
-        name: [{ required: true, message: "请输入", trigger: "blur" }],
+        taxBodyId: [{ required: true, message: "请选择", trigger: ['blur','change'] }],
+        code: [{ required: true, message: "请输入数字或字母", trigger: ['blur','change'] }],
+        name: [{ required: true, message: "请输入", trigger: ['blur','change'] }],
         // phone: [regCollection.phone],
-        invoicePhone: [{ required: true, message: "请输入", trigger: "blur" }, regCollection.phone],
-        enable: [{ required: true, message: "请选择", trigger: "blur" }],
-        address: [{ required: true, message: "请输入", trigger: "blur" }],
-        bank: [{ required: true, message: "请输入", trigger: "blur" }],
-        bankAccount: [{ required: true, message: "请输入", trigger: "blur" }],
-        ssztName: [{ required: true, message: "请输入", trigger: "blur" }],
-        ssztCode: [{ required: true, message: "请输入", trigger: "blur" }],
+        invoicePhone: [{ required: true, message: "请输入", trigger: ['blur','change'] }, regCollection.phone],
+        enable: [{ required: true, message: "请选择", trigger: ['blur','change'] }],
+        address: [{ required: true, message: "请输入", trigger: ['blur','change'] }],
+        bank: [{ required: true, message: "请输入", trigger: ['blur','change'] }],
+        bankAccount: [{ required: true, message: "请输入", trigger: ['blur','change'] }],
+        ssztName: [{ required: true, message: "请输入", trigger: ['blur','change']}],
+        ssztCode: [{ required: true, message: "请输入", trigger: ['blur','change'] }],
       },
       saveLoading: false,
       selectOrgList: [],

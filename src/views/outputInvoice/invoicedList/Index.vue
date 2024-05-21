@@ -52,7 +52,7 @@
       <template #tdys="row">
         {{ row.data.tdys == '06' ? '不动产经营租赁' : row.data.tdys == '05' ? '不动产销售' : row.data.tdys == '03' ? '建筑服务' : row.data.tdys == '00' ? '通用' : '' }}
       </template>
-      <template #kprq="row">{{ dateFormat('YYYY-mm-dd', row.data.kprq) }}</template>
+      <template #kprq="row">{{ dateFormat('YYYY-mm-dd HH:MM:SS',parseDateCompatible(row.data.kprq)) }}</template>
       <!-- <template #rzzt="row">
         {{ row.data.rzzt == '02' ? '已入账' : row.data.rzzt == '03' ? '已入账撤销' : '未入账' }}
       </template> -->
@@ -151,7 +151,7 @@ export default {
         { title: "购买方名称", width: 100, dataIndex: "gmfmc", showTooltip: true },
         { title: "购买方识别号/身份证号", width: 180, dataIndex: "gmfnsrsbh", },
         { title: "发票请求流水号", width: 180, dataIndex: "fpqqlsh" },
-        { title: "开票日期", width: 100, dataIndex: "kprq",align:"center", slot: 'kprq' },
+        { title: "开票日期", width: 180, dataIndex: "kprq",align:"center", slot: 'kprq' },
         { title: "开票人", width: 100, dataIndex: "kpr" },
         { title: "金额", width: 100, dataIndex: "hjje", slot: 'hjje', align: 'right' },
         { title: "税额", width: 100, dataIndex: "hjse", slot: 'hjse', align: 'right' },
@@ -607,6 +607,8 @@ export default {
         return { txt: '开票中', clazz: 'orange-cell' }
       } else if (cellValue == '04') {
         return { txt: '待开票', clazz: 'grey-cell' }
+      }else{
+        return {}
       }
     },
      formatTsztStatus(cellValue) {
@@ -616,6 +618,8 @@ export default {
         return { txt: '推送成功', clazz: 'blue-cell' }
       } else if (cellValue == 2) {
         return { txt: '推送失败', clazz: 'red-cell' }
+      }else{
+        return {}
       }
     },
     formatShzt(cellValue) {
@@ -663,8 +667,16 @@ export default {
       console.log(row)
     },
     handleCellMouseLeave(row) {
+    },
+    parseDateCompatible(dateStr) {
+      if((dateStr ??'') === '') return 
+      // 尝试直接解析日期
+      let parts = dateStr.split(' ');
+      let newDateTime =`${parts[0]}T${parts[1]}`;
+      return newDateTime;
     }
   },
+ 
 };
 </script>
 

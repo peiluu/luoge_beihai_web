@@ -42,6 +42,7 @@ export const getFrequentCustomerPage = data => postJSON(`${config.host}/Customer
  */
 export const getTaxRates = data => postJSON(`${config.host}/blueInvoice/getTaxRates`, data);
 
+export const getNoIsTypeRates = data => postJSON(`${config.host}/blueInvoice/getTaxRateList`, data);
 // 校验是否可以开票
 export const checkOpenInvoice = (data) => postJSON(`${config.host}/blueInvoice/checkOpenInvoice`, data)
 

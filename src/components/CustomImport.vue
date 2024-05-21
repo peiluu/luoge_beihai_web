@@ -141,6 +141,10 @@ export default {
     importParams: {
       type: Object,
       default: null
+    },
+    backParams:{
+      type:String,
+      default:null
     }
   },
   data() {
@@ -158,17 +162,22 @@ export default {
     },
     getDisabled(){
       const { importing, effImport, successCount, failCount } = this;
-      if(importing){
-       return true
-      } 
       if(effImport && successCount > 0){
         return false;
-      } 
-      if (failCount > 0) {
-        return true
       }
-      return true
-    }
+      return this.failcount > 0 ||  importing
+      // if(importing){
+      //  return true
+      // } 
+      // if(effImport && successCount > 0){
+      //   return false;
+      // } 
+      // if (failCount > 0) {
+      //   return true
+      // }
+      // return true
+    },
+    
   },
   methods: {
     //ajax上传
@@ -199,10 +208,10 @@ export default {
           type: 'success',
         });
         that.importing = false;
-        that.tableData = res.data.failList;
+        that.tableData = res.data.failList??res.data.list;
         that.successCount = res.data.successCount;
         that.failCount = res.data.failCount;
-        that.successList = res.data.successList;
+        that.successList = res.data.list;
       });
     },
     // 直接导入模版

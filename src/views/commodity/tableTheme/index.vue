@@ -70,8 +70,13 @@
                 <el-table-column prop="sl" label="税率/征收率" min-width="200">
                 </el-table-column>
                 <el-table-column prop="xsyhzc" label="优惠政策以及简易计税" min-width="200">
+                  <template slot-scope="scope">
+                   
+                   {{ scope.row.xsyhzc === 'Y'?'是':scope.row.xsyhzc === 'N'?'否':'' }}
+                 </template>
                 </el-table-column>
                 <el-table-column prop="zzstsgl" label="优惠政策及简易计税类型" min-width="200">
+                 
                 </el-table-column>
                 <el-table-column prop="dj" label="单价" min-width="120">
                 </el-table-column>
@@ -114,7 +119,8 @@
 </template>
 
 <script>
-import AppAddCommodity from '../componetns/dataAddDrawer/index.vue';
+// import AppAddCommodity from '../componetns/dataAddDrawer/index.vue';
+import AppAddCommodity from '../componetns/dataAddDrawerOnly/index.vue';
 import {getTableSourceList,getTaxrateList,delTableRowSingle} from '../api.js';
 const RESET_FORM = {
   name:'',
@@ -169,7 +175,8 @@ export default {
       handler(val){
         this.commodityName = val;
       }
-    }
+    },
+   
   },
   methods: {
     handleSizeChange(e) {
@@ -185,7 +192,11 @@ export default {
     /* 初始化 */
     handlerInit(){
       this.handleGetList();
-      
+      let query = this.$route.query;
+      if(query?.is_open){
+        this.title = '商品添加'
+        this.addVisible = true;
+      }
     },
     /* 获取table数据 */
     handleGetList(){
@@ -260,7 +271,7 @@ export default {
       this.addVisible = true;
       
     },
-
+    
     /* 查询 */
     handleSerch(){
       this.handleGetList();
