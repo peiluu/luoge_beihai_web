@@ -403,6 +403,13 @@ export const mainChildrenRoutes = [
     component: () =>
       import('@/views/outputInvoice/batchBlueInvoice/blueTaskMage/index'),
   },
+  {
+    path: '/outputInvoice/batchBlueInvoiceSelectable/blueTaskMage',
+    name: 'blueTaskMageSelectablePage',
+    meta: { title: '批量蓝字发票任务(可选)', isTab: true },
+    component: () =>
+      import('@/views/outputInvoice/batchBlueInvoiceSelectable/blueTaskMage/index'),
+  },
 ];
 
 // 页面路由(独立页面), 无公共左侧菜单导航，无公共头部。如：登录页

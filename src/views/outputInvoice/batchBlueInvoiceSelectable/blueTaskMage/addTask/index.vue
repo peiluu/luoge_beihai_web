@@ -7,113 +7,185 @@
       @update:visible="updateVisible"
       :before-close="handleClose"
       v-loading="loading"
+      :fullscreen="true"
     >
-      <article >
-        <el-form
-          :model="intoForm"
-          :rules="rules"
-          ref="ruleForm"
-          label-width="100px"
-          class="demo-ruleForm"
-        >
-          <el-row>
-            <el-col :span="24">
-              <el-form-item label="发票类型" prop="fppz">
-                <el-select v-model="intoForm.fppz" placeholder="请选择">
+      <article style="width: 30%; margin: 0 auto">
+        <el-steps :active="actived" finish-status="success" style="">
+          <el-step title="选择流水"> </el-step>
+          <el-step title="设置规则"> </el-step>
+        </el-steps>
+      </article>
+      <article class="step_main">
+        <!-- 第一步 -->
+        <article style="margin-top: 15px;" v-show="actived === 0">
+          <article></article>
+          <article>
+            <el-table
+              :data="tableData"
+              :border="true"
+              style="width: 100%"
+              height="100%"
+              @selection-change="handleSelectionChange"
+            >
+              <el-table-column type="selection" width="55"> </el-table-column>
+              <el-table-column type="index" width="55"> </el-table-column>
+              <el-table-column prop="date" label="税收分类编码" width="180">
+              </el-table-column>
+              <el-table-column prop="name" label="项目名称" width="180">
+              </el-table-column>
+              <el-table-column prop="name" label="商品规格" width="180">
+              </el-table-column>
+              <el-table-column prop="name" label="计量单位" width="180">
+              </el-table-column>
+              <el-table-column prop="name" label="数量" width="180">
+              </el-table-column>
+              <el-table-column prop="name" label="金额（不含税价）" width="180">
+              </el-table-column>
+              <el-table-column prop="name" label="税率" width="180">
+              </el-table-column>
+              <el-table-column prop="name" label="税额" width="180">
+              </el-table-column>
+              <el-table-column prop="name" label="流水时间" width="180">
+              </el-table-column>
+              <el-table-column prop="name" label="状态" width="180">
+              </el-table-column>
+              <el-table-column prop="name" label="发票号码" width="180">
+              </el-table-column>
+              <el-table-column prop="name" label="开票点" width="180">
+              </el-table-column>
+              <el-table-column prop="name" label="账套" width="180">
+              </el-table-column>
+              <el-table-column prop="name" label="销方纳税人识别号" width="180">
+              </el-table-column>
+              <el-table-column prop="name" label="销方纳税人名称" width="180">
+              </el-table-column>
+              <el-table-column prop="address" label="上传时间"> </el-table-column>
+            </el-table>
+          </article>
+        </article>
+        <!-- 第二步 -->
+        <article v-show="actived === 1">
+          <el-form
+            :model="intoForm"
+            :rules="rules"
+            ref="ruleForm"
+            label-width="100px"
+            class="demo-ruleForm"
+          >
+            <el-row>
+              <el-col :span="24">
+                <el-form-item label="发票类型" prop="fppz">
+                  <el-select v-model="intoForm.fppz" placeholder="请选择">
                     <el-option
-                    v-for="item in fppzOptions"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
+                      v-for="item in fppzOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    >
                     </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="24">
-              <el-form-item label="开票限额" prop="fpxe">
-                <el-input-number
-                  style="width: 100%"
-                  v-model="intoForm.fpxe"
-                  :max="100000000000"
-                  :precision="2"
-                  :controls="false"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="24">
-              <el-form-item label="发票明细行数限制" prop="mxxz">
-                <el-input-number
-                  style="width: 100%"
-                  v-model="intoForm.mxxz"
-                  :max="2000"
-                  :precision="0"
-                  :controls="false"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="24">
-              <el-form-item label="纳税人名称" >
-                <el-input v-model="intoForm.nsrmc" disabled />
-              </el-form-item>
-            </el-col>
-            <el-col :span="24">
-              <el-form-item label="纳税人识别号" >
-                <el-input v-model="intoForm.nsrsbh" disabled />
-              </el-form-item>
-            </el-col>
-            <el-col :span="24">
-              <el-form-item label="文件上传" prop="fileList">
-                <article style="margin-bottom: 2px;">
-                  <el-button type="primary" plain @click="handleDownTel"> 下载模板</el-button>
-                </article>
-                <article>
-                  <el-upload
-                  ref="uploadRef"
-                  class="upload-demo"
-                  drag
-                  :action="api"
-                  multiple
-                  :auto-upload="false"
-                  :show-file-list="false"
-                  :data="extraData"
-                  name="file"
-                  accept=".xlsx,.xls"
-                  :limit="1"
-                  :http-request="handleUploadFile"
-                  :on-change="handleOnchange"
-                >
-                  <i class="el-icon-upload"></i>
-                  <div class="el-upload__text">
-                    将文件拖到此处，或<em>点击获取文件</em><br />
-                    <span> 已添加文件 &nbsp;<em>{{ `${fileList[0]?.name || ''}` }} </em></span>
-                  </div>
-                  <!-- <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div> -->
-                </el-upload>
-                </article>
-                
-              </el-form-item>
-            </el-col>
-            <!-- <el-col :span="6">
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="开票限额" prop="fpxe">
+                  <el-input-number
+                    style="width: 100%"
+                    v-model="intoForm.fpxe"
+                    :max="100000000000"
+                    :precision="2"
+                    :controls="false"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="发票明细行数限制" prop="mxxz">
+                  <el-input-number
+                    style="width: 100%"
+                    v-model="intoForm.mxxz"
+                    :max="2000"
+                    :precision="0"
+                    :controls="false"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="纳税人名称">
+                  <el-input v-model="intoForm.nsrmc" disabled />
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="纳税人识别号">
+                  <el-input v-model="intoForm.nsrsbh" disabled />
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="文件上传" prop="fileList">
+                  <article style="margin-bottom: 2px">
+                    <el-button type="primary" plain @click="handleDownTel">
+                      下载模板</el-button
+                    >
+                  </article>
+                  <article>
+                    <el-upload
+                      ref="uploadRef"
+                      class="upload-demo"
+                      drag
+                      :action="api"
+                      multiple
+                      :auto-upload="false"
+                      :show-file-list="false"
+                      :data="extraData"
+                      name="file"
+                      accept=".xlsx,.xls"
+                      :limit="1"
+                      :http-request="handleUploadFile"
+                      :on-change="handleOnchange"
+                    >
+                      <i class="el-icon-upload"></i>
+                      <div class="el-upload__text">
+                        将文件拖到此处，或<em>点击获取文件</em><br />
+                        <span>
+                          已添加文件 &nbsp;<em
+                            >{{ `${fileList[0]?.name || ""}` }}
+                          </em></span
+                        >
+                      </div>
+                      <!-- <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div> -->
+                    </el-upload>
+                  </article>
+                </el-form-item>
+              </el-col>
+              <!-- <el-col :span="6">
               <el-form-item label="" label-width="30px">
                 <el-button type="primary" @click="handleUpload">上传</el-button>
               </el-form-item>
             </el-col> -->
-          </el-row>
-        </el-form>
+            </el-row>
+          </el-form>
+        </article>
       </article>
+
       <span slot="footer" class="dialog-footer">
+        <el-button @click="actived = 0" v-if="actived === 1">上一步</el-button>
         <el-button @click="updateVisible(false)">取 消</el-button>
-        <el-button type="primary"  @click="handleOpen">确 定</el-button>
-        
+        <el-button
+          type="primary"
+          @click="actived = 1;"
+          v-if="actived === 0"
+          >下一步</el-button
+        >
+        <el-button type="primary" @click="handleOpen" v-if="actived === 1"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { getInvoiceQuota, downBatchTelleData} from "../../api";
+import { getInvoiceQuota, downBatchTelleData } from "../../api";
 import { config } from "@/config";
-import { customPost,} from "@/utils/request.js";
+import { customPost } from "@/utils/request.js";
 
 export default {
   name: "addTaskPage",
@@ -147,9 +219,14 @@ export default {
       }
     };
     return {
-      intoForm: { ...this.respData, fpxe: undefined,mxxz:undefined,fppz:'' },
+      intoForm: {
+        ...this.respData,
+        fpxe: undefined,
+        mxxz: undefined,
+        fppz: "",
+      },
       rules: {
-        fppz:[
+        fppz: [
           {
             required: true,
             message: "请选择发票类型",
@@ -165,33 +242,34 @@ export default {
           },
           { validator: checkFpxe, tigger: "blur" },
         ],
-        mxxz:[
-        {
-          required: true,
-          type: 'number',
-          message: "明细限制不能为空",
-          tigger: ["blur",'change']
-        },
-      
-      ],
+        mxxz: [
+          {
+            required: true,
+            type: "number",
+            message: "明细限制不能为空",
+            tigger: ["blur", "change"],
+          },
+        ],
       },
-     
+
       fileList: [],
       extraData: {},
       api: `${config.host}/excelInvoice/upload`,
       loading: false,
-      fppzOptions:[
-        {label:'增值税专用发票',value:'01'},
-        {label:'增值税普通发票',value:'02'},
+      fppzOptions: [
+        { label: "增值税专用发票", value: "01" },
+        { label: "增值税普通发票", value: "02" },
       ],
-      queryData:this.$route.query || {}
+      queryData: this.$route.query || {},
+      actived: 0,
+      tableData:[],
     };
   },
   computed: {},
   watch: {
     respData: {
       handler(val) {
-        this.intoForm = { ...val,mxxz:1000,fppz:'' };
+        this.intoForm = { ...val, mxxz: 1000, fppz: "" };
       },
     },
   },
@@ -211,13 +289,12 @@ export default {
           this.intoForm.fpxe = res.data.amount || 0;
           this.intoForm.mxxz = 1000;
         }
-        
       } catch (e) {
         console.error(e);
-      }finally{
-        const {nsrsbh,nsrmc} = this.$route.query || {}
-        this.intoForm.nsrsbh = nsrsbh || '';
-        this.intoForm.nsrmc = nsrmc || '';
+      } finally {
+        const { nsrsbh, nsrmc } = this.$route.query || {};
+        this.intoForm.nsrsbh = nsrsbh || "";
+        this.intoForm.nsrmc = nsrmc || "";
         this.loading = false;
       }
     },
@@ -225,7 +302,8 @@ export default {
     handleUpload() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
-          if (this.fileList.length <= 0) return this.$message.error("请至少选择一份文件！");
+          if (this.fileList.length <= 0)
+            return this.$message.error("请至少选择一份文件！");
           this.loading = true;
           this.$refs.uploadRef.submit();
           // this.fileList.forEach(file => {
@@ -236,7 +314,7 @@ export default {
     },
     /* 上传文件 */
     handleUploadFile(option) {
-      const { orgId, fppz, fpxe,nsrmc,nsrsbh,mxxz } = this.intoForm || {};
+      const { orgId, fppz, fpxe, nsrmc, nsrsbh, mxxz } = this.intoForm || {};
       const formData = new FormData();
       formData.append("file", option.file);
       formData.append("orgId", orgId);
@@ -263,11 +341,10 @@ export default {
     /* 添加文件或者上传文件触发事件 */
     handleOnchange(file, fileList) {
       this.fileList = fileList.filter((k) => k.status === "ready");
-      
     },
     /* 上传回调 */
-    handlerUploadDone(value){
-        this.$emit('done',value)
+    handlerUploadDone(value) {
+      this.$emit("done", value);
     },
     /* 关闭 */
     updateVisible(value) {
@@ -283,26 +360,37 @@ export default {
     },
     /*提示确认框 */
     handleOpen() {
-      //销售方为 ${this.queryData.nsrmc},纳税人识别号为 ${this.queryData.nsrsbh} 
-        this.$confirm(`<div>请确认开票主体！</div>
+      //销售方为 ${this.queryData.nsrmc},纳税人识别号为 ${this.queryData.nsrsbh}
+      this.$confirm(
+        `<div>请确认开票主体！</div>
           <div>销售方名称：${this.queryData.nsrmc}</div>
           <div>纳税人识别号：${this.queryData.nsrsbh}</div>
-          <div>发票类型：${this.queryData.fppz === '01'? '增值税专用发票':'增值税普通发票'}</div>`, '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
+          <div>发票类型：${
+            this.queryData.fppz === "01" ? "增值税专用发票" : "增值税普通发票"
+          }</div>`,
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
           dangerouslyUseHTMLString: true,
-          type: 'warning'
-        }).then(() => {
-          this.handleUpload()
-        }).catch(() => {
-                 
-        });
-      },
-      /* 模板下载 */
-      handleDownTel(){
-       const fileName = `蓝字发票批量开具任务模板.xlsx`;
-        downBatchTelleData({fileName},null,true)
-      }
+          type: "warning",
+        }
+      )
+        .then(() => {
+          this.handleUpload();
+        })
+        .catch(() => {});
+    },
+    /* 模板下载 */
+    handleDownTel() {
+      const fileName = `蓝字发票批量开具任务模板.xlsx`;
+      downBatchTelleData({ fileName }, null, true);
+    },
+
+    /* 选择改变 */
+    handleSelectionChange(){
+
+    },
   },
   created() {},
   mounted() {
@@ -321,5 +409,10 @@ export default {
 /*@import url(); 引入公共css类*/
 ::v-deep .el-input-number.is-without-controls .el-input__inner {
   text-align: left;
+}
+.step_main {
+  min-height: calc(100vh - 245px);
+  max-height: calc(100vh - 245px);
+  overflow: hidden auto;
 }
 </style>
