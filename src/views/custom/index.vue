@@ -56,16 +56,9 @@
       <Detail :detailInfo="detailInfo" @onOk="onOk" @onClose="onClose" />
     </el-dialog>
     <custom-import 
-      dialogTitle="导入客户信息维护"
-      :dialogVisible="dialogImportVisible"
-      @handleClose="handleonClose"
-      @handleOk="handleonOk"
-      downloadTemplateApi="/Customer/downLoadTemplate"
-      downloadTemplateName="客户信息_导入模板"
-      upApi="/Customer/importExcel"
-      importApi="/Customer/importExcel"
-      upTitle="上传客户信息"
-      :importColumns="importColumns"
+      title="导入客户信息"
+      width="50%" @handleOk="handleOk"
+      :visible.sync="dialogImportVisible" v-if="dialogImportVisible"
     ></custom-import>
   </div>
 </template>
@@ -75,13 +68,13 @@
 import FormList from '@/components/FormList.vue';
 import { deleteBatch, getList, hmdCustomer } from './Api.js';
 import Detail from './Detail.vue'
-import CustomImport from '@/components/CustomImport'
+import customImport from './customImport/index.vue'
 export default {
   name: 'organizationTaxBody',
   components: {
     FormList,
     Detail,
-    CustomImport
+    customImport
   },
   data() {
     return {
@@ -153,11 +146,11 @@ export default {
       exportLoading: false,
       detailInfo: {},
       dialogImportVisible:false,
-      importColumns:[
-        { title: "组织编码", width: 100, dataIndex: "code", },
-        { title: "组织名称", width: 150, dataIndex: "name", },
-        { title: "所属主体", width: 150, dataIndex: "nsrmc", },
-      ],
+      // importColumns:[
+      //   { title: "组织编码", width: 100, dataIndex: "code", },
+      //   { title: "组织名称", width: 150, dataIndex: "name", },
+      //   { title: "所属主体", width: 150, dataIndex: "nsrmc", },
+      // ],
     };
 
   },
@@ -318,13 +311,8 @@ export default {
     handleImport() {
       this.dialogImportVisible = true
     },
-    /* 导入返回 */
-    handleonOk(){
+    handleOk(){
       this.queryParam = param;
-      this.handleonClose()
-    },
-    handleonClose(){
-      this.dialogImportVisible = false;
     },
   }
 };
