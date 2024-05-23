@@ -75,10 +75,10 @@ export default {
         /* 自定义上传 */
         ajaxUpload(content){
             let that = this;
-            const  {orgId,nsrsbh,nsrmc} = this.$route.query || {};
+            const  {kpdId,nsrsbh,nsrmc} = this.$route.query || {};
             let formData = new FormData();
             formData.append('file', content.file);
-            formData.append('orgId', orgId);
+            formData.append('kpdId', kpdId);
             formData.append('nsrsbh', nsrsbh);
             formData.append('nsrmc', nsrmc);
             //this.importExl(formData)
