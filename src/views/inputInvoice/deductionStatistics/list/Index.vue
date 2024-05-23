@@ -128,7 +128,8 @@ export default {
 
   computed: {
     currentMonth() {
-      return `${new Date().getFullYear()}年${new Date().getMonth() + 1}月`
+      return getCurrentMonthSsq().dateLabel
+      // return `${new Date().getFullYear()}年${new Date().getMonth() + 1}月`
     },
     skssq() {
       return getCurrentMonthSsq().dateValue;
