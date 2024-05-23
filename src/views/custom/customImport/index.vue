@@ -10,17 +10,26 @@
           <span class="right">
             <el-button type="text" @click="downloadTemplate" >下载模板</el-button>
           </span>
-          <el-upload ref="fileUpload" :action="action" :drag="drag" :accept="accept" :show-file-list="false" :limit="limit" :on-success="handleSuccess" :http-request="ajaxUpload" >
+          <el-upload ref="fileUpload" :file-list="fileList" 
+          :action="action" :drag="drag" :accept="accept" :show-file-list="false" :limit="limit" 
+          :on-success="handleSuccess"
+          :on-change="handleChange"
+          :http-request="ajaxUpload" >
             <i class="el-icon-upload"></i>
-            <div class="el-upload__text">
-              将文件拖到此处，或
-              <em>点击上传</em>
+            <div class="el-upload__text" v-if="fileList.length <=0">
+              将文件拖到此处，
+              <em >或 点击选择</em>
+            </div>
+            <div class="el-upload__text"  v-else>
+              将文件拖到此处，
+              <em >或 点击选择</em><br>
+              <em >已选择 {{fileList[0].name??''}}</em>
             </div>
           </el-upload>
         </div>
             <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="updateVisible(false)">完 成</el-button>
-                <!-- <el-button type="primary" @click="handleConfirm">确 定</el-button> -->
+                <el-button type="" @click="updateVisible(false)">取 消</el-button>
+                <el-button type="primary" @click="handleConfirm ">上 传</el-button>
             </span>
         </el-dialog>
     </div>
@@ -55,6 +64,8 @@ export default {
             drag:true,
             accept:'.xlsx, .xls',
             limit:1,
+            globelFormData:null,
+            fileList:[],
         };
     },
     computed: {},
@@ -65,10 +76,12 @@ export default {
             let that = this;
             let formData = new FormData();
             formData.append('file', content.file);
-            this.importExl()
+            //this.importExl(formData)
+            this.globelFormData = formData;
         },
         // 直接导入模版
         importExl(formData){
+            console.log(formData)
             let that = this;
             that.importing = true;
             customPost(`${config.host}/Customer/importExcel`, { 'Content-Type': 'multipart/form-data' }, formData, res => {
@@ -80,6 +93,7 @@ export default {
                     type: 'success',
                 });
                 that.$emit('handleOk');
+                this.updateVisible(false)
                 }
             }).finally(()=>{
                 that.importing = false;
@@ -98,6 +112,11 @@ export default {
                 fileName,
             });
         },
+        /* 上传变化 */
+        handleChange(file, fileList){
+            console.log(file, fileList,"--")
+            this.fileList = [...fileList];
+        },
         /* 关闭 */
         updateVisible(value) {
             this.$emit('update:visible', value);
@@ -105,12 +124,13 @@ export default {
 
         /* 确认 */
         handleConfirm(){
-
+            this.importExl(this.globelFormData)
+           
         },
 
         /* 关闭前 */
         handleClose(){
-
+            this.updateVisible(false)
         },
     },
     created() {},
