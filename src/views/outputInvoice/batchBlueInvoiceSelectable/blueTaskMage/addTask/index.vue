@@ -9,16 +9,24 @@
       v-loading="loading"
       :fullscreen="true"
     >
+    <template slot="title">
+      <article>
+        <p>{{ title }}</p>
+      </article>
       <article style="width: 30%; margin: 0 auto">
-        <el-steps :active="actived" finish-status="success" style="">
+        <el-steps :active="actived" finish-status="success" align-center>
           <el-step title="选择流水"> </el-step>
           <el-step title="设置规则"> </el-step>
         </el-steps>
       </article>
+    </template>
+      
       <article class="step_main">
         <!-- 第一步 -->
         <article style="margin-top: 15px;" v-show="actived === 0">
-          <article></article>
+          <article>
+            <add-task-form></add-task-form>
+          </article>
           <article>
             <el-table
               :data="tableData"
@@ -186,7 +194,7 @@
 import { getInvoiceQuota, downBatchTelleData } from "../../api";
 import { config } from "@/config";
 import { customPost } from "@/utils/request.js";
-
+import addTaskForm from './addTaskForm/index.vue'
 export default {
   name: "addTaskPage",
   props: {
@@ -209,7 +217,7 @@ export default {
       default: () => ({}),
     },
   },
-  components: {},
+  components: {addTaskForm},
   data() {
     const checkFpxe = (rule, value, callback) => {
       if (value <= 0) {
@@ -409,6 +417,12 @@ export default {
 /*@import url(); 引入公共css类*/
 ::v-deep .el-input-number.is-without-controls .el-input__inner {
   text-align: left;
+}
+::v-deep .el-dialog__body{
+  padding-top: 0;
+}
+::v-deep .el-dialog__header{
+  display: flex;
 }
 .step_main {
   min-height: calc(100vh - 245px);
