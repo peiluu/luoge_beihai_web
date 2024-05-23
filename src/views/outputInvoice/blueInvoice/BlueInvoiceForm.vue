@@ -3523,6 +3523,10 @@ export default {
     if(!this.$route.query.isFormInvoiced){
       this.init()
     }
+    console.log(this.query,"----")
+    if((this.query.cezslxDm??'') !==''){
+      this.form.sfhs = "N"
+    }
     this.getTaxRates();
     // if(this.query?.isType){
     //   this.$set(this.form,'sfhs','Y')

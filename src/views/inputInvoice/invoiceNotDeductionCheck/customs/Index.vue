@@ -65,7 +65,7 @@
     <el-dialog
       :title="`${editForm.id ? '修改' : '新增'}失信人员黑名单`"
       :visible.sync="addVisible"
-      width="1000px"
+      width="50%"
       :before-close="handleAddClose"
       class="black-dialog"
     >
