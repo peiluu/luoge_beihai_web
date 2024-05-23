@@ -132,8 +132,8 @@ export default {
     /*  01专 02 普 */
     handleACtion(scope){
       console.log(scope.row,"row")
-        const {id,nsrmc,nsrsbh} = scope.row || {}
-        this.$router.push({path:'/outputInvoice/batchBlueInvoiceSelectable/blueTaskMage',query:{orgId:id,nsrsbh,nsrmc}});
+        const {id,nsrmc,nsrsbh,kpdId} = scope.row || {}
+        this.$router.push({path:'/outputInvoice/batchBlueInvoiceSelectable/blueTaskMage',query:{kpdId,orgId:id,nsrsbh,nsrmc}});
         // this.title = type === '01' ? '批量专票': '批量普票';
         // this.respData = {orgId:scope.row.id,fppz:type};
         // this.visible = true;

@@ -28,7 +28,10 @@
             <add-task-form @handleDoneSearch="handleDoneSearch">
               <template slot="btnBef">
                 <span class="checkBox" style="margin-left:10px">
-                  <el-checkbox size="mini" v-model="conditions" border>按条件选择</el-checkbox>&nbsp; <i class="el-icon-question"></i>
+                  <el-checkbox size="mini" v-model="conditions" border @change=handleCheckBoxChange>按条件选择</el-checkbox>&nbsp; 
+                  <el-tooltip class="item"  content="勾选！按条件搜索，数据将会被选中为流水！" placement="top">
+                    <i class="el-icon-question" style="color: #E6A23C;"></i>
+                  </el-tooltip>
                 </span>
             
               </template>
@@ -45,9 +48,10 @@
               :border="true"
               style="width: 100%"
               height="100%"
+              row-key="sid"
               @selection-change="handleSelectionChange"
             >
-              <el-table-column type="selection" width="55"> </el-table-column>
+              <el-table-column type="selection" width="55" :selectable="checkSelectable" :reserve-selection="true"> </el-table-column>
               <el-table-column type="index" width="55" label="序号"> </el-table-column>
               <el-table-column prop="gflx" label="购方类型" width="100">
                 <template slot-scope="row">
@@ -142,7 +146,7 @@
                   <el-input v-model="intoForm.nsrsbh" disabled />
                 </el-form-item>
               </el-col>
-              <el-col :span="24">
+              <!-- <el-col :span="24">
                 <el-form-item label="文件上传" prop="fileList">
                   <article style="margin-bottom: 2px">
                     <el-button type="primary" plain @click="handleDownTel">
@@ -173,12 +177,12 @@
                             >{{ `${fileList[0]?.name || ""}` }}
                           </em></span
                         >
-                      </div>
+                      </div> -->
                       <!-- <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div> -->
-                    </el-upload>
+                    <!-- </el-upload>
                   </article>
                 </el-form-item>
-              </el-col>
+              </el-col> -->
               <!-- <el-col :span="6">
               <el-form-item label="" label-width="30px">
                 <el-button type="primary" @click="handleUpload">上传</el-button>
@@ -188,13 +192,13 @@
           </el-form>
         </article>
       </article>
-      <add-task-import :visible.sync="importVisible" v-if="importVisible" title="流水导入" width="40%"></add-task-import>
+      <add-task-import :visible.sync="importVisible" v-if="importVisible" title="流水导入" width="40%" @handleOk="handleImportDone"></add-task-import>
       <span slot="footer" class="dialog-footer">
         <el-button @click="actived = 0" v-if="actived === 1">上一步</el-button>
         <el-button @click="updateVisible(false)">取 消</el-button>
         <el-button
           type="primary"
-          @click="actived = 1;"
+          @click=" handleNext"
           v-if="actived === 0"
           >下一步</el-button
         >
@@ -299,6 +303,7 @@ export default {
       },
       total:0,
       where:{},
+      sumbitData:{},
     };
   },
   computed: {},
@@ -442,11 +447,12 @@ export default {
       console.log(res,"-09")
       if([0,'0'].includes(res.code)){
         this.tableData = [...res.data]
+        this.total = res.totalCount || 0
       }
     },
     /* 选择改变 */
-    handleSelectionChange(){
-
+    handleSelectionChange(val){
+      console.log(val,"-")
     },
     /* 分页变化 */
     handleSizeChange(val) {
@@ -456,6 +462,36 @@ export default {
     handleCurrentChange(val) {
       this.page.currentPage = val;
       this.handleDataList()
+    },
+    /* 条件选择变化 */
+    handleCheckBoxChange(val){
+      console.log(val,"098")
+    },
+    /* 上传完成返回 */
+    handleImportDone(){
+      this.handleDataList();
+    },
+    /* 表格勾选禁用 */
+    checkSelectable(row){
+      return !this.conditions
+    },
+    /* 下一步 */
+    handeNext(){
+      let queryContions = {};
+      if(conditions){
+        queryContions = {...this.where};
+        this.sumbitData = {
+          sfATjxzKp: 1,
+          queryContions,
+        }
+      }else{
+        this.sumbitData = {
+          ids:[],
+          sfATjxzKp: 0
+        }
+      }
+      
+      this.actived = 1;
     }
   },
   created() {},
