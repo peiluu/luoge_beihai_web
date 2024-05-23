@@ -26,4 +26,6 @@ export const delBatchSingleData = data => getJSON(`${config.host}/invoiceExcelTa
 export const downBatchTelleData = data => download(`${config.host}/invoiceExcelTask/downLoadTemplate`, data,null,true);
 
 
+export const taskJournalList = data => postJSON(`${config.host}/tradenum/page`, data);
+
 
