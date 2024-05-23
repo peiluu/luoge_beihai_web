@@ -27,6 +27,14 @@
           <article>
             <add-task-form></add-task-form>
           </article>
+          <el-card shadow="hover">
+            <article class="table_header">
+              <el-button size="mini" type="primary" >导入流水</el-button>
+             <span class="checkBox">
+              <el-checkbox size="mini" v-model="conditions" border>按条件选择</el-checkbox>
+             </span>
+             <i class="el-icon-question"></i>
+            </article>
           <article>
             <el-table
               :data="tableData"
@@ -70,6 +78,7 @@
               <el-table-column prop="address" label="上传时间"> </el-table-column>
             </el-table>
           </article>
+        </el-card>
         </article>
         <!-- 第二步 -->
         <article v-show="actived === 1">
@@ -271,6 +280,8 @@ export default {
       queryData: this.$route.query || {},
       actived: 0,
       tableData:[],
+      //条件选择
+      conditions:false
     };
   },
   computed: {},
@@ -428,5 +439,20 @@ export default {
   min-height: calc(100vh - 245px);
   max-height: calc(100vh - 245px);
   overflow: hidden auto;
+}
+.table_header{
+  display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+  height: 60px;
+  line-height: 40px;
+  padding: 10px;
+  background: #F5F7FA;
+  border: 1px solid #EBEEF5;
+  border-bottom: none;
+  .checkBox{
+    display: inline-block;
+    margin-left: 10px;
+  }
 }
 </style>
