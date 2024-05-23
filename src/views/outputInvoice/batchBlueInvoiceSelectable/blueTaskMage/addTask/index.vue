@@ -198,7 +198,7 @@
         <el-button @click="updateVisible(false)">取 消</el-button>
         <el-button
           type="primary"
-          @click=" handleNext"
+          @click=" handeNext"
           v-if="actived === 0"
           >下一步</el-button
         >
