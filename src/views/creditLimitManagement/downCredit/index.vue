@@ -95,6 +95,7 @@ export default {
                         if( res.data.code === '00'){
                             this.$message.success('操作成功');
                             this.updateVisible(false);
+                            this.$emit("handeSuccess",true)
                         }else{
                             this.$message.error(res.msg);
                         }
