@@ -37,7 +37,7 @@
           <el-card shadow="hover">
             <article class="table_header">
               <el-button size="mini" type="primary" @click="handleImport">导入流水</el-button>
-              
+              <el-button @click="addOrEdit">新增（流水）</el-button>
             </article>
           <article style="height:calc(100vh - 350px)">
             <el-table
@@ -203,6 +203,17 @@
         >
       </span>
     </el-dialog>
+    <template>
+  <div>
+    <!-- :edit-form-data="formData" -->
+
+    <new-addition
+      :visible.sync="addVisible" 
+      :on-save="handleSave"
+      :on-close="handleClose"
+    ></new-addition>
+  </div>
+</template>
   </div>
 </template>
 
@@ -210,6 +221,7 @@
 import { getInvoiceQuota, downBatchTelleData,taskJournalList } from "../../api";
 import { config } from "@/config";
 import { customPost } from "@/utils/request.js";
+import newAddition from './newAddition/index.vue'
 import addTaskForm from './addTaskForm/index.vue'
 import addTaskImport from './addTaskImport/index.vue'
 export default {
@@ -234,7 +246,7 @@ export default {
       default: () => ({}),
     },
   },
-  components: {addTaskForm,addTaskImport},
+  components: {addTaskForm,addTaskImport,newAddition},
   data() {
     const checkFpxe = (rule, value, callback) => {
       if (value <= 0) {
@@ -299,6 +311,7 @@ export default {
       },
       total:0,
       where:{},
+      addVisible:false,
     };
   },
   computed: {},
@@ -456,7 +469,19 @@ export default {
     handleCurrentChange(val) {
       this.page.currentPage = val;
       this.handleDataList()
-    }
+    },
+    handleSave(formData) {
+      this.isDialogVisible = false;
+    },
+    handleClose() {
+      this.isDialogVisible = false;
+    },
+        // 新增
+        addOrEdit() {
+      // console.log('----row----', row);
+      this.editForm = {...row};
+      this.addVisible = true;
+    },
   },
   created() {},
   mounted() {

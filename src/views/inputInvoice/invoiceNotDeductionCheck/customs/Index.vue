@@ -12,7 +12,6 @@
               v-if="$refs.list && $refs.list.searchParam.cljg == '03'">撤销勾选</el-button>
             <el-button type="success" @click="submitBatch('03')" v-else>提交勾选</el-button>
             <el-button @click="exportInvoiceCheck">导出查询结果</el-button>
-            <el-button @click="addOrEdit({})">新增（流水）</el-button>
             <!-- <el-button @click="exportSelectedInvoice">导出选中发票</el-button> -->
           </div>
         </div>
