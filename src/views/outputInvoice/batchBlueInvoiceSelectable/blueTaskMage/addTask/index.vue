@@ -501,7 +501,7 @@ export default {
       return !this.conditions
     },
     /* 下一步 */
-    handeNext(){
+    handeNext(){ 
       let queryContions = {};
       if(conditions){
         queryContions = {...this.where};
