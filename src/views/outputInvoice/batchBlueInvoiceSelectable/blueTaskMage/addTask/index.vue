@@ -25,9 +25,21 @@
         <!-- 第一步 -->
         <article style="margin-top: 15px;" v-show="actived === 0">
           <article>
-            <add-task-form></add-task-form>
+            <add-task-form @handleDoneSearch="handleDoneSearch">
+              <template slot="btnBef">
+                <span class="checkBox" style="margin-left:10px">
+                  <el-checkbox size="mini" v-model="conditions" border>按条件选择</el-checkbox>&nbsp; <i class="el-icon-question"></i>
+                </span>
+            
+              </template>
+            </add-task-form>
           </article>
-          <article>
+          <el-card shadow="hover">
+            <article class="table_header">
+              <el-button size="mini" type="primary" @click="handleImport">导入流水</el-button>
+              
+            </article>
+          <article style="height:calc(100vh - 350px)">
             <el-table
               :data="tableData"
               :border="true"
@@ -36,40 +48,44 @@
               @selection-change="handleSelectionChange"
             >
               <el-table-column type="selection" width="55"> </el-table-column>
-              <el-table-column type="index" width="55"> </el-table-column>
-              <el-table-column prop="date" label="税收分类编码" width="180">
+              <el-table-column type="index" width="55" label="序号"> </el-table-column>
+              <el-table-column prop="gflx" label="购方类型" width="100">
+                <template slot-scope="row">
+                  <span>{{row.row.gflx === '1'?'个人':row.row.gflx === '2'?'企业':''}}</span>
+                </template>
               </el-table-column>
-              <el-table-column prop="name" label="项目名称" width="180">
-              </el-table-column>
-              <el-table-column prop="name" label="商品规格" width="180">
-              </el-table-column>
-              <el-table-column prop="name" label="计量单位" width="180">
-              </el-table-column>
-              <el-table-column prop="name" label="数量" width="180">
-              </el-table-column>
-              <el-table-column prop="name" label="金额（不含税价）" width="180">
-              </el-table-column>
-              <el-table-column prop="name" label="税率" width="180">
-              </el-table-column>
-              <el-table-column prop="name" label="税额" width="180">
-              </el-table-column>
-              <el-table-column prop="name" label="流水时间" width="180">
-              </el-table-column>
-              <el-table-column prop="name" label="状态" width="180">
-              </el-table-column>
-              <el-table-column prop="name" label="发票号码" width="180">
-              </el-table-column>
-              <el-table-column prop="name" label="开票点" width="180">
-              </el-table-column>
-              <el-table-column prop="name" label="账套" width="180">
-              </el-table-column>
-              <el-table-column prop="name" label="销方纳税人识别号" width="180">
-              </el-table-column>
-              <el-table-column prop="name" label="销方纳税人名称" width="180">
-              </el-table-column>
-              <el-table-column prop="address" label="上传时间"> </el-table-column>
+              <el-table-column prop="gmfbh" label="购方编码" width="180" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column prop="gmfmc" label="购方名称" width="180" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column prop="sphfwssflhbbm" label="税收分类编码" width="140" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column prop="xmmc" label="项目名称" width="140" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column prop="ggxh" label="商品规格" width="160" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column prop="dw" label="计量单位" width="100" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column prop="sl" label="数量" width="80" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column prop="je" label="金额（不含税价）" width="140" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column prop="slv" label="税率" width="100" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column prop="se" label="税额" width="100" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column prop="lssj" label="流水时间" width="180" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column prop="fpzt" label="状态" width="80" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column prop="fphm" label="发票号码" width="180" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column prop="kpd_id" label="开票点" width="180" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column prop="org_id" label="账套" width="180" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column prop="nsrsbh" label="销方纳税人识别号" width="180" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column prop="nsrmc" label="销方纳税人名称" width="180" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column prop="create time" label="上传时间" width="180" :show-overflow-tooltip="true"> </el-table-column>
             </el-table>
           </article>
+          <article>
+            <el-pagination
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page="page.currentPage"
+              :page-sizes="page.pageSizes"
+              :page-size="page.pageSize"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="total">
+            </el-pagination>
+          </article>
+        </el-card>
         </article>
         <!-- 第二步 -->
         <article v-show="actived === 1">
@@ -172,7 +188,7 @@
           </el-form>
         </article>
       </article>
-
+      <add-task-import :visible.sync="importVisible" v-if="importVisible" title="流水导入" width="40%"></add-task-import>
       <span slot="footer" class="dialog-footer">
         <el-button @click="actived = 0" v-if="actived === 1">上一步</el-button>
         <el-button @click="updateVisible(false)">取 消</el-button>
@@ -191,10 +207,11 @@
 </template>
 
 <script>
-import { getInvoiceQuota, downBatchTelleData } from "../../api";
+import { getInvoiceQuota, downBatchTelleData,taskJournalList } from "../../api";
 import { config } from "@/config";
 import { customPost } from "@/utils/request.js";
 import addTaskForm from './addTaskForm/index.vue'
+import addTaskImport from './addTaskImport/index.vue'
 export default {
   name: "addTaskPage",
   props: {
@@ -217,7 +234,7 @@ export default {
       default: () => ({}),
     },
   },
-  components: {addTaskForm},
+  components: {addTaskForm,addTaskImport},
   data() {
     const checkFpxe = (rule, value, callback) => {
       if (value <= 0) {
@@ -271,6 +288,17 @@ export default {
       queryData: this.$route.query || {},
       actived: 0,
       tableData:[],
+      //条件选择
+      conditions:false,
+      /* 导入字段 */
+      importVisible:false,
+      page:{
+        currentPage:1,
+        pageSizes:[10,15,20,30,50,75,100],
+        pageSize:10,
+      },
+      total:0,
+      where:{},
     };
   },
   computed: {},
@@ -394,15 +422,46 @@ export default {
       const fileName = `蓝字发票批量开具任务模板.xlsx`;
       downBatchTelleData({ fileName }, null, true);
     },
-
+    /* 导入 */
+    handleImport(){
+      this.importVisible = true;
+    },
+    /* 搜索按钮事件回调 */
+    handleDoneSearch(val){
+      this.where = {...val};
+      this.handleDataList();
+    },
+    /* 获取流水列表 */
+   async handleDataList(){
+      let params = {
+        pageNo:this.page.currentPage,
+        pageSize:this.page.pageSize,
+        ...this.where,
+      }
+      const res = await taskJournalList(params);
+      console.log(res,"-09")
+      if([0,'0'].includes(res.code)){
+        this.tableData = [...res.data]
+      }
+    },
     /* 选择改变 */
     handleSelectionChange(){
 
     },
+    /* 分页变化 */
+    handleSizeChange(val) {
+      this.page.pageSize = val;
+      this.handleDataList()
+    },
+    handleCurrentChange(val) {
+      this.page.currentPage = val;
+      this.handleDataList()
+    }
   },
   created() {},
   mounted() {
     this.handleInit();
+    this.handleDataList();
   },
   beforeCreate() {},
   beforeMount() {},
@@ -420,13 +479,34 @@ export default {
 }
 ::v-deep .el-dialog__body{
   padding-top: 0;
+  padding-block: 0;
+  height: calc(100vh - 150px);
 }
 ::v-deep .el-dialog__header{
   display: flex;
 }
 .step_main {
-  min-height: calc(100vh - 245px);
-  max-height: calc(100vh - 245px);
+  min-height: calc(100vh - 165px);
+  max-height: calc(100vh - 165px);
   overflow: hidden auto;
+ 
+}
+::v-deep .step_main .el-card__body{
+    padding: 0px;
+  }
+.table_header{
+  display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+  height: 60px;
+  line-height: 40px;
+  padding: 10px;
+  background: #F5F7FA;
+  border: 1px solid #EBEEF5;
+  border-bottom: none;
+  .checkBox{
+    display: inline-block;
+    margin-left: 10px;
+  }
 }
 </style>
