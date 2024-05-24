@@ -76,7 +76,7 @@ export default {
         currentPage:1,
         pageSizes:[10,20,30,40,50,100,500,1000],
         pageSize:10,
-        total:100,
+        total:0,
       },
       visible:false,
       title:'title',

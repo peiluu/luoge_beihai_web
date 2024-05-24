@@ -13,7 +13,7 @@
           <el-card shadow="never" :body-style="{paddingBottom:'0px'}" >
             <el-form :model="desForm">
               <el-form-item label="发票状态">
-                <el-select v-model="desForm.status" placeholder="请选择" @change="handleSelectChange">
+                <el-select v-model="desForm.status" placeholder="请选择" @change="handleSelectChange" style="margin-left: 5px">
                   <el-option
                     v-for="item in statusOptions"
                     :key="item.value"
@@ -323,5 +323,9 @@ export default {
 }
 ::v-deep .el-dialog__body{
   padding-top: 10px;
+  
+}
+::v-deep .el-card__body{
+  // padding: 0px;
 }
 </style>
