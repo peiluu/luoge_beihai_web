@@ -7,7 +7,7 @@
       :before-close="handleAddClose"
       class="black-dialog"
     >
-      <el-form :inline="true" :model="editForm" ref="editForm" >
+      <el-form :inline="true" :model="editForm" ref="editForm">
         <el-form-item label="购方类型" prop="nsrmc">
           <el-input v-model="editForm.nsrmc" placeholder="请输入" />
         </el-form-item>
@@ -76,14 +76,19 @@
 <script>
 export default {
   name: "newAddition",
-  data(){
-    return{
+  props: {
+    visible: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  components: {},
+  data() {
+    return {
       editForm: {},
-      formData:{},
+      formData: {},
       addVisible: false,
-    }
-
-
+    };
   },
   methods: {
     // 新增/修改
@@ -129,6 +134,4 @@ export default {
   },
 };
 </script>
-<style>
-
-</style>
+<style></style>

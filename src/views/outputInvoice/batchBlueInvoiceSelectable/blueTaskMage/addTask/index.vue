@@ -485,7 +485,6 @@ export default {
         // 新增
         addOrEdit() {
       // console.log('----row----', row);
-      this.editForm = {...row};
       this.addVisible = true;
     },
     /* 条件选择变化 */
