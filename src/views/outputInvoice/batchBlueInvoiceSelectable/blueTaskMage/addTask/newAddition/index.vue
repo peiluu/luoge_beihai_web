@@ -1,8 +1,8 @@
 <template>
   <div>
     <el-dialog
-      :title="`${editForm.id ? '修改' : '新增'}失信人员黑名单`"
-      :visible.sync="addVisible"
+      :title="title"
+      :visible="visible"
       width="60%"
       :before-close="handleAddClose"
       class="black-dialog"
@@ -81,13 +81,17 @@ export default {
       type: Boolean,
       default: false,
     },
+    title:{
+      type:String,
+      default:'新增'
+    }
   },
   components: {},
   data() {
     return {
       editForm: {},
-      formData: {},
       addVisible: false,
+      saveLoading:false,
     };
   },
   methods: {
@@ -98,10 +102,7 @@ export default {
     },
     // 关闭弹窗
     handleAddClose() {
-      this.addVisible = false;
-      setTimeout(() => {
-        this.$refs.editForm.resetFields();
-      }, 100);
+     this.$emit('update:visible',false)
     },
     handleSelection(rows) {
       this.selections = rows;
@@ -123,7 +124,7 @@ export default {
           if (code === "0") {
             this.$message.success("操作成功");
             this.handleAddClose();
-            this.reloadList();
+           
           }
         } catch (error) {
         } finally {

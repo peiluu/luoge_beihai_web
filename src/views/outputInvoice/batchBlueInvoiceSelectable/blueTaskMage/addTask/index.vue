@@ -483,7 +483,7 @@ export default {
       this.isDialogVisible = false;
     },
         // 新增
-        addOrEdit() {
+    addOrEdit() {
       // console.log('----row----', row);
       this.addVisible = true;
     },
@@ -502,7 +502,7 @@ export default {
     /* 下一步 */
     handeNext(){ 
       let queryContions = {};
-      if(conditions){
+      if(this.conditions){
         queryContions = {...this.where};
         this.sumbitData = {
           sfATjxzKp: 1,
