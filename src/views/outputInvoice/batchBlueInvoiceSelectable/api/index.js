@@ -28,4 +28,6 @@ export const downBatchTelleData = data => download(`${config.host}/invoiceExcelT
 
 export const taskJournalList = data => postJSON(`${config.host}/tradenum/page`, data);
 
+export const postSubmitData = data => postJSON(`${config.host}/tradenum/createWkp`, data);
+
 

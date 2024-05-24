@@ -5,7 +5,7 @@
                 <el-row :gutter="10">
                     <el-col :span="8">
                         <el-form-item label="购方名称">
-                            <el-input v-model="taskForm.gmfmc"></el-input>
+                            <el-input v-model="taskForm.gmfmc" @change="handleInput"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
@@ -15,6 +15,7 @@
                             type="datetimerange"
                             start-placeholder="开始日期"
                             end-placeholder="结束日期"
+                            @change="handleTimeChange"
                             >
                             </el-date-picker>
                         </el-form-item>
@@ -45,27 +46,40 @@
 </template>
 
 <script>
-
+const RESTFORM = {
+    gmfmc:'',
+    lssj:[]
+}
 export default {
     name:'addTaskFormPage',
     components: {},
     props: {},
     data() {
         return {
-            taskForm:{}
+            taskForm:{
+                gmfmc:'',
+                lssj:[]
+            }
         };
     },
     computed: {},
     watch: {},
     methods: {
-
+        handleInput(){
+            this.$emit('handleDoneSearch',this.taskForm)
+        },
+        handleTimeChange(){
+            this.$emit('handleDoneSearch',this.taskForm)
+        },
         /* 搜索 */
         handleSearch(){
             this.$emit('handleDoneSearch',this.taskForm)
         },
         /* 重置 */
         handleRest(){
-            this.taskForm = {};
+            this.taskForm = {
+               
+            };
             this.$emit('handleDoneSearch',this.taskForm)
         }
     },
