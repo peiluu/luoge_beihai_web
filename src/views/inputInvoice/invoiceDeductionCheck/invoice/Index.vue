@@ -82,16 +82,20 @@
           </template>
         </el-table-column>
         <el-table-column
-          prop="purchaserstatus"
+          prop="rzzt"
           label="入账状态"
           min-width="100"
         >
+<!--          <template slot-scope="{ row }">-->
+<!--            {{-->
+<!--              row.purchaserstatus ? purchaserstatusMap[row.purchaserstatus] : ""-->
+<!--            }}-->
+<!--          </template>-->
           <template slot-scope="{ row }">
-            {{
-              row.purchaserstatus ? purchaserstatusMap[row.purchaserstatus] : ""
-            }}
+            <span>{{ row.rzzt === 1 ?'未入账': row.rzzt === 6 ?'入账撤销':'已入账' }}</span>
           </template>
         </el-table-column>
+
         <el-table-column
           prop="preCheck"
           label="预勾选状态"
