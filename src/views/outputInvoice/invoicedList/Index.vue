@@ -658,7 +658,7 @@ export default {
       that.errorDialog = true;
     },
     async downLoadList() {
-      const fileName = `已开票记录导出_含明细.xlsx`
+      const fileName = `已开票记录导出.xlsx`
       const ids = this.selections.map((item) => item.id)
       await downLoadInvoiceList({
         reqData: { ...this.queryParam, scope: this.scope ,idKeys:ids },
@@ -667,7 +667,7 @@ export default {
     },
 
     async downLoadListNoDetail() {
-      const fileName = `已开票记录导出.xlsx`
+      const fileName = `已开票记录导出_不含明细.xlsx`
       const ids = this.selections.map((item) => item.id)
       await downLoadListNoDetail({
         reqData: { ...this.queryParam, scope: this.scope ,idKeys:ids },
