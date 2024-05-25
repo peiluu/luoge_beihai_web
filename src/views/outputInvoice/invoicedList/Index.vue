@@ -163,6 +163,7 @@ export default {
         { title: "税额", width: 100, dataIndex: "hjse", slot: 'hjse', align: 'right' },
         { title: "备注", width: 100, dataIndex: "bz", showTooltip: true},
         { title: "特定业务", width: 100, dataIndex: "tdys", slot: 'tdys' },
+          { title: "税率", width: 60, dataIndex: "slv"},
         { title: "发送记录", width: 80, dataIndex: "sendRecords", fixed: 'right', slot: 'sendRecords',align: 'center' },
         {
           title: "操作",
