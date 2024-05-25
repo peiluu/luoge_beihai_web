@@ -90,6 +90,7 @@
             <el-button @click="getCurrentOrgList">维护开票组织</el-button>
             <el-button @click="downLoadPdfZip">下载pdf</el-button>
             <el-button @click.stop="handleShare()">分享</el-button>
+            <el-button @click="downLoadListNoDetail">导出（不含明细）</el-button>
             <el-button @click="downLoadList">导出</el-button>
           </div>
         </div>
@@ -126,7 +127,7 @@
 import { dateFormat, previewPdf } from "@/utils/tool";
 import FormList from '@/components/FormList.vue';
 import { outputFplxList } from '@/config/constant'
-import { invoiceUsedStatus, downLoadPdf, downLoadPdfZip, detailByOrgId, sendPdf, getOrgList, selectKpr, updateInvoiceOrgId, downLoadInvoiceList, selectQyList, repushBackJQ } from './Api'
+import { invoiceUsedStatus, downLoadPdf, downLoadPdfZip, detailByOrgId, sendPdf, getOrgList, selectKpr, updateInvoiceOrgId, downLoadInvoiceList, downLoadListNoDetail, selectQyList, repushBackJQ } from './Api'
 
 export default {
   name: 'InvoicedList',
@@ -657,9 +658,18 @@ export default {
       that.errorDialog = true;
     },
     async downLoadList() {
-      const fileName = `已开票记录导出.xlsx`
+      const fileName = `已开票记录导出_含明细.xlsx`
       const ids = this.selections.map((item) => item.id)
       await downLoadInvoiceList({
+        reqData: { ...this.queryParam, scope: this.scope ,idKeys:ids },
+        fileName
+      })
+    },
+
+    async downLoadListNoDetail() {
+      const fileName = `已开票记录导出.xlsx`
+      const ids = this.selections.map((item) => item.id)
+      await downLoadListNoDetail({
         reqData: { ...this.queryParam, scope: this.scope ,idKeys:ids },
         fileName
       })
