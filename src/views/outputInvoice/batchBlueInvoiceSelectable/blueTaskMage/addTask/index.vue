@@ -558,10 +558,11 @@ export default {
           queryContions.startTime = ''
           queryContions.endTime = '';
         }
+        queryContions.taskId = this.intoForm.taskId || this.uploadData;
         this.sumbitData = {
           sfATjxzKp: 1,
           queryContions,
-          taskId:this.intoForm.taskId || this.uploadData,
+          
         }
       }else{
         this.sumbitData = {
@@ -589,31 +590,31 @@ export default {
       let text = '';
       
       switch(row.fpzt){
-        case 1:{
+        case '1':{
           text='未开票';
           break;
         }
-        case 2:{
+        case '2':{
           text='已勾选';
           break;
         }
-        case 3:{
+        case '3':{
           text='开票中';
           break;
         }
-        case 4:{
+        case '4':{
           text='上传成功';
           break;
         }
-        case 5:{
+        case '5':{
           text='上传失败';
           break;
         }
-        case 6:{
+        case '6':{
           text='开票成功';
           break;
         }
-        case 7:{
+        case '7':{
           text='开票失败';
           break;
         }
