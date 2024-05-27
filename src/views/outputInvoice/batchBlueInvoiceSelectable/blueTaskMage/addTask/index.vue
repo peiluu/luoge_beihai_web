@@ -69,7 +69,11 @@
               <el-table-column prop="slv" label="税率" width="100" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column prop="se" label="税额" width="100" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column prop="lssj" label="流水时间" width="180" :show-overflow-tooltip="true"></el-table-column>
-              <el-table-column prop="fpzt" label="状态" width="80" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column prop="fpzt" label="状态" width="80" :show-overflow-tooltip="true">
+                <template slot-scope="scope">
+                  {{ handleParesonStatus(scope.row) }}
+                </template>
+              </el-table-column>
               <el-table-column prop="fphm" label="发票号码" width="180" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column prop="kpd_id" label="开票点" width="180" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column prop="org_id" label="账套" width="180" :show-overflow-tooltip="true"></el-table-column>
@@ -557,6 +561,7 @@ export default {
         this.sumbitData = {
           sfATjxzKp: 1,
           queryContions,
+          taskId:this.intoForm.taskId || this.uploadData,
         }
       }else{
         this.sumbitData = {
@@ -578,7 +583,47 @@ export default {
             // });
           }
         });
+      },
+    /* 状态格式化 */
+    handleParesonStatus(row){
+      let text = '';
+      
+      switch(row.fpzt){
+        case 1:{
+          text='未开票';
+          break;
+        }
+        case 2:{
+          text='已勾选';
+          break;
+        }
+        case 3:{
+          text='开票中';
+          break;
+        }
+        case 4:{
+          text='上传成功';
+          break;
+        }
+        case 5:{
+          text='上传失败';
+          break;
+        }
+        case 6:{
+          text='开票成功';
+          break;
+        }
+        case 7:{
+          text='开票失败';
+          break;
+        }
+        
+        default:{
+          text = ''
+        }
       }
+      return text
+    }
   },
   created() {},
   mounted() {
