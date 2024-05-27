@@ -39,8 +39,8 @@
           </article>
           <el-card shadow="hover">
             <article class="table_header">
-              <el-button size="mini" type="primary" @click="handleImport">导入流水</el-button>
-              <el-button @click="addOrEdit">新增（流水）</el-button>
+              <el-button size="mini" type="primary" @click="handleImport" v-if="!intoForm.taskId">导入流水</el-button>
+              <el-button @click="addOrEdit" v-if="!intoForm.taskId">新增（流水）</el-button>
             </article>
           <article style="height:calc(100vh - 350px)">
             <el-table
@@ -69,7 +69,11 @@
               <el-table-column prop="slv" label="税率" width="100" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column prop="se" label="税额" width="100" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column prop="lssj" label="流水时间" width="180" :show-overflow-tooltip="true"></el-table-column>
-              <el-table-column prop="fpzt" label="状态" width="80" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column prop="fpzt" label="状态" width="80" :show-overflow-tooltip="true">
+                <template slot-scope="scope">
+                  {{ handleParesonStatus(scope.row) }}
+                </template>
+              </el-table-column>
               <el-table-column prop="fphm" label="发票号码" width="180" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column prop="kpd_id" label="开票点" width="180" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column prop="org_id" label="账套" width="180" :show-overflow-tooltip="true"></el-table-column>
@@ -202,7 +206,7 @@
           v-if="actived === 0"
           >下一步</el-button
         >
-        <el-button type="primary" @click="handleOpen" v-if="actived === 1"
+        <el-button type="primary" @click="handleOpens" v-if="actived === 1"
           >确 定</el-button
         >
       </span>
@@ -222,7 +226,7 @@
 </template>
 
 <script>
-import { getInvoiceQuota, downBatchTelleData,taskJournalList } from "../../api";
+import { getInvoiceQuota, downBatchTelleData,taskJournalList,postSubmitData } from "../../api";
 import { config } from "@/config";
 import { customPost } from "@/utils/request.js";
 import newAddition from './newAddition/index.vue'
@@ -261,10 +265,10 @@ export default {
     };
     return {
       intoForm: {
-        ...this.respData,
-        fpxe: undefined,
-        mxxz: undefined,
+        fpxe: null,
+        mxxz: 1000,
         fppz: "",
+        ...this.respData,
       },
       rules: {
         fppz: [
@@ -314,27 +318,36 @@ export default {
         pageSize:10,
       },
       total:0,
-      where:{},
+      where:{
+        
+      },
       addVisible:false,
       sumbitData:{},
+      selected:[],
+      uploadData:null,
     };
   },
   computed: {},
   watch: {
     respData: {
       handler(val) {
-        this.intoForm = { ...val, mxxz: 1000, fppz: "" };
+        
+        this.intoForm = { ...val,};
+        this.intoForm.mxxz=1000;
+        this.intoForm.fppz = ""
       },
     },
   },
   methods: {
     /* 初始化 */
     handleInit() {
+      
       this.handleGetOrg();
     },
     /* 获取开票额度 */
     async handleGetOrg() {
       this.loading = true;
+     
       const { orgId } = this.intoForm || {};
       try {
         let params = { orgId };
@@ -354,43 +367,74 @@ export default {
     },
     /* 上传验证 */
     handleUpload() {
-      this.$refs.ruleForm.validate((valid) => {
+     
+      this.$refs.ruleForm.validate(async (valid) => {
+        
         if (valid) {
-          if (this.fileList.length <= 0)
-            return this.$message.error("请至少选择一份文件！");
+         
+          if (this.sumbitData?.ids?.length <= 0 && !this.sumbitData?.queryContions){
+            this.$message.error("请选择流水！");
+            return
+          }
+         
           this.loading = true;
-          this.$refs.uploadRef.submit();
-          // this.fileList.forEach(file => {
-          //     this.$refs.uploadRef.submit(file.raw);
-          // });
+          const {orgId,fppz,nsrmc,nsrsbh,mxxz,fpxe} = this.intoForm || {}
+          this.sumbitData.rulers={
+            kpxe:fpxe,fpmxhsxz:mxxz,
+            orgId,fplx:fppz,nsrmc,nsrsbh,
+            nsrmc:this.$route.query.nsrmc || ''
+          }
+         
+          this.handleSumbitData(this.sumbitData)
+          //this.$refs.uploadRef.submit();
+        }else{
+          
         }
       });
     },
-    /* 上传文件 */
-    handleUploadFile(option) {
-      const { orgId, fppz, fpxe, nsrmc, nsrsbh, mxxz } = this.intoForm || {};
-      const formData = new FormData();
-      formData.append("file", option.file);
-      formData.append("orgId", orgId);
-      formData.append("fppz", fppz);
-      formData.append("fpxe", fpxe);
-      formData.append("nsrmc", nsrmc);
-      formData.append("nsrsbh", nsrsbh);
-      formData.append("mxxz", mxxz);
-      customPost(
-        this.api,
-        { "Content-Type": "multipart/form-data" },
-        formData,
-        (res) => {
-          if (res.code === 0 || res.code === "0") {
-            this.$message.success("上传成功!");
-            this.handlerUploadDone(true);
-            this.updateVisible(false);
-          }
+    // /* 上传文件 */
+    // handleUploadFile(option) {
+    //   const { orgId, fppz, fpxe, nsrmc, nsrsbh, mxxz } = this.intoForm || {};
+    //   const formData = new FormData();
+    //   formData.append("file", option.file);
+    //   formData.append("orgId", orgId);
+    //   formData.append("fppz", fppz);
+    //   formData.append("fpxe", fpxe);
+    //   formData.append("nsrmc", nsrmc);
+    //   formData.append("nsrsbh", nsrsbh);
+    //   formData.append("mxxz", mxxz);
+    //   customPost(
+    //     this.api,
+    //     { "Content-Type": "multipart/form-data" },
+    //     formData,
+    //     (res) => {
+    //       if (res.code === 0 || res.code === "0") {
+    //         this.$message.success("上传成功!");
+    //         this.handlerUploadDone(true);
+    //         this.updateVisible(false);
+    //       }
+    //     }
+    //   ).finally(() => {
+    //     this.loading = false;
+    //   });
+    // },
+    /* 提交数据 */
+    async handleSumbitData(data){
+      
+      try{
+        const res = await postSubmitData(data);
+        if([0,'0'].includes(res.code)){
+          
+          this.$message.success("添加成功！")
+          this.$emit("done",true)
+          this.updateVisible(false);
         }
-      ).finally(() => {
+      }catch(e){
+        this.$message.error(e,"添加失败！")
+      }finally{
         this.loading = false;
-      });
+      }
+     
     },
     /* 添加文件或者上传文件触发事件 */
     handleOnchange(file, fileList) {
@@ -402,6 +446,7 @@ export default {
     },
     /* 关闭 */
     updateVisible(value) {
+      
       this.$emit("update:visible", value);
     },
 
@@ -413,14 +458,15 @@ export default {
       this.updateVisible(false);
     },
     /*提示确认框 */
-    handleOpen() {
+    handleOpens() {
+      
       //销售方为 ${this.queryData.nsrmc},纳税人识别号为 ${this.queryData.nsrsbh}
       this.$confirm(
         `<div>请确认开票主体！</div>
           <div>销售方名称：${this.queryData.nsrmc}</div>
           <div>纳税人识别号：${this.queryData.nsrsbh}</div>
           <div>发票类型：${
-            this.queryData.fppz === "01" ? "增值税专用发票" : "增值税普通发票"
+            this.intoForm.fppz === "01" ? "增值税专用发票" : "增值税普通发票"
           }</div>`,
         "提示",
         {
@@ -431,6 +477,7 @@ export default {
         }
       )
         .then(() => {
+          
           this.handleUpload();
         })
         .catch(() => {});
@@ -455,17 +502,22 @@ export default {
         pageNo:this.page.currentPage,
         pageSize:this.page.pageSize,
         ...this.where,
+       
+      }
+      if(this.intoForm.taskId || this.uploadData){
+        params = {...params,taskId:this.intoForm.taskId ??this.uploadData}
       }
       const res = await taskJournalList(params);
-      console.log(res,"-09")
+    
       if([0,'0'].includes(res.code)){
-        this.tableData = [...res.data]
+        res?.data ?this.tableData = [...res?.data]:[];
         this.total = res.totalCount || 0
       }
     },
     /* 选择改变 */
     handleSelectionChange(val){
-      console.log(val,"-")
+      
+      this.selected = [...val];
     },
     /* 分页变化 */
     handleSizeChange(val) {
@@ -484,38 +536,104 @@ export default {
     },
         // 新增
     addOrEdit() {
-      // console.log('----row----', row);
       this.addVisible = true;
     },
     /* 条件选择变化 */
     handleCheckBoxChange(val){
-      console.log(val,"098")
+      
+      if(val){
+        this.handleopen();
+      }
+      
     },
     /* 上传完成返回 */
-    handleImportDone(){
+    handleImportDone(val){
+      this.intoForm.taskId = val;
       this.handleDataList();
     },
     /* 表格勾选禁用 */
     checkSelectable(row){
-      return !this.conditions
+      return (!this.conditions && ['1','5','7'].includes(row.fpzt)) 
     },
     /* 下一步 */
     handeNext(){ 
       let queryContions = {};
       if(this.conditions){
-        queryContions = {...this.where};
+        if(Object.keys(this.where).length > 0){
+          queryContions.gfmc = this.where.gmfmc;
+          queryContions.startTime = this.where?.lssj[0] || '';
+          queryContions.endTime = this.where?.lssj[1] || '';
+        }else{
+          queryContions.gfmc = '';
+          queryContions.startTime = ''
+          queryContions.endTime = '';
+        }
+        queryContions.taskId = this.intoForm.taskId;
         this.sumbitData = {
           sfATjxzKp: 1,
           queryContions,
+          
         }
       }else{
         this.sumbitData = {
-          ids:[],
+          ids:this.selected.map(k=> k.sid) ||[],
           sfATjxzKp: 0
         }
       }
-      
+     
       this.actived = 1;
+    },
+    /* 切换提示 */
+    handleopen() {
+        this.$alert('勾选后,条件 购方名称 为空与 时间未选择 流水将会是选择全部!', '提示', {
+          confirmButtonText: '继续',
+          callback: action => {
+            // this.$message({
+            //   type: 'info',
+            //   message: `action: ${ action }`
+            // });
+          }
+        });
+    },
+    /* 状态格式化 */
+    handleParesonStatus(row){
+      let text = '';
+      
+      switch(row.fpzt){
+        case '1':{
+          text='未开票';
+          break;
+        }
+        case '2':{
+          text='已勾选';
+          break;
+        }
+        case '3':{
+          text='开票中';
+          break;
+        }
+        case '4':{
+          text='上传成功';
+          break;
+        }
+        case '5':{
+          text='上传失败';
+          break;
+        }
+        case '6':{
+          text='开票成功';
+          break;
+        }
+        case '7':{
+          text='开票失败';
+          break;
+        }
+        
+        default:{
+          text = ''
+        }
+      }
+      return text
     }
   },
   created() {},

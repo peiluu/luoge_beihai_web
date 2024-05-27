@@ -82,9 +82,9 @@
             <el-form-item label="收款人" prop="skr">
               <el-input v-model="billingStationAddDto.skr" placeholder="请输入" />
             </el-form-item>
-            <el-form-item label="税盘编号" prop="taxTrayNum">
+            <!--<el-form-item label="税盘编号" prop="taxTrayNum">
               <el-input v-model="billingStationAddDto.taxTrayNum" placeholder="请输入" />
-            </el-form-item>
+            </el-form-item>-->
 
             <!-- 开票税控-->
             <template v-if="form.isDigital == 'N'">

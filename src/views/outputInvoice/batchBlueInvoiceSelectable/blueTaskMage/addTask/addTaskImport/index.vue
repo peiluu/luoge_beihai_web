@@ -67,6 +67,7 @@ export default {
             limit:1,
             globelFormData:null,
             fileList:[],
+            
         };
     },
     computed: {},
@@ -75,12 +76,13 @@ export default {
         /* 自定义上传 */
         ajaxUpload(content){
             let that = this;
-            const  {kpdId,nsrsbh,nsrmc} = this.$route.query || {};
+            const  {kpdId,nsrsbh,nsrmc,orgId} = this.$route.query || {};
             let formData = new FormData();
             formData.append('file', content.file);
             formData.append('kpdId', kpdId);
             formData.append('nsrsbh', nsrsbh);
             formData.append('nsrmc', nsrmc);
+            formData.append('orgId', orgId);
             //this.importExl(formData)
             this.globelFormData = formData;
         },
@@ -97,7 +99,7 @@ export default {
                     message: '文件导入成功',
                     type: 'success',
                 });
-                that.$emit('handleOk');
+                that.$emit('handleOk',res.data);
                 this.updateVisible(false)
                 }
             }).finally(()=>{

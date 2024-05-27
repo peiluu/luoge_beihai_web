@@ -4,7 +4,7 @@
       <article class="table_header">
         <div>
           <el-button @click="$router.go(-1)">返回</el-button>
-          <el-button type="primary" @click="handleAddTask">添加任务</el-button>
+          <el-button type="primary" @click="handleAddTask(null)">添加任务</el-button>
           <el-button type="primary" @click="handlerRefers">刷新状态</el-button>
         </div>
       </article>
@@ -162,7 +162,7 @@
          
           <el-table-column label="操作" width="180" :header-align="'center'" :align="'center'" fixed="right">
             <template slot-scope="scope">
-              <el-link @click="handleViewDes(scope,'')" type="parmariy" size="small">
+              <el-link @click="handleAddTask(scope.row)" type="parmariy" size="small">
                 查看
               </el-link>
               <el-divider direction="vertical"></el-divider>
@@ -196,7 +196,7 @@
         </el-pagination>
       </article>
     </el-card>
-    <app-add-task :visible.sync="addVisible" v-if="addVisible" :resp-data="respData" :title="title" @done="handleAddDone"></app-add-task>
+    <app-add-task :visible.sync="addVisible" v-if="addVisible" :resp-data="respData" :title="title" @done="handleAddDone" ></app-add-task>
     <app-into-excel :visible.sync="visible" v-if="visible" :title="listTitle" :resp-data="listRespData"></app-into-excel>
   </div>
 </template>
@@ -245,11 +245,19 @@ export default {
       this.handlerGetTaskList()
     },
     /* 添加任务 */
-    handleAddTask(){
-        const {orgId,fppz} = this.$route.query || {}
+    handleAddTask(row){
+      const {orgId,} = this.$route.query || {}
+      const {id,fppz} = row || {};
+      if(row){
+       
+        this.respData = {taskId:id};
+      }else{
+        this.respData = {taskId:''};
+      }
+      this.respData = {...this.respData,orgId,fppz:fppz?fppz:null};
+      console.log(this.respData,"00")
         // this.title = fppz === '01' ? '添加开批量任务': '批量普票任务添加';
         this.title = '添加开批量任务';
-        this.respData = {orgId,fppz};
         this.addVisible = true;
     },
     /* 添加任务回调 */
@@ -266,6 +274,7 @@ export default {
         this.listTitle = '任务详情'
         this.visible = true;
     },
+   
     /* 获取任务 */
     handlerGetTaskList(type){
        this.loading = true;
@@ -273,6 +282,8 @@ export default {
           "pageNo": this.page.currentPage,
           "pageSize": this.page.pageSize,
         nsrsbh:this?.$route?.query?.nsrsbh || '',
+        orgId:this?.$route?.query?.orgId || '',
+        kpdId:this?.$route?.query?.kpdId || '',
         }
         getBatchTaskData(data).then(res=>{
             if([0,'0'].includes(res.code)){
