@@ -4,16 +4,27 @@
       :before-close="handleClose">
       <article v-loading="loading">
         <article class="require_tag">
-          <template v-if="isFailed === null">
+          <!-- <template v-if="isFailed === null">
             <div>努力校验中...</div>
-          </template>
-          <template v-if="isFailed === true">
+          </template> -->
+          <!-- <template v-if="isFailed === true">
             <div class="require_img_main"><img src="@/assets/img/u535.png" alt=""></div>
             <div style="color: red">发票存在合规性风险！</div>
           </template>
           <template v-if="isFailed === false">
             <div class="require_img_main"><img src="@/assets/img/pass.png" alt=""></div>
             <div>发票合规性校验通过！</div>
+          </template> -->
+           <!-- <template v-if="isFailed === null">
+            <div>努力校验中...</div>
+          </template> -->
+          <template v-if="requirdList.resultCode !== '00'">
+            <div class="require_img_main"><img src="@/assets/img/u535.png" alt=""></div>
+            <div style="color: red">{{ requirdList.message }}</div>
+          </template>
+          <template v-else>
+            <div class="require_img_main"><img src="@/assets/img/pass.png" alt=""></div>
+            <div>{{ requirdList.message }}</div>
           </template>
         </article>
         <el-descriptions :column="2">

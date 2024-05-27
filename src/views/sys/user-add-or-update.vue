@@ -74,8 +74,12 @@ export default {
   computed: {
     dataRule () {
       var validatePassword = (rule, value, callback) => {
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,}$/;
         if (!this.dataForm.id && !/\S/.test(value)) {
           return callback(new Error(this.$t('validate.required')))
+        }
+        if(!passwordRegex.test(value)){
+          return callback(new Error('密码需包含大小写字母数字和特殊字符(@$!%*?&.)，不少于8位'))
         }
         callback()
       }
