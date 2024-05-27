@@ -39,7 +39,7 @@
           <el-descriptions-item label="发票税额">{{ requirdList.se }}</el-descriptions-item>
           <el-descriptions-item label="查验次数">{{ requirdList.count }}</el-descriptions-item>
         </el-descriptions>
-        <article style="margin-top:15px;">
+        <article style="margin-top:15px;" v-if="isTableShow">
           <el-table :data="requirdList.resultList" style="width: 100%" :border="true">
             <el-table-column prop="title" label="风险检查项" width="220" :header-align="'center'" :align="'center'">
             </el-table-column>
@@ -92,6 +92,7 @@ export default {
       },
       loading: false,
       isFailed: null, //校验是否不通过 true 校验不通过，false 校验通过, 默认值null
+      isTableShow:false,
     };
   },
   computed: {},
@@ -115,6 +116,9 @@ export default {
       try {
         const res = await getRequiredInvoice({ fphm: this.invoiceNumber })
         if ([0, '0'].includes(res.code)) {
+          if(res.data.resultCode === '00'){
+            this.isTableShow = true;
+          }
           this.requirdList = { ...res.data }
           this.isFailed = res.data.resultList.some(item => item.type === "0")
         } else {
