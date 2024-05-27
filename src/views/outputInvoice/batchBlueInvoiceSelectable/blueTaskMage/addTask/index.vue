@@ -424,6 +424,7 @@ export default {
       try{
         const res = await postSubmitData(data);
         if([0,'0'].includes(res.code)){
+          
           this.$message.success("添加成功！")
           this.$emit("done",true)
           this.updateVisible(false);
@@ -445,6 +446,7 @@ export default {
     },
     /* 关闭 */
     updateVisible(value) {
+      
       this.$emit("update:visible", value);
     },
 
@@ -534,7 +536,6 @@ export default {
     },
         // 新增
     addOrEdit() {
-      
       this.addVisible = true;
     },
     /* 条件选择变化 */
@@ -547,12 +548,12 @@ export default {
     },
     /* 上传完成返回 */
     handleImportDone(val){
-      this.uploadData = val;
+      this.intoForm.taskId = val;
       this.handleDataList();
     },
     /* 表格勾选禁用 */
     checkSelectable(row){
-      return !this.conditions
+      return (!this.conditions && ['1','5','7'].includes(row.fpzt)) 
     },
     /* 下一步 */
     handeNext(){ 
@@ -567,7 +568,7 @@ export default {
           queryContions.startTime = ''
           queryContions.endTime = '';
         }
-        queryContions.taskId = this.intoForm.taskId || this.uploadData;
+        queryContions.taskId = this.intoForm.taskId;
         this.sumbitData = {
           sfATjxzKp: 1,
           queryContions,

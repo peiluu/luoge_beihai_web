@@ -251,6 +251,8 @@ export default {
       if(row){
        
         this.respData = {taskId:id};
+      }else{
+        this.respData = {taskId:''};
       }
       this.respData = {...this.respData,orgId,fppz:fppz?fppz:null};
       console.log(this.respData,"00")

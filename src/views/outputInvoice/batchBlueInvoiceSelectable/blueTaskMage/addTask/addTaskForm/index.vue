@@ -3,14 +3,15 @@
         <el-card shadow=""hover>
             <el-form ref="form" :model="taskForm" label-width="80px">
                 <el-row :gutter="10">
-                    <el-col :span="8">
+                    <el-col :span="6">
                         <el-form-item label="购方名称">
                             <el-input v-model="taskForm.gmfmc" @change="handleInput"></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="8">
+                    <el-col :span="6">
                         <el-form-item label="时间">
                             <el-date-picker
+                            style="width: 100%;"
                             v-model="taskForm.lssj"
                             type="datetimerange"
                             start-placeholder="开始日期"
@@ -20,11 +21,18 @@
                             </el-date-picker>
                         </el-form-item>
                     </el-col>
-                    <!-- <el-col :span="6">
+                    <el-col :span="6">
                         <el-form-item label="状态">
-                            <el-input v-model="taskForm.name"></el-input>
+                            <el-select style="width: 100%;" multiple v-model="taskForm.fpzt" placeholder="请选择">
+                                <el-option
+                                v-for="item in fpztOptions"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                                </el-option>
+                            </el-select>
                         </el-form-item>
-                    </el-col> -->
+                    </el-col>
                     <el-col :span="6">
                         <el-form-item label="" label-width="0">
                             <article class="searchBth">
@@ -48,7 +56,8 @@
 <script>
 const RESTFORM = {
     gmfmc:'',
-    lssj:[]
+    lssj:[],
+    fpzt:['1','5','7']
 }
 export default {
     name:'addTaskFormPage',
@@ -58,8 +67,39 @@ export default {
         return {
             taskForm:{
                 gmfmc:'',
-                lssj:[]
-            }
+                lssj:[],
+                fpzt:['1','5','7']
+            },
+            fpztOptions:[
+                {
+                    label:'未开票',
+                    value:'1'
+                },
+                {
+                    label:'已勾选',
+                    value:'2'
+                },
+                {
+                    label:'开票中',
+                    value:'3'
+                },
+                {
+                    label:'上传成功',
+                    value:'4'
+                },
+                {
+                    label:'上传失败',
+                    value:'5'
+                },
+                {
+                    label:'开票成功',
+                    value:'6'
+                },
+                {
+                    label:'开票失败',
+                    value:'7'
+                },
+            ]
         };
     },
     computed: {},
@@ -78,13 +118,15 @@ export default {
         /* 重置 */
         handleRest(){
             this.taskForm = {
-               
+                fpzt:['1','5','7']
             };
             this.$emit('handleDoneSearch',this.taskForm)
         }
     },
     created() {},
-    mounted() {},
+    mounted() {
+        this.handleSearch();
+    },
     beforeCreate() {},
     beforeMount() {},
     beforeUpdate() {},
