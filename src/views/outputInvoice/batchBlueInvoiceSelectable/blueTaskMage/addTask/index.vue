@@ -206,7 +206,7 @@
           v-if="actived === 0"
           >下一步</el-button
         >
-        <el-button type="primary" @click="handleOpen" v-if="actived === 1"
+        <el-button type="primary" @click="handleOpens" v-if="actived === 1"
           >确 定</el-button
         >
       </span>
@@ -331,7 +331,7 @@ export default {
   watch: {
     respData: {
       handler(val) {
-        console.log(val,"watch")
+        
         this.intoForm = { ...val,};
         this.intoForm.mxxz=1000;
         this.intoForm.fppz = ""
@@ -341,7 +341,7 @@ export default {
   methods: {
     /* 初始化 */
     handleInit() {
-      console.log(this.intoForm,"-09")
+      
       this.handleGetOrg();
     },
     /* 获取开票额度 */
@@ -367,12 +367,16 @@ export default {
     },
     /* 上传验证 */
     handleUpload() {
-      this.$refs.ruleForm.validate((valid) => {
+     
+      this.$refs.ruleForm.validate(async (valid) => {
+        
         if (valid) {
-          if (this.sumbitData.ids.length <= 0 && !this.sumbitData.queryContions){
+         
+          if (this.sumbitData?.ids?.length <= 0 && !this.sumbitData?.queryContions){
             this.$message.error("请选择流水！");
             return
           }
+         
           this.loading = true;
           const {orgId,fppz,nsrmc,nsrsbh,mxxz,fpxe} = this.intoForm || {}
           this.sumbitData.rulers={
@@ -380,8 +384,10 @@ export default {
             orgId,fplx:fppz,nsrmc,nsrsbh,
             nsrmc:this.$route.query.nsrmc || ''
           }
+         
           this.handleSumbitData(this.sumbitData)
           //this.$refs.uploadRef.submit();
+        }else{
           
         }
       });
@@ -414,6 +420,7 @@ export default {
     // },
     /* 提交数据 */
     async handleSumbitData(data){
+      
       try{
         const res = await postSubmitData(data);
         if([0,'0'].includes(res.code)){
@@ -421,8 +428,8 @@ export default {
           this.$emit("done",true)
           this.updateVisible(false);
         }
-      }catch{
-        this.$message.error("添加失败！")
+      }catch(e){
+        this.$message.error(e,"添加失败！")
       }finally{
         this.loading = false;
       }
@@ -449,7 +456,8 @@ export default {
       this.updateVisible(false);
     },
     /*提示确认框 */
-    handleOpen() {
+    handleOpens() {
+      
       //销售方为 ${this.queryData.nsrmc},纳税人识别号为 ${this.queryData.nsrsbh}
       this.$confirm(
         `<div>请确认开票主体！</div>
@@ -467,6 +475,7 @@ export default {
         }
       )
         .then(() => {
+          
           this.handleUpload();
         })
         .catch(() => {});
@@ -497,7 +506,7 @@ export default {
         params = {...params,taskId:this.intoForm.taskId ??this.uploadData}
       }
       const res = await taskJournalList(params);
-      console.log(res,"-09")
+    
       if([0,'0'].includes(res.code)){
         res?.data ?this.tableData = [...res?.data]:[];
         this.total = res.totalCount || 0
@@ -525,12 +534,12 @@ export default {
     },
         // 新增
     addOrEdit() {
-      // console.log('----row----', row);
+      
       this.addVisible = true;
     },
     /* 条件选择变化 */
     handleCheckBoxChange(val){
-      console.log(val,"098")
+      
       if(val){
         this.handleopen();
       }
@@ -570,7 +579,7 @@ export default {
           sfATjxzKp: 0
         }
       }
-      console.log(this.sumbitData,"传递的数据")
+     
       this.actived = 1;
     },
     /* 切换提示 */
@@ -584,7 +593,7 @@ export default {
             // });
           }
         });
-      },
+    },
     /* 状态格式化 */
     handleParesonStatus(row){
       let text = '';
