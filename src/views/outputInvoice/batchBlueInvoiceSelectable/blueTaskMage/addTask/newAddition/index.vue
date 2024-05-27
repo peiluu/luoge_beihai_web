@@ -3,65 +3,70 @@
     <el-dialog
       :title="title"
       :visible="visible"
-      width="60%"
+      width="1000px"
       :before-close="handleAddClose"
       class="black-dialog"
     >
       <el-form :inline="true" :model="editForm" ref="editForm">
-        <el-form-item label="购方类型" prop="nsrmc">
-          <el-input v-model="editForm.nsrmc" placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="购方编码" prop="nsrsbh">
-          <el-input v-model="editForm.nsrsbh" placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="购方名称" prop="nsrmc">
-          <el-input v-model="editForm.nsrmc" placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="税收分类编码" prop="nsrsbh">
-          <el-input v-model="editForm.nsrsbh" placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="项目名称" prop="nsrsbh">
-          <el-input v-model="editForm.nsrsbh" placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="商品规格" prop="nsrsbh">
-          <el-input v-model="editForm.nsrsbh" placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="计量单位" prop="nsrsbh">
-          <el-input v-model="editForm.nsrsbh" placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="数量" prop="nsrsbh">
-          <el-input v-model="editForm.nsrsbh" placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="金额（不含税价）" prop="nsrsbh">
-          <el-input v-model="editForm.nsrsbh" placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="税率" prop="szdq">
-          <el-input v-model="editForm.szdq" placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="税额" prop="swjgmc">
-          <el-input v-model="editForm.swjgmc" placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="流水时间" prop="jydz">
-          <el-input v-model="editForm.jydz" placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="状态" prop="zrr">
-          <el-input v-model="editForm.zrr" placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="发票号码" prop="zrr">
-          <el-input v-model="editForm.zrr" placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="开票点" prop="zrr">
-          <el-input v-model="editForm.zrr" placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="账套" prop="zrr">
-          <el-input v-model="editForm.zrr" placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="销方纳税人识别号" prop="zrr">
-          <el-input v-model="editForm.zrr" placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="销方纳税人名称" prop="zrr">
-          <el-input v-model="editForm.zrr" placeholder="请输入" />
-        </el-form-item>
+          <el-form-item label="购方类型" prop="nsrmc">
+            <el-input v-model="editForm.nsrmc" placeholder="请输入" />
+          </el-form-item>
+          <el-form-item label="购方编码" prop="nsrsbh">
+            <el-input v-model="editForm.nsrsbh" placeholder="请输入" />
+          </el-form-item>
+          <el-form-item label="购方名称" prop="nsrmc">
+            <el-input v-model="editForm.nsrmc" placeholder="请输入" />
+          </el-form-item>
+
+          <el-form-item label="税收分类编码" prop="nsrsbh">
+            <el-input v-model="editForm.nsrsbh" placeholder="请输入" />
+          </el-form-item>
+          <el-form-item label="项目名称" prop="nsrsbh">
+            <el-input v-model="editForm.nsrsbh" placeholder="请输入" />
+          </el-form-item>
+          <el-form-item label="商品规格" prop="nsrsbh">
+            <el-input v-model="editForm.nsrsbh" placeholder="请输入" />
+          </el-form-item>
+          <el-form-item label="计量单位" prop="nsrsbh">
+            <el-input v-model="editForm.nsrsbh" placeholder="请输入" />
+          </el-form-item>
+          <el-form-item label="数量" prop="nsrsbh">
+            <el-input v-model="editForm.nsrsbh" placeholder="请输入" />
+          </el-form-item>
+          <el-form-item label="金额（不含税价）" prop="nsrsbh">
+            <el-input v-model="editForm.nsrsbh" placeholder="请输入" />
+          </el-form-item>
+
+          <el-form-item label="税率" prop="szdq">
+            <el-input v-model="editForm.szdq" placeholder="请输入" />
+          </el-form-item>
+          <el-form-item label="税额" prop="swjgmc">
+            <el-input v-model="editForm.swjgmc" placeholder="请输入" />
+          </el-form-item>
+          <el-form-item label="流水时间" prop="jydz">
+            <el-input v-model="editForm.jydz" placeholder="请输入" />
+          </el-form-item>
+
+          <el-form-item label="状态" prop="zrr">
+            <el-input v-model="editForm.zrr" placeholder="请输入" />
+          </el-form-item>
+          <el-form-item label="发票号码" prop="zrr">
+            <el-input v-model="editForm.zrr" placeholder="请输入" />
+          </el-form-item>
+          <el-form-item label="开票点" prop="zrr">
+            <el-input v-model="editForm.zrr" placeholder="请输入" />
+          </el-form-item>
+
+          <el-form-item label="账套" prop="zrr">
+            <el-input v-model="editForm.zrr" placeholder="请输入" />
+          </el-form-item>
+          <el-form-item label="销方纳税人识别号" prop="zrr">
+            <el-input v-model="editForm.zrr" placeholder="请输入" />
+          </el-form-item>
+          <el-form-item label="销方纳税人名称" prop="zrr">
+            <el-input v-model="editForm.zrr" placeholder="请输入" />
+          </el-form-item>
+
         <el-form-item label="上传时间" prop="zrr">
           <el-input v-model="editForm.zrr" placeholder="请输入" />
         </el-form-item>
@@ -81,17 +86,17 @@ export default {
       type: Boolean,
       default: false,
     },
-    title:{
-      type:String,
-      default:'新增'
-    }
+    title: {
+      type: String,
+      default: "新增",
+    },
   },
   components: {},
   data() {
     return {
       editForm: {},
       addVisible: false,
-      saveLoading:false,
+      saveLoading: false,
     };
   },
   methods: {
@@ -102,7 +107,7 @@ export default {
     },
     // 关闭弹窗
     handleAddClose() {
-     this.$emit('update:visible',false)
+      this.$emit("update:visible", false);
     },
     handleSelection(rows) {
       this.selections = rows;
@@ -124,7 +129,6 @@ export default {
           if (code === "0") {
             this.$message.success("操作成功");
             this.handleAddClose();
-           
           }
         } catch (error) {
         } finally {
@@ -135,4 +139,32 @@ export default {
   },
 };
 </script>
-<style></style>
+<style scoped lang="scss">
+
+ .black-dialog {
+  /deep/ .el-form-item {
+    width: calc(50% - 10px);
+    &.full-item {
+      width: 100%;
+    }
+    .el-form-item__label {
+      width: 180px;
+    }
+
+    .el-form-item__content {
+      width: calc(100% - 180px);
+
+      .el-select,
+      .el-date-editor,
+      .el-input {
+        width: 100%;
+      }
+    }
+
+  }
+}
+/deep/ .el-dialog__body{
+  height: calc(100vh - 420px) !important;
+  overflow: auto;
+ }
+</style>
