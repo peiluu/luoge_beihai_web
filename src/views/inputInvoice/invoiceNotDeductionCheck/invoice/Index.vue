@@ -1,7 +1,7 @@
 <template>
   <div class="com-invoice">
     <form-list :columns="columns" :searchRow="searchList" @getSearchParam="getSearchParam" :api="api" :param="param"
-      @handleSelection="handleSelection" :height="height" :firstLoading="false" v-loading="loading" ref="list"
+     @handleSelection="handleSelection" :height="height" :firstLoading="false" v-loading="loading" ref="list"
       :tableCounterShow="true">
       <!-- 中间部分 -->
       <template #topTool>
@@ -77,7 +77,7 @@ import FormList from '@/components/FormList.vue';
 import SelectReasonModal from '../../components/SelectReasonModal.vue';
 import { submitRevokeInvoiceCheck, getOrgList, exportInvoiceCheck } from './Api'
 import { inputFplxList, inputFplxMap } from '@/config/constant'
-import { bdklxList, bdklxMap, purchaserstatusList, purchaserstatusMap, fpztList, fpztMap } from '../../constant'
+import { bdklxList, bdklxMap, purchaserstatusList, purchaserstatusMap, fpztList, fpztMap,enterAccountStatus } from '../../constant'
 
 export default {
   name: 'InvoiceNotDeductionCheckInvoice',
@@ -131,7 +131,7 @@ export default {
         { title: "勾选时间", width: 100, dataIndex: "gxsj", slot: 'gxsj' },
         { title: "勾选人", width: 130, dataIndex: "createrName" },
         // { title: "业务系统单号", dataIndex: "hjje", width: 100, },
-        { title: "来源系统", dataIndex: "mideaSrc", align: "center", width: 100, },
+        // { title: "来源系统", dataIndex: "mideaSrc", align: "center", width: 100, },
         // { title: "项目名称", dataIndex: "hjse", width: 100, },
         { title: "记账人", dataIndex: "accountUser", width: 100, },
         { title: "记账日期", width: 100, dataIndex: "accountTime", slot: 'accountTime' },
@@ -264,15 +264,15 @@ export default {
           key: "purchaserstatus",
           val: '',
           type: "select",
-          options: [{ value: "", label: "全部" }].concat(purchaserstatusList)
+          options:[{label:'全部',value:''},...enterAccountStatus]
         },
-        {
-          label: "是否入发票池",
-          key: "syncInvoice",
-          val: '',
-          type: "select",
-          options: [{ value: "", label: "全部" }, { value: "Y", label: "是" }, { value: "N", label: "否" }],
-        },
+        // {
+        //   label: "是否入发票池",
+        //   key: "syncInvoice",
+        //   val: '',
+        //   type: "select",
+        //   options: [{ value: "", label: "全部" }, { value: "Y", label: "是" }, { value: "N", label: "否" }],
+        // },
 
         // {
         //   label: "是否为转内销凭证",
@@ -444,7 +444,7 @@ export default {
         number: rows.length,
         hjje: hjje.toFixed(2),
         hjse: hjse.toFixed(2),
-        jshj
+        jshj:jshj.toFixed(2)
       };
     },
     getList() {

@@ -321,12 +321,14 @@ import {
   getDetailById,
   cstateZzsfp,
 } from "./Api";
-import { inputFplxList, inputFplxMap } from "@/config/constant";
+import { inputFplxList, inputFplxMap, } from "@/config/constant";
+import {enterAccountStatus} from '../../constant.js'
 import {
   purchaserstatusList,
   purchaserstatusMap,
   fpztMap,
   fpztList,
+  
 } from "@/views/inputInvoice/constant";
 import CustomImport from "@/components/CustomImport";
 
@@ -474,7 +476,7 @@ export default {
           key: "purchaserstatus",
           val: "",
           type: "select",
-          options: [{ value: "", label: "全部" }].concat(purchaserstatusList),
+          options: [{ value: "", label: "全部" }].concat(enterAccountStatus),
         },
         // {
         //   label: "是否入发票池",
@@ -553,7 +555,7 @@ export default {
   },
   computed: {
     height() {
-      return window.innerHeight - 460;
+      return window.innerHeight - 429;
     },
     nsrsbh() {
       return this.$route.query.nsrsbh;
@@ -666,7 +668,10 @@ export default {
           pageNo: pagination.pageNo,
           pageSize: pagination.pageSize,
         });
-        vm.getHjje();
+        if(this.searchParam.cljg === '02'){
+          vm.getHjje();
+        }
+        
         if (res && res.code == "0") {
           this.isPerCheck = false;
           // 在切换页面时不清空选中的数据
@@ -687,6 +692,11 @@ export default {
                 index: index + 1,
               };
             });
+            if(this.searchParam.cljg === '01'){
+              this.selections = [];
+              this.$refs.tableCounter.setInfo({...this.handleCalc(this.selections,['hjje','hjse','jshj']),number:this.selections?.length})
+              
+            }
           } else {
             vm.data = [];
           }
@@ -717,6 +727,7 @@ export default {
             jshj: data.jshj,
           };
           this.$refs.tableCounter.setInfo(this.selecedInfo);
+          
         }
       } catch (error) {
         console.log(error);
@@ -724,6 +735,24 @@ export default {
         this.totalLoading = false;
       }
     },
+    /* 计算已勾选 */
+    handleCalc(array, keys) {
+      let result = {};
+
+      keys.forEach(key => {
+        result[key] = 0; // 初始化每个键的总和为0
+      });
+
+      array.forEach(item => {
+        keys.forEach(key => {
+          if (key in item) {
+            result[key] += item[key];
+          }
+        });
+      });
+
+      return result;
+  },
     // 搜索
     handleSearch(val) {
       let param = this.searchParam;
@@ -742,11 +771,13 @@ export default {
     },
     // 初始化多选数据
     setSelections(list) {
+      
       list?.map((item) => {
         if (!this.selections.find((selItem) => selItem.id == item.id)) {
           this.$refs.table.toggleRowSelection(item);
         }
       });
+      
     },
     // 清空多选
     clearSelection() {
@@ -791,8 +822,9 @@ export default {
       }
       this.setPre({ ids, preCheck });
     },
-    async setPre({ ids, preCheck }) {
-      console.log("ids----", ids, preCheck);
+    async setPre({ids,preCheck}) {
+     
+      if(this.searchParam?.cljg === '01') return
       try {
         this.loading = true;
         const { code = "0", data } = await checkPreOneZzsfp({ ids, preCheck, nsrsbh: this.nsrsbh });
@@ -806,8 +838,13 @@ export default {
     },
     // 处理多选
     handleSelection(rows) {
+      console.log(rows,"change")
       // this.$refs.tableCounter.getSelecedInfo(rows);
       this.selections = rows;
+      if(this.searchParam.cljg === '01'){
+        this.$refs.tableCounter.setInfo({...this.handleCalc(this.selections,['hjje','hjse','jshj']),number:this.selections?.length})
+      }
+     
     },
     // 撤销勾选
     cancleBatch(gxlxDm) {

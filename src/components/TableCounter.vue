@@ -81,7 +81,7 @@ export default {
     },
     setInfo(selecedInfo){
       // console.log(selecedInfo,"--")
-      this.selecedInfo = selecedInfo
+      this.selecedInfo = {...selecedInfo}
     }
   }
 
