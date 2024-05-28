@@ -13,7 +13,7 @@ if (isDev) {
 }
 export const config = {
   /*应用名称*/
-  title: '个税通',
+  title: '罗格北海',
   /*是否使用页签*/
   useTab: true,
   /*是否添加页面加载动画*/
