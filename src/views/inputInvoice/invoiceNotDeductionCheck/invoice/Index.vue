@@ -125,7 +125,7 @@ export default {
         { title: "记账人", dataIndex: "accountUser", width: 100, },
         { title: "记账日期", width: 100, dataIndex: "accountTime", slot: 'accountTime' },
         { title: "报销日期", width: 100, dataIndex: "reimburseDate", slot: 'reimburseDate' },
-        { title: "是否入发票池", dataIndex: "syncInvoice", width: 100, slot: 'syncInvoice' },
+        // { title: "是否入发票池", dataIndex: "syncInvoice", width: 100, slot: 'syncInvoice' },
 
         {
           title: "不抵扣原因",
@@ -304,8 +304,8 @@ export default {
   },
   watch: {
     level: {
-      handler: function(newV, oldV){
-        if(newV === '1'){
+      handler: function (newV, oldV) {
+        if (newV === '1') {
           this.getList()
         }
       },

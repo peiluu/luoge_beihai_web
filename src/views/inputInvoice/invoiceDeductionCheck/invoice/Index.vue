@@ -208,11 +208,11 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="sfycpz" label="是否入发票池" min-width="120">
+        <!-- <el-table-column prop="sfycpz" label="是否入发票池" min-width="120">
           <template slot-scope="{ row }">{{
             row.syncInvoice == "Y" ? "是" : "否"
           }}</template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
       <TableCounter ref="tableCounter" v-loading="totalLoading" />
 
@@ -585,7 +585,7 @@ export default {
       this.dialogVisible = false;
       this.form = {};
     },
-    
+
     handleReset() {
       this.pagination = {
         ...this.pagination,
@@ -772,7 +772,7 @@ export default {
     },
     // 点击勾选icon触发handleSelected
     handleSelected(selection, row) {
-      this.setPre({ids:[row.id],nsrsbh: this.nsrsbh, preCheck:row.preCheck === 'Y'?'N':'Y'});
+      this.setPre({ ids: [row.id], nsrsbh: this.nsrsbh, preCheck: row.preCheck === 'Y' ? 'N' : 'Y' });
     },
     seleceAll(rows) {
       let ids = [];
@@ -789,13 +789,13 @@ export default {
           }
         });
       }
-      this.setPre({ids,preCheck});
+      this.setPre({ ids, preCheck });
     },
-    async setPre({ids,preCheck}) {
-      console.log("ids----", ids,preCheck);
+    async setPre({ ids, preCheck }) {
+      console.log("ids----", ids, preCheck);
       try {
         this.loading = true;
-        const { code = "0", data } = await checkPreOneZzsfp({ids,preCheck,nsrsbh:this.nsrsbh});
+        const { code = "0", data } = await checkPreOneZzsfp({ ids, preCheck, nsrsbh: this.nsrsbh });
         if (code === "0") {
           this.handleGetData(this.searchParam);
         }
@@ -890,7 +890,7 @@ export default {
             this.reload();
           }
         })
-        .catch(() => {}); // 添加错误捕获
+        .catch(() => { }); // 添加错误捕获
     },
 
     // 提交数据勾选
