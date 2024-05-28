@@ -131,7 +131,7 @@ export default {
         { title: "勾选时间", width: 100, dataIndex: "gxsj", slot: 'gxsj' },
         { title: "勾选人", width: 130, dataIndex: "createrName" },
         // { title: "业务系统单号", dataIndex: "hjje", width: 100, },
-        { title: "来源系统", dataIndex: "mideaSrc", align: "center", width: 100, },
+        // { title: "来源系统", dataIndex: "mideaSrc", align: "center", width: 100, },
         // { title: "项目名称", dataIndex: "hjse", width: 100, },
         { title: "记账人", dataIndex: "accountUser", width: 100, },
         { title: "记账日期", width: 100, dataIndex: "accountTime", slot: 'accountTime' },
