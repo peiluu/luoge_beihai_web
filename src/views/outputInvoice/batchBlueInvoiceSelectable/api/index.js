@@ -29,5 +29,9 @@ export const downBatchTelleData = data => download(`${config.host}/invoiceExcelT
 export const taskJournalList = data => postJSON(`${config.host}/tradenum/page`, data);
 
 export const postSubmitData = data => postJSON(`${config.host}/tradenum/createWkp`, data);
+/**
+* @desption 新增
+*/
+export const addMghw = data => postJSON(`${config.host}/tradenum/add`, data);
 
 
