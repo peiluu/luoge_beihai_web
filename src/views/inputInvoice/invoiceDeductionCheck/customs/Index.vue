@@ -63,6 +63,9 @@
       <template #gxsj="{ data }">
         {{ data.gxsj ? dateFormat("YYYY-MM-DD", data.gxsj) : "" }}
       </template>
+      <template #rzzt="{ data }">
+        {{ handleFormat(data.rzzt)}}
+      </template>
     </form-list>
 
     <!-- dialog 提交勾选 -->
@@ -768,6 +771,32 @@ export default {
         this.totalLoading = false;
       }
     },
+    /* 数据格式化 */
+    handleFormat(data){
+      let text = '';
+      switch(data){
+        case '01':{
+          text='未入账';
+          break;
+        }
+        case '02':{
+          text='已入账(企业所得税税前扣除)';
+          break;
+        }
+        case '03':{
+          text='已入账(企业所得税不扣除)';
+          break;
+        }
+        case '06':{
+          text='已入账撤销';
+          break;
+        }
+        default:{
+          text = '';
+        }
+      }
+      return text
+    }
   },
 };
 </script>
