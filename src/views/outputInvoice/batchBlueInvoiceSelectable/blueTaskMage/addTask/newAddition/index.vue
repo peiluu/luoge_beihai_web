@@ -1,12 +1,6 @@
 <template>
   <div>
-    <el-dialog
-      :title="title"
-      :visible="visible"
-      width="1000px"
-      :before-close="handleAddClose"
-      class="black-dialog"
-    >
+    <el-dialog :title="title" :visible="visible" width="1000px" :before-close="handleAddClose" class="black-dialog">
       <el-form :inline="true" :model="editForm" ref="editForm">
         <el-form-item label="购方类型" prop="gflx">
           <el-select v-model="editForm.gflx">
@@ -46,16 +40,17 @@
           <el-input v-model="editForm.se" placeholder="请输入" />
         </el-form-item>
         <el-form-item label="流水时间" prop="lssj">
-          <el-input v-model="editForm.lssj" placeholder="请输入" />
+          <el-date-picker v-model="editForm.lssj" type="datetime" placeholder="选择日期时间">
+          </el-date-picker>
         </el-form-item>
-        <el-form-item label="状态" prop="fpzt">
+        <!-- <el-form-item label="状态" prop="fpzt">
           <el-select v-model="editForm.fpzt">
             <el-option v-for="item in fpzt" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="发票号码" prop="fphm">
           <el-input v-model="editForm.fphm" placeholder="请输入" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="开票点" prop="kpd_id">
           <el-input v-model="editForm.kpdId" disabled placeholder="请输入" />
         </el-form-item>
@@ -95,22 +90,25 @@ export default {
       type: String,
       default: "新增",
     },
+    editeTask: {
+      type: [String, Number],
+      default: "",
+    },
   },
   components: {},
   data() {
     const gflx = [
-      { value: '1', label: '个人' },
-      { value: '2', label: '企业' },
-
+      { value: "1", label: "个人" },
+      { value: "2", label: "企业" },
     ];
     const fpzt = [
-      { value: '1', label: '未开票' },
-      { value: '2', label: '已勾选' },
-      { value: '3', label: '开票中' },
-      { value: '4', label: '上传成功' },
-      { value: '5', label: '上传失败' },
-      { value: '6', label: '开票成功' },
-      { value: '7', label: '开票失败' },
+      { value: "1", label: "未开票" },
+      { value: "2", label: "已勾选" },
+      { value: "3", label: "开票中" },
+      { value: "4", label: "上传成功" },
+      { value: "5", label: "上传失败" },
+      { value: "6", label: "开票成功" },
+      { value: "7", label: "开票失败" },
     ];
     return {
       fpzt,
@@ -118,18 +116,17 @@ export default {
       editForm: {},
       addVisible: false,
       saveLoading: false,
-     
     };
   },
   methods: {
-     init(){
-      const {orgId,kpdId, nsrsbh,nsrmc} = this.$route.query || {};
-    
+    init() {
+      const { orgId, kpdId, nsrsbh, nsrmc } = this.$route.query || {};
+
       this.editForm.orgId = orgId;
       this.editForm.kpdId = kpdId;
       this.editForm.nsrsbh = nsrsbh;
       this.editForm.nsrmc = nsrmc;
-     },
+    },
     // extractParamsFromUrl() {
     //   const urlParams = new URLSearchParams(window.location.search);
     //   this.kpdId = urlParams.get('kpdId');
@@ -154,24 +151,19 @@ export default {
       this.$refs["editForm"].validate(async (valid) => {
         if (!valid) return;
         this.saveLoading = true;
-        const {kpdId,orgId,TradeNumInfoAddDto} =  this.$route.query || {};
+        const { kpdId, orgId } = this.$route.query || {};
         const params = {
-          taskId: this.intoForm?.taskId ||'',
-          ...this.editForm,
+          taskId: this.useTask || "",
+
           kpdId: kpdId,
           orgId: orgId,
-          TradeNumInfoAddDto: TradeNumInfoAddDto,
+          tradeNumInfoAddDto: { ...this.editForm },
         };
-        let apiFn = addMghw;
-        if (this.editForm.id) {
-          // 编辑
-          apiFn = updateMghw;
-          params.id = this.editForm.id;
-        }
         try {
-          const { code = "" } = await apiFn(params);
-          if (code === "0") {
+          const res = await addMghw(params);
+          if ([0,'0'].includes(res.code)) {
             this.$message.success("操作成功");
+            this.$emit('handleDoneAdd',{taskId:res.data})
             this.handleAddClose();
           }
         } catch (error) {
@@ -181,18 +173,25 @@ export default {
       });
     },
   },
-  created(){
+  created() {
     this.init();
-  }
+  },
+  computed: {
+    useTask() {
+      return this.editeTask || "";
+    },
+  },
 };
 </script>
 <style scoped lang="scss">
 .black-dialog {
   /deep/ .el-form-item {
     width: calc(50% - 10px);
+
     &.full-item {
       width: 100%;
     }
+
     .el-form-item__label {
       width: 180px;
     }
@@ -208,8 +207,9 @@ export default {
     }
   }
 }
+
 /deep/ .el-dialog__body {
-  height: calc(100vh - 420px) !important;
+  height: calc(100vh - 320px) !important;
   overflow: auto;
 }
 </style>

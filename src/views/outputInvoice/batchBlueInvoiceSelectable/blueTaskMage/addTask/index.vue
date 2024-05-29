@@ -55,7 +55,7 @@
                 v-if="!intoForm.taskId"
                 >导入流水</el-button
               >
-              <!-- <el-button v-if="!intoForm.taskId"  @click="addOrEdit">新增（流水）</el-button> -->
+              <el-button v-if="!intoForm.taskId"  @click="addOrEdit">新增（流水）</el-button>
             </article>
             <article style="height: calc(100vh - 350px)">
               <el-table
@@ -340,12 +340,9 @@
 
         <new-addition
           :visible.sync="addVisible"
-          :on-save="handleSave"
-          :on-close="handleClose"
-          :kpdId="kpdId"
-          :orgId="orgId"
-          :taskId="taskId"
-          :TradeNumInfoAddDto="TradeNumInfoAddDto"
+          v-if="addVisible"
+          :edite-task="editeTask"
+          @handleDoneAdd="handleDoneAdd"
         ></new-addition>
       </div>
     </template>
@@ -399,7 +396,7 @@ export default {
       kpdId: '',
     orgId: '',
     taskId: '',
-    TradeNumInfoAddDto: {},
+    editeTask:'',
       intoForm: {
         fpxe: null,
         mxxz: 1000,
@@ -664,6 +661,7 @@ export default {
     },
     // 新增
     addOrEdit() {
+      this.editeTask = this.intoForm?.taskId || '';
       this.addVisible = true;
     },
     /* 条件选择变化 */
@@ -764,6 +762,14 @@ export default {
       }
       return text;
     },
+    /* 添加返回 */
+    handleDoneAdd(val){
+      console.log(val);
+      if((this.intoForm.taskId??'')===''){
+        this.intoForm.taskId = val.taskId
+      }
+      this.handleDataList()
+    }
   },
   created() {},
   mounted() {
