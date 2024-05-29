@@ -29,7 +29,7 @@
             ? "已部署转出"
             : ""
     }}</template>
-      <template #purchaserstatus="{ data }">
+      <!-- <template #purchaserstatus="{ data }">
         {{
       data.purchaserstatus == "30"
         ? "未收票"
@@ -38,7 +38,7 @@
           : data.purchaserstatus == "42"
             ? "已记账"
             : ""
-    }}</template>
+    }}</template> -->
       <template #verifyStatus="{ data }">
         {{
       data.verifyStatus == "1"
@@ -192,7 +192,7 @@ export default {
         // { title: "勾选失败原因", width: 130, dataIndex: "createrName" },
         // { title: "勾选人", width: 130, dataIndex: "createrName" },
         { title: "勾选时间", width: 130, dataIndex: "updateTime" },
-        { title: "入账状态", width: 130, dataIndex: " purchaserstatus", slot: "purchaserstatus" },
+        { title: "入账状态", width: 130, dataIndex: " rzzt", slot: "rzzt" },
         { title: "收票状态", width: 130, dataIndex: " spzt", slot: "spzt" },
         { title: "转出状态", width: 130, dataIndex: "zczt", slot: "zczt" },
         // { title: "入账日期", width: 130, dataIndex: "createrName" },
