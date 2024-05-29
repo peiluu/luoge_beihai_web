@@ -103,6 +103,7 @@
 <script>
 import moment from "moment";
 import FormList from "@/components/FormList.vue";
+import {enterAccountStatus} from '../../constant.js'
 import {
   checkCustomsPayment,
   getKjList,
@@ -300,15 +301,10 @@ export default {
         },
         {
           label: "入帐状态",
-          key: "purchaserstatus",
+          key: "rzzt",
           val: "",
           type: "select",
-          options: [
-            { value: "", label: "全部" },
-            { value: "30", label: "未收票" },
-            { value: "36", label: "报帐中" },
-            { value: "42", label: "已记账" },
-          ],
+          options:  [{ value: "", label: "全部" }].concat(enterAccountStatus),
         },
         {
           label: "转出状态",
