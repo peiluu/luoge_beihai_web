@@ -244,6 +244,7 @@ export default {
           route = {
             path: '/deductionStatistics/historyStatistics',
             query: {
+              ...this.$route.query,
               nsrsbh: this.form.gfsbh,
               nsrmc: this.form.nsrmc,
               businessType: this.$route.query.businessType
@@ -254,6 +255,7 @@ export default {
           route = {
             path: '/deductionStatistics/statisticsDetails',
             query: {
+              ...this.$route.query,
               operateType,
               nsrsbh: data.gfsbh,
               nsrmc: data.gfmc,
@@ -267,6 +269,7 @@ export default {
           route = {
             path: '/deductionStatistics/statisticsTable',
             query: {
+              ...this.$route.query,
               operateType,
               nsrsbh: data.gfsbh,
               nsrmc: data.gfmc,
@@ -280,11 +283,12 @@ export default {
           route = {
             path: '/deductionStatistics/applyStatistics',
             query: {
+              ...this.$route.query,
               operateType,
               nsrsbh: this.form.gfsbh,
               nsrmc: this.form.nsrmc,
               skssq: this.skssq,
-              //pclsh: this.tableData[0]?.pclsh
+              pclsh: this.tableData[0]?.pclsh
             }
           }
           break;
