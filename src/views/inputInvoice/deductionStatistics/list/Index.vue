@@ -1,7 +1,8 @@
 <template>
   <div class="main-content">
     <div class="content-tab-header">
-      <BackBtn path="/inputInvoice/enterpriseList/deductionCheckStatistics" align="left" :query="{ businessType: this.$route.query.businessType }" />
+      <BackBtn path="/inputInvoice/enterpriseList/deductionCheckStatistics" align="left"
+        :query="{ businessType: this.$route.query.businessType }" />
       <BtnTabs :activeName="2" :zt="applyStatisticsStatus.zt" />
     </div>
 
@@ -9,7 +10,8 @@
       <el-form-item label="所属属期"><span>{{ currentMonth }}</span></el-form-item>
       <el-form-item label="纳税主体" prop="gfsbh">
         <el-select v-model="form.gfsbh" placeholder="请选择" disabled @change="getData" style="width: 300px">
-          <el-option v-for="item in taxBodyList" :key="item.nsrsbh" :label="item.nsrmc + ' ' + item.nsrsbh" :value="item.nsrsbh">
+          <el-option v-for="item in taxBodyList" :key="item.nsrsbh" :label="item.nsrmc + ' ' + item.nsrsbh"
+            :value="item.nsrsbh">
           </el-option>
         </el-select>
       </el-form-item>
@@ -18,14 +20,14 @@
     <div class="toolbar">
       <el-button @click="handleEntry('history')">查看历史统计</el-button>
     </div>
-    <div  class="custom-table">
+    <div class="custom-table">
       <el-table row-key="id" ref="table" :data="tableData" :height="120" border stripe :header-cell-style="{
-        fontWeight: 400,
-        borderTop: '1px solid #adb4bc',
-        background: '#f7f9fd',
-        color: '#333333',
-        padding: '7px 0'
-      }" tooltip-effect="dark" v-loading="loading">
+          fontWeight: 400,
+          borderTop: '1px solid #adb4bc',
+          background: '#f7f9fd',
+          color: '#333333',
+          padding: '7px 0'
+        }" tooltip-effect="dark" v-loading="loading">
         <el-table-column label="纳税主体" prop="gfmc" :min-width="150" />
         <el-table-column label="税款所属期" prop="skssq">
           <template slot-scope="scope"> {{ dateFormat('YYYY-MM', scope.row.skssq) }}</template>
@@ -171,7 +173,7 @@ export default {
         ...this.form,
         nsrsbh: this.form.gfsbh
       })
-      console.log(data,"0")
+      console.log(data, "0")
       if (code === '0') {
         this.tableData = data
       }
@@ -238,7 +240,7 @@ export default {
     // 进入页面
     handleEntry(operateType, data) {
       let route = {};
-      console.log(this.form,"-")
+      console.log(this.form, "-")
       switch (operateType) {
         case 'history':
           route = {
@@ -302,6 +304,7 @@ export default {
 
 <style lang="scss" scoped>
 @import '../../../../styles/variables.scss';
+
 /deep/ .el-form {
   margin-top: 12px;
 
@@ -352,6 +355,7 @@ export default {
     font-size: 14px;
   }
 }
+
 .content-tab-header {
   display: flex;
 }
