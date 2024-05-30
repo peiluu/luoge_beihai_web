@@ -1,14 +1,8 @@
 <template>
   <div class="com-invoice">
     <template>
-      <form-search
-        ref="search"
-        :key="propsKey"
-        :param="searchParam"
-        :searchList="searchList"
-        @search="handleSearch"
-        @reset="handleReset"
-      ></form-search>
+      <form-search ref="search" :key="propsKey" :param="searchParam" :searchList="searchList" @search="handleSearch"
+        @reset="handleReset"></form-search>
     </template>
     <div class="custom-table">
       <div class="toolbar">
@@ -16,12 +10,8 @@
           <template v-if="isBusinessFormat">
             <!-- <el-button type="success" @click="showDialogVisiblePercent">修改进销比例</el-button>
             <el-button type="success" @click="calPreCheck">计算</el-button> -->
-            <span style="marginleft: 12px"
-              >上期销项税额： {{ formatMoney(10000) }}元</span
-            >
-            <span style="marginleft: 12px"
-              >可抵扣税额合计： {{ formatMoney(selecedInfo.yxdkse) }}元</span
-            >
+            <span style="marginleft: 12px">上期销项税额： {{ formatMoney(10000) }}元</span>
+            <span style="marginleft: 12px">可抵扣税额合计： {{ formatMoney(selecedInfo.yxdkse) }}元</span>
           </template>
         </div>
 
@@ -31,82 +21,47 @@
             <el-button @click="submitRevokePreCheck('N')">取消预勾选</el-button> -->
           </template>
 
-          <el-button
-            type="success"
-            @click="cancleBatch('02')"
-            v-if="searchParam.cljg == '01'"
-            >撤销勾选</el-button
-          >
-          <el-button type="success" @click="submitBatch('01')" v-else
-            >提交勾选</el-button
-          >
+          <el-button type="success" @click="cancleBatch('02')" v-if="searchParam.cljg == '01'">撤销勾选</el-button>
+          <el-button type="success" @click="submitBatch('01')" v-else>提交勾选</el-button>
           <!-- <el-button @click="exportPreCheck" v-if="isBusinessFormat">导出预勾选数据</el-button> -->
           <el-button @click="exportInvoiceCheck">导出</el-button>
-          <el-button @click="importExcel" v-if="searchParam.cljg == '02'"
-            >导入</el-button
-          >
+          <el-button @click="importExcel" v-if="searchParam.cljg == '02'">导入</el-button>
         </div>
       </div>
-      <el-table
-        row-key="id"
-        :reserve-selection="true"
-        ref="table"
-        :data="data"
-        :height="height"
-        border
-        stripe
+      <el-table row-key="id" :reserve-selection="true" ref="table" :data="data" :height="height" border stripe
         :header-cell-style="{
-          fontWeight: 400,
-          borderTop: '1px solid #adb4bc',
-          background: '#f7f9fd',
-          color: '#333333',
-          padding: '7px 0',
-        }"
-        tooltip-effect="dark"
-        :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
-        v-loading="loading"
-        :row-class-name="tableSelectedRow"
-        @selection-change="handleSelection"
-        @select="handleSelected"
-        @select-all="seleceAll"
-      >
-        <el-table-column
-          type="selection"
-          :selectable="checkSelectable"
-          :reserve-selection="true"
-        />
+        fontWeight: 400,
+        borderTop: '1px solid #adb4bc',
+        background: '#f7f9fd',
+        color: '#333333',
+        padding: '7px 0',
+      }" tooltip-effect="dark" :tree-props="{ children: 'children', hasChildren: 'hasChildren' }" v-loading="loading"
+        :row-class-name="tableSelectedRow" @selection-change="handleSelection" @select="handleSelected"
+        @select-all="seleceAll">
+        <el-table-column type="selection" :selectable="checkSelectable" :reserve-selection="true" />
         <el-table-column type="index" label="序号" min-width="50" />
         <el-table-column prop="cljg" label="勾选状态" min-width="100">
           <template slot-scope="{ row }">
             {{ row.cljg == "01" ? "已勾选" : "未勾选" }}
           </template>
         </el-table-column>
-        <el-table-column
-          prop="rzzt"
-          label="入账状态"
-          min-width="100"
-        >
-<!--          <template slot-scope="{ row }">-->
-<!--            {{-->
-<!--              row.purchaserstatus ? purchaserstatusMap[row.purchaserstatus] : ""-->
-<!--            }}-->
-<!--          </template>-->
+        <el-table-column prop="rzzt" label="入账状态" min-width="100">
+          <!--          <template slot-scope="{ row }">-->
+          <!--            {{-->
+          <!--              row.purchaserstatus ? purchaserstatusMap[row.purchaserstatus] : ""-->
+          <!--            }}-->
+          <!--          </template>-->
           <template slot-scope="{ row }">
-            <span>{{ row.rzzt === 1 ?'未入账': row.rzzt === 6 ?'入账撤销':'已入账' }}</span>
+            <span>{{ row.rzzt === 1 ? '未入账' : row.rzzt === 6 ? '入账撤销' : '已入账' }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column
-          prop="preCheck"
-          label="预勾选状态"
-          min-width="100"
-          v-if="isBusinessFormat"
-        >
+        <el-table-column prop="preCheck" label="预勾选状态" min-width="100" v-if="isBusinessFormat">
           <template slot-scope="{ row }">
             {{ row.preCheck == "Y" ? "已预勾选" : "未预勾选" }}
           </template>
         </el-table-column>
-        <el-table-column prop="fphm" label="发票号码" min-width="180" />
+        <el-table-column prop="zzfphm" label="发票号码" min-width="180" />
         <el-table-column prop="zzfpDm" label="发票代码" min-width="180" />
         <el-table-column prop="fplx" label="发票种类" min-width="180">
           <template slot-scope="{ row }">
@@ -120,26 +75,17 @@
           </template>
         </el-table-column>
         <el-table-column prop="xsfmc" label="销售方名称" min-width="270" />
-        <el-table-column
-          prop="xsfnsrsbh"
-          label="销售方识别号"
-          min-width="180"
-        />
+        <el-table-column prop="xsfnsrsbh" label="销售方识别号" min-width="180" />
         <!-- <el-table-column prop="fpxsfmchm" label=" " min-width="180" /> -->
         <el-table-column prop="name" label="会计主体" min-width="220" />
         <el-table-column prop="accountPeriod" label="会计期间" min-width="120">
           <template slot-scope="{ row }">
             {{
-              row.accountPeriod ? dateFormat("YYYY-MM", row.accountPeriod) : ""
-            }}
+        row.accountPeriod ? dateFormat("YYYY-MM", row.accountPeriod) : ""
+      }}
           </template>
         </el-table-column>
-        <el-table-column
-          prop="jshj"
-          label="价税合计"
-          min-width="120"
-          align="right"
-        >
+        <el-table-column prop="jshj" label="价税合计" min-width="120" align="right">
           <template slot-scope="{ row }">
             {{ formatMoney(row.jshj) }}
           </template>
@@ -150,12 +96,7 @@
             {{ formatMoney(row.hjse) }}
           </template>
         </el-table-column>
-        <el-table-column
-          prop="yxdkse"
-          label="可抵扣税额"
-          min-width="120"
-          align="right"
-        >
+        <el-table-column prop="yxdkse" label="可抵扣税额" min-width="120" align="right">
           <template slot-scope="{ row }">
             {{ formatMoney(row.yxdkse) }}
           </template>
@@ -163,21 +104,20 @@
 
         <el-table-column prop="fpzt" label="发票状态" min-width="120">
           <template slot-scope="{ row }">
-            {{ row.fpzt ? fpztMap[row.fpzt] : "" }}</template
-          >
+            {{ row.fpzt ? fpztMap[row.fpzt] : "" }}</template>
         </el-table-column>
 
         <el-table-column prop="sfycpz" label="是否异常凭证" min-width="120">
           <template slot-scope="{ row }">
             {{
-              row.sfycpz == "01"
-                ? "正常"
-                : row.sfycpz == "02"
-                ? "异常"
-                : row.sfycpz == "03"
-                ? "疑似异常"
-                : ""
-            }}
+        row.sfycpz == "01"
+          ? "正常"
+          : row.sfycpz == "02"
+            ? "异常"
+            : row.sfycpz == "03"
+              ? "疑似异常"
+              : ""
+      }}
           </template>
         </el-table-column>
 
@@ -187,24 +127,24 @@
           </template>
         </el-table-column>
         <el-table-column prop="createrName" label="勾选人" min-width="120" />
-        <el-table-column prop="mideaSrc" label="来源系统" min-width="120" />
+        <!-- <el-table-column prop="mideaSrc" label="来源系统" min-width="120" /> -->
         <el-table-column prop="accountUser" label="记账人" min-width="120" />
 
         <el-table-column prop="accountTime" label="记账日期" min-width="120">
           <template slot-scope="{ row }">
             {{
-              row.accountTime ? dateFormat("YYYY-MM-DD", row.accountTime) : ""
-            }}
+        row.accountTime ? dateFormat("YYYY-MM-DD", row.accountTime) : ""
+      }}
           </template>
         </el-table-column>
 
         <el-table-column prop="reimburseDate" label="报销日期" min-width="120">
           <template slot-scope="{ row }">
             {{
-              row.reimburseDate
-                ? dateFormat("YYYY-MM-DD", row.reimburseDate)
-                : ""
-            }}
+          row.reimburseDate
+            ? dateFormat("YYYY-MM-DD", row.reimburseDate)
+            : ""
+        }}
           </template>
         </el-table-column>
 
@@ -217,27 +157,15 @@
       <TableCounter ref="tableCounter" v-loading="totalLoading" />
 
       <div class="pagination" v-if="!isPerCheck">
-        <el-pagination
-          background
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="pagination.pageNo"
-          :page-sizes="[10, 20, 30, 40, 50, 100, 500, 1000]"
-          :page-size="pagination.pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="pagination.total"
-        >
+        <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange"
+          :current-page="pagination.pageNo" :page-sizes="[10, 20, 30, 40, 50, 100, 500, 1000]"
+          :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total">
         </el-pagination>
       </div>
     </div>
 
     <!-- dialog 提交勾选 -->
-    <el-dialog
-      title="请确认"
-      :visible.sync="dialogVisible"
-      width="40%"
-      :before-close="handleClose"
-    >
+    <el-dialog title="请确认" :visible.sync="dialogVisible" width="40%" :before-close="handleClose">
       <div class="submit-info">
         <template v-if="abnormalList.length > 0">
           <div class="title">
@@ -246,61 +174,40 @@
           <div class="tip">是否确认提交</div>
           <div class="list">
             <span v-for="item in abnormalList" :key="item.fphm">{{
-              item.fphm
-            }}</span>
+        item.fphm
+      }}</span>
           </div>
         </template>
         <template v-else>
           <div class="title title-normal">
             <i class="el-icon-warning" />本次勾选<span>{{
-              selections.length
-            }}</span
-            >张发票，税额合计<span>{{ selecedInfo.hjse }}</span
-            >元
+        selections.length
+      }}</span>张发票，税额合计<span>{{ selecedInfo.hjse }}</span>元
           </div>
           <div class="tip">是否确认提交</div>
         </template>
       </div>
       <span slot="footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="success" @click="submitRevokeInvoiceCheck"
-          >确 认</el-button
-        >
+        <el-button type="success" @click="submitRevokeInvoiceCheck">确 认</el-button>
       </span>
     </el-dialog>
     <!-- 设置税负率 -->
-    <el-dialog
-      title="进销比例设置"
-      :visible.sync="dialogVisiblePercent"
-      width="40%"
-      :before-close="handleClose"
-      class="submit-dialog"
-    >
+    <el-dialog title="进销比例设置" :visible.sync="dialogVisiblePercent" width="40%" :before-close="handleClose"
+      class="submit-dialog">
       <div class="dialog-main">
-        请输入进销比例<el-input
-          placeholder="请输入（0-100）%"
-          v-model="lossTaxRate"
-        />%
+        请输入进销比例<el-input placeholder="请输入（0-100）%" v-model="lossTaxRate" />%
       </div>
       <span slot="footer">
         <el-button @click="cancel">取 消</el-button>
         <el-button type="success" @click="incomeOutputScale">确 认</el-button>
       </span>
     </el-dialog>
-    <custom-import
-      dialogTitle="发票勾选"
-      :dialogVisible="dialogImportVisible"
-      @handleClose="handleImportClose"
-      @handleOk="handleImportOk"
-      downloadTemplateApi="/income/downExcel"
-      :downloadTemplateApiParams="{ type: 'ZZSFP' }"
-      downloadTemplateName="发票勾选_导入模板"
-      :upApi="`/income/uploadZzsfp/${nsrsbh}/${skssq}`"
-      importApi="/income/checkPreCheckZzsfp"
-      effImport
-      upTitle="上传发票勾选数据"
-      :importColumns="importColumns"
-    ></custom-import>
+    <custom-import dialogTitle="发票勾选" :dialogVisible="dialogImportVisible" @handleClose="handleImportClose"
+      @handleOk="handleImportOk" downloadTemplateApi="/income/downExcel" :downloadTemplateApiParams="{ type: 'ZZSFP' }"
+      downloadTemplateName="发票勾选_导入模板" :upApi="`/income/uploadZzsfp/${nsrsbh}/${skssq}`"
+      importApi="/income/checkPreCheckZzsfp" effImport upTitle="上传发票勾选数据"
+      :importColumns="importColumns"></custom-import>
   </div>
 </template>
 
@@ -322,13 +229,13 @@ import {
   cstateZzsfp,
 } from "./Api";
 import { inputFplxList, inputFplxMap, } from "@/config/constant";
-import {enterAccountStatus} from '../../constant.js'
+import { enterAccountStatus } from '../../constant.js'
 import {
   purchaserstatusList,
   purchaserstatusMap,
   fpztMap,
   fpztList,
-  
+
 } from "@/views/inputInvoice/constant";
 import CustomImport from "@/components/CustomImport";
 
@@ -668,10 +575,10 @@ export default {
           pageNo: pagination.pageNo,
           pageSize: pagination.pageSize,
         });
-        if(this.searchParam.cljg === '02'){
+        if (this.searchParam.cljg === '02') {
           vm.getHjje();
         }
-        
+
         if (res && res.code == "0") {
           this.isPerCheck = false;
           // 在切换页面时不清空选中的数据
@@ -692,10 +599,10 @@ export default {
                 index: index + 1,
               };
             });
-            if(this.searchParam.cljg === '01'){
+            if (this.searchParam.cljg === '01') {
               this.selections = [];
-              this.$refs.tableCounter.setInfo({...this.handleCalc(this.selections,['hjje','hjse','jshj']),number:this.selections?.length})
-              
+              this.$refs.tableCounter.setInfo({ ...this.handleCalc(this.selections, ['hjje', 'hjse', 'jshj']), number: this.selections?.length })
+
             }
           } else {
             vm.data = [];
@@ -727,7 +634,7 @@ export default {
             jshj: data.jshj,
           };
           this.$refs.tableCounter.setInfo(this.selecedInfo);
-          
+
         }
       } catch (error) {
         console.log(error);
@@ -752,7 +659,7 @@ export default {
       });
 
       return result;
-  },
+    },
     // 搜索
     handleSearch(val) {
       let param = this.searchParam;
@@ -771,13 +678,13 @@ export default {
     },
     // 初始化多选数据
     setSelections(list) {
-      
+
       list?.map((item) => {
         if (!this.selections.find((selItem) => selItem.id == item.id)) {
           this.$refs.table.toggleRowSelection(item);
         }
       });
-      
+
     },
     // 清空多选
     clearSelection() {
@@ -822,9 +729,9 @@ export default {
       }
       this.setPre({ ids, preCheck });
     },
-    async setPre({ids,preCheck}) {
-     
-      if(this.searchParam?.cljg === '01') return
+    async setPre({ ids, preCheck }) {
+
+      if (this.searchParam?.cljg === '01') return
       try {
         this.loading = true;
         const { code = "0", data } = await checkPreOneZzsfp({ ids, preCheck, nsrsbh: this.nsrsbh });
@@ -838,13 +745,13 @@ export default {
     },
     // 处理多选
     handleSelection(rows) {
-      console.log(rows,"change")
+      console.log(rows, "change")
       // this.$refs.tableCounter.getSelecedInfo(rows);
       this.selections = rows;
-      if(this.searchParam.cljg === '01'){
-        this.$refs.tableCounter.setInfo({...this.handleCalc(this.selections,['hjje','hjse','jshj']),number:this.selections?.length})
+      if (this.searchParam.cljg === '01') {
+        this.$refs.tableCounter.setInfo({ ...this.handleCalc(this.selections, ['hjje', 'hjse', 'jshj']), number: this.selections?.length })
       }
-     
+
     },
     // 撤销勾选
     cancleBatch(gxlxDm) {

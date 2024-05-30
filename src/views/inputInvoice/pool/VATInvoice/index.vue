@@ -146,7 +146,7 @@
             </el-table-column>
             <el-table-column prop="srzzt" label="入账状态" minWidth="120" :header-align="'center'" :align="'center'">
               <template slot-scope="scope">
-                <span>{{ scope.row.rzzt === '01' ?'未入账':scope.row.rzzt === '06'?'入账撤销':'' }}</span>
+                <span>{{ scope.row.rzzt === '01' ?'未入账':scope.row.rzzt === '06'?'入账撤销':'已入账' }}</span>
               </template>
             </el-table-column>
             <el-table-column prop="spzt" label="收票状态" minWidth="120" :header-align="'center'" :align="'center'">
@@ -439,7 +439,7 @@ export default {
       
     },
     totaljs(){
-      const totalAmount = this.isSelected.reduce((sum, item) => sum + (item.jshj || 0), 0);
+      const totalAmount = this.isSelected.reduce((sum, item) => sum + (item.hjje || 0), 0);
       // 格式化成带千位符且保留两位小数的字符串
       const formattedTotalAmount = totalAmount.toLocaleString('en-US', {
         minimumFractionDigits: 2,
