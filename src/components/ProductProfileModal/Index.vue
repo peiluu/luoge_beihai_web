@@ -25,7 +25,7 @@
         iconClose: 'vxe-icon-square-plus-fill',
         expandRowKeys: ['0', 0]
       }" row-config.keyField="id" @cell-click="({ row }) => queryProductProfile(row)">
-        <vxe-column field="name" title="商品分类" :title-prefix="{ icon: 'vxe-icon-square-minus-fill' }" tree-node>
+        <vxe-column field="name" title="商品库" :title-prefix="{ icon: 'vxe-icon-square-minus-fill' }" tree-node>
         </vxe-column>
       </vxe-table>
     </div>
@@ -115,7 +115,7 @@ export default {
       treeData: [{
         id: 0,
         hasChild: true,
-        name: '商品分类',
+        name: '商品库',
       }],
       // tableColumns: [],
       tableData: [],

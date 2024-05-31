@@ -153,7 +153,7 @@ export default {
         { title: "推送状态", width: 100, dataIndex: "tszt",align:"center", slot: 'tsztstatus' },
         // { title: "发票代码", width: 100, dataIndex: "fpdm" },
         { title: "发票号码", width: 180, dataIndex: "fphm", slot: 'fphm', showTooltip: true},
-        { title: "开票组织名称", width: 180, dataIndex: "orgName", slot: "orgName", showTooltip: true},
+        { title: "开票组织名称", width: 100, dataIndex: "orgName", slot: "orgName", showTooltip: true},
         { title: "购买方名称", width: 100, dataIndex: "gmfmc", showTooltip: true },
         { title: "购买方识别号/身份证号", width: 180, dataIndex: "gmfnsrsbh", },
         { title: "发票请求流水号", width: 180, dataIndex: "fpqqlsh" },

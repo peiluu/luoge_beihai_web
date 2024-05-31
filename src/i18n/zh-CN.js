@@ -263,4 +263,5 @@ t.datapower.cancel='禁用'
 t.datapower.tree='树型'
 t.datapower.list='列表'
 t.datapower.setdatapermission='数据授权'
+t.user.searchName = '用户名或姓名'
 export default t
