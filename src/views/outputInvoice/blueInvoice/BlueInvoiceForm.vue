@@ -2180,7 +2180,8 @@ export default {
         //复制开票
         this.api.getCopyDetailById({ id: this.query.invoiceId }).then((res) => {
           this.$refs.xTable.remove();
-          this.form = {...res.data,sfhs:res.data.sfhs === '1'?'Y':'N'};
+          // sfhs:res.data.sfhs === '1'?'Y':'N'
+          this.form = {...res.data,};
           delete this.form.id;
           delete this.form.bdczldz;
           this.mideaInfo.orgid = res.data.orgid + "";
@@ -2204,7 +2205,8 @@ export default {
           .getInvoiceDetailById({ id: this.query.invoiceId || this.detailInfo.id})
           .then((res) => {
             this.$refs.xTable.remove();
-            this.form = {...res.data,sfhs:res.data.sfhs === '1'?'Y':'N'};
+            //sfhs:res.data.sfhs === '1'?'Y':'N'
+            this.form = {...res.data,};
             console.log(res.data,"000989098")
             delete this.form.bdczldz;
             if (res.data.status != "02" && res.data.status != "04") {

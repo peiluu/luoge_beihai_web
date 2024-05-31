@@ -93,3 +93,7 @@ export const exportOrganizationInfo = data =>
  * @description 获取选中的主体基本信息
  */
 export const getOrgInfo = data => http.post(`${config.host}/taxBody/getDetailById`, data);
+
+/* 复核人下拉选择 */
+
+export const getUserList = data => http.get(`${config.host}/getUserList`, data);
