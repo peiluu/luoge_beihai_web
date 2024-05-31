@@ -2188,7 +2188,10 @@ export default {
           this.$set(this.customerQuery, "orgid", this.form.orgid);
           this.$set(this.frequentCustomerQuery, "orgid", this.form.orgid);
           this.loadFpmxList();
-          this.handleCalcTaxInclusive(this.form.sfhs??'N')
+          if(this.form.sfhs !=='N'){
+            this.handleCalcTaxInclusive(this.form.sfhs)
+          }
+          
           this.loading = false;
           //初始化差额开票数据
           if (this.form.invoiceVariableLevy) {
@@ -2217,7 +2220,9 @@ export default {
             this.$set(this.customerQuery, "orgid", this.form.orgid);
             this.$set(this.frequentCustomerQuery, "orgid", this.form.orgid);
             this.loadFpmxList();
-            this.handleCalcTaxInclusive(this.form.sfhs??'N')
+            if(this.form.sfhs !=='N'){
+            this.handleCalcTaxInclusive(this.form.sfhs)
+          }
             this.loading = false;
             //初始化差额开票数据
             if (this.form.invoiceVariableLevy) {
