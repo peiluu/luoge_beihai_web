@@ -1,5 +1,6 @@
 <template>
   <el-dialog :visible.sync="visible" :title="!dataForm.id ? $t('add') : $t('update')" :close-on-click-modal="false" :close-on-press-escape="false">
+    <article class="body_main">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmitHandle()" label-width="120px">
       <el-form-item prop="name" :label="$t('role.name')">
         <el-input v-model="dataForm.name" :placeholder="$t('role.name')"></el-input>
@@ -34,6 +35,7 @@
         </el-col>
       </el-row>
     </el-form>
+  </article>
     <template slot="footer">
       <el-button @click="visible = false">{{ $t('cancel') }}</el-button>
       <el-button type="primary" @click="dataFormSubmitHandle()">{{ $t('confirm') }}</el-button>
@@ -146,3 +148,20 @@ export default {
   }
 }
 </script>
+
+<style  scoped>
+::v-deep .el-dialog{
+  margin-top:5vh !important;
+}
+::v-deep .el-dialog__body{
+  padding-top: 10px;
+}
+.body_main{
+  max-height: 450px;
+  overflow: hidden auto;
+  padding: 5px;
+}
+.body_main::-webkit-scrollbar {
+    width: 5px;
+}
+</style>

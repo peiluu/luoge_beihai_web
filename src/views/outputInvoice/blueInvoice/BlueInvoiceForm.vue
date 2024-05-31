@@ -890,6 +890,12 @@
               <el-form-item label="开票人" prop="kpr">
                 <el-input :disabled="false" v-model="form.kpr"></el-input>
               </el-form-item>
+              <el-form-item label="收款人" prop="skrxm">
+                <el-input v-model="form.skrxm"></el-input>
+              </el-form-item>
+              <el-form-item label="复核人" prop="fhrxm">
+                <el-input v-model="form.fhrxm"></el-input>
+              </el-form-item>
               <el-form-item label="邮箱" prop="email">
                 <el-input v-model="form.email"></el-input>
               </el-form-item>
@@ -3184,6 +3190,8 @@ export default {
         this.$set(this.form, "xsfkhh", data.bank);
         this.$set(this.form, "xsfzh", data.bankAccount);
         this.$set(this.form, "kpr", data.kpr);
+        this.$set(this.form, "skrxm", data.skr);
+        this.$set(this.form, "fhrxm", data.fhr);
       }
     },
     //保存发票
@@ -3522,6 +3530,10 @@ export default {
   mounted() {
     if(!this.$route.query.isFormInvoiced){
       this.init()
+    }
+    console.log(this.query,"----")
+    if((this.query.cezslxDm??'') !==''){
+      this.form.sfhs = "N"
     }
     this.getTaxRates();
     // if(this.query?.isType){

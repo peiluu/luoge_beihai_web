@@ -104,7 +104,7 @@
     >
       <HistoricalDetails :detailInfo="detailInfo"/>
     </el-dialog>
-    <app-down-credit v-if="visible" :visible.sync="visible" title="下载或退回授信额度" :dataObj="dataObj"></app-down-credit>
+    <app-down-credit v-if="visible" :visible.sync="visible" title="下载或退回授信额度" :dataObj="dataObj" @handeSuccess="handeSuccess"></app-down-credit>
   </div>
 </template>
 
@@ -290,7 +290,11 @@ export default {
       // })
       // this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
 
-    }
+    },
+    /* 退回 或下载成功返回 */
+    handeSuccess(){
+      this.getInfo();
+    },
   },
   updated(){
     this.$refs['table'].doLayout();

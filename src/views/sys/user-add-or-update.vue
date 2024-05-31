@@ -1,42 +1,44 @@
 <template>
   <el-dialog :visible.sync="visible" :title="!dataForm.id ? $t('add') : $t('update')" :close-on-click-modal="false" :close-on-press-escape="false">
-    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmitHandle()" label-width="120px">
-      <el-form-item prop="username" :label="$t('user.username')">
-        <el-input v-model="dataForm.username" :placeholder="$t('user.username')"></el-input>
-      </el-form-item>
-      <el-form-item prop="deptName" :label="$t('user.deptName')">
-        <ren-dept-tree v-model="dataForm.deptId" :placeholder="$t('dept.title')" :dept-name.sync="dataForm.deptName"></ren-dept-tree>
-      </el-form-item>
-      <el-form-item prop="password" :label="$t('user.password')" :class="{ 'is-required': !dataForm.id }">
-        <el-input v-model="dataForm.password" type="password" :placeholder="$t('user.password')"></el-input>
-      </el-form-item>
-      <el-form-item prop="confirmPassword" :label="$t('user.confirmPassword')" :class="{ 'is-required': !dataForm.id }">
-        <el-input v-model="dataForm.confirmPassword" type="password" :placeholder="$t('user.confirmPassword')"></el-input>
-      </el-form-item>
-      <el-form-item prop="realName" :label="$t('user.realName')">
-        <el-input v-model="dataForm.realName" :placeholder="$t('user.realName')"></el-input>
-      </el-form-item>
-      <el-form-item prop="gender" :label="$t('user.gender')">
-        <ren-radio-group v-model="dataForm.gender" dict-type="gender"></ren-radio-group>
-      </el-form-item>
-      <el-form-item prop="email" :label="$t('user.email')">
-        <el-input v-model="dataForm.email" :placeholder="$t('user.email')"></el-input>
-      </el-form-item>
-      <el-form-item prop="mobile" :label="$t('user.mobile')">
-        <el-input v-model="dataForm.mobile" :placeholder="$t('user.mobile')"></el-input>
-      </el-form-item>
-      <el-form-item prop="roleIdList" :label="$t('user.roleIdList')" class="role-list">
-        <el-select v-model="dataForm.roleIdList" multiple :placeholder="$t('user.roleIdList')">
-          <el-option v-for="role in roleList" :key="role.id" :label="role.name" :value="role.id"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item prop="status" :label="$t('user.status')" size="mini">
-        <el-radio-group v-model="dataForm.status">
-          <el-radio :label="0">{{ $t('user.status0') }}</el-radio>
-          <el-radio :label="1">{{ $t('user.status1') }}</el-radio>
-        </el-radio-group>
-      </el-form-item>
-    </el-form>
+    <article class="body_main" style="max-height: 450px;overflow: hidden auto;padding: 5px;">
+      <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmitHandle()" label-width="120px">
+        <el-form-item prop="username" :label="$t('user.username')">
+          <el-input v-model="dataForm.username" :placeholder="$t('user.username')"></el-input>
+        </el-form-item>
+        <el-form-item prop="deptName" :label="$t('user.deptName')">
+          <ren-dept-tree v-model="dataForm.deptId" :placeholder="$t('dept.title')" :dept-name.sync="dataForm.deptName"></ren-dept-tree>
+        </el-form-item>
+        <el-form-item prop="password" :label="$t('user.password')" :class="{ 'is-required': !dataForm.id }">
+          <el-input v-model="dataForm.password" type="password" :placeholder="$t('user.password')"></el-input>
+        </el-form-item>
+        <el-form-item prop="confirmPassword" :label="$t('user.confirmPassword')" :class="{ 'is-required': !dataForm.id }">
+          <el-input v-model="dataForm.confirmPassword" type="password" :placeholder="$t('user.confirmPassword')"></el-input>
+        </el-form-item>
+        <el-form-item prop="realName" :label="$t('user.realName')">
+          <el-input v-model="dataForm.realName" :placeholder="$t('user.realName')"></el-input>
+        </el-form-item>
+        <el-form-item prop="gender" :label="$t('user.gender')">
+          <ren-radio-group v-model="dataForm.gender" dict-type="gender"></ren-radio-group>
+        </el-form-item>
+        <el-form-item prop="email" :label="$t('user.email')">
+          <el-input v-model="dataForm.email" :placeholder="$t('user.email')"></el-input>
+        </el-form-item>
+        <el-form-item prop="mobile" :label="$t('user.mobile')">
+          <el-input v-model="dataForm.mobile" :placeholder="$t('user.mobile')"></el-input>
+        </el-form-item>
+        <el-form-item prop="roleIdList" :label="$t('user.roleIdList')" class="role-list">
+          <el-select v-model="dataForm.roleIdList" multiple :placeholder="$t('user.roleIdList')">
+            <el-option v-for="role in roleList" :key="role.id" :label="role.name" :value="role.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="status" :label="$t('user.status')" size="mini">
+          <el-radio-group v-model="dataForm.status">
+            <el-radio :label="0">{{ $t('user.status0') }}</el-radio>
+            <el-radio :label="1">{{ $t('user.status1') }}</el-radio>
+          </el-radio-group>
+        </el-form-item>
+      </el-form>
+  </article>
     <template slot="footer">
       <el-button @click="visible = false">{{ $t('cancel') }}</el-button>
       <el-button type="primary" @click="dataFormSubmitHandle()">{{ $t('confirm') }}</el-button>
@@ -72,8 +74,12 @@ export default {
   computed: {
     dataRule () {
       var validatePassword = (rule, value, callback) => {
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,}$/;
         if (!this.dataForm.id && !/\S/.test(value)) {
           return callback(new Error(this.$t('validate.required')))
+        }
+        if(!passwordRegex.test(value)){
+          return callback(new Error('密码需包含大小写字母数字和特殊字符(@$!%*?&.)，不少于8位'))
         }
         callback()
       }
@@ -208,5 +214,16 @@ export default {
       width: 100%;
     }
   }
+}
+</style>
+<style scoped>
+::v-deep .el-dialog{
+  margin-top:5vh !important;
+}
+::v-deep .el-dialog__body{
+  padding-top: 10px;
+}
+.body_main::-webkit-scrollbar {
+    width: 5px;
 }
 </style>

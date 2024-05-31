@@ -97,7 +97,7 @@
           <template slot-scope="scope">
             <el-popover placement="left" trigger="hover" popper-class="customPopper">
               <template>
-                <el-button @click="handleViewClick(scope.row)">预览</el-button>
+                <!-- <el-button @click="handleViewClick(scope.row)">预览</el-button> -->
                 <el-button @click="handleUseClick(scope.row)">查看用途</el-button>
               </template>
               <el-button slot="reference">操作</el-button>

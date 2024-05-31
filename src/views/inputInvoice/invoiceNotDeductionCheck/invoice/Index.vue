@@ -1,13 +1,15 @@
 <template>
   <div class="com-invoice">
-    <form-list :columns="columns" :searchRow="searchList" @getSearchParam="getSearchParam" :api="api" :param="param" @handleSelection="handleSelection" :height="height" :firstLoading="false" v-loading="loading" ref="list"
+    <form-list :columns="columns" :searchRow="searchList" @getSearchParam="getSearchParam" :api="api" :param="param"
+     @handleSelection="handleSelection" :height="height" :firstLoading="false" v-loading="loading" ref="list"
       :tableCounterShow="true">
       <!-- 中间部分 -->
       <template #topTool>
         <div class="toolbar">
           <div class="toolbar-left" />
           <div class="toolbar-right">
-            <el-button type="success" @click="cancleBatch('04')" v-if="$refs.list && $refs.list.searchParam.cljg == '01'">撤销勾选</el-button>
+            <el-button type="success" @click="cancleBatch('04')"
+              v-if="$refs.list && $refs.list.searchParam.cljg == '01'">撤销勾选</el-button>
             <el-button type="success" @click="submitBatch('03')" v-else>提交勾选</el-button>
             <el-button @click="exportInvoiceCheck">导出</el-button>
           </div>
@@ -15,19 +17,23 @@
       </template>
 
       <template #cljg="{ data }"> {{ data.cljg == '01' ? '已勾选' : '未勾选' }}</template>
-      <template #sfycpz="{ data }"> {{ data.sfycpz == '01' ? '正常' : data.sfycpz == '02' ? '异常' : data.sfycpz == '03' ? '疑似异常' : '' }}</template>
+      <template #sfycpz="{ data }"> {{ data.sfycpz == '01' ? '正常' : data.sfycpz == '02' ? '异常' : data.sfycpz == '03' ?
+      '疑似异常' : '' }}</template>
       <template #fplx="{ data }"> {{ inputFplxMap[data.fplx] }} </template>
       <template #fpzt="{ data }">{{ data.fpzt ? fpztMap[data.fpzt] : '' }} </template>
 
 
       <template #bdklx="{ data, index }">
-        <span v-if="data.cljg == '01'">{{ data.bdklx ? data.bdklx == '5' ? data.bdkyy : bdklxMap[data.bdklx] : '' }}</span>
-        <span v-else class="column-text" @click.stop="selectBdklx(data, index)">{{ data.bdklx ? data.bdklx == '5' ? data.bdkyy : bdklxMap[data.bdklx] : '请选择' }}</span>
+        <span v-if="data.cljg == '01'">{{ data.bdklx ? data.bdklx == '5' ? data.bdkyy : bdklxMap[data.bdklx] : ''
+          }}</span>
+        <span v-else class="column-text" @click.stop="selectBdklx(data, index)">{{ data.bdklx ? data.bdklx == '5' ?
+      data.bdkyy : bdklxMap[data.bdklx] : '请选择' }}</span>
       </template>
       <template #syncInvoice="{ data }"> {{ data.syncInvoice == 'Y' ? '是' : '否' }}</template>
 
-      <template #purchaserstatus="{ data }">
-        {{ data.purchaserstatus ? purchaserstatusMap[data.purchaserstatus] : '' }}
+      <template #rzzt="{ data }">
+        <span>{{ data.rzzt === 1 ? '未入账' : data.rzzt === 6 ? '入账撤销' : '已入账' }}</span>
+        <!-- {{ data.rzzt ? purchaserstatusMap[data.purchaserstatus] : '' }} -->
       </template>
       <template #jshj="{ data }">{{ formatMoney(data.jshj) }}</template>
       <template #hjse="{ data }">{{ formatMoney(data.hjse) }}</template>
@@ -35,9 +41,12 @@
       <template #kprq="{ data }"> {{ data.kprq ? dateFormat('YYYY-MM-DD', data.kprq) : data.kprq }} </template>
 
       <template #gxsj="{ data }"> {{ data.gxsj ? dateFormat('YYYY-MM-DD', data.gxsj) : '' }} </template>
-      <template #accountPeriod="{ data }"> {{ data.accountPeriod ? dateFormat('YYYY-MM', data.accountPeriod) : '' }} </template>
-      <template #accountTime="{ data }"> {{ data.accountTime ? dateFormat('YYYY-MM-DD', data.accountTime) : '' }} </template>
-      <template #reimburseDate="{ data }"> {{ data.reimburseDate ? dateFormat('YYYY-MM', data.reimburseDate) : '' }} </template>
+      <template #accountPeriod="{ data }"> {{ data.accountPeriod ? dateFormat('YYYY-MM', data.accountPeriod) : '' }}
+      </template>
+      <template #accountTime="{ data }"> {{ data.accountTime ? dateFormat('YYYY-MM-DD', data.accountTime) : '' }}
+      </template>
+      <template #reimburseDate="{ data }"> {{ data.reimburseDate ? dateFormat('YYYY-MM', data.reimburseDate) : '' }}
+      </template>
 
       <!-- <template #myscope="{ data }">
         <el-button @click.stop="queryDetail(data)">查看</el-button>
@@ -45,9 +54,11 @@
     </form-list>
 
     <!-- dialog 提交勾选 -->
-    <el-dialog title="请确认" :visible.sync="dialogVisibleSubmit" width="40%" :before-close="handleClose" class="submit-dialog">
+    <el-dialog title="请确认" :visible.sync="dialogVisibleSubmit" width="40%" :before-close="handleClose"
+      class="submit-dialog">
       <div class="title">
-        <i class="el-icon-warning" />本次勾选<span>{{ selections.length }}</span>张发票，税额合计<span>{{ selecedInfo.hjse }}</span>元
+        <i class="el-icon-warning" />本次勾选<span>{{ selections.length }}</span>张发票，税额合计<span>{{ selecedInfo.hjse
+          }}</span>元
       </div>
       <div class="tip">是否确认提交</div>
       <span slot="footer" class="dialog-footer">
@@ -66,7 +77,7 @@ import FormList from '@/components/FormList.vue';
 import SelectReasonModal from '../../components/SelectReasonModal.vue';
 import { submitRevokeInvoiceCheck, getOrgList, exportInvoiceCheck } from './Api'
 import { inputFplxList, inputFplxMap } from '@/config/constant'
-import { bdklxList, bdklxMap, purchaserstatusList, purchaserstatusMap, fpztList, fpztMap } from '../../constant'
+import { bdklxList, bdklxMap, purchaserstatusList, purchaserstatusMap, fpztList, fpztMap,enterAccountStatus } from '../../constant'
 
 export default {
   name: 'InvoiceNotDeductionCheckInvoice',
@@ -98,7 +109,7 @@ export default {
         { type: "selection", width: 50, },
         { title: '序号', type: "index", width: 50, },
         { title: "勾选状态", width: 80, dataIndex: "cljg", align: "center", slot: 'cljg' },
-        { title: "入账状态", dataIndex: "purchaserstatus", align: "center", width: 100, slot: 'purchaserstatus' },
+        { title: "入账状态", dataIndex: "rzzt", align: "center", width: 100, slot: 'rzzt' },
         { title: "发票号码", width: 150, dataIndex: "fphm", },
         { title: "发票代码", width: 150, dataIndex: "zzfpDm", },
         { title: "发票种类", width: 150, dataIndex: "fplx", slot: 'fplx' },
@@ -120,12 +131,12 @@ export default {
         { title: "勾选时间", width: 100, dataIndex: "gxsj", slot: 'gxsj' },
         { title: "勾选人", width: 130, dataIndex: "createrName" },
         // { title: "业务系统单号", dataIndex: "hjje", width: 100, },
-        { title: "来源系统", dataIndex: "mideaSrc", align: "center", width: 100, },
+        // { title: "来源系统", dataIndex: "mideaSrc", align: "center", width: 100, },
         // { title: "项目名称", dataIndex: "hjse", width: 100, },
         { title: "记账人", dataIndex: "accountUser", width: 100, },
         { title: "记账日期", width: 100, dataIndex: "accountTime", slot: 'accountTime' },
         { title: "报销日期", width: 100, dataIndex: "reimburseDate", slot: 'reimburseDate' },
-        { title: "是否入发票池", dataIndex: "syncInvoice", width: 100, slot: 'syncInvoice' },
+        // { title: "是否入发票池", dataIndex: "syncInvoice", width: 100, slot: 'syncInvoice' },
 
         {
           title: "不抵扣原因",
@@ -253,15 +264,15 @@ export default {
           key: "purchaserstatus",
           val: '',
           type: "select",
-          options: [{ value: "", label: "全部" }].concat(purchaserstatusList)
+          options:[{label:'全部',value:''},...enterAccountStatus]
         },
-        {
-          label: "是否入发票池",
-          key: "syncInvoice",
-          val: '',
-          type: "select",
-          options: [{ value: "", label: "全部" }, { value: "Y", label: "是" }, { value: "N", label: "否" }],
-        },
+        // {
+        //   label: "是否入发票池",
+        //   key: "syncInvoice",
+        //   val: '',
+        //   type: "select",
+        //   options: [{ value: "", label: "全部" }, { value: "Y", label: "是" }, { value: "N", label: "否" }],
+        // },
 
         // {
         //   label: "是否为转内销凭证",
@@ -304,8 +315,8 @@ export default {
   },
   watch: {
     level: {
-      handler: function(newV, oldV){
-        if(newV === '1'){
+      handler: function (newV, oldV) {
+        if (newV === '1') {
           this.getList()
         }
       },
@@ -433,7 +444,7 @@ export default {
         number: rows.length,
         hjje: hjje.toFixed(2),
         hjse: hjse.toFixed(2),
-        jshj
+        jshj:jshj.toFixed(2)
       };
     },
     getList() {

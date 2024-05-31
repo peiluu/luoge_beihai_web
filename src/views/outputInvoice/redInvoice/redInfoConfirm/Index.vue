@@ -490,7 +490,7 @@
             ...this.form,
             ...data,
             lzkprq: dateFormat('YYYY-mm-dd HH:MM:SS', this.parseDateCompatible(data.lzkprq)),
-            lzfptdyslxDm: data.lzfpTdyslxDm, // 蓝字发票特定要素类型代码
+            lzfpTdyslxDm: data.lzfpTdyslxDm, // 蓝字发票特定要素类型代码
           };
 
           // 当前身份，销方收到的购方发起的，购方收到的销方发起的
@@ -523,7 +523,7 @@
             lzfphm: data.fpHm,
             lzfpdm: data.fpDm,
             lzkprq: dateFormat('YYYY-mm-dd HH:MM:SS', this.parseDateCompatible(data.kprq)),
-            lzfptdyslxDm: data.tspz, // 蓝字发票特定要素类型代码
+            lzfpTdyslxDm: data.tspz, // 蓝字发票特定要素类型代码
             lzfppzDm: data.fplx, // 发票种类
             invoiceId: id, // 蓝字发票id
             xsfmc: data.xsfMc,

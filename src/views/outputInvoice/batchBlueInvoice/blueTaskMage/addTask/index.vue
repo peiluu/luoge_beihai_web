@@ -283,11 +283,12 @@ export default {
     },
     /*提示确认框 */
     handleOpen() {
+      
       //销售方为 ${this.queryData.nsrmc},纳税人识别号为 ${this.queryData.nsrsbh} 
         this.$confirm(`<div>请确认开票主体！</div>
           <div>销售方名称：${this.queryData.nsrmc}</div>
           <div>纳税人识别号：${this.queryData.nsrsbh}</div>
-          <div>发票类型：${this.queryData.fppz === '01'? '增值税专用发票':'增值税普通发票'}</div>`, '提示', {
+          <div>发票类型：${this.intoForm.fppz === '01'? '增值税专用发票':'增值税普通发票'}</div>`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           dangerouslyUseHTMLString: true,
