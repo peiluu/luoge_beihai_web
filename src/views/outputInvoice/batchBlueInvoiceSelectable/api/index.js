@@ -33,5 +33,7 @@ export const postSubmitData = data => postJSON(`${config.host}/tradenum/createWk
 * @desption 新增
 */
 export const addMghw = data => postJSON(`${config.host}/tradenum/add`, data);
-
-
+/**
+* @desption 获取购方名称
+*/
+export const getBuyerlist = data => postJSON(`${config.host}/tradeexceltask/list?taskId=${data}`);

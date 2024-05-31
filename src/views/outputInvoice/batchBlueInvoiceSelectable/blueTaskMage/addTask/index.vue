@@ -25,7 +25,7 @@
         <!-- 第一步 -->
         <article style="margin-top: 15px" v-show="actived === 0">
           <article>
-            <add-task-form @handleDoneSearch="handleDoneSearch">
+            <add-task-form @handleDoneSearch="handleDoneSearch" :data-option="options">
               <template slot="btnBef">
                 <span class="checkBox" style="margin-left: 10px">
                   <el-checkbox
@@ -55,7 +55,9 @@
                 v-if="!intoForm.taskId"
                 >导入流水</el-button
               >
-              <el-button v-if="!intoForm.taskId"  @click="addOrEdit">新增（流水）</el-button>
+              <el-button v-if="!intoForm.taskId" @click="addOrEdit"
+                >新增（流水）</el-button
+              >
             </article>
             <article style="height: calc(100vh - 350px)">
               <el-table
@@ -92,6 +94,7 @@
                   width="180"
                   :show-overflow-tooltip="true"
                 ></el-table-column>
+
                 <el-table-column
                   prop="gmfmc"
                   label="购方名称"
@@ -355,7 +358,9 @@ import {
   downBatchTelleData,
   taskJournalList,
   postSubmitData,
+  getBuyerlist,
 } from "../../api";
+
 import { config } from "@/config";
 import { customPost } from "@/utils/request.js";
 import newAddition from "./newAddition/index.vue";
@@ -393,10 +398,10 @@ export default {
       }
     };
     return {
-      kpdId: '',
-    orgId: '',
-    taskId: '',
-    editeTask:'',
+      kpdId: "",
+      orgId: "",
+      taskId: "",
+      editeTask: "",
       intoForm: {
         fpxe: null,
         mxxz: 1000,
@@ -456,6 +461,7 @@ export default {
       sumbitData: {},
       selected: [],
       uploadData: null,
+      options:[],
     };
   },
   computed: {},
@@ -661,7 +667,7 @@ export default {
     },
     // 新增
     addOrEdit() {
-      this.editeTask = this.intoForm?.taskId || '';
+      this.editeTask = this.intoForm?.taskId || "";
       this.addVisible = true;
     },
     /* 条件选择变化 */
@@ -674,6 +680,7 @@ export default {
     handleImportDone(val) {
       this.intoForm.taskId = val;
       this.handleDataList();
+      this.addTaskFormRef(val);
     },
     /* 表格勾选禁用 */
     checkSelectable(row) {
@@ -763,18 +770,40 @@ export default {
       return text;
     },
     /* 添加返回 */
-    handleDoneAdd(val){
+    handleDoneAdd(val) {
       console.log(val);
-      if((this.intoForm.taskId??'')===''){
-        this.intoForm.taskId = val.taskId
+      if ((this.intoForm.taskId ?? "") === "") {
+        this.where.taskId = val.taskId;
+        this.this.intoForm.taskId = val.taskId;
       }
-      this.handleDataList()
-    }
+      this.handleDataList();
+      this.addTaskFormRef(val.taskId);
+    },
+    async addTaskFormRef(data) {
+      try {
+        const res = await getBuyerlist(data);
+        if ([0, "0"].includes(res.code)) {
+          this.options = res.data.map((item) => {
+            return {
+              value: item.gfnsrmc,
+              label: item.gfnsrmc,
+            };
+          });
+          console.log(this.options)
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    },
   },
   created() {},
   mounted() {
     this.handleInit();
     this.handleDataList();
+    if ((this.intoForm.taskId ?? "") !== "") {
+      console.log(this.intoForm.taskId);
+      this.addTaskFormRef(this.intoForm.taskId);
+    }
   },
   beforeCreate() {},
   beforeMount() {},

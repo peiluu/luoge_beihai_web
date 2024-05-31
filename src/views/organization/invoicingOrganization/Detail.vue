@@ -108,7 +108,7 @@
 <script>
 import { regCollection } from '@/config/constant.js';
 import TaxControlEquipment from './TaxControlEquipment.vue';
-import { getListAll, updateOrg, selectKpr, saveOrg, loadOrgDetail, getOrgList, getOrgInfo, } from "./Api";
+import { getListAll, updateOrg, selectKpr, saveOrg, loadOrgDetail, getOrgList, getOrgInfo,getUserList } from "./Api";
 
 /**
  * @description  发票确认单 - 可编辑

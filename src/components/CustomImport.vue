@@ -211,7 +211,7 @@ export default {
         that.tableData = res.data.failList??res.data.list;
         that.successCount = res.data.successCount;
         that.failCount = res.data.failCount;
-        that.successList = res.data.list;
+        that.successList = res.data.successList;
       });
     },
     // 直接导入模版

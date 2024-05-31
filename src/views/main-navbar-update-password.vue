@@ -30,6 +30,7 @@
 import debounce from 'lodash/debounce'
 import { clearLoginInfo } from '@/utils'
 export default {
+  
   data () {
     return {
       visible: false,
@@ -42,6 +43,13 @@ export default {
   },
   computed: {
     dataRule () {
+      var validatePassword = (rule, value, callback) => {
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,}$/;
+        if(!passwordRegex.test(value)){
+          return callback(new Error('密码需包含大小写字母数字和特殊字符(@$!%*?&.)，不少于8位'))
+        }
+        callback()
+      }
       var validateConfirmPassword = (rule, value, callback) => {
         if (this.dataForm.newPassword !== value) {
           return callback(new Error(this.$t('updatePassword.validate.confirmPassword')))
@@ -50,10 +58,12 @@ export default {
       }
       return {
         password: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          
         ],
         newPassword: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { validator: validatePassword, trigger: 'blur' }
         ],
         confirmPassword: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' },
