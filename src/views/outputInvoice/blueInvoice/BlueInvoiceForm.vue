@@ -474,7 +474,7 @@
                   </vxe-column>-->
                   <vxe-column
                     field="xmmc"
-                    min-width="300"
+                    min-width="290"
                     title="项目名称"
                     :edit-render="{name: 'EditDown'}"
                   >
@@ -600,7 +600,7 @@
                     </template>
                   </vxe-column>
                   <vxe-column
-                    min-width="130"
+                    min-width="140"
                     field="je"
                     :title="
                       form.sfhs == 'Y' ? '金额（含税）' : '金额（不含税）'
