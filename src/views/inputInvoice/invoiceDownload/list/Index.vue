@@ -86,7 +86,7 @@ export default {
         { title: "销售方名称", dataIndex: "xsfmc", width: 180, },
         { title: "销售方识别号", dataIndex: "xsfnsrsbh", width: 180, },
         { title: "金额", width: 100, dataIndex: "hjje", slot: 'hjje', align: 'right' },
-        { title: "税额", width: 100, dataIndex: "hjse", slot: 'hjje', align: 'right' },
+        { title: "税额", width: 100, dataIndex: "hjse", slot: 'hjse', align: 'right' },
         { title: "价税合计", width: 100, dataIndex: "jshj", slot: 'jshj', align: 'right' },
         { title: "发票状态", width: 120, dataIndex: "fpztbz", slot: 'fpztbz',align: 'center'},
         { title: "发票备注", width: 200, dataIndex: "bz", },

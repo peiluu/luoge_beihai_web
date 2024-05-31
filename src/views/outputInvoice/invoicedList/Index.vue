@@ -52,6 +52,19 @@
       <template #tdys="row">
         {{ row.data.tdys == '06' ? '不动产经营租赁' : row.data.tdys == '05' ? '不动产销售' : row.data.tdys == '03' ? '建筑服务' : row.data.tdys == '00' ? '通用' : '' }}
       </template>
+      <template #sendRecords="row">
+        <el-popover
+          placement="right"
+          width="650"
+          trigger="hover">
+          <el-table :data="row.data?.sendRecords">
+            <el-table-column minWidth="180" property="fphm" label="发票号码" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column minWidth="180" property="email" label="邮箱" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column minWidth="180" property="sendTime" label="日期" :show-overflow-tooltip="true"></el-table-column>
+          </el-table>
+          <el-button slot="reference">详情</el-button>
+        </el-popover>
+      </template>
       <template #kprq="row">{{ dateFormat('YYYY-mm-dd HH:MM:SS',parseDateCompatible(row.data.kprq)) }}</template>
       <!-- <template #rzzt="row">
         {{ row.data.rzzt == '02' ? '已入账' : row.data.rzzt == '03' ? '已入账撤销' : '未入账' }}
@@ -85,6 +98,7 @@
             <el-button @click="getCurrentOrgList">维护开票组织</el-button>
             <el-button @click="downLoadPdfZip">下载pdf</el-button>
             <el-button @click.stop="handleShare()">分享</el-button>
+            <el-button @click="downLoadListNoDetail">导出（不含明细）</el-button>
             <el-button @click="downLoadList">导出</el-button>
           </div>
         </div>
@@ -121,7 +135,7 @@
 import { dateFormat, previewPdf } from "@/utils/tool";
 import FormList from '@/components/FormList.vue';
 import { outputFplxList } from '@/config/constant'
-import { invoiceUsedStatus, downLoadPdf, downLoadPdfZip, detailByOrgId, sendPdf, getOrgList, selectKpr, updateInvoiceOrgId, downLoadInvoiceList, selectQyList, repushBackJQ } from './Api'
+import { invoiceUsedStatus, downLoadPdf, downLoadPdfZip, detailByOrgId, sendPdf, getOrgList, selectKpr, updateInvoiceOrgId, downLoadInvoiceList, downLoadListNoDetail, selectQyList, repushBackJQ } from './Api'
 
 export default {
   name: 'InvoicedList',
@@ -158,6 +172,8 @@ export default {
         { title: "备注", width: 100, dataIndex: "bz", showTooltip: true},
         { title: "特定业务", width: 100, dataIndex: "tdys", slot: 'tdys' },
         { title: "开票方式", width: 100, dataIndex: "kpfs", slot: 'kpfs' },
+          { title: "税率", width: 60, dataIndex: "slv"},
+        { title: "发送记录", width: 80, dataIndex: "sendRecords", fixed: 'right', slot: 'sendRecords',align: 'center' },
         {
           title: "操作",
           key: "action",
@@ -655,6 +671,15 @@ export default {
       const fileName = `已开票记录导出.xlsx`
       const ids = this.selections.map((item) => item.id)
       await downLoadInvoiceList({
+        reqData: { ...this.queryParam, scope: this.scope ,idKeys:ids },
+        fileName
+      })
+    },
+
+    async downLoadListNoDetail() {
+      const fileName = `已开票记录导出_不含明细.xlsx`
+      const ids = this.selections.map((item) => item.id)
+      await downLoadListNoDetail({
         reqData: { ...this.queryParam, scope: this.scope ,idKeys:ids },
         fileName
       })

@@ -542,7 +542,7 @@ img {
     transition: margin-left .3s;
   }
   > .aui-card--fill > .el-card__body {
-    min-height: calc(#{$content--fill-height} - 2px);
+    min-height: calc(#{$content--fill-height} - 10px);
   }
   > .aui-card--fill > .el-card__header + .el-card__body {
     min-height: calc(#{$content--fill-height} - #{$content--card-header-height} - 2px);

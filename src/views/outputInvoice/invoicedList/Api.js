@@ -54,6 +54,10 @@ export const updateInvoiceOrgId = data => postJSON(`${config.host}/invoiceUpload
  */
 export const downLoadInvoiceList = data => download(`${config.host}/invoiceUpload/downLoadList`, data);
 /**
+ * @desption 导出
+ */
+export const downLoadListNoDetail = data => download(`${config.host}/invoiceUpload/downLoadListNoDetail`, data);
+/**
  * @desption 获取区域选择下拉
  */
 export const selectQyList = data => postJSON(`${config.host}/taxBody/selectQyList`, data);
