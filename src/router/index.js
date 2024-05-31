@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import http from '@/utils/request'
-import { getToken, fnAddDynamicMenuRoutes } from '@/utils'
+import { getToken, fnAddDynamicMenuRoutes, clearLoginInfo } from '@/utils'
 // import { isURL } from '@/utils/validate'
 import store from '../store/index'
 import { routerWhitelist } from '@/config/constant'
@@ -70,9 +70,9 @@ router.beforeEach((to, from, next) => {
     return next()
   }
   const token = getToken();
-  // console.log('----token----', token, router)
-  // console.log('----beforeEach to----', to)
-  // console.log('----beforeEach from----', to)
+  console.log('----token----', token, router)
+  console.log('----beforeEach to----', to)
+  console.log('----beforeEach from----', to)
   if (!token ) { // 未登录
     if(to.path !== '/login'){ // 不是在登录页，重定向到登录页
       return next('/login');
@@ -80,6 +80,7 @@ router.beforeEach((to, from, next) => {
       return next();
     }
   }
+  console.log('--store.state.app.--', store.state.app.sidebarMenuList)
   if (store.state.app.sidebarMenuList.length) {
     if(to.path === '/'){
       return next({name: 'home'})
@@ -108,6 +109,7 @@ router.beforeEach((to, from, next) => {
     }
   }).catch((e) => {
     console.log('---e---', e)
+    clearLoginInfo()
     next({ name: 'login' })
   })
 })
