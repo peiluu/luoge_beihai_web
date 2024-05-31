@@ -2188,6 +2188,7 @@ export default {
           this.$set(this.customerQuery, "orgid", this.form.orgid);
           this.$set(this.frequentCustomerQuery, "orgid", this.form.orgid);
           this.loadFpmxList();
+          this.handleCalcTaxInclusive(this.form.sfhs??'N')
           this.loading = false;
           //初始化差额开票数据
           if (this.form.invoiceVariableLevy) {
@@ -2216,6 +2217,7 @@ export default {
             this.$set(this.customerQuery, "orgid", this.form.orgid);
             this.$set(this.frequentCustomerQuery, "orgid", this.form.orgid);
             this.loadFpmxList();
+            this.handleCalcTaxInclusive(this.form.sfhs??'N')
             this.loading = false;
             //初始化差额开票数据
             if (this.form.invoiceVariableLevy) {
@@ -2438,7 +2440,10 @@ export default {
      * 是否含税切换
      */
     toggleSfhs($event) {
-      
+     this.handleCalcTaxInclusive($event)
+    },
+    /* 计算含税 */
+    handleCalcTaxInclusive($event){
       let xTable = this.$refs.xTable;
       //  let tableData = xTable.getTableData().tableData;
       // 计算含税
