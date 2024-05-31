@@ -402,9 +402,8 @@
                     >添加折扣</el-button
                   >
                 </el-popover>
-
                 <el-switch
-                  :disabled="!isBlank(form.cezslxDm) || !canEdit"
+                  :disabled="!isBlank(form.cezslxDm) || !canEdit" 
                   style="margin-left: 10px"
                   class="switch"
                   active-text="含税"
@@ -1606,7 +1605,8 @@ export default {
         cezslxDm: "", //差额征税类型代码，空：非差额发票；01：全额开票；02：差额开票
         sfhs: "Y",
         lzfpbz: "0",
-        gmfmc:""
+        gmfmc:"",
+        
       },
       rules: {
         gmfmc: [
@@ -2180,7 +2180,7 @@ export default {
         //复制开票
         this.api.getCopyDetailById({ id: this.query.invoiceId }).then((res) => {
           this.$refs.xTable.remove();
-          this.form = res.data;
+          this.form = {...res.data,sfhs:res.data.sfhs === '1'?'Y':'N'};
           delete this.form.id;
           delete this.form.bdczldz;
           this.mideaInfo.orgid = res.data.orgid + "";
@@ -2204,7 +2204,8 @@ export default {
           .getInvoiceDetailById({ id: this.query.invoiceId || this.detailInfo.id})
           .then((res) => {
             this.$refs.xTable.remove();
-            this.form = res.data;
+            this.form = {...res.data,sfhs:res.data.sfhs === '1'?'Y':'N'};
+            console.log(res.data,"000989098")
             delete this.form.bdczldz;
             if (res.data.status != "02" && res.data.status != "04") {
               this.canEdit = false;
@@ -2435,6 +2436,7 @@ export default {
      * 是否含税切换
      */
     toggleSfhs($event) {
+      
       let xTable = this.$refs.xTable;
       //  let tableData = xTable.getTableData().tableData;
       // 计算含税
@@ -3502,9 +3504,10 @@ export default {
      
     },
     /* 添加完毕刷新 */
-    handeAddCustomDone(){
+    handeAddCustomDone(val){
+      console.log(val,"0")
       this.$nextTick(()=>{
-        this.handeAddCustomDone();
+        this.getCustomerPage();
       })
     },
     handleJumpClose(val){
@@ -3531,9 +3534,11 @@ export default {
     if(!this.$route.query.isFormInvoiced){
       this.init()
     }
-    console.log(this.query,"----")
+    console.log((this.query.cezslxDm??'') !=='',this.form.sfhs,this.query,"----")
+    console.log(this.form,"=-=-=-=-")
+    
     if((this.query.cezslxDm??'') !==''){
-      this.form.sfhs = "N"
+      this.$set(this.form,'sfhs','N')
     }
     this.getTaxRates();
     // if(this.query?.isType){
@@ -3556,8 +3561,9 @@ export default {
     if(this.$route.query.isFormInvoiced){
       this.init()
     }
-    // if(this.query.isType){
-    //   this.$set(this.form,'sfhs','Y')
+    // if((this.query.cezslxDm??'') !==''){
+    //   this.form.sfhs = "N";
+      
     // }
   },
 };
