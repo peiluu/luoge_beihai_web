@@ -1,5 +1,5 @@
 // 数据字典
-import { postJSON } from '@/utils/request.js';
+import { postJSON,getJSON } from '@/utils/request.js';
 import { config } from "@/config"
 // 获取列表
 export const getList = data => postJSON(`${config.host}/orgnization/getAuditList`, data);
@@ -18,7 +18,7 @@ export const getListByUser = data => postJSON(`${config.host}/taxBody/getListByU
  */
 //export const selectShr = data => postJSON(`${config.host}/orgnization/selectShr`, data);
 
-export const selectShr = data => postJSON(`${config.hostUser}/sys/user/page`, data);
+export const selectShr = data => getJSON(`${config.hostUser}/getUserList`, data);
 /**
  * @desption 获取当前用户可以开票的开票点（不分页）
  */

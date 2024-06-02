@@ -13,7 +13,12 @@
           <vxe-input size="mini" v-model="username" class="grid-input" placeholder="请输入姓名查询" @keyup.enter.native="selectShr" @focus="focusEvent" @suffix-click="suffixClick" />
           <el-button type="success" @click="selectShr">查询</el-button>
         </div>
-        <vxe-grid size="mini" height="300" border :row-config="{ isHover: true }" :pager-config="pagerConfig" :data="selectShrList" :columns="tableColumn" @cell-click="cellClickEvent" @page-change="pageChangeEvent">
+        <vxe-grid size="mini" height="300" border :row-config="{ isHover: true }" 
+        :pager-config="pagerConfig" 
+        :data="selectShrList" 
+        :columns="tableColumn" 
+        @cell-click="cellClickEvent" 
+        @page-change="pageChangeEvent">
         </vxe-grid>
       </div>
     </template>
@@ -65,16 +70,18 @@ export default {
   methods: {
     // 查询审核人
     async selectShr() {
-      const { code = '', data = [], totalCount, pageNo, pageSize } = await selectShr({
+      const res = await selectShr({
         username: this.username,
         pageNo: this.pagerConfig.currentPage,
         pageSize: this.pagerConfig.pageSize
       })
-      if (code === '0') {
-        this.pagerConfig.total = totalCount
+      if ([0,'0'].includes(res.code)) {
+        this.pagerConfig.total = res.data.totalCount
         // this.pagerConfig.currentPage = pageNo
         // this.pagerConfig.pageSize = pageSize
-        this.selectShrList = data
+        this.$nextTick(()=>{
+          this.selectShrList =res.data.list || [];
+        })
       }
       console.log(this.selectShrList)
     },
@@ -94,8 +101,9 @@ export default {
     cellClickEvent({ row }) {
       const $pulldown = this.$refs.pulldownRef
       if ($pulldown) {
-        this.form[this.nameKey] = row.username
+        this.form[this.nameKey] = row.realName
         this.form[this.codeKey] = row.usercode
+        this.form.username = row.username
         $pulldown.hidePanel()
         this.$emit('submitShr', this.form)
       }
@@ -109,13 +117,14 @@ export default {
       if (!this.form[this.nameKey]) {
         this.form[this.nameKey] = ''
         this.form[this.codeKey] = ''
+        this.form.lpshr = ''
         this.$emit('submitShr', this.form)
       }
     }
   }
 };
 </script>
-<style lang="scss">
+<style lang="scss" >
 .vxe-button--dropdown.is--active,
 .vxe-button--dropdown:hover {
   button {

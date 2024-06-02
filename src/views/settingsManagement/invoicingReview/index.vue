@@ -205,7 +205,7 @@ export default {
   },
   computed: {
     height() {
-      return window.innerHeight - 300;
+      return window.innerHeight - 355;
     },
     contentHeight() {
       return window.innerHeight - 132;
@@ -291,7 +291,9 @@ export default {
     submitShr(data) {
       this.form = {
         ...this.form,
-        ...data
+        ...data,
+        lpshr:data.username,
+         hpshr:data.username,
       }
       console.log(this.form)
     }

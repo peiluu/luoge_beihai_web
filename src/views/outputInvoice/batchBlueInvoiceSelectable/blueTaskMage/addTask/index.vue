@@ -55,9 +55,9 @@
                 v-if="!intoForm.taskId"
                 >导入流水</el-button
               >
-              <el-button v-if="!intoForm.taskId" @click="addOrEdit"
+              <!-- <el-button v-if="!intoForm.taskId" @click="addOrEdit"
                 >新增（流水）</el-button
-              >
+              > -->
             </article>
             <article style="height: calc(100vh - 350px)">
               <el-table

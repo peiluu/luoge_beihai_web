@@ -3257,7 +3257,9 @@ export default {
                       if (result.data.sh && result.data.sh == "sh") {
                      
                         msg = "您的开票请求已成功提交，请等待审核";
-                      }else if (result.data.cxe && result.data.cxe == "cxe") {
+
+                      }
+                       if (result.data.cxe && result.data.cxe == "cxe") {
                         
                         this.$confirm(
                           `超出单张发票限额，您确定要开票吗？`,

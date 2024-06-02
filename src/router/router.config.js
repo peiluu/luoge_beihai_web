@@ -406,7 +406,7 @@ export const mainChildrenRoutes = [
   {
     path: '/outputInvoice/batchBlueInvoiceSelectable/blueTaskMage',
     name: 'blueTaskMageSelectablePage',
-    meta: { title: '批量蓝字发票任务(可选)', isTab: true },
+    meta: { title: '批量蓝字发票任务交易流水)', isTab: true },
     component: () =>
       import('@/views/outputInvoice/batchBlueInvoiceSelectable/blueTaskMage/index'),
   },
