@@ -71,7 +71,7 @@ export default {
     showGoodsDlg: Function,
     handleSubmitProduct: Function,
     orgid: {
-      type: String,
+      type: [String, Number],
       default: '',
     },
     tdys: {

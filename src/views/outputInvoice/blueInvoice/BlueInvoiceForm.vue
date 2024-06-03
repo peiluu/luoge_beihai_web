@@ -2567,25 +2567,43 @@ export default {
       let xsyhzc = oldItem.xsyhzc;
 
       let mxxh = this.currentGoodsIndex;
-      resultItem.mxxh = mxxh + 1;
-      resultItem.xmmc = oldItem.name;
-      resultItem.hwhyslwfwmc = xmmc;
-      resultItem.spfwjc = spfwjc;
-      resultItem.ggxh = ggxh;
-      resultItem.dw = dw;
-      resultItem.sl = sl;
-      resultItem.dj = dj;
-      resultItem.je = je;
-      resultItem.slv = slv;
-      resultItem.se = se;
-      resultItem.hsje = hsje;
-      resultItem.kce = kce;
-      resultItem.sphfwssflhbbm = sphfwssflhbbm;
-      resultItem.lslbs = lslbs;
-      //  需单独处理下，或后端处理
-      resultItem.yhzcbs = "";
-      resultItem.zzstsgl = zzstsgl;
-      resultItem.xsyhzc = xsyhzc;
+      // resultItem.mxxh = mxxh + 1;
+      // resultItem.xmmc = oldItem.name;
+      // resultItem.hwhyslwfwmc = xmmc;
+      // resultItem.spfwjc = spfwjc;
+      // resultItem.ggxh = ggxh;
+      // resultItem.dw = dw;
+      // resultItem.sl = sl;
+      // resultItem.dj = dj;
+      // resultItem.je = je;
+      // resultItem.slv = slv;
+      // resultItem.se = se;
+      // resultItem.hsje = hsje;
+      // resultItem.kce = kce;
+      // resultItem.sphfwssflhbbm = sphfwssflhbbm;
+      // resultItem.lslbs = lslbs;
+      // //  需单独处理下，或后端处理
+      // resultItem.yhzcbs = "";
+      // resultItem.zzstsgl = zzstsgl;
+      // resultItem.xsyhzc = xsyhzc;
+      this.$set(resultItem, 'mxxh', mxxh + 1)
+      this.$set(resultItem, 'xmmc', oldItem.name)
+      this.$set(resultItem, 'hwhyslwfwmc', xmmc)
+      this.$set(resultItem, 'spfwjc', spfwjc)
+      this.$set(resultItem, 'ggxh', ggxh)
+      this.$set(resultItem, 'dw', dw)
+      this.$set(resultItem, 'sl', sl)
+      this.$set(resultItem, 'dj', dj)
+      this.$set(resultItem, 'je', je)
+      this.$set(resultItem, 'slv', slv)
+      this.$set(resultItem, 'se', se)
+      this.$set(resultItem, 'hsje', hsje)
+      this.$set(resultItem, 'kce', kce)
+      this.$set(resultItem, 'sphfwssflhbbm', sphfwssflhbbm)
+      this.$set(resultItem, 'lslbs', lslbs)
+      this.$set(resultItem, 'yhzcbs', "")
+      this.$set(resultItem, 'zzstsgl', zzstsgl)
+      this.$set(resultItem, 'xsyhzc', xsyhzc)
     },
     /**
      * 商品列表合计
@@ -2923,6 +2941,7 @@ export default {
           }
         }
       }
+      console.log('--this--', this)
       //判断发票特定要素
       if (this.form.tdys) {
         this.chooseGoods(row);

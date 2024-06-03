@@ -2,7 +2,7 @@
   <div>
   <el-dialog  :visible.sync="dialogVisible" min-height="600px;" width="80%" :show-close="!loading" :before-close="handleClose">
     <template slot="title">
-      <span>{{title}}</span>
+      <span>{{pTitle}}</span>
       <span style="display:inline-block;margin-left:15px;">
         <el-button type="primary" @click="handleAddCustom" size="mini" >添 加</el-button>
       </span>
@@ -77,7 +77,7 @@
   </el-dialog>
   <add-commindity-com v-if="addVisible" :commodity-active-id="activeId"  
      :visible.sync="addVisible" 
-    :title="title" 
+    :title="pTitle" 
     @saveDone="handleSaveDone"
     width="75%"></add-commindity-com>
 </div>
@@ -135,7 +135,7 @@ export default {
       loading:false,
       addVisible:false,
       activeId:  null,
-      title:'添加商品'
+      pTitle:'添加商品'
     }
   },
 
