@@ -12,6 +12,7 @@
       <template #myscope="row">
         <el-popover placement="left" trigger="hover" popper-class="customPopper">
           <template>
+            <el-button @click.stop="previewQr(row.data)" type="primary">查看二维码</el-button>
             <el-button @click.stop="previewPdf(row.data)" type="primary">查看</el-button>
             <el-button @click.stop="handleShare(row.data)" type="warning">分享</el-button>
             <el-button @click.stop="downLoadPdf(row.data)" type="info">下载</el-button>
@@ -121,6 +122,7 @@
         <el-button v-else type="success"  :loading="saveLoading" @click="sendPdf">确 认</el-button>
       </span>
     </el-dialog>
+    <lgQrCode :visible.sync = "qrVisible" :qr-data="qrData" v-if="qrVisible"></lgQrCode>
   </div>
 </template>
 <script>
@@ -128,12 +130,13 @@ import { dateFormat, previewPdf } from "@/utils/tool";
 import FormList from '@/components/FormList.vue';
 import { outputFplxList } from '@/config/constant'
 import { invoiceUsedStatus, downLoadPdf, downLoadPdfZip, detailByOrgId, sendPdf, getOrgList, selectKpr, updateInvoiceOrgId, downLoadInvoiceList, downLoadListNoDetail, selectQyList, repushBackJQ } from './Api'
-
+import lgQrCode from './qrCode/index.vue'
 export default {
   name: 'InvoicedList',
-  components: { FormList },
+  components: { FormList,lgQrCode },
   data() {
     return {
+      qrVisible:false,
       form: {},
       saveLoading: false,
       param: {},
@@ -341,6 +344,7 @@ export default {
       isUpdateInvoiceOrgId: false,
       queryParam: {},
       repushLoading: false,
+      qrData:{},
     };
 
   },
@@ -386,7 +390,12 @@ export default {
         }))
       }
     },
-
+    //查看二维码
+    previewQr(row){
+      console.log(row);
+      this.qrData = {...row};
+      this.qrVisible = true;
+    },
     // 查询开票人
     async selectKpr() {
       const { code = '', data = [] } = await selectKpr({})

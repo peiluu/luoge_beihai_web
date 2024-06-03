@@ -71,3 +71,8 @@ export const detailByOrgId = data => postJSON(`${config.host}/taxBody/detailByOr
  * @desption 重新推送
  */
 export const repushBackJQ = data => postJSON(`${config.host}/invoiceUpload/backJQ`, data);
+
+/**
+ * @desption 重新推送
+ */
+export const getQrUrl = data => postJSON(`${config.host}/invoiceUpload/getPdfUrl`, data);
