@@ -2087,7 +2087,7 @@ export default {
           params = {
             ...params, 
             pageNo:1,
-            pageSize:99999,
+            pageSize:50,
             gmfMc:query,
           }
           try{

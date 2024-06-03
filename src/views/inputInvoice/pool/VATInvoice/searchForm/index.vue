@@ -166,7 +166,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="凭号证：">
+              <el-form-item label="凭证号码：">
                 <el-input style="width: 100%;"
                   v-model="where.wspzh"
                   placeholder="请输入内容"

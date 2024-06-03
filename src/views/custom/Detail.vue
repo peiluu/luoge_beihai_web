@@ -4,7 +4,7 @@
       <el-form :inline="true" :model="form" :rules="rules" ref="ruleForm" :disabled="operateType === 'detail'">
         <div class="content-title">客户信息</div>
         <el-form-item label="所属开票点" prop="orgids" class="form-orgids">
-          <el-select v-model="form.orgids" placeholder="请选择" filterable clearable multiple @change="handleChange">
+          <el-select v-model="form.orgids" placeholder="请选择" filterable :disabled="isDisabled"  clearable multiple @change="handleChange">
             <el-option :class="`li-all ${selectedAll ? 'selected' : ''}`" :value="0"><span class="s-all"
                 @click.stop="handleClick">全选</span></el-option>
             <el-option v-for="(item, index) in taxBodyList" :key="index" :label="item.name" :value="item.id"></el-option>
@@ -57,6 +57,7 @@
 <script>
 import { regCollection } from "@/config/constant.js";
 import { updateCustomer, getOrgList, addCustomer, getDetailById } from "./Api";
+import { isDistinction } from '@/config/setting.js'
 export default {
   name: "organizationTaxBodyDetail",
   components: {},
@@ -69,7 +70,9 @@ export default {
   data() {
     return {
       taxBodyList: [],
-      form: {},
+      form: {
+        orgids:null
+      },
       operateType: "",
       rules: {
         orgids: [{ required: true, message: "请选择", trigger: "blur" }],
@@ -87,6 +90,7 @@ export default {
       saveLoading: false,
       // 是否全选
       selectedAll: false,
+      isDisabled:false,
     };
   },
   mounted() {
@@ -157,6 +161,10 @@ export default {
       const { code = "", data = [] } = await getOrgList({});
       if (code === "0") {
         this.taxBodyList = data;
+        if(isDistinction === 1){
+          this.form.orgids = 0;
+          this.isDisabled = true;
+        }
         // 编辑初始化值
         this.initData();
       }

@@ -115,7 +115,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="凭证号：">
+              <el-form-item label="凭证号码：">
                 <el-input
                   v-model="where.pzh"
                   placeholder="请输入内容"
