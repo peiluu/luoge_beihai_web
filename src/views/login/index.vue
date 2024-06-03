@@ -22,7 +22,7 @@
               </el-input>
             </el-form-item>
             <el-form-item prop="password">
-              <el-input v-model="dataForm.password" type="password" :placeholder="$t('login.password')">
+              <el-input v-model="dataForm.password" type="password" :placeholder="$t('login.password')" :show-password="true">
                 <span slot="prefix" class="el-input__icon">
                   <svg class="icon-svg" aria-hidden="true"><use xlink:href="#icon-lock"></use></svg>
                 </span>

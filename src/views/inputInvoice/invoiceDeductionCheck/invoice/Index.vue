@@ -1,5 +1,5 @@
 <template>
-  <div class="com-invoice">
+  <div class="com-invoice" >
     <template>
       <form-search ref="search" :key="propsKey" :param="searchParam" :searchList="searchList" @search="handleSearch"
         @reset="handleReset"></form-search>
@@ -188,8 +188,8 @@
         </template>
       </div>
       <span slot="footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="success" @click="submitRevokeInvoiceCheck">确 认</el-button>
+        <el-button @click="dialogVisible = false" :loading="counstLoading">取 消</el-button>
+        <el-button type="success" @click="submitRevokeInvoiceCheck" :loading="counstLoading">确 认</el-button>
       </span>
     </el-dialog>
     <!-- 设置税负率 -->
@@ -199,8 +199,8 @@
         请输入进销比例<el-input placeholder="请输入（0-100）%" v-model="lossTaxRate" />%
       </div>
       <span slot="footer">
-        <el-button @click="cancel">取 消</el-button>
-        <el-button type="success" @click="incomeOutputScale">确 认</el-button>
+        <el-button @click="cancel" >取 消</el-button>
+        <el-button type="success" @click="incomeOutputScale" >确 认</el-button>
       </span>
     </el-dialog>
     <custom-import dialogTitle="发票勾选" :dialogVisible="dialogImportVisible" @handleClose="handleImportClose"
@@ -448,6 +448,7 @@ export default {
       isPerCheck: false,
       isBusinessFormat: "", // 物业,需要预勾选操作
       totalLoading: false,
+      counstLoading:false,
     };
   },
   watch: {
@@ -839,6 +840,7 @@ export default {
 
     // 提交数据勾选
     async submitRevokeInvoiceCheck() {
+      this.counstLoading = true;
       try {
         const { code = "" } = await submitRevokeInvoiceCheck({
           gfsbh: this.nsrsbh,
@@ -858,6 +860,8 @@ export default {
         }
       } catch (error) {
         console.log(error);
+      }finally{
+        this.counstLoading = false;
       }
     },
     showDialogVisiblePercent() {

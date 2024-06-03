@@ -96,8 +96,8 @@
       </template>
 
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="success" @click="batchWithhold">确 认</el-button>
+        <el-button @click="dialogVisible = false" :loading="counstLoading">取 消</el-button>
+        <el-button type="success" @click="batchWithhold" :loading="counstLoading">确 认</el-button>
       </span>
     </el-dialog>
     <custom-import
@@ -147,6 +147,7 @@ export default {
   data() {
     const sfqkrzgx = this.sfqkrzgx
     return {
+      counstLoading:false,
       dialogImportVisible: false, // 导入
       inputFplxMap,
       api: require("./Api"),
@@ -382,6 +383,7 @@ export default {
 
     // 提交数据
     async batchWithhold() {
+      this.counstLoading = true;
       const { code = "" } = await batchWithhold({
         kjywrsbh: this.nsrsbh,
         gxlxDm: this.gxlxDm,
@@ -393,6 +395,7 @@ export default {
         this.dialogVisible = false;
         this.$refs.list.reload();
       }
+      this.counstLoading = false;
     },
     getSearchParam(param) {
       this.queryParam = param;
