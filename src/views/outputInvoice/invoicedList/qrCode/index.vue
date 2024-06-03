@@ -57,7 +57,7 @@ export default {
             logoSrc: '',
             randomColor: 'black',
             qrCodeUrl: '', // 存放生成的二维码url,
-            form:{...qrData}
+            form:{...this.qrData}
         };
     },
     computed: {},

@@ -157,6 +157,7 @@ export default {
       gxlxDm: '', // 勾选类型代码
       currentIndex: '',
       queryParam: {},
+      counstLoading:false,
     };
   },
   mounted() {
@@ -240,6 +241,7 @@ export default {
 
     // 提交数据
     async batchWithhold() {
+      this.counstLoading = true;
       const { code = '' } = await batchWithhold({
         kjywrsbh: this.$route.query.nsrsbh,
         gxlxDm: this.gxlxDm,
@@ -251,6 +253,7 @@ export default {
         this.dialogVisible = false;
         this.$refs.list.reload();
       }
+      this.counstLoading = false;
     },
 
     getSearchParam(param) {

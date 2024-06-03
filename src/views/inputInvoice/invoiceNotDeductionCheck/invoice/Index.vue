@@ -62,8 +62,8 @@
       </div>
       <div class="tip">是否确认提交</div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisibleSubmit = false">取 消</el-button>
-        <el-button type="success" @click="submitRevokeInvoiceCheck">确 认</el-button>
+        <el-button @click="dialogVisibleSubmit = false" :loading="counstLoading">取 消</el-button>
+        <el-button type="success" @click="submitRevokeInvoiceCheck" :loading="counstLoading">确 认</el-button>
       </span>
     </el-dialog>
 
@@ -93,6 +93,7 @@ export default {
   },
   data() {
     return {
+      counstLoading:false,
       form: {},
       inputFplxMap,
       bdklxMap,
@@ -399,6 +400,7 @@ export default {
 
     // 提交数据
     async submitRevokeInvoiceCheck() {
+      this.counstLoading = true;
       const { code = '' } = await submitRevokeInvoiceCheck({
         gfsbh: this.$route.query.nsrsbh,
         skssq: this.currentSq.dateValue,
@@ -415,6 +417,7 @@ export default {
         this.$message.success('提交成功');
         this.$refs.list.reload()
       }
+      this.counstLoading = false;
     },
 
     getSearchParam(param) {
