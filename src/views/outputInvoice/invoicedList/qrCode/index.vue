@@ -13,8 +13,8 @@
                 :logoSrc="logoSrc"
                 :color-dark="randomColor"
                 :callback="qrCodeCallback"
-                width="100"
-                height="100"
+                width="200"
+                height="200"
                 ></vue-qr>
             </article>
             <span slot="footer" class="dialog-footer">
@@ -95,7 +95,7 @@ export default {
 
         /* 关闭前 */
         handleClose(){
-            updateVisible(false)
+            this.updateVisible(false)
         },
     },
     created() {},
