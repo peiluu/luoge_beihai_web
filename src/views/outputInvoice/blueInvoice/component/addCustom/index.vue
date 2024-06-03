@@ -79,5 +79,8 @@ export default {
 </script>
 <style scoped>
 /*@import url(); 引入公共css类*/
-
+::v-deep .el-dialog__body{
+    padding:10px 0;
+    
+}
 </style>

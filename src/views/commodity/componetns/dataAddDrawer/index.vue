@@ -35,7 +35,7 @@
                                           <span style="">{{ isActiveName }}</span>
                                         </el-form-item>-->
                                         <el-form-item label="所属开票点" prop="orgids" >
-                                            <el-select style="width:100%;" v-model="addForm.orgids" filterable 
+                                            <el-select style="width:100%;" v-model="addForm.orgids" filterable :disabled="isDisabled"
                                             placeholder="请选择" clearable multiple @change="handlerOrgidsChange" @remove-tag="handlerRemoveTag">
                                                 <el-option
                                                 v-for="item in buillingOptions"
@@ -154,6 +154,7 @@
 <script>
 import AppLeftList from '../../leftList';
 import {addCommonditySingle,getUnitList,getallBilling,getCommodityDes,getCommondityDes,updateCommondityRow,getNameDes,getSelectdatas} from '../../api.js';
+import { isDistinction } from '@/config/setting.js'
 export default {
     name:'addcommodityPage',
     props:{
@@ -246,6 +247,7 @@ export default {
             loadings:false,
             isActiveName:'',
             deepOption:[],
+            isDisabled:false,
         };
     },
     computed: {},
@@ -492,6 +494,10 @@ export default {
                     this.buillingOptions = res.data.map(k=> {return {...k,label:k.name,value:k.id}});
                     if(this.buillingOptions.length >0){
                         this.buillingOptions.unshift({label:'全部',value:'0'})
+                        if(isDistinction === 1){
+                            this.addForm.orgids = '0';
+                            this.isDisabled = true;
+                        }
                     }
                    
                 }

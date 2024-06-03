@@ -162,7 +162,7 @@ export default {
       if (code === "0") {
         this.taxBodyList = data;
         if(isDistinction === 1){
-          this.form.orgids = 0;
+          this.handleClick();
           this.isDisabled = true;
         }
         // 编辑初始化值
