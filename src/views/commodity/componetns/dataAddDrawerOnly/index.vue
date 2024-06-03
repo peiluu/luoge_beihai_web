@@ -415,6 +415,11 @@ export default {
         handlerSubmit(){
             this.loading = false;
         let data = {...this.addForm};
+       
+        if(data.orgids.length === this.buillingOptions.length){
+            data.orgids = [0];
+        }
+        console.log(data,"data")
         this.$refs.ruleAddForm.validate(async (valid) => {
             if(valid){
                 this.loading = true;
