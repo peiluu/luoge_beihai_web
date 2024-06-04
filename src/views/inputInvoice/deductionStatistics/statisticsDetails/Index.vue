@@ -123,18 +123,24 @@ export default {
       isShow:true,
     };
   },
+  mounted(){
+    // this.$set(this.param,'skssq',moment(this.$route.query.skssq).format('YYYY-MM'))
+    // this.$set(this.param,'gfsbh',this.$route.query.nsrsbh);
+    // this.getListByUser();
+  },
   activated() {
    
     this.$set(this.param,'skssq',moment(this.$route.query.skssq).format('YYYY-MM'))
     this.$set(this.param,'gfsbh',this.$route.query.nsrsbh);
-    this.isShow = false
-    this.isShow = true
+    this.isShow = false;
     this.$nextTick(()=>{
-      
+      this.isShow = true;
+      this.getListByUser();
     })
+    
     //this.param.skssq = moment(this.$route.query.skssq).format('YYYY-MM')
     //this.param.gfsbh = this.$route.query.nsrsbh
-    this.getListByUser();
+   
     
   },
 
