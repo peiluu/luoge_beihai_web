@@ -124,9 +124,13 @@ export default {
     };
   },
   activated() {
-    this.param.skssq = moment(this.$route.query.skssq).format('YYYY-MM')
-    this.param.gfsbh = this.$route.query.nsrsbh
+   
+    this.$set(this.param,'skssq',moment(this.$route.query.skssq).format('YYYY-MM'))
+    this.$set(this.param,'gfsbh',this.$route.query.nsrsbh)
+    //this.param.skssq = moment(this.$route.query.skssq).format('YYYY-MM')
+    //this.param.gfsbh = this.$route.query.nsrsbh
     this.getListByUser();
+    
   },
 
   computed: {
@@ -162,6 +166,7 @@ export default {
       }
     },
     getSearchParam(param) {
+      console.log(param)
       this.queryParam = param;
     },
     async exportInvoiceCheckStatistics() {

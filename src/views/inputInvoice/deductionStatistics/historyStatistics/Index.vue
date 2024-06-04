@@ -87,6 +87,7 @@ export default {
     };
   },
   activated() {
+   
     this.param.nsrsbh = this.$route.query.nsrsbh
     // this.param.isCurrent = 'false'
     this.getListByUser();
