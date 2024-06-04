@@ -659,6 +659,10 @@ export default {
         });
       });
 
+      Object.keys(result).forEach(key => {
+        result[key] = parseFloat(result[key].toFixed(2));
+      });
+
       return result;
     },
     // 搜索
@@ -714,30 +718,40 @@ export default {
       this.setPre({ ids: [row.id], nsrsbh: this.nsrsbh, preCheck: row.preCheck === 'Y' ? 'N' : 'Y' });
     },
     seleceAll(rows) {
+      
       let ids = [];
       let preCheck = ''
       if (rows.length === 0) {
         ids = this.data.map((item) => item.id);
         preCheck = 'N'
       } else {
-        rows.forEach((item) => {
-          console.log('--rows--', item.preCheck, item.id)
-          if (item.preCheck !== "Y") {
-            ids.push(item.id);
-            preCheck = 'Y'
-          }
-        });
+         ids = this.data.map(k=> k.id) || [];
+        if(this.data.every(k=> k.preCheck === 'Y')){
+          preCheck = 'N'
+        }else if(this.data.every(k=> k.preCheck === 'N')){
+          preCheck = 'Y'
+        }else{
+          preCheck = 'Y'
+        }
+        // this.setPre({ ids: ,  preCheck: row.preCheck === 'Y' ? 'N' : 'Y' });
+        // rows.forEach((item) => {
+        //   console.log('--rows--', item.preCheck, item.id)
+        //   if (item.preCheck !== "Y") {
+        //     ids.push(item.id);
+        //     preCheck = 'Y'
+        //   }
+        // });
       }
       this.setPre({ ids, preCheck });
     },
     async setPre({ ids, preCheck }) {
-
+     
       if (this.searchParam?.cljg === '01') return
       try {
         this.loading = true;
         const { code = "0", data } = await checkPreOneZzsfp({ ids, preCheck, nsrsbh: this.nsrsbh });
         if (code === "0") {
-          this.handleGetData(this.searchParam);
+          this.handleGetData(this.searchParam,{},true);
         }
         this.loading = false;
       } catch (error) {
@@ -752,6 +766,7 @@ export default {
       if (this.searchParam.cljg === '01') {
         this.$refs.tableCounter.setInfo({ ...this.handleCalc(this.selections, ['hjje', 'hjse', 'jshj']), number: this.selections?.length })
       }
+      console.log(this.selections,"data")
 
     },
     // 撤销勾选
