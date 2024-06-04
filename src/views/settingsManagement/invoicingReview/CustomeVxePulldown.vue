@@ -18,7 +18,7 @@
         :data="selectShrList" 
         :columns="tableColumn" 
         @cell-click="cellClickEvent" 
-        @page-change="pageChangeEvent">
+        @page-change="pageChangeEvent" style="background-color: #fff;">
         </vxe-grid>
       </div>
     </template>
@@ -152,10 +152,11 @@ export default {
 
 .my-dropdown {
   padding: 12px;
-
+  background: #fff;
   .dropdown-header {
     display: flex;
     margin-bottom: 12px;
+    background: #fff;
   }
 
   .el-button {
