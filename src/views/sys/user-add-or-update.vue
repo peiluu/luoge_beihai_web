@@ -78,7 +78,7 @@ export default {
         if (!this.dataForm.id && !/\S/.test(value)) {
           return callback(new Error(this.$t('validate.required')))
         }
-        if(this.dataForm.id && !passwordRegex.test(value)){
+        if((value??'')!=='' && !passwordRegex.test(value)){
           return callback(new Error('密码需包含大小写字母数字和特殊字符(@$!%*?&.)，不少于8位'))
         }
         callback()

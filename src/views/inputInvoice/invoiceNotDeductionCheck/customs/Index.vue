@@ -453,17 +453,22 @@ export default {
     async checkCustomsPayment() {
       this.counstLoading = true;
       const hgjksmx = this.selections.map(item=> ({jkshm: item.hgjkshm , tfrq: item.tfrq}))
-      const { code = '' } = await checkCustomsPayment({
-        gfsbh: this.$route.query.nsrsbh,
-        gxlx: this.gxlxDm,
-        hgjksmx,
-      })
-      if (code === '0') {
-        this.$message.success('提交成功');
-        this.dialogVisibleSubmit = false;
-        this.$refs.list.reload()
+      try{
+          const { code = '' } = await checkCustomsPayment({
+          gfsbh: this.$route.query.nsrsbh,
+          gxlx: this.gxlxDm,
+          hgjksmx,
+        })
+        if (code === '0') {
+          this.$message.success('提交成功');
+          this.dialogVisibleSubmit = false;
+          this.$refs.list.reload()
+        }
+      }finally{
+        this.counstLoading = false;
       }
-      this.counstLoading = false;
+      
+      
     },
 
     getSearchParam(param) {
