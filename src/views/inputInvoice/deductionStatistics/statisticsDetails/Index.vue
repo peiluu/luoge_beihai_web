@@ -120,15 +120,15 @@ export default {
           }
         },
       ],
-      isShow:false,
+      isShow:true,
     };
   },
   activated() {
    
     this.$set(this.param,'skssq',moment(this.$route.query.skssq).format('YYYY-MM'))
     this.$set(this.param,'gfsbh',this.$route.query.nsrsbh);
-    this.isShow = true
     this.isShow = false
+    this.isShow = true
     this.$nextTick(()=>{
       
     })
