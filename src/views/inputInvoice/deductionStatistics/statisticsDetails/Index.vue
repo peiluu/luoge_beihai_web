@@ -128,8 +128,9 @@ export default {
     this.$set(this.param,'skssq',moment(this.$route.query.skssq).format('YYYY-MM'))
     this.$set(this.param,'gfsbh',this.$route.query.nsrsbh);
     this.isShow = true
+    this.isShow = false
     this.$nextTick(()=>{
-      this.isShow = false
+      
     })
     //this.param.skssq = moment(this.$route.query.skssq).format('YYYY-MM')
     //this.param.gfsbh = this.$route.query.nsrsbh
