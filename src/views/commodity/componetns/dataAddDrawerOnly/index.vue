@@ -279,7 +279,7 @@ export default {
       } else {
         this.ruleAddForm.zzstsgl = [];
         // 手动清除验证错误信息
-        this.$refs.addForm.clearValidate(['zzstsgl']);
+        this.$refs.addForm?.clearValidate(['zzstsgl']);
       }
       // 重新验证表单
       this.$refs.addForm?.validateField('zzstsgl');
@@ -320,8 +320,9 @@ export default {
                         ...arr_ss.map(i=> {return {label:i,value:Number(i.split('%')[0]) / 100}})
                     ])
                 }
-                if(zzstsgl === '免税'){
-                    this.$set(this,'taxRateOption',[{label:'免税',value:0}])
+                if(zzstsgl === '免税' || zzstsgl === '不征税'){
+                    zzstsgl === '免税'?this.$set(this,'taxRateOption',[{label:'免税',value:0}]):zzstsgl === '不征税'?this.$set(this,'taxRateOption',[{label:'不征税',value:0}]):[]
+            
                 }else{
                     this.taxRateOption = [...this.deepOption];
                 }
@@ -336,24 +337,26 @@ export default {
         const {zsl,zzssl,zzstsgl} = res.data || {}
         if([0,'0'].includes(res.code)){
             if((zzstsgl??'') !==''){
-                    let arr = zzstsgl.split('、');
-                    this.taxAssOptions = arr.map(i=> {return {lable:i,value:i}})
-                    console.log(zzstsgl.split(','))
-                }
-                if((zsl??'')!=='' && (zzssl??'')!==''){
-                    let arr_ls = zsl.split('、');
-                    let arr_ss = zzssl.split('、');
-                    
-                    this.deepOption = this.deepClone([
-                        ...arr_ls.map(k=>{ return {label:k,value:Number(k.split('%')[0]) / 100}}),
-                        ...arr_ss.map(i=> {return {label:i,value:Number(i.split('%')[0]) / 100}})
-                    ])
-                }
-                if(zzstsgl === '免税' || zzstsgl === '不征税'){
-                    this.$set(this,'taxRateOption',[{label:'免税',value:0}])
-                }else{
-                    this.taxRateOption = [...this.deepOption];
-                }
+                let arr = zzstsgl.split('、');
+                this.taxAssOptions = arr.map(i=> {return {lable:i,value:i}})
+                console.log(zzstsgl.split(','))
+            }
+            if((zsl??'')!=='' && (zzssl??'')!==''){
+                let arr_ls = zsl.split('、');
+                let arr_ss = zzssl.split('、');
+                
+                this.deepOption = this.deepClone([
+                    ...arr_ls.map(k=>{ return {label:k,value:Number(k.split('%')[0]) / 100}}),
+                    ...arr_ss.map(i=> {return {label:i,value:Number(i.split('%')[0]) / 100}})
+                ])
+            }
+            if(zzstsgl === '免税' || zzstsgl === '不征税'){
+
+                zzstsgl === '免税'?this.$set(this,'taxRateOption',[{label:'免税',value:0}]):zzstsgl === '不征税'?this.$set(this,'taxRateOption',[{label:'不征税',value:0}]):[]
+            
+            }else{
+                this.taxRateOption = [...this.deepOption];
+            }
         }
        },
        /* 离开焦点事件 */
@@ -465,15 +468,15 @@ export default {
                             sphfwfljc
                         }
                     if((zzstsgl??'') !==''){
-                        let arr = zzstsgl.split('、');
+                        let arr = zzstsgl?.split('、');
                         this.taxAssOptions = arr.map(i=> {return {lable:i,value:i}}) ||  []
                         console.log(zzstsgl.split(','))
                     }else{
                         this.taxAssOptions = [];
                     }
                     if((zzssl??'')!==''){
-                        let arr_ls = zsl.split('、');
-                        let arr_ss = zzssl.split('、');
+                        let arr_ls = zsl?.split('、');
+                        let arr_ss = zzssl?.split('、');
                         this.taxRateOption = [
                             // ...arr_ls.map(k=>{ return {label:k,value:Number(k.split('%')[0]) / 100}}),
                             ...arr_ss.map(i=> {return {label:i,value:Number(i.split('%')[0]) / 100}})
