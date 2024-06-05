@@ -80,6 +80,13 @@
             <el-table-column prop="kce" label="扣除额" minWidth="120" :header-align="'center'" :align="'center'">
               <template slot-scope="{row}">{{ formatMoney(row.kce) }} </template>
             </el-table-column>
+
+            <el-table-column prop="rzzt" label="认证状态" minWidth="120" :header-align="'center'" :align="'center'">
+              <template slot-scope="scope">
+                <span>{{ handleParesTableValue(`${scope.row.rzzt[1]}`, optionList.authenticationStatus) }}</span>
+              </template>
+            </el-table-column>
+
             <el-table-column prop="fpzt" label="发票状态" minWidth="120" :header-align="'center'" :align="'center'">
               <template slot-scope="scope">
                 <span>{{ handleParesTableValue(scope.row.fpzt, optionList.invoiceStatus) }}</span>
