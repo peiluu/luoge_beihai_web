@@ -7,8 +7,8 @@
       </article>
       <!-- table -->
       <article>
-        <el-card shadow="never" v-loading="loading">
-          <article>
+        <el-card shadow="never" >
+          <article v-loading="loading">
             <article>
               <div>
                 <el-button @click="handleImportData">导 出</el-button>
@@ -101,7 +101,7 @@ export default {
     /* 获取数据 */
     async handleGetTableList(){
         let params = {...this.where};
-        this.loading = false;
+        this.loading = true;
         try {
             const res = await getListData(params);
             if([0,'0'].includes(res.code)){
