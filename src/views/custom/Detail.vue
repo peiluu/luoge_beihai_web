@@ -70,7 +70,8 @@ export default {
   data() {
     const checkgmfNsrsbh = (rule, value, callback) => {
         const regex = /^[A-Z0-9]{15,20}$/;
-        if((value??'')!=='' && regex.test(value)){
+       
+        if((value??'')!=='' && !regex.test(value)){
           callback(new Error('购买方纳税人识别号长度为15-20位,由数字和大写字母组成'));
         }else{
           callback();
@@ -86,8 +87,8 @@ export default {
         orgids: [{ required: true, message: "请选择", trigger: "blur" }],
         gmfNsrsbh: [
           { required: true, message: "请输入", trigger: "blur" },
-          {validator: checkgmfNsrsbh, trigger: ['blur','change'] },
-          regCollection.nsrsbh,
+          { validator: checkgmfNsrsbh, trigger: ['blur','change'] },
+         // regCollection.nsrsbh,
          
         
         ],
