@@ -214,7 +214,7 @@ export default {
       tableData: [],
       page: {
         currentPage: 1,
-        pageSizes: [10, 20, 30, 50, 70, 100, 150, 200],
+        pageSizes: [10, 15, 30, 50, 70, 100, 150, 500,1000,],
         pageSize: 10,
         total: 0,
       },
