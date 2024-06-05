@@ -303,7 +303,7 @@ export default {
 
                 }
 
-                if(this.addForm.orgids === '0'){
+                if(this.addForm.orgids[0] == '0'){
                     this.buillingOptions = this.buillingOptions.map(k=> {return {...k,disabled:true}})
                 }
                 if((zzstsgl??'') !==''){
