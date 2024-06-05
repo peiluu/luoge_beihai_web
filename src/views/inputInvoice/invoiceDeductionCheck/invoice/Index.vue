@@ -158,7 +158,7 @@
 
       <div class="pagination" v-if="!isPerCheck">
         <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange"
-          :current-page="pagination.pageNo" :page-sizes="[10, 20, 30, 40, 50, 100, 500, 1000]"
+          :current-page="pagination.pageNo" :page-sizes="[10, 20, 30, 40, 50, 100]"
           :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total">
         </el-pagination>
       </div>

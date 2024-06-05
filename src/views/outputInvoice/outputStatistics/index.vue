@@ -37,25 +37,25 @@
               <el-table :data="tableData" style="width: 100%" height="calc(100vh - 360px)" :border="true" ref="tableRef">
                 <el-table-column type="index" label="序号" width="50">
                 </el-table-column>
-                <el-table-column prop="name" label="项目名称" :resizable="true" :show-overflow-tooltip="true" :header-align="'center'" :align="'center'" width="180">
+                <el-table-column prop="name" label="项目名称" :resizable="true" :show-overflow-tooltip="true" :header-align="'center'" :align="'center'" width="160">
                 </el-table-column>
-                <el-table-column prop="total" label="合计" :resizable="true" :show-overflow-tooltip="true" :header-align="'center'" :align="'right'" minWidth="180">
+                <el-table-column prop="total" label="合计" :resizable="true" :show-overflow-tooltip="true" :header-align="'center'" :align="'right'" minWidth="110">
                 </el-table-column>
-                <el-table-column prop="shisan" label="13%" :resizable="true" :show-overflow-tooltip="true" :header-align="'center'" :align="'right'" minWidth="140">
+                <el-table-column prop="shisan" label="13%" :resizable="true" :show-overflow-tooltip="true" :header-align="'center'" :align="'right'" minWidth="110">
                 </el-table-column>
-                <el-table-column prop="jiu" label="9%" :resizable="true" :show-overflow-tooltip="true" :header-align="'center'" :align="'right'" minWidth="140">
+                <el-table-column prop="jiu" label="9%" :resizable="true" :show-overflow-tooltip="true" :header-align="'center'" :align="'right'" minWidth="110">
                 </el-table-column>
-                <el-table-column prop="liu" label="6%" :resizable="true" :show-overflow-tooltip="true" :header-align="'center'" :align="'right'" width="140">
+                <el-table-column prop="liu" label="6%" :resizable="true" :show-overflow-tooltip="true" :header-align="'center'" :align="'right'" minWidth="110">
                 </el-table-column>
-                <el-table-column prop="wu" label="5%" :resizable="true" :show-overflow-tooltip="true" :header-align="'center'" :align="'right'" width="140">
+                <el-table-column prop="wu" label="5%" :resizable="true" :show-overflow-tooltip="true" :header-align="'center'" :align="'right'" minWidth="110">
                 </el-table-column>
-                <el-table-column prop="san" label="3%" :resizable="true" :show-overflow-tooltip="true" :header-align="'center'" :align="'right'" width="140">
+                <el-table-column prop="san" label="3%" :resizable="true" :show-overflow-tooltip="true" :header-align="'center'" :align="'right'" minWidth="110">
                 </el-table-column>
-                <el-table-column prop="ling" label="0%" :resizable="true" :show-overflow-tooltip="true" :header-align="'center'" :align="'right'" width="140">
+                <el-table-column prop="ling" label="0%" :resizable="true" :show-overflow-tooltip="true" :header-align="'center'" :align="'right'" minWidth="110">
                 </el-table-column>
-                <el-table-column prop="bzs" label="不征税" :resizable="true" :show-overflow-tooltip="true" :header-align="'center'" :align="'right'" width="140">
+                <el-table-column prop="bzs" label="不征税" :resizable="true" :show-overflow-tooltip="true" :header-align="'center'" :align="'right'" minWidth="110">
                 </el-table-column>
-                <el-table-column prop="ms" label="免税" :resizable="true" :show-overflow-tooltip="true" :header-align="'center'" :align="'right'" width="140">
+                <el-table-column prop="ms" label="免税" :resizable="true" :show-overflow-tooltip="true" :header-align="'center'" :align="'right'" minWidth="110">
                 </el-table-column>
               </el-table>
             </article>
