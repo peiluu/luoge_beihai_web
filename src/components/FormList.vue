@@ -233,8 +233,13 @@ export default {
         this.radioValue = val;
       }
     },
-    param: function(val){
-      this.formParams = cloneDeep({...this.formParams, ...val})
+    param:{
+      handler(val){
+        this.formParams = cloneDeep({...this.formParams, ...val})
+        this.$nextTick(() => {
+        this.handleGetData(this.formParams);
+      });
+      },deep:true
     }
   },
   data() {
@@ -302,7 +307,7 @@ export default {
     },
     async handleGetData(obj, args, keepSelections) {
       // this.keepSelections = false;
-            this.searchParam = obj;
+      this.searchParam = obj;
       let param = {};
       Object.keys(obj).map(key => {
       if (obj[key] != null) {
@@ -521,10 +526,17 @@ export default {
       this.$refs.tableCounter.setInfo(val);
     }
   },
+  mounted(){
+    console.log(this.formParams,"接收的参数0")
+  },
   activated() {
+    this.formParams = cloneDeep(this.param);
+   
     if (this.firstLoading) {
       this.$nextTick(() => {
+       
         this.handleGetData(this.formParams);
+        
       });
     }
   },
