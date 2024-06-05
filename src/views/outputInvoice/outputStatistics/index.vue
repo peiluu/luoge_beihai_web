@@ -12,29 +12,29 @@
             <article>
               <div>
                 <el-button @click="handleImportData">导 出</el-button>
-                <el-button>打 印</el-button>
+                <el-button @click="printTable">打 印</el-button>
               </div>
               <div class="statistic_main">
                 <div>
                   <el-statistic
                     group-separator=","
-                    :precision="2"
-                    :value="554"
+                    :precision="0"
+                    :value="statisticTotal.blue"
                     :title="'蓝票总数'"
                   ></el-statistic>
                 </div>
                 <div>
                   <el-statistic
                     group-separator=","
-                    :precision="2"
-                    :value="19"
+                    :precision="0"
+                    :value="statisticTotal.red"
                     :title="'红票总数'"
                   ></el-statistic>
                 </div>
               </div>
             </article>
             <article style="margin-top:20px">
-              <el-table :data="tableData" style="width: 100%" height="calc(100vh - 360px)" :border="true">
+              <el-table :data="tableData" style="width: 100%" height="calc(100vh - 360px)" :border="true" ref="tableRef">
                 <el-table-column type="index" label="序号" width="50">
                 </el-table-column>
                 <el-table-column prop="name" label="项目名称" :resizable="true" :show-overflow-tooltip="true" :header-align="'center'" :align="'center'" width="180">
@@ -78,6 +78,10 @@ export default {
       where: {}, //搜索条件
       tableData: [], //表格数据
       loading:false,
+      statisticTotal:{
+        blue:0,
+        red:0,
+      }
     };
   },
   computed: {},
@@ -85,7 +89,13 @@ export default {
   methods: {
     /* 搜索组件返回 */
     handleFormSearch(val) {
-      this.where = { ...val };
+        const {time,fppz,nsrsbh} = val ||{}
+        if(time || fppz || nsrsbh){
+            this.where = {fppz,beginTime:time[0]??null,endTime:time[1]??null,nsrsbh}
+        }else{
+            this.where = {};
+        }
+      
       this.handleGetTableList();
     },
     /* 获取数据 */
@@ -96,6 +106,8 @@ export default {
             const res = await getListData(params);
             if([0,'0'].includes(res.code)){
                 this.tableData = [...res.data.list];
+                this.statisticTotal.blue = res.data.lpzs??0;
+                this.statisticTotal.red = res.data.hpzs??0;
             }
         } catch (error) {
             throw(`get table data error: ${error}`)
@@ -107,7 +119,17 @@ export default {
     /* 导出数据 */
     handleImportData(){
         const fileName = `销项统计.xlsx`;
-        downListData({ fileName }, null, true);
+        downListData({ fileName,reqData:{...this.where} }, null, true);
+    },
+    printTable() {
+     
+      const printContent = this.$refs.tableRef.$el.outerHTML;
+      const originalContent = document.body.innerHTML;
+      document.body.innerHTML = printContent;
+      window.print();
+      document.body.innerHTML = originalContent;
+
+      
     }
   },
   created() {},
