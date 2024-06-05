@@ -94,7 +94,7 @@ export default {
       searchForm: {
         time: [],
         fppz: "",
-        nsrsbh: "",
+        nsrsbh: "9143120071702048XN",
       },
       typeOption: [],
       fpzlOptions: [
