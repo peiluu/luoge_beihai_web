@@ -33,10 +33,10 @@
         </p>
         <div class="subtitle">
           <p>
-            专用发票：<span class="blue">{{ fpsj.lzpp }}张（{{ fpsj.lzppje }}元）</span>
+            专用发票：<span class="blue">{{ fpsj.lzzp }}张（{{ fpsj.lzzpje }}元）</span>
           </p>
           <p>
-            普通发票：<span class="blue">{{ fpsj.lzzp }}张（{{ fpsj.lzzpje }}元）</span>
+            普通发票：<span class="blue">{{ fpsj.lzpp }}张（{{ fpsj.lzppje }}元）</span>
           </p>
           <p class="last-moon">较上月：{{ fpsj.lzppbl }}</p>
         </div>
@@ -48,10 +48,10 @@
         </p>
         <div class="subtitle">
           <p>
-            专用发票：<span class="blue">{{ fpsj.hzpp }}张（{{ fpsj.hzppje }}元）</span>
+            专用发票：<span class="blue">{{ fpsj.hzzp }}张（{{ fpsj.hzzpje }}元）</span>
           </p>
           <p>
-            普通发票：<span class="blue">{{ fpsj.hzzp }}张（{{ fpsj.hzzpje }}元）</span>
+            普通发票：<span class="blue">{{ fpsj.hzpp }}张（{{ fpsj.hzppje }}元）</span>
           </p>
           <p class="last-moon">较上月：{{ fpsj.hzppbl }}</p>
         </div>

@@ -56,15 +56,14 @@ export default {
       return getCurrentMonthSsq()
     }
   },
-  activated() {
-    this.queryApplyStatisticsStatus();
-  },
+  
   methods: {
     // 申请统计状态查询
     async queryApplyStatisticsStatus() {
       const { code = '', data = [] } = await queryApplyStatisticsStatus({
         gfsbh: this.$route.query.nsrsbh
       })
+      console.log("123")
       if (code === '0') {
         this.applyStatisticsStatus = data
       }
@@ -87,6 +86,7 @@ export default {
     },
   },
   activated(){
+    this.queryApplyStatisticsStatus();
     this.level = null;
     this.getSfqkrzgxById();
     this.$nextTick(()=>{

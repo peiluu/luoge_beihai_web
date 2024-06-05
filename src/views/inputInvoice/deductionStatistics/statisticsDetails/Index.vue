@@ -1,8 +1,11 @@
 <template>
   <div class="main-content" :style="'height: ' + contentHeight + 'px;'">
-    <BackBtn :path="operateType == 'statisticsDetails' ? '/deductionStatistics/list': '/deductionStatistics/historyStatistics'" :query="$route.query" />
+    <BackBtn
+      :path="operateType == 'statisticsDetails' ? '/deductionStatistics/list' : '/deductionStatistics/historyStatistics'"
+      :query="$route.query" />
 
-    <form-list :columns="columns" :searchRow="searchList" :api="api" :param="param" :height="height" @getSearchParam="getSearchParam" v-loading="loading" ref="list">
+    <form-list :columns="columns" :searchRow="searchList" :api="api" :param="param" :height="height"
+      @getSearchParam="getSearchParam" v-loading="loading" ref="list" v-if="isShow">
       <template #topTool>
         <div class="toolbar">
           <div class="toolbar-left" />
@@ -16,7 +19,8 @@
       </template>
 
       <template #cljg="{ data }"> {{ data.cljg == '01' ? '已勾选' : '未勾选' }}</template>
-      <template #sfycpz="{ data }"> {{ data.sfycpz == '01' ? '正常' : data.sfycpz == '02' ? '异常' : data.sfycpz == '03' ? '疑似异常' : '' }}</template>
+      <template #sfycpz="{ data }"> {{ data.sfycpz == '01' ? '正常' : data.sfycpz == '02' ? '异常' : data.sfycpz == '03' ?
+    '疑似异常' : '' }}</template>
       <template #fplx="{ data }"> {{ inputFplxMap[data.fplx] }} </template>
       <template #jshj="{ data }"> {{ formatMoney(data.jshj) }} </template>
       <template #hjse="{ data }"> {{ formatMoney(data.hjse) }} </template>
@@ -26,19 +30,19 @@
 
       <template #fpzt="{ data }">
         {{
-          data.fpzt == '0'
-          ? '正常'
-          : data.fpzt == '1'
-            ? '失控'
-            : data.fpzt == '2'
-              ? '作废'
-              : data.fpzt == '3'
-                ? '已红冲'
-                : data.fpzt == '7'
-                  ? '部分红冲'
-                  : data.fpzt == '8'
-                    ? '全额红冲' : ''
-        }}
+    data.fpzt == '0'
+      ? '正常'
+      : data.fpzt == '1'
+        ? '失控'
+        : data.fpzt == '2'
+          ? '作废'
+          : data.fpzt == '3'
+            ? '已红冲'
+            : data.fpzt == '7'
+              ? '部分红冲'
+              : data.fpzt == '8'
+                ? '全额红冲' : ''
+  }}
       </template>
     </form-list>
   </div>
@@ -69,17 +73,17 @@ export default {
       columns: [
         { title: '序号', type: "index", width: 50, fixed: 'left', },
         { title: "发票种类", width: 150, dataIndex: "fplx", slot: 'fplx' },
-        { title: "发票号码", width: 150, dataIndex: "fphm", },
+        { title: "发票号码", width: 150, dataIndex: "zzfphm", },
         { title: "发票代码", width: 100, dataIndex: "zzfpDm", },
-        { title: "开票日期", width: 100, dataIndex: "kprq", slot: 'kprq',align: 'center' },
+        { title: "开票日期", width: 100, dataIndex: "kprq", slot: 'kprq', align: 'center' },
         { title: "销售方名称", dataIndex: "xsfmc", width: 120, },
         { title: "销售方识别号", dataIndex: "xsfnsrsbh", width: 150, },
         // { title: "纳税主体", dataIndex: "hjje", },
         // { title: "确认标记", dataIndex: "hjse", },
         { title: "价税合计", width: 100, dataIndex: "jshj", slot: 'jshj', align: 'right' },
         { title: "税额", width: 100, dataIndex: "hjse", slot: 'hjse', align: 'right' },
-        { title: "发票状态", width: 100, dataIndex: "fpzt", slot: 'fpzt',align: 'center' },
-        { title: "勾选时间", width: 100, dataIndex: "gxsj", slot: 'gxsj',align: 'center' },
+        { title: "发票状态", width: 100, dataIndex: "fpzt", slot: 'fpzt', align: 'center' },
+        { title: "勾选时间", width: 100, dataIndex: "gxsj", slot: 'gxsj', align: 'center' },
         { title: "勾选人", width: 100, dataIndex: "createrName" },
         // {
         //   title: "操作",
@@ -116,13 +120,23 @@ export default {
           }
         },
       ],
-
+      isShow:true,
     };
   },
+  mounted(){
+    // this.$set(this.param,'skssq',moment(this.$route.query.skssq).format('YYYY-MM'))
+    // this.$set(this.param,'gfsbh',this.$route.query.nsrsbh);
+    // this.getListByUser();
+  },
   activated() {
-    this.param.skssq = moment(this.$route.query.skssq).format('YYYY-MM')
-    this.param.gfsbh = this.$route.query.nsrsbh
+   
+    this.$set(this.param,'skssq',moment(this.$route.query.skssq).format('YYYY-MM'))
+    this.$set(this.param,'gfsbh',this.$route.query.nsrsbh);
     this.getListByUser();
+    //this.param.skssq = moment(this.$route.query.skssq).format('YYYY-MM')
+    //this.param.gfsbh = this.$route.query.nsrsbh
+   
+    
   },
 
   computed: {
@@ -158,6 +172,7 @@ export default {
       }
     },
     getSearchParam(param) {
+      console.log(param)
       this.queryParam = param;
     },
     async exportInvoiceCheckStatistics() {
