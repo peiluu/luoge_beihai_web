@@ -178,7 +178,7 @@ export default {
     /* 获取主体 */
     async handleSelectList() {
       try {
-        const res = await getListByUser();
+        const res = await getListByUser({});
         if (res.code === "0") {
           this.typeOption = res.data.map((item) => {
             return {
@@ -187,7 +187,8 @@ export default {
               label: item.nsrmc + " " + item.nsrsbh,
             };
           });
-          this.searchForm.nsrsbh = data[0]?.nsrsbh || "";
+          this.searchForm.nsrsbh =res.data[0]?.nsrsbh || "";
+          this.handleSearch();
         }
       } catch (error) {
         throw(`Select NSRSBH error:${error}`)
@@ -198,8 +199,7 @@ export default {
   mounted() {
     this.handleSelectList();
     this.searchForm.time = this.getDateRangeByCondition(1);
-    
-    this.handleSearch();
+   
   },
   beforeCreate() {},
   beforeMount() {},
