@@ -12,7 +12,7 @@
       <template #myscope="row">
         <el-popover placement="left" trigger="hover" popper-class="customPopper">
           <template>
-            <el-button @click.stop="previewQr(row.data)" type="primary" v-if="isDisabled ===1 ">查看二维码 {{ isDisabled }}</el-button>
+            <el-button @click.stop="previewQr(row.data)" type="primary" v-if="isDisabled ===1 ">查看二维码 </el-button>
             <el-button @click.stop="previewPdf(row.data)" type="primary">查看</el-button>
             <el-button @click.stop="handleShare(row.data)" type="warning">分享</el-button>
             <el-button @click.stop="downLoadPdf(row.data)" type="info">下载</el-button>
