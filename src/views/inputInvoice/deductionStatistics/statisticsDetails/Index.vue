@@ -5,7 +5,7 @@
       :query="$route.query" />
 
     <form-list :columns="columns" :searchRow="searchList" :api="api" :param="param" :height="height"
-      @getSearchParam="getSearchParam" v-loading="loading" ref="list" v-if="isShow">
+      @getSearchParam="getSearchParam" v-loading="loading" ref="list" v-if="isShow" >
       <template #topTool>
         <div class="toolbar">
           <div class="toolbar-left" />
@@ -133,9 +133,6 @@ export default {
     this.$set(this.param,'skssq',moment(this.$route.query.skssq).format('YYYY-MM'))
     this.$set(this.param,'gfsbh',this.$route.query.nsrsbh);
     this.getListByUser();
-    //this.param.skssq = moment(this.$route.query.skssq).format('YYYY-MM')
-    //this.param.gfsbh = this.$route.query.nsrsbh
-   
     
   },
 
@@ -172,7 +169,7 @@ export default {
       }
     },
     getSearchParam(param) {
-      console.log(param)
+     
       this.queryParam = param;
     },
     async exportInvoiceCheckStatistics() {

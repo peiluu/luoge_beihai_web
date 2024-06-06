@@ -179,6 +179,8 @@ export default {
         { title: "提交时间", dataIndex: "lrrqq", slot: 'lrrqq', align: "center", width: 100, },
         { title: "冲红原因", dataIndex: "chyyDm", align: "center", slot: "chyyDm", width: 120, },
         { title: "开具状态", dataIndex: "ykjhzfpbz", align: "center", slot: "ykjhzfpbz" },
+        { title: "驳回原因", dataIndex: "bhyy", align: "center",  width: 120, },
+        { title: "失败原因", dataIndex: "kjsbyy", align: "center",  },
         { title: "操作", key: "action", fixed: "right", width: 80, scopedSlots: { customRender: "action" } }
       ],
       
