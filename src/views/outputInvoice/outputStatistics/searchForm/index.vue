@@ -124,7 +124,7 @@ export default {
 
     /* 重置 */
     handleRest() {
-      this.searchForm = { time: this.getDateRangeByCondition(1), fppz: "" };
+      this.searchForm = { time: this.getDateRangeByCondition(1), fppz: "",nsrsbh: "9143120071702048XN", };
       this.handleSearch();
     },
     /* 日期取值  1 2 3 4 5 */
