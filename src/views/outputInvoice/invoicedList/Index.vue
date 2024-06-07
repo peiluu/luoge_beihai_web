@@ -49,7 +49,7 @@
         <el-popover
           placement="right"
           width="650"
-          @after-enter="handleGetSendList"
+          @after-enter="()=> handleGetSendList(row.data)"
           trigger="hover">
           <el-table :data="sendTableData" v-loading="tableLoading">
             <el-table-column minWidth="180" property="fphm" label="发票号码" :show-overflow-tooltip="true"></el-table-column>
@@ -384,10 +384,11 @@ export default {
 
   methods: {
     /* 获取发送记录 */
-    async handleGetSendList(){
+    async handleGetSendList(row){
+      console.log(row,"-")
       this.tableLoading = true;
       try {
-        const res = await getSendList()
+        const res = await getSendList({fphm:row.fphm})
         if([0,'0'].includes(res.code)){
           this.sendTableData = res.data??[];
         }
