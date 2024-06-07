@@ -72,7 +72,7 @@ export default {
         const regex = /^[A-Z0-9]{15,20}$/;
        
         if((value??'')!=='' && !regex.test(value)){
-          callback(new Error('购买方纳税人识别号长度为15-20位,由数字和大写字母组成'));
+          callback(new Error('长度为15-20位,由数字和大写字母组成'));
         }else{
           callback();
         }
