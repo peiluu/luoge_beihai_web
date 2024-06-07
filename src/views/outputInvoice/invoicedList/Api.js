@@ -79,4 +79,4 @@ export const getQrUrl = data => postJSON(`${config.host}/invoiceUpload/getPdfUrl
 
 /* 获取发送记录 */
 
-export const getSendList = data => getJSON(`${config.host}/invoiceUpload/getPdfUrl`, data);
+export const getSendList = data => getJSON(`${config.host}/invoiceUpload/sendRecords`, data);
