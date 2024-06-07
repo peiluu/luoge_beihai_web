@@ -1,5 +1,5 @@
 // 数据字典
-import { postJSON, download } from '@/utils/request';
+import { postJSON, download,getJSON } from '@/utils/request';
 import { config } from "@/config"
 // 获取列表
 export const getList = data =>
@@ -76,3 +76,7 @@ export const repushBackJQ = data => postJSON(`${config.host}/invoiceUpload/backJ
  * @desption 重新推送
  */
 export const getQrUrl = data => postJSON(`${config.host}/invoiceUpload/getPdfUrl`, data);
+
+/* 获取发送记录 */
+
+export const getSendList = data => getJSON(`${config.host}/invoiceUpload/getPdfUrl`, data);

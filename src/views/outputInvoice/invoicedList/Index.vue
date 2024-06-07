@@ -49,8 +49,9 @@
         <el-popover
           placement="right"
           width="650"
+          @after-enter="handleGetSendList"
           trigger="hover">
-          <el-table :data="row.data?.sendRecords">
+          <el-table :data="sendTableData" v-loading="tableLoading">
             <el-table-column minWidth="180" property="fphm" label="发票号码" :show-overflow-tooltip="true"></el-table-column>
             <el-table-column minWidth="180" property="email" label="邮箱" :show-overflow-tooltip="true"></el-table-column>
             <el-table-column minWidth="180" property="sendTime" label="日期" :show-overflow-tooltip="true"></el-table-column>
@@ -130,9 +131,8 @@ import { isDistinction } from "@/config/setting.js";
 import { dateFormat, previewPdf } from "@/utils/tool";
 import FormList from '@/components/FormList.vue';
 import { outputFplxList } from '@/config/constant';
-import { invoiceUsedStatus, downLoadPdf, downLoadPdfZip, detailByOrgId, sendPdf, getOrgList, selectKpr, updateInvoiceOrgId, downLoadInvoiceList, downLoadListNoDetail, selectQyList, repushBackJQ } from './Api'
+import { getSendList, invoiceUsedStatus, downLoadPdf, downLoadPdfZip, detailByOrgId, sendPdf, getOrgList, selectKpr, updateInvoiceOrgId, downLoadInvoiceList, downLoadListNoDetail, selectQyList, repushBackJQ } from './Api'
 import lgQrCode from './qrCode/index.vue';
-
 export default {
   name: 'InvoicedList',
   components: { FormList,lgQrCode },
@@ -347,6 +347,8 @@ export default {
       queryParam: {},
       repushLoading: false,
       qrData:{},
+      sendTableData:[],
+      tableLoading:false,
     };
 
   },
@@ -381,6 +383,21 @@ export default {
   },
 
   methods: {
+    /* 获取发送记录 */
+    async handleGetSendList(){
+      this.tableLoading = true;
+      try {
+        const res = await getSendList()
+        if([0,'0'].includes(res.code)){
+          this.sendTableData = res.data??[];
+        }
+      } catch (error) {
+        throw(`Send List Error ${error}`)
+      }finally{
+        this.tableLoading = false;
+      }
+
+    },
     // 预览pdf
     previewPdf,
     async getOrgList() {

@@ -100,7 +100,7 @@ export default {
     },
     pageSizes: {
       type: Array,
-      default: ()=>[10, 20, 30, 40, 50, 100, 500, 1000],
+      default: ()=>[10, 20, 30, 40, 50, 100,],
     },
     pageLayout: {
       type: String,
