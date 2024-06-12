@@ -3556,7 +3556,7 @@ export default {
     if((this.query.cezslxDm??'') !==''){
       this.form.sfhs = "N"
     }
-    this.getTaxRates();
+    // this.getTaxRates();
     // if(this.query?.isType){
     //   this.$set(this.form,'sfhs','Y')
     // }
