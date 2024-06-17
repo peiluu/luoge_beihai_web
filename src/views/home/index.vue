@@ -81,8 +81,7 @@
     </div>
     <div class="tasks">
       <div class="tasks-l">
-        <div class="tasks-head">待办任务<span>共{{pageInfo.totalCount}}条</span></div>
-        <FormList
+        <div class="tasks-head">待办任务<span>共{{pageInfo.totalCount}}条</span></div><FormList
           :columns="columns"
           :api="api"
           :firstLoading="false"
@@ -984,6 +983,9 @@ p {
   border-top: none;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
+  /deep/ .custom-table {
+    padding: 0;
+  }
   /deep/ .el-table__body-wrapper {
     height: 110px;
     min-height: initial !important;
