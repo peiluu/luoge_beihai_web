@@ -61,6 +61,8 @@
 import Cookies from 'js-cookie';
 import debounce from 'lodash/debounce';
 import { getUUID, fnAddDynamicMenuRoutes } from '@/utils';
+import {passwordKey} from '@/config/setting.js';
+import CryptoJS from 'crypto-js';
 export default {
   data() {
     return {
@@ -99,9 +101,10 @@ export default {
           if (!valid) {
             return false;
           }
+          const encryptedPassword = this.encryptPassword(this.dataForm.password);
           this.loading = true;
           this.$http
-            .post('/login', this.dataForm)
+            .post('/login', {...this.dataForm,password:encryptedPassword})
             .then((res) => {
               if (res.code !== 0) {
                 this.loading = false;
@@ -118,6 +121,7 @@ export default {
             .catch((e) => {
               console.log(e);
               this.loading = false;
+              this.dataForm.password ='';
               this.$message.error(e.msg || '登录失败');
               this.getCaptcha();
             });
@@ -164,6 +168,16 @@ export default {
         })
         .catch(() => {});
     },
+    encryptPassword(password) {
+      // AES-128-ECB模式的密钥
+      const key = CryptoJS.enc.Utf8.parse(passwordKey);
+      const encrypted = CryptoJS.AES.encrypt(password, key, {
+        mode: CryptoJS.mode.ECB,
+        padding: CryptoJS.pad.Pkcs7
+      });
+      
+      return encrypted.toString();
+    }
   },
 };
 </script>

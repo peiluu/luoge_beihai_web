@@ -6,3 +6,5 @@ isDistinction为1,则：
 */
 export const isDistinction = 1;
 
+export const passwordKey = '2Ev7HV17x78xMwCW';
+

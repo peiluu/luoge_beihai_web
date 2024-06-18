@@ -15,6 +15,7 @@
     "babel-plugin-component": "^1.1.1",
     "babel-polyfill": "^6.26.0",
     "core-js": "^3.6.5",
+    "crypto-js": "^4.2.0",
     "echarts": "^5.3.2",
     "element-theme": "^2.0.1",
     "element-ui": "^2.15.7",
