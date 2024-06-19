@@ -103,7 +103,7 @@ export default {
       }
 
       // 判断是单个撤销还是批量撤销
-      const { id = '', shzt = '', uuid = '', hzfpxxqrdbh = '', hzqrxxztDm = '', xsfnsrsbh = '' } = this.singleCancelData || {}
+      const { id = '', shzt = '', uuid = '', hzfpxxqrdbh = '', hzqrxxztDm = '', xsfnsrsbh = '',gmfnsrsbh='' } = this.singleCancelData || {}
       const confirmList = this.singleCancelData ? [{
         bhyy: this.bhyy,
         shzt,
@@ -112,6 +112,7 @@ export default {
         uuid,
         hzqrxxztDm,
         xsfnsrsbh,
+        gmfnsrsbh,
       }] : this.selections.map((item) => {
 
         return {
@@ -122,6 +123,7 @@ export default {
           uuid: item.uuid,
           hzqrxxztDm: item.hzqrxxztDm,
           xsfnsrsbh: item.xsfnsrsbh,
+          gmfnsrsbh: item.gmfnsrsbh,
         }
       });
       this.dialogVisible = false;
