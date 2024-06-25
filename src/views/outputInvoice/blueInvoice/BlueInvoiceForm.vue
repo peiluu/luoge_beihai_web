@@ -402,6 +402,12 @@
                     >添加折扣</el-button
                   >
                 </el-popover>
+                <el-button
+                    style="margin-left: 10px"
+                    type="success"
+                    @click="handleBatchImport()"
+                    >批量添加</el-button
+                  >
                 <el-switch
                   :disabled="!isBlank(form.cezslxDm) || !canEdit" 
                   style="margin-left: 10px"
@@ -1473,6 +1479,8 @@
     </el-dialog>
     <app-add-theme :visible.sync="addVisible" v-if="addVisible"></app-add-theme>
     <app-use-theme :visible.sync="useVisible" v-if="useVisible"></app-use-theme>
+    <lg-important-batch v-if="importVisible" :visible.sync="importVisible" :import-data="importData" @handleOk="handleOk"
+    title="批量导入" width="26%"></lg-important-batch>
   </div>
 </template>
 
@@ -1489,7 +1497,8 @@ import AppUseTheme from './component/useTheme'
 import EditDown from './component/editDown'
 import VXETable from 'vxe-table';
 import { debounce } from '@/utils/tool.js';
-import blueAddCustom from './component/addCustom'
+import blueAddCustom from './component/addCustom';
+import lgImportantBatch from './component/importBatch/index.vue'
 //import { getArrayName } from '@/utils'
 export default {
   name: "BlueInvoiceForm",
@@ -1509,7 +1518,8 @@ export default {
     ProductProfileModal,
     AppAddTheme,
     AppUseTheme,
-    blueAddCustom
+    blueAddCustom,
+    lgImportantBatch
   },
   data() {
     const validatePass = (rule, value, callback) => {
@@ -1521,6 +1531,8 @@ export default {
       };
     return {
       api: require("./Api"),
+      importVisible:false,//批量弹窗
+      importData:{},
       canEdit: true,
       invisible: false,
       kysyed: "", //可用授信额度
@@ -2044,6 +2056,18 @@ export default {
     },
   },
   methods: {
+    /* 批量添加 */
+    handleBatchImport(){
+      this.importData.sfhs = this.form.sfhs;
+      this.importVisible = true;
+    },
+    /* 批量添加返回 */
+    handleOk(val){
+      console.log(val,"--")
+      if(val.length >0){
+          this.tableData = [...val]
+      }
+    },
     handleBlurXsfmc (e) {
       if( this.form.gmfzrrbz === 'Y' ){
         if(!/（个人）$/.test(e.value )){
