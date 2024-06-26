@@ -1555,6 +1555,7 @@ export default {
         { name: "建筑服务", value: "03", key: "jzfw" },
         { name: "不动产销售", value: "05", key: "bdcxs" },
         { name: "不动产经营租赁服务", value: "06", key: "bdczl" },
+        { name: "医疗服务（门诊）", value: "02", key: "ylfw" },
       ],
       tableData: [],
       //差额征税
@@ -2065,7 +2066,8 @@ export default {
     handleOk(val){
       console.log(val,"--")
       if(val.length >0){
-          this.tableData = [...val]
+          this.tableData = [...val];
+         // this.handleCalcTaxInclusive(this.form.sfhs)
       }
     },
     handleBlurXsfmc (e) {

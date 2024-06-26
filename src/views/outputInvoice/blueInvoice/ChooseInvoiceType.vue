@@ -35,6 +35,7 @@
         <el-option key="jzfw" label="建筑服务" value="03"></el-option>
         <el-option key="bdcxs" label="不动产销售" value="05"></el-option>
         <el-option key="bdczl" label="不动产经营租赁服务" value="06"></el-option>
+        <!-- <el-option key="ylfw" label="医疗服务（门诊）" value="02"></el-option> -->
       </el-select>
       </el-form-item>
       <el-form-item label="是否差额" prop="cezslxDm">
