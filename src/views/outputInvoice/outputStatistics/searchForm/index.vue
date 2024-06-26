@@ -4,7 +4,7 @@
       <el-card shadow="never">
         <el-row :gutter="10" :align="'middle'">
           <el-col :span="8">
-            <el-form-item label="活动名称">
+            <el-form-item label="日期范围">
               <el-date-picker
                 style="width: 100%"
                 v-model="searchForm.time"

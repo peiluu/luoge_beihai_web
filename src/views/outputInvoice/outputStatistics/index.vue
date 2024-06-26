@@ -34,7 +34,7 @@
               </div>
             </article>
             <article style="margin-top:20px">
-              <el-table :data="tableData" style="width: 100%" height="calc(100vh - 360px)" :border="true" ref="tableRef">
+              <el-table :data="tableData" style="width: 100%" height="calc(100vh - 360px)" :border="true" ref="tableRef" class="printableArea">
                 <el-table-column type="index" label="序号" width="50">
                 </el-table-column>
                 <el-table-column prop="name" label="项目名称" :resizable="true" :show-overflow-tooltip="true" :header-align="'center'" :align="'center'" width="160">
@@ -123,12 +123,22 @@ export default {
     },
     printTable() {
      
-      const printContent = this.$refs.tableRef.$el.outerHTML;
-      const originalContent = document.body.innerHTML;
-      document.body.innerHTML = printContent;
-      window.print();
-      document.body.innerHTML = originalContent;
+      //const printContent = this.$refs.tableRef.$el.outerHTML;
+      // const printContent = this.$refs.tableRef.innerHTML;
+      // const originalContent = document.body.innerHTML;
+      // const printArea = document.createElement('div');
+      // printArea.id = 'printArea';
+      // printArea.innerHTML = printContent;
+      // document.body.appendChild(printArea);
 
+      // const originalStyle = document.body.style.display;
+      // document.body.style.display = 'none';
+      // printArea.style.display = 'block';
+
+      window.print();
+
+      // document.body.style.display = originalStyle;
+      // document.body.removeChild(printArea);
       
     }
   },
@@ -148,5 +158,22 @@ export default {
 .statistic_main {
   display: flex;
   justify-content: space-around;
+}
+
+</style>
+<style>
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .printableArea, .printableArea * {
+    visibility: visible;
+  }
+  .printableArea {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
 }
 </style>
