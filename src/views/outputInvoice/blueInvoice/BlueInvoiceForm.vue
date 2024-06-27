@@ -872,6 +872,8 @@
                 </el-select>
               </el-form-item>
             </div>
+            <!-- 特定要素医疗门诊 -->
+            
             <!-- 特定要素-->
             <!-- 备注信息-->
             <div class="invoice-form-remark">
@@ -1555,7 +1557,9 @@ export default {
         { name: "建筑服务", value: "03", key: "jzfw" },
         { name: "不动产销售", value: "05", key: "bdcxs" },
         { name: "不动产经营租赁服务", value: "06", key: "bdczl" },
-        { name: "医疗服务（门诊）", value: "02", key: "ylfw" },
+        { name: "医疗服务（门诊）", value: "10", key: "ylfw(mz)" },
+        { name: "医疗服务（住院）", value: "11", key: "ylfw(zy)" },
+        { name: "农产品收购发票", value: "16", key: "ncpsg" },
       ],
       tableData: [],
       //差额征税

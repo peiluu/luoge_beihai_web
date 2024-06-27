@@ -83,29 +83,29 @@
 
             <el-table-column prop="rzzt" label="认证状态" minWidth="120" :header-align="'center'" :align="'center'">
               <template slot-scope="scope">
-                <span>{{ handleParesTableValue(`${scope.row.rzzt[1]}`, optionList.authenticationStatus) }}</span>
+                <span>{{ (scope.row?.rzzt??'')!==''?handleParesTableValue(`${scope.row?.rzzt[1]}`, optionList.authenticationStatus):'' }}</span>
               </template>
             </el-table-column>
 
             <el-table-column prop="fpzt" label="发票状态" minWidth="120" :header-align="'center'" :align="'center'">
               <template slot-scope="scope">
-                <span>{{ handleParesTableValue(scope.row.fpzt, optionList.invoiceStatus) }}</span>
+                <span>{{ handleParesTableValue(scope.row?.fpzt, optionList.invoiceStatus) }}</span>
               </template>
             </el-table-column>
             <el-table-column prop="sfycpz" label="异常凭证状态" minWidth="120" :header-align="'center'" :align="'center'">
               <template slot-scope="scope">
-                <span>{{ handleParesTableValue(scope.row.sfycpz, sfycpzOption) }}</span>
+                <span>{{ handleParesTableValue(scope.row?.sfycpz, sfycpzOption) }}</span>
               </template>
             </el-table-column>
             <el-table-column prop="sdzt" label="红字锁定标识" minWidth="120" :header-align="'center'" :align="'center'">
               <template slot-scope="scope">
-                <span>{{ handleParesTableValue(scope.row.sdzt, [{ label: '已锁定', value: 'Y' }, { label: '未锁定', value: 'N' }])
+                <span>{{ handleParesTableValue(scope.row?.sdzt, [{ label: '已锁定', value: 'Y' }, { label: '未锁定', value: 'N' }])
                   }}</span>
               </template>
             </el-table-column>
             <el-table-column prop="hxyt" label="发票用途" minWidth="120" :header-align="'center'" :align="'center'">
               <template slot-scope="scope">
-                <span>{{ handleParesTableValue(scope.row.hxyt, optionList.invoiceUse) }}</span>
+                <span>{{ handleParesTableValue(scope.row?.hxyt, optionList.invoiceUse) }}</span>
               </template>
             </el-table-column>
             <el-table-column prop="srzzt" label="入账状态" minWidth="180" :header-align="'center'" :align="'center'">
@@ -116,14 +116,14 @@
             </el-table-column>
             <el-table-column prop="spzt" label="收票状态" minWidth="120" :header-align="'center'" :align="'center'">
               <template slot-scope="scope">
-                <span>{{ handleParesTableValue(scope.row.spzt, optionList.collectTicketStatus) }}</span>
+                <span>{{ handleParesTableValue(scope.row?.spzt, optionList.collectTicketStatus) }}</span>
               </template>
             </el-table-column>
             <el-table-column prop="sprq" label="收票日期" minWidth="120" :header-align="'center'" :align="'center'">
             </el-table-column>
             <el-table-column prop="zczt" label="转出状态" minWidth="120" :header-align="'center'" :align="'center'">
               <template slot-scope="scope">
-                <span>{{ handleParesTableValue(scope.row.zczt, optionList.rollOntStatus) }}</span>
+                <span>{{ handleParesTableValue(scope.row?.zczt, optionList.rollOntStatus) }}</span>
               </template>
             </el-table-column>
             <el-table-column prop="yfphm" label="原发票号码" minWidth="120" :header-align="'center'" :align="'center'">
@@ -336,9 +336,10 @@ export default {
       try {
         const res = await getPoolInvoiceList(parmas);
         if ([0, '0'].includes(res.code)) {
+          console.log(res.data,"-=-=-")
           this.tableData = [...res.data];
           this.total = res.totalCount;
-          this.$refs.tableRef.doLayout();
+          //this.$refs.tableRef.doLayout();
         }
       } finally {
         this.loading = false
@@ -513,10 +514,13 @@ export default {
       this.handleGetTableList()
     },
     handleParesTableValue(val, option) {
+      console.log(val,"0098")
       if (option.length <= 0 || (val ?? '') === '') {
+        console.log(val,"0099")
         return ''
       } else {
-        return option.find(k => k.value === val).label
+        console.log(val,"00100")
+        return option.find(k => k.value === val)?.label || ''
       }
     },
     refDoLayout(b) {
