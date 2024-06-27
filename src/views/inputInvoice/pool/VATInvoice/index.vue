@@ -83,7 +83,7 @@
 
             <el-table-column prop="rzzt" label="认证状态" minWidth="120" :header-align="'center'" :align="'center'">
               <template slot-scope="scope">
-                <span>{{ handleParesTableValue(`${scope.row.rzzt[1]}`, optionList.authenticationStatus) }}</span>
+                <span>{{ (scope.row.rzzt??'')!==''?handleParesTableValue(`${scope.row.rzzt[1]}`, optionList.authenticationStatus):'' }}</span>
               </template>
             </el-table-column>
 
