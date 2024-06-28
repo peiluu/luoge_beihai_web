@@ -472,6 +472,7 @@
                     type="seq"
                     min-width="50"
                     title="序号"
+
                   ></vxe-column>
                   <!--<vxe-column field="fphxz" min-width="50">
                     <template #default="{row, rowIndex, $rowIndex}">
@@ -873,7 +874,121 @@
               </el-form-item>
             </div>
             <!-- 特定要素医疗门诊 -->
-            
+             <div
+              v-else-if="form.tdys == '10'"
+              class="invoice-form-remark"
+              style="border-bottom: 2px solid #a15f3b"
+            >
+              <div class="remark-title">
+                <div class="remark-left">特定信息-医疗服务（门诊）</div>
+              </div>
+              <el-form-item label="业务流水号" prop="ylywlsh">
+                <el-input  
+                v-model="form.ylywlsh"
+                  placeholder='请输入业务流水号'></el-input>
+              </el-form-item>
+              <el-form-item label="门诊号" prop="mzh">
+                <el-input  
+                v-model="form.mzh"
+                  placeholder='请输入门诊号'></el-input>
+              </el-form-item>
+              <el-form-item label="就诊时间" prop="mzjzsj">
+                <el-date-picker
+                  v-model="form.mzjzsj"
+                  format="yyyy-MM-dd HH:mm:ss"
+                  type="datetime"
+                  style="width:100%"
+                  placeholder="选择日期时间">
+                </el-date-picker>
+                </el-form-item>
+              <el-form-item label="医疗机构类型" >
+                <el-select style="width:100%" class="form-inline-input" v-model="form.yljglxDm">
+                  <el-option
+                    key="1"
+                    label="平方千米"
+                    value="平方千米"
+                  ></el-option>
+                  <el-option key="2" label="平方米" value="平方米"></el-option>
+                  <el-option key="3" label="孔公里" value="孔公里"></el-option>
+                  <el-option key="4" label="公顷" value="公顷"></el-option>
+                  <el-option key="5" label="亩" value="亩"></el-option>
+                  <el-option key="6" label="hm²" value="hm²"></el-option>
+                  <el-option key="7" label="km²" value="km²"></el-option>
+                  <el-option key="8" label="㎡" value="㎡"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="其他医疗机构类型" >
+                <el-input  
+                v-model="form.tyljglx"
+                  placeholder='请填写上述医疗机构类型代码没有的类型'></el-input>
+              </el-form-item>
+              <el-form-item label="医保类型代码" >
+                <el-select style="width:100%" class="form-inline-input" v-model="form.yblxDm">
+                  <el-option
+                    key="1"
+                    label="平方千米"
+                    value="平方千米"
+                  ></el-option>
+                  <el-option key="2" label="平方米" value="平方米"></el-option>
+                  <el-option key="3" label="孔公里" value="孔公里"></el-option>
+                  <el-option key="4" label="公顷" value="公顷"></el-option>
+                  <el-option key="5" label="亩" value="亩"></el-option>
+                  <el-option key="6" label="hm²" value="hm²"></el-option>
+                  <el-option key="7" label="km²" value="km²"></el-option>
+                  <el-option key="8" label="㎡" value="㎡"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="其他医保类型" >
+                <el-input  
+                v-model="form.tyblx"
+                  placeholder='请填写上述医保类型代码没有的类型'></el-input>
+              </el-form-item>
+              <el-form-item label="医保编号" prop="mjdw">
+                <el-input  
+                v-model="form.tyblx"
+                  placeholder='请填写医保编号'></el-input>
+              </el-form-item>
+              <el-form-item label="性别" prop="xbDm">
+                <el-select style="width:100%" class="form-inline-input" v-model="form.xbDm">
+                  <el-option
+                    key="1"
+                    label="平方千米"
+                    value="平方千米"
+                  ></el-option>
+                  <el-option key="2" label="平方米" value="平方米"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="医保统筹基金支付" >
+                <el-input  
+                v-model="form.ybtcjjzfje"
+                  placeholder='请填写医保统筹基金支付'></el-input>
+              </el-form-item>
+              <el-form-item label="其他支付" >
+                <el-input  
+                v-model="form.tzfje"
+                  placeholder='请填写其他支付'></el-input>
+              </el-form-item>
+              <el-form-item label="个人账户支付" >
+                <el-input  
+                v-model="form.grzhzfje"
+                  placeholder='请填写个人账户支付'></el-input>
+              </el-form-item>
+              <el-form-item label="个人现金支付" >
+                <el-input  
+                v-model="form.rxjzfje"
+                  placeholder='个人现金支付'></el-input>
+              </el-form-item>
+              <el-form-item label="个人自付" >
+                <el-input  
+                v-model="form.grzfje"
+                  placeholder='个人自付'></el-input>
+              </el-form-item>
+              <el-form-item label="个人自费" >
+                <el-input  
+                v-model="form.grzfje1"
+                  placeholder='请填写个人自费'></el-input>
+              </el-form-item>
+            </div>
             <!-- 特定要素-->
             <!-- 备注信息-->
             <div class="invoice-form-remark">

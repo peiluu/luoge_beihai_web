@@ -302,7 +302,7 @@
             break;
           }
           case '02':{
-            generalKey = ['10','11','16'];
+            generalKey = ['10','11','16','03','05','06'];
             break;
           }
           default:{

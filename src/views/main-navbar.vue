@@ -41,7 +41,8 @@
 <script>
 import screenfull from 'screenfull'
 import UpdatePassword from './main-navbar-update-password'
-import { clearLoginInfo } from '@/utils'
+import { clearLoginInfo } from '@/utils';
+import { mapActions, mapGetters } from 'vuex';
 export default {
   inject: ['refresh'],
   data () {
@@ -54,6 +55,7 @@ export default {
     UpdatePassword
   },
   methods: {
+    ...mapActions('user', ['fetchDictionariesData', 'clearDictionariesData']),
     // 全屏
     fullscreenHandle () {
       if (!screenfull.enabled) {
@@ -84,6 +86,7 @@ export default {
             return this.$message.error(res.msg)
           }
           clearLoginInfo()
+          this.clearDictionariesData();
           this.$router.push({ name: 'login' })
         }).catch(() => {})
       }).catch(() => {})

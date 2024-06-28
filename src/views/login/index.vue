@@ -63,6 +63,7 @@ import debounce from 'lodash/debounce';
 import { getUUID, fnAddDynamicMenuRoutes } from '@/utils';
 import {passwordKey} from '@/config/setting.js';
 import CryptoJS from 'crypto-js';
+import { mapActions, mapGetters } from 'vuex';
 export default {
   data() {
     return {
@@ -89,6 +90,7 @@ export default {
     this.getCaptcha();
   },
   methods: {
+    ...mapActions('user', ['fetchDictionariesData', 'clearDictionariesData']),
     // 获取验证码
     getCaptcha() {
       this.dataForm.uuid = getUUID();
@@ -117,6 +119,7 @@ export default {
               // 登录成功后获取菜单
               this.getMenus(roleList);
               this.getDicts();
+              this.fetchDictionariesData();
             })
             .catch((e) => {
               console.log(e);
