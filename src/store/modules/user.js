@@ -3,7 +3,8 @@ import {
 	getOne,
 	postOne,
 	deleteOne,
-	postJSON
+	postJSON,
+	getJSON
 	} from '@/utils/request.js'
 export default {
 	namespaced: true,
@@ -47,7 +48,7 @@ export default {
 		/* 请求获取字典数据 */
 		async fetchDictionariesData({ commit }) {
 			try {
-			  const response = await postJSON(`${config.hostUser}/sys/dict/type/all`,);
+			  const response = await getJSON(`${config.hostUser}/sys/dict/type/all`,);
 			  console.log(response,"dict")
 			  commit('SET_DICTIONARIES_DATA', response.data);
 			} catch (error) {
