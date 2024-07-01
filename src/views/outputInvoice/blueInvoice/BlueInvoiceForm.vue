@@ -902,19 +902,14 @@
                 </el-date-picker>
                 </el-form-item>
               <el-form-item label="医疗机构类型" >
-                <el-select style="width:100%" class="form-inline-input" v-model="form.yljglxDm">
+                <el-select style="width:100%" class="form-inline-input" v-model="form.yljglxDm" clearable filterable> 
+                  <!-- yljglxDmOption -->
                   <el-option
-                    key="1"
-                    label="平方千米"
-                    value="平方千米"
-                  ></el-option>
-                  <el-option key="2" label="平方米" value="平方米"></el-option>
-                  <el-option key="3" label="孔公里" value="孔公里"></el-option>
-                  <el-option key="4" label="公顷" value="公顷"></el-option>
-                  <el-option key="5" label="亩" value="亩"></el-option>
-                  <el-option key="6" label="hm²" value="hm²"></el-option>
-                  <el-option key="7" label="km²" value="km²"></el-option>
-                  <el-option key="8" label="㎡" value="㎡"></el-option>
+                    v-for="item in yljglxDmOption"
+                    :key="item.dictValue"
+                    :label="item.dictLabel"
+                    :value="item.dictValue">
+                  </el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="其他医疗机构类型" >
@@ -923,19 +918,14 @@
                   placeholder='请填写上述医疗机构类型代码没有的类型'></el-input>
               </el-form-item>
               <el-form-item label="医保类型代码" >
-                <el-select style="width:100%" class="form-inline-input" v-model="form.yblxDm">
+                <el-select style="width:100%" class="form-inline-input" v-model="form.yblxDm" clearable filterable>
+                  <!-- yblxDmOption -->
                   <el-option
-                    key="1"
-                    label="平方千米"
-                    value="平方千米"
-                  ></el-option>
-                  <el-option key="2" label="平方米" value="平方米"></el-option>
-                  <el-option key="3" label="孔公里" value="孔公里"></el-option>
-                  <el-option key="4" label="公顷" value="公顷"></el-option>
-                  <el-option key="5" label="亩" value="亩"></el-option>
-                  <el-option key="6" label="hm²" value="hm²"></el-option>
-                  <el-option key="7" label="km²" value="km²"></el-option>
-                  <el-option key="8" label="㎡" value="㎡"></el-option>
+                    v-for="item in yblxDmOption"
+                    :key="item.dictValue"
+                    :label="item.dictLabel"
+                    :value="item.dictValue">
+                  </el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="其他医保类型" >
@@ -949,13 +939,14 @@
                   placeholder='请填写医保编号'></el-input>
               </el-form-item>
               <el-form-item label="性别" prop="xbDm">
-                <el-select style="width:100%" class="form-inline-input" v-model="form.xbDm">
+                <el-select style="width:100%" class="form-inline-input" v-model="form.xbDm" clearable>
+                  <!-- genderOption -->
                   <el-option
-                    key="1"
-                    label="平方千米"
-                    value="平方千米"
-                  ></el-option>
-                  <el-option key="2" label="平方米" value="平方米"></el-option>
+                    v-for="item in genderOption"
+                    :key="item.dictValue"
+                    :label="item.dictLabel"
+                    :value="item.dictValue">
+                  </el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="医保统筹基金支付" >
@@ -1602,7 +1593,7 @@
 </template>
 
 <script>
-import { getArrayName } from '@/utils'
+import { getArrayName,getDictionary } from '@/utils'
 import { numToCny } from "@/utils/tool";
 import Step from "@/components/Step.vue";
 import HouseInfoDlg from "./HouseInfoDlg.vue";
@@ -1654,6 +1645,9 @@ export default {
       invisible: false,
       kysyed: "", //可用授信额度
       loading: false,
+      genderOption:getDictionary('gender')?.dataList,//性别下拉
+      yljglxDmOption:getDictionary('yljglx')?.dataList,//医疗机构类型下拉数据
+      yblxDmOption:getDictionary('yblx')?.dataList,//医保类型下拉数据
       //
       mideaInfo: {
         orgid: "",
@@ -3709,6 +3703,7 @@ export default {
   //   console.log(this.query,"3")
   // },
   mounted() {
+    console.log(this.genderOption,"_+_")
     if(!this.$route.query.isFormInvoiced){
       this.init()
     }

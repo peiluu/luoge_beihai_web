@@ -23,7 +23,7 @@ export default {
 			return state.taxpayerInfo.nsrsbm;
 		},
 		/* 字典数据获取 */
-		dictionariesData: (state) => state.dictionariesData
+		getDictionaries: (state) => state.dictionariesData
 	},
 
 	mutations: {
