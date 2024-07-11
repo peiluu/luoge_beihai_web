@@ -129,8 +129,8 @@
           {label:'建筑服务',value:'03',key:'jzfw'},
           {label:'不动产销售',value:'05',key:'bdcxs'},
           {label:'不动产经营租赁服务',value:'06',key:'bdczl'},
-          {label:'医疗服务（门诊）',value:'10',key:'ylfw(mz)'},
-          // {label:'医疗服务（住院）',value:'11',key:'ylfw(zy)'},
+          {label:'医疗服务（门诊）',value:'11',key:'ylfw(mz)'},
+          // {label:'医疗服务（住院）',value:'10',key:'ylfw(zy)'},
           {label:'农产品收购发票',value:'16',key:'ncpsg'},
         ],
         fppzOption:[

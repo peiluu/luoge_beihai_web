@@ -481,7 +481,7 @@
                   </vxe-column>-->
                   <vxe-column
                     field="xmmc"
-                    min-width="290"
+                    min-width="260"
                     title="项目名称"
                     :edit-render="{name: 'EditDown'}"
                   >
@@ -520,14 +520,14 @@
                       }}</span>
                       <span v-else
                         ><el-tag type="danger">折扣</el-tag
-                        >{{ row.hwhyslwfwmc }}</span
-                      >
+                        >{{ row.hwhyslwfwmc }}</span>
                     </template>
                   </vxe-column>
-                  <vxe-column
+                  <vxe-column 
+                  
                     min-width="120"
-                    field="ggxh"
-                    title="规格型号"
+                    :field="form.tdys === '11'?'fymx':'ggxh'"
+                    :title="form.tdys === '11'?'费用明细':'规格型号'"
                     :edit-render="{name: '$input'}"
                   >
                     <template #edit="{ row, rowIndex, $rowIndex }">
@@ -538,13 +538,14 @@
                           form.tdys == '06' ||
                           !canEdit
                         "
-                        v-model="row.ggxh"
+                        v-model="row[form.tdys === '11'?'fymx':'ggxh']"
                         type="text"
                         v-if="row.fphxz == '00'"
                       ></vxe-input>
-                      <span v-else>{{ row.ggxh }}</span>
+                      <span v-else>{{ row[form.tdys === '11'?'fymx':'ggxh'] }}</span>
                     </template>
                   </vxe-column>
+                 
                   <vxe-column
                     min-width="80"
                     field="dw"
@@ -590,6 +591,7 @@
                       form.sfhs == 'Y' ? '单价（含税）' : '单价（不含税）'
                     "
                     :edit-render="{name: '$input'}"
+                    :visible="form.tdys !== '11'"
                   >
                     <template #edit="{ row, rowIndex, $rowIndex }">
                       <vxe-input
@@ -661,6 +663,50 @@
                           : row.se
                       }}
                     </template>
+                  </vxe-column>
+                  <vxe-column 
+                  min-width="140"
+                  field="ylfwgbm"
+                  title="医疗服务贯标码"
+                  :edit-render="{name: '$input'}"
+                  :visible="form.tdys === '11'"
+                >
+                  <template #edit="{ row, rowIndex, $rowIndex }">
+                    <vxe-input
+                      :disabled="
+                        form.tdys == '03' ||
+                        form.tdys == '05' ||
+                        form.tdys == '06' ||
+                        !canEdit
+                      "
+                      v-model="row['ylfwgbm']"
+                      type="text"
+                      v-if="row.fphxz == '00'"
+                    ></vxe-input>
+                    <span v-else>{{ row['ylfwgbm'] }}</span>
+                  </template>
+                  </vxe-column>
+                  <vxe-column 
+                  min-width="80"
+                  field="qt"
+                  title="其它"
+                  :edit-render="{name: '$input'}"
+                  :visible="form.tdys === '11'"
+                >
+                  <template #edit="{ row, rowIndex, $rowIndex }">
+                    <vxe-input
+                      :disabled="
+                        form.tdys == '03' ||
+                        form.tdys == '05' ||
+                        form.tdys == '06' ||
+                        !canEdit
+                      "
+                      v-model="row['qt']"
+                      type="text"
+                      v-if="row.fphxz == '00'"
+                    ></vxe-input>
+                    <span v-else>{{ row['qt'] }}</span>
+                  </template>
                   </vxe-column>
                 </vxe-table>
               </div>
@@ -875,112 +921,16 @@
             </div>
             <!-- 特定要素医疗门诊 -->
              <div
-              v-else-if="form.tdys == '10'"
+              v-else-if="form.tdys == '11'"
               class="invoice-form-remark"
               style="border-bottom: 2px solid #a15f3b"
             >
               <div class="remark-title">
                 <div class="remark-left">特定信息-医疗服务（门诊）</div>
               </div>
-              <el-form-item label="业务流水号" prop="ylywlsh">
-                <el-input  
-                v-model="form.ylywlsh"
-                  placeholder='请输入业务流水号'></el-input>
-              </el-form-item>
-              <el-form-item label="门诊号" prop="mzh">
-                <el-input  
-                v-model="form.mzh"
-                  placeholder='请输入门诊号'></el-input>
-              </el-form-item>
-              <el-form-item label="就诊时间" prop="mzjzsj">
-                <el-date-picker
-                  v-model="form.mzjzsj"
-                  format="yyyy-MM-dd HH:mm:ss"
-                  type="datetime"
-                  style="width:100%"
-                  placeholder="选择日期时间">
-                </el-date-picker>
-                </el-form-item>
-              <el-form-item label="医疗机构类型" >
-                <el-select style="width:100%" class="form-inline-input" v-model="form.yljglxDm" clearable filterable> 
-                  <!-- yljglxDmOption -->
-                  <el-option
-                    v-for="item in yljglxDmOption"
-                    :key="item.dictValue"
-                    :label="item.dictLabel"
-                    :value="item.dictValue">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="其他医疗机构类型" >
-                <el-input  
-                v-model="form.tyljglx"
-                  placeholder='请填写上述医疗机构类型代码没有的类型'></el-input>
-              </el-form-item>
-              <el-form-item label="医保类型代码" >
-                <el-select style="width:100%" class="form-inline-input" v-model="form.yblxDm" clearable filterable>
-                  <!-- yblxDmOption -->
-                  <el-option
-                    v-for="item in yblxDmOption"
-                    :key="item.dictValue"
-                    :label="item.dictLabel"
-                    :value="item.dictValue">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="其他医保类型" >
-                <el-input  
-                v-model="form.tyblx"
-                  placeholder='请填写上述医保类型代码没有的类型'></el-input>
-              </el-form-item>
-              <el-form-item label="医保编号" prop="mjdw">
-                <el-input  
-                v-model="form.tyblx"
-                  placeholder='请填写医保编号'></el-input>
-              </el-form-item>
-              <el-form-item label="性别" prop="xbDm">
-                <el-select style="width:100%" class="form-inline-input" v-model="form.xbDm" clearable>
-                  <!-- genderOption -->
-                  <el-option
-                    v-for="item in genderOption"
-                    :key="item.dictValue"
-                    :label="item.dictLabel"
-                    :value="item.dictValue">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="医保统筹基金支付" >
-                <el-input  
-                v-model="form.ybtcjjzfje"
-                  placeholder='请填写医保统筹基金支付'></el-input>
-              </el-form-item>
-              <el-form-item label="其他支付" >
-                <el-input  
-                v-model="form.tzfje"
-                  placeholder='请填写其他支付'></el-input>
-              </el-form-item>
-              <el-form-item label="个人账户支付" >
-                <el-input  
-                v-model="form.grzhzfje"
-                  placeholder='请填写个人账户支付'></el-input>
-              </el-form-item>
-              <el-form-item label="个人现金支付" >
-                <el-input  
-                v-model="form.rxjzfje"
-                  placeholder='个人现金支付'></el-input>
-              </el-form-item>
-              <el-form-item label="个人自付" >
-                <el-input  
-                v-model="form.grzfje"
-                  placeholder='个人自付'></el-input>
-              </el-form-item>
-              <el-form-item label="个人自费" >
-                <el-input  
-                v-model="form.grzfje1"
-                  placeholder='请填写个人自费'></el-input>
-              </el-form-item>
+              <lg-medical-clinic ref="medicalClinicRef" :data-source.sync="form.ylmztdys"></lg-medical-clinic>
             </div>
-            <!-- 特定要素-->
+            <!-- 特定要素 end-->
             <!-- 备注信息-->
             <div class="invoice-form-remark">
               <div class="remark-title">
@@ -1606,7 +1556,9 @@ import EditDown from './component/editDown'
 import VXETable from 'vxe-table';
 import { debounce } from '@/utils/tool.js';
 import blueAddCustom from './component/addCustom';
-import lgImportantBatch from './component/importBatch/index.vue'
+import lgImportantBatch from './component/importBatch/index.vue';
+import lgMedicalClinic from './component/medicalClinic/index.vue'
+
 //import { getArrayName } from '@/utils'
 export default {
   name: "BlueInvoiceForm",
@@ -1627,7 +1579,8 @@ export default {
     AppAddTheme,
     AppUseTheme,
     blueAddCustom,
-    lgImportantBatch
+    lgImportantBatch,
+    lgMedicalClinic
   },
   data() {
     const validatePass = (rule, value, callback) => {
@@ -1645,9 +1598,6 @@ export default {
       invisible: false,
       kysyed: "", //可用授信额度
       loading: false,
-      genderOption:getDictionary('gender')?.dataList,//性别下拉
-      yljglxDmOption:getDictionary('yljglx')?.dataList,//医疗机构类型下拉数据
-      yblxDmOption:getDictionary('yblx')?.dataList,//医保类型下拉数据
       //
       mideaInfo: {
         orgid: "",
@@ -1666,8 +1616,8 @@ export default {
         { name: "建筑服务", value: "03", key: "jzfw" },
         { name: "不动产销售", value: "05", key: "bdcxs" },
         { name: "不动产经营租赁服务", value: "06", key: "bdczl" },
-        { name: "医疗服务（门诊）", value: "10", key: "ylfw(mz)" },
-        { name: "医疗服务（住院）", value: "11", key: "ylfw(zy)" },
+        { name: "医疗服务（门诊）", value: "11", key: "ylfw(mz)" },
+        { name: "医疗服务（住院）", value: "10", key: "ylfw(zy)" },
         { name: "农产品收购发票", value: "16", key: "ncpsg" },
       ],
       tableData: [],
@@ -2170,6 +2120,10 @@ export default {
     },
   },
   methods: {
+    /* 特定要素-医疗门诊-添加省自定义要素 */
+    handleAddCounst(){
+      console.log("do I")
+    },
     /* 批量添加 */
     handleBatchImport(){
       this.importData.sfhs = this.form.sfhs;
@@ -3371,6 +3325,9 @@ export default {
       let that = this;
       that.saving = true;
       delete that.form.fpqqlsh;
+      if(this.form.tdys === '11' && !this.handleValid()){
+        return
+      }
       //  let tableData = this.$refs.xTable.getTableData().tableData;
       if (this.tableData.length <= 0) {
         that.$notify({
@@ -3549,6 +3506,11 @@ export default {
       setTimeout(() => {
         that.saving = false;
       }, 1000);
+     
+    },
+   async handleValid(){
+      const medicalClinicValid = await this.$refs.medicalClinicRef.validateForm();
+      return medicalClinicValid
     },
     //初始化省
     initDistrictDict() {
