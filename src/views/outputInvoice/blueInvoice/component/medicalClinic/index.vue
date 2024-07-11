@@ -165,8 +165,8 @@ export default {
         editableIndex: -1,
         editableLabels: [],
         form:{
-         
-            sszdyysList:[
+          ylywlsh:'',
+          sszdyysList:[
                 {
                     "sszdyysxh": 1,
                     "sszdyysmc": '省自定义要素(点击编辑)',
@@ -204,7 +204,7 @@ export default {
   },
   methods: {
     handleInit(data){
-      if(data.sszdyysList && data.sszdyysList.length <=0){
+      if(data.sszdyysList && data.sszdyysList.length <=0 || (Object.keys(data).length <=0)){
         data.sszdyysList.push({
             "sszdyysxh": 1,
             "sszdyysmc": '省自定义要素(点击编辑)',
