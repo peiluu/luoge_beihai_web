@@ -42,13 +42,13 @@
       </el-select>
       </el-form-item>
       <el-form-item label="是否差额" prop="cezslxDm">
-        <el-select :disabled="!isBlank(form.jazs) || form.tdys === '10'"  class="form-inline-input" v-model="form.cezslxDm" size="small" clearable>
+        <el-select :disabled="!isBlank(form.jazs) || ['10','11'].includes(form.tdys) "  class="form-inline-input" v-model="form.cezslxDm" size="small" clearable>
           <el-option key="qekp" label="差额征税-全额开票" value="01"></el-option>
           <el-option key="cekp" label="差额征税-差额开票" value="02"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="是否减按征税" prop="jazs">
-        <el-select :disabled="isBlank(form.fppz) || form.tdys=='03' || form.tdys=='05'|| !isBlank(form.cezslxDm) || form.tdys === '10'"  class="form-inline-input" v-model="form.jazs" size="small" clearable>
+        <el-select :disabled="isBlank(form.fppz) || form.tdys=='03' || form.tdys=='05'|| !isBlank(form.cezslxDm) || ['10','11'].includes(form.tdys)"  class="form-inline-input" v-model="form.jazs" size="small" clearable>
           <el-option v-if="form.fppz=='02' && isBlank(form.tdys)" key="gdzc" label="销售自己使用过的固定资产" value="01"></el-option>
           <el-option key="zfzl" label="住房租赁" value="02"></el-option>
         </el-select>
@@ -130,7 +130,7 @@
           {label:'不动产销售',value:'05',key:'bdcxs'},
           {label:'不动产经营租赁服务',value:'06',key:'bdczl'},
           {label:'医疗服务（门诊）',value:'11',key:'ylfw(mz)'},
-          // {label:'医疗服务（住院）',value:'10',key:'ylfw(zy)'},
+          {label:'医疗服务（住院）',value:'10',key:'ylfw(zy)'},
           {label:'农产品收购发票',value:'16',key:'ncpsg'},
         ],
         fppzOption:[
