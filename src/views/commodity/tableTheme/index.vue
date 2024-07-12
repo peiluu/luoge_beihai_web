@@ -37,6 +37,7 @@
                 <span style="font-size:12px">当前项目商品分类名称:<span style="font-weight:bold;font-size:14px">{{ commodityName }}</span></span>
               </article>
                 <article >
+                  <!-- <el-button type="primary" @click="handleImportBatch">批量导入</el-button> -->
                     <el-button type="primary" @click="handleAddCommondity">新增</el-button>
                     <!-- <el-button type="primary">导入</el-button>
                     <el-button type="primary">导出</el-button> -->
@@ -115,6 +116,35 @@
     :title="title" :row-data="rowData"
     @saveDone="handleSaveDone"
     width="75%" ></app-add-commodity>
+    <!--<article >
+      <el-dialog
+      title="商品明细批量导入"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose">
+       <article>
+        <div>
+          <el-button type="text">下载模板</el-button>
+        </div>
+        <div style="text-align:center">
+          <el-upload
+          class="upload-demo"
+          drag
+          action="https://jsonplaceholder.typicode.com/posts/"
+          multiple>
+          <i class="el-icon-upload"></i>
+          <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+          <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
+        </el-upload>
+        </div>
+      </article>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      </span>
+</el-dialog>
+
+    </article> -->
   </div>
 </template>
 
@@ -141,6 +171,7 @@ export default {
   components: {AppAddCommodity},
   data() {
     return {
+      // dialogVisible:false,
       tableData: [],
       page: {
         currentPage: 1,
@@ -295,7 +326,11 @@ export default {
           this.taxOption = res.data.map(k=> {return {...k,label:k.mc,value:k.slzf}});
         }
       })
-    }
+    },
+    /* 批量导入 */
+    // handleImportBatch(){
+    //   this.dialogVisible = true;
+    // },
   },
   created() {
     this.handlerGetTaxRateLIst();

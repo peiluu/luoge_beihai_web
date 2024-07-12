@@ -723,6 +723,20 @@
                 }}</span>
               </div>
             </div>
+            <!-- 医疗住院收费详情 -->
+            <div
+              v-if="form.tdys == '10'"
+              class="invoice-form-remark"
+              style="border-bottom: 2px solid #a15f3b"
+            >
+                <div class="remark-title">
+                  <div class="remark-left">医疗住院-收费详情</div>
+                </div>
+                <div>
+                  <lg-pay-fees></lg-pay-fees>
+                </div>
+            </div>
+            <!-- 医疗住院收费详情 end-->
             <!-- 特定要素-->
             <div
               v-if="form.tdys == '03'"
@@ -918,6 +932,17 @@
                   <el-option key="8" label="㎡" value="㎡"></el-option>
                 </el-select>
               </el-form-item>
+            </div>
+             <!-- 特定要素医疗住院 -->
+             <div
+              v-else-if="form.tdys == '10'"
+              class="invoice-form-remark"
+              style="border-bottom: 2px solid #a15f3b"
+            >
+              <div class="remark-title">
+                <div class="remark-left">特定信息-医疗服务（住院）</div>
+              </div>
+              <lg-medical-hospitalization :data-source.sync="form.ylmztdys"></lg-medical-hospitalization>
             </div>
             <!-- 特定要素医疗门诊 -->
              <div
@@ -1557,7 +1582,9 @@ import VXETable from 'vxe-table';
 import { debounce } from '@/utils/tool.js';
 import blueAddCustom from './component/addCustom';
 import lgImportantBatch from './component/importBatch/index.vue';
-import lgMedicalClinic from './component/medicalClinic/index.vue'
+import lgMedicalClinic from './component/medicalClinic/index.vue';
+import lgMedicalHospitalization from './component/medicalHospitalization/index.vue';
+import lgPayFees from './component/medicalHospitalization/payFees/index.vue'
 
 //import { getArrayName } from '@/utils'
 export default {
@@ -1580,7 +1607,9 @@ export default {
     AppUseTheme,
     blueAddCustom,
     lgImportantBatch,
-    lgMedicalClinic
+    lgMedicalClinic,
+    lgMedicalHospitalization,
+    lgPayFees
   },
   data() {
     const validatePass = (rule, value, callback) => {
