@@ -20,7 +20,7 @@
           <el-date-picker
             v-model="form.zysjq"
             value-format="yyyy-MM-dd"
-            type="datetime"
+            type="date"
             style="width: 100%"
             placeholder="选择日期时间"
           >
@@ -30,7 +30,7 @@
           <el-date-picker
             v-model="form.zysjz"
             value-format="yyyy-MM-dd"
-            type="datetime"
+            type="date"
             style="width: 100%"
             placeholder="选择日期时间"
           >
@@ -223,7 +223,7 @@
     methods: {
       handleInit(data){
         if(data.sszdyysList && data.sszdyysList.length <=0 || (Object.keys(data).length <=0)){
-            data?.sszdyysList = [];
+            data.sszdyysList = [];
           data?.sszdyysList.push({
               "sszdyysxh": 1,
               "sszdyysmc": '省自定义要素(点击编辑)',

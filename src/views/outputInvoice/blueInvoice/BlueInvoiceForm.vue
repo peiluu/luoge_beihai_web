@@ -726,11 +726,11 @@
             <!-- 医疗住院收费详情 -->
             <div
               v-if="form.tdys == '10'"
-              class="invoice-form-remark"
+              class=""
               style="border-bottom: 2px solid #a15f3b"
             >
                 <div class="remark-title">
-                  <div class="remark-left">医疗住院-收费详情</div>
+                  <div class="remark-left invoice-form-price" style="border-bottom:none;padding:10px 24px" >医疗住院-收费详情</div>
                 </div>
                 <div>
                   <lg-pay-fees></lg-pay-fees>
