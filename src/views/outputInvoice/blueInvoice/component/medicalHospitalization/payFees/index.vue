@@ -1,11 +1,11 @@
 <template>
   <div class="">
     <article class="form-goods-toolbar">
-        <el-button type="success">添加行</el-button>
-        <el-button>删除</el-button>
+        <el-button type="success" @click="handleAddRow">添加行</el-button>
+        <el-button @click="handleDelRow">删除</el-button>
     </article>
     <article>
-        <vxe-grid v-bind="gridOptions1" @edit-disabled="editDisabledEvent">
+        <vxe-grid ref="payFeesTableRef" v-bind="gridOptions" @edit-disabled="editDisabledEvent">
         <template #fymx_edit="{ row }">
             <vxe-input v-model="row.name" size="small"></vxe-input>
         </template>
@@ -43,7 +43,7 @@ export default {
   props: {},
   data() {
     return {
-      gridOptions1: {
+      gridOptions: {
         border: true,
         showOverflow: true,
         editConfig: {
@@ -64,7 +64,7 @@ export default {
           {field: "bz",title: "备注",editRender: {},slots: { edit: "bz_edit" },},
         ],
         data: [
-          { id: 10001,name: "Test1",nickname: "T1",role: "Develop",sex: "Man",age: 28,address: "Shenzhen",},
+          { },
         ],
       },
     };
@@ -80,7 +80,39 @@ export default {
     },
     editDisabledEvent ({ row, column }) {
         console.log('禁止编辑')
-    }
+    },
+    /* 添加行 */
+    handleAddRow(){
+        let obj = {
+            "zysfmxxh": null,
+            "mxxh": null,
+            "fymx": "",
+            "sl": "",
+            "dw": "",
+            "je": null,
+            "se": null,
+            "slv": null,
+            "ylfwgbm": "",
+            "bz": ""
+        };
+        this.gridOptions.data.push(obj)
+    },
+    /* 删除行 */
+    handleDelRow(){
+        const tableRef = this.$refs.payFeesTableRef;
+        let checkData = tableRef.getCheckboxRecords(true);
+        if(checkData.length <=0){
+            this.$message.warning("请选择要删除的数据！");
+            return
+        }
+        for (let i = checkData.length - 1; i >= 0; i--) {
+            let row = checkData[i];
+            let index = tableRef.getVTRowIndex(row);
+            this.gridOptions.data.splice(index, 1);
+        }
+       
+       
+    },
   },
   created() {},
   mounted() {},
