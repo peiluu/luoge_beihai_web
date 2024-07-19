@@ -6,6 +6,11 @@
         :width="width"
         @update:visible="updateVisible"
         :before-close="handleClose">
+        <article>
+            <div style="margin-bottom: 5px;">
+                    <el-button type="primary" plain @click="handleDon">下载模板</el-button>
+                </div>
+        </article>
             <article >
                 <el-upload
                 class="upload-demo"
@@ -94,21 +99,25 @@ export default {
         }
       });
     },
-        /* 关闭 */
-        updateVisible(value) {
-            this.$emit('update:visible', value);
-        },
-
-        /* 确认 */
-        handleConfirm(){
-
-        },
-
-        /* 关闭前 */
-        handleClose(){
-            this.updateVisible(false);
-        },
+    /* 关闭 */
+    updateVisible(value) {
+        this.$emit('update:visible', value);
     },
+
+    /* 确认 */
+    handleConfirm(){
+
+    },
+
+    /* 关闭前 */
+    handleClose(){
+        this.updateVisible(false);
+    },
+    /* 下载模板 */
+    handleDon(){
+        
+    },
+},
     created() {},
     mounted() {},
     beforeCreate() {},
