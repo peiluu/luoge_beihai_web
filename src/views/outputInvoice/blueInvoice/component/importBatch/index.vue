@@ -34,7 +34,7 @@
 
 <script>
 import { config } from '@/config';
-import { customPost, } from '@/utils/request';
+import { customPost,download } from '@/utils/request';
 export default {
     name:'',
     props:{
@@ -114,8 +114,12 @@ export default {
         this.updateVisible(false);
     },
     /* 下载模板 */
-    handleDon(){
-        
+    async handleDon() {
+      const fileName = `蓝票批量导入模板.xlsx`;
+      await download(`${config.host}/applyInvoiceUpload/downLoadExcel` , {
+        reqData: '',
+        fileName,
+      });
     },
 },
     created() {},
