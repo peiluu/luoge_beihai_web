@@ -7,28 +7,28 @@
     <article>
         <vxe-grid ref="payFeesTableRef" v-bind="gridOptions" @edit-disabled="editDisabledEvent">
         <template #fymx_edit="{ row }">
-            <vxe-input v-model="row.name" size="small"></vxe-input>
+            <vxe-input v-model="row.name" size="mini"></vxe-input>
         </template>
         <template #sl_edit="{ row }">
-            <vxe-input v-model="row.sex" size="small"></vxe-input>
+            <vxe-input v-model="row.sex" size="mini"></vxe-input>
         </template>
         <template #dw_edit="{ row }">
-            <vxe-input v-model="row.age" size="small"></vxe-input>
+            <vxe-input v-model="row.age" size="mini"></vxe-input>
         </template>
         <template #je_edit="{ row }">
-            <vxe-input v-model="row.address" size="small"></vxe-input>
+            <vxe-input v-model="row.address" size="mini"></vxe-input>
         </template>
         <template #se_edit="{ row }">
-            <vxe-input v-model="row.address" size="small"></vxe-input>
+            <vxe-input v-model="row.address" size="mini"></vxe-input>
         </template>
         <template #slv_edit="{ row }">
-            <vxe-input v-model="row.address" size="small"></vxe-input>
+            <vxe-input v-model="row.address" size="mini"></vxe-input>
         </template>
         <template #ylfwgbm_edit="{ row }">
-            <vxe-input v-model="row.address" size="small"></vxe-input>
+            <vxe-input v-model="row.address" size="mini"></vxe-input>
         </template>
         <template #bz_edit="{ row }">
-            <vxe-input v-model="row.address" size="small"></vxe-input>
+            <vxe-input v-model="row.address" size="mini"></vxe-input>
         </template>
         </vxe-grid>
     </article>
@@ -46,6 +46,7 @@ export default {
       gridOptions: {
         border: true,
         showOverflow: true,
+        size:'mini',
         editConfig: {
           trigger: "click",
           mode: "cell",
@@ -131,5 +132,9 @@ export default {
     padding: 10px;
     border-top: 2px solid #a15f3b;
     border-bottom: 2px solid #a15f3b;
+}
+::v-deep .vxe-cell--title{
+    color: #a15f3b;
+    font-size: 14px;
 }
 </style>
