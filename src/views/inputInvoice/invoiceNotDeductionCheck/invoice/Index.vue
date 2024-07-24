@@ -425,9 +425,19 @@ export default {
     },
     // 导出发票数据
     async exportInvoiceCheck() {
+      let list = null;
+      if(this.selections.length >0){
+        list = this.selections.map(k=>{
+           if((k.zzfpDm??'')!=='' && (k.zzfphm??'')!==''){
+            return `${k.zzfpDm}${k.zzfphm}`
+          }else{
+            return `${k.fphm}`
+          }
+        })
+      }
       const fileName = `进项发票信息列表.xlsx`
       await exportInvoiceCheck({
-        reqData: { ...this.queryParam, sign: 'N', pageNo: 1, pageSize: 9999999 },
+        reqData: { ...this.queryParam, sign: 'N', pageNo: 1, pageSize: 9999999,fphmList:list },
         fileName
       })
     },

@@ -12,6 +12,7 @@ if (isDev) {
   // host = 'http://192.168.1.26:8003/mtclq-mtclqback'; // 李尚恒
   // host = 'http://192.168.1.80:8003/mtclq-mtclqback'; // 邓伟林
   //  host = 'http://192.168.1.117:8003/mtclq-mtclqback'; // 令狐芷冉
+  //host = 'http://192.168.1.112:8003/mtclq-mtclqback'; //杨润
 
 }
 export const config = {

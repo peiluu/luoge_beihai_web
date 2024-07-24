@@ -177,10 +177,16 @@ export const inputFplxList = [
   { value: '11', label: '卷式发票' },
   { value: '14', label: '通行费发票' },
   { value: '15', label: '二手车销售统一发票' },
+  { value: '51', label: '电子发票（铁路电子客票）' },
+  { value: '61', label: '电子发票（航空运输客票电子行程单）' },
   { value: '81', label: '数电增值税专用发票' },
-  { value: '82', label: '数电增值税普通发票' },
-  // { value: '51', label: '电子发票（铁路电子客票）' },
-  // { value: '61', label: '电子发票（航空运输客票电子行程单）' }
+  { value: '82', label: '电子发票(普通发票)' },
+  { value: '83', label: '机动车销售电子统一发票' },
+  { value: '84', label: '二手车销售电子统一发票' },
+  { value: '85', label: '纸质增值税专用发票' },
+  { value: '86', label: '纸质增值税普通发票' },
+  { value: '87', label: '纸质发票(机动车销售统一发票)' },
+  { value: '88', label: '纸质发票' },
 ];
 
 /**

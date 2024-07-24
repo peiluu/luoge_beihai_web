@@ -472,6 +472,7 @@
                     type="seq"
                     min-width="50"
                     title="序号"
+
                   ></vxe-column>
                   <!--<vxe-column field="fphxz" min-width="50">
                     <template #default="{row, rowIndex, $rowIndex}">
@@ -480,7 +481,7 @@
                   </vxe-column>-->
                   <vxe-column
                     field="xmmc"
-                    min-width="290"
+                    min-width="260"
                     title="项目名称"
                     :edit-render="{name: 'EditDown'}"
                   >
@@ -519,14 +520,14 @@
                       }}</span>
                       <span v-else
                         ><el-tag type="danger">折扣</el-tag
-                        >{{ row.hwhyslwfwmc }}</span
-                      >
+                        >{{ row.hwhyslwfwmc }}</span>
                     </template>
                   </vxe-column>
-                  <vxe-column
+                  <vxe-column 
+                  
                     min-width="120"
-                    field="ggxh"
-                    title="规格型号"
+                    :field="form.tdys === '11'?'fymx':'ggxh'"
+                    :title="form.tdys === '11'?'费用明细':'规格型号'"
                     :edit-render="{name: '$input'}"
                   >
                     <template #edit="{ row, rowIndex, $rowIndex }">
@@ -537,13 +538,14 @@
                           form.tdys == '06' ||
                           !canEdit
                         "
-                        v-model="row.ggxh"
+                        v-model="row[form.tdys === '11'?'fymx':'ggxh']"
                         type="text"
                         v-if="row.fphxz == '00'"
                       ></vxe-input>
-                      <span v-else>{{ row.ggxh }}</span>
+                      <span v-else>{{ row[form.tdys === '11'?'fymx':'ggxh'] }}</span>
                     </template>
                   </vxe-column>
+                 
                   <vxe-column
                     min-width="80"
                     field="dw"
@@ -589,6 +591,7 @@
                       form.sfhs == 'Y' ? '单价（含税）' : '单价（不含税）'
                     "
                     :edit-render="{name: '$input'}"
+                    :visible="form.tdys !== '11'"
                   >
                     <template #edit="{ row, rowIndex, $rowIndex }">
                       <vxe-input
@@ -661,6 +664,50 @@
                       }}
                     </template>
                   </vxe-column>
+                  <vxe-column 
+                  min-width="140"
+                  field="ylfwgbm"
+                  title="医疗服务贯标码"
+                  :edit-render="{name: '$input'}"
+                  :visible="form.tdys === '11'"
+                >
+                  <template #edit="{ row, rowIndex, $rowIndex }">
+                    <vxe-input
+                      :disabled="
+                        form.tdys == '03' ||
+                        form.tdys == '05' ||
+                        form.tdys == '06' ||
+                        !canEdit
+                      "
+                      v-model="row['ylfwgbm']"
+                      type="text"
+                      v-if="row.fphxz == '00'"
+                    ></vxe-input>
+                    <span v-else>{{ row['ylfwgbm'] }}</span>
+                  </template>
+                  </vxe-column>
+                  <vxe-column 
+                  min-width="80"
+                  field="qt"
+                  title="其它"
+                  :edit-render="{name: '$input'}"
+                  :visible="form.tdys === '11'"
+                >
+                  <template #edit="{ row, rowIndex, $rowIndex }">
+                    <vxe-input
+                      :disabled="
+                        form.tdys == '03' ||
+                        form.tdys == '05' ||
+                        form.tdys == '06' ||
+                        !canEdit
+                      "
+                      v-model="row['qt']"
+                      type="text"
+                      v-if="row.fphxz == '00'"
+                    ></vxe-input>
+                    <span v-else>{{ row['qt'] }}</span>
+                  </template>
+                  </vxe-column>
                 </vxe-table>
               </div>
             </div>
@@ -676,6 +723,20 @@
                 }}</span>
               </div>
             </div>
+            <!-- 医疗住院收费详情 -->
+            <div
+              v-if="form.tdys == '10'"
+              class=""
+              style="border-bottom: 2px solid #a15f3b"
+            >
+                <div class="remark-title">
+                  <div class="remark-left invoice-form-price" style="border-bottom:none;padding:10px 24px" >医疗住院-收费详情</div>
+                </div>
+                <div>
+                  <lg-pay-fees></lg-pay-fees>
+                </div>
+            </div>
+            <!-- 医疗住院收费详情 end-->
             <!-- 特定要素-->
             <div
               v-if="form.tdys == '03'"
@@ -872,7 +933,29 @@
                 </el-select>
               </el-form-item>
             </div>
-            <!-- 特定要素-->
+             <!-- 特定要素医疗住院 -->
+             <div
+              v-else-if="form.tdys == '10'"
+              class="invoice-form-remark"
+              style="border-bottom: 2px solid #a15f3b"
+            >
+              <div class="remark-title">
+                <div class="remark-left">特定信息-医疗服务（住院）</div>
+              </div>
+              <lg-medical-hospitalization :data-source.sync="form.ylmztdys"></lg-medical-hospitalization>
+            </div>
+            <!-- 特定要素医疗门诊 -->
+             <div
+              v-else-if="form.tdys == '11'"
+              class="invoice-form-remark"
+              style="border-bottom: 2px solid #a15f3b"
+            >
+              <div class="remark-title">
+                <div class="remark-left">特定信息-医疗服务（门诊）</div>
+              </div>
+              <lg-medical-clinic ref="medicalClinicRef" :data-source.sync="form.ylmztdys"></lg-medical-clinic>
+            </div>
+            <!-- 特定要素 end-->
             <!-- 备注信息-->
             <div class="invoice-form-remark">
               <div class="remark-title">
@@ -1485,7 +1568,7 @@
 </template>
 
 <script>
-import { getArrayName } from '@/utils'
+import { getArrayName,getDictionary } from '@/utils'
 import { numToCny } from "@/utils/tool";
 import Step from "@/components/Step.vue";
 import HouseInfoDlg from "./HouseInfoDlg.vue";
@@ -1498,7 +1581,11 @@ import EditDown from './component/editDown'
 import VXETable from 'vxe-table';
 import { debounce } from '@/utils/tool.js';
 import blueAddCustom from './component/addCustom';
-import lgImportantBatch from './component/importBatch/index.vue'
+import lgImportantBatch from './component/importBatch/index.vue';
+import lgMedicalClinic from './component/medicalClinic/index.vue';
+import lgMedicalHospitalization from './component/medicalHospitalization/index.vue';
+import lgPayFees from './component/medicalHospitalization/payFees/index.vue'
+
 //import { getArrayName } from '@/utils'
 export default {
   name: "BlueInvoiceForm",
@@ -1519,7 +1606,10 @@ export default {
     AppAddTheme,
     AppUseTheme,
     blueAddCustom,
-    lgImportantBatch
+    lgImportantBatch,
+    lgMedicalClinic,
+    lgMedicalHospitalization,
+    lgPayFees
   },
   data() {
     const validatePass = (rule, value, callback) => {
@@ -1555,7 +1645,9 @@ export default {
         { name: "建筑服务", value: "03", key: "jzfw" },
         { name: "不动产销售", value: "05", key: "bdcxs" },
         { name: "不动产经营租赁服务", value: "06", key: "bdczl" },
-        { name: "医疗服务（门诊）", value: "02", key: "ylfw" },
+        { name: "医疗服务（门诊）", value: "11", key: "ylfw(mz)" },
+        { name: "医疗服务（住院）", value: "10", key: "ylfw(zy)" },
+        { name: "农产品收购发票", value: "16", key: "ncpsg" },
       ],
       tableData: [],
       //差额征税
@@ -2057,6 +2149,10 @@ export default {
     },
   },
   methods: {
+    /* 特定要素-医疗门诊-添加省自定义要素 */
+    handleAddCounst(){
+      console.log("do I")
+    },
     /* 批量添加 */
     handleBatchImport(){
       this.importData.sfhs = this.form.sfhs;
@@ -3258,6 +3354,9 @@ export default {
       let that = this;
       that.saving = true;
       delete that.form.fpqqlsh;
+      if(this.form.tdys === '11' && !this.handleValid()){
+        return
+      }
       //  let tableData = this.$refs.xTable.getTableData().tableData;
       if (this.tableData.length <= 0) {
         that.$notify({
@@ -3436,6 +3535,11 @@ export default {
       setTimeout(() => {
         that.saving = false;
       }, 1000);
+     
+    },
+   async handleValid(){
+      const medicalClinicValid = await this.$refs.medicalClinicRef.validateForm();
+      return medicalClinicValid
     },
     //初始化省
     initDistrictDict() {
@@ -3590,6 +3694,7 @@ export default {
   //   console.log(this.query,"3")
   // },
   mounted() {
+    console.log(this.genderOption,"_+_")
     if(!this.$route.query.isFormInvoiced){
       this.init()
     }

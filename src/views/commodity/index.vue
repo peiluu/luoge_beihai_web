@@ -9,7 +9,6 @@
          
           <article class="table_main">
             <app-right-table ref="rightTable" :current-id="currentId" :current-name="currentName"></app-right-table>
-           
           </article>
         </el-col>
       </el-row>

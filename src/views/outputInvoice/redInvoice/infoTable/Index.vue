@@ -113,7 +113,7 @@
               <el-button @click="confirm('N')">驳回</el-button>
             </template>
             <!-- 销方发出等待对方确认可撤销 -->
-            <!-- <el-button v-if="activeName == '0'" @click="confirm('C')">撤销</el-button> -->
+            <el-button v-if="activeName == '0'" @click="confirm('C')">撤销</el-button>
             <el-button @click="downloadConfirmList">导出</el-button>
           </div>
         </div>

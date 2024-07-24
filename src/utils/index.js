@@ -1,7 +1,8 @@
 import Cookies from 'js-cookie'
 import store from '@/store'
 import { isURL } from './validate'
-import { mainChildrenRoutes, moduleRoutes } from '../router/router.config.js'
+import { mainChildrenRoutes, moduleRoutes } from '../router/router.config.js';
+
 /**
  * 权限
  * @param {*} key
@@ -222,5 +223,13 @@ export const getRequest = (url='') => {
   
   return format.replace(/YYYY|MM|DD|HH|mm|ss/g, match => map[match]);
 }
-  
-  
+
+/* 字典数据获取 */
+export function getDictionary(dictType) {
+  const dictionaries = store.state.user.dictionariesData;
+  if (!dictType) {
+    return dictionaries;
+  }
+
+  return dictionaries.find(dict => dict.dictType === dictType) || null;
+}

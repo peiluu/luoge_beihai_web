@@ -24,28 +24,31 @@
     <article>
       <el-form  class="content-form" ref="form" :inline="false" :model="form" :rules="rules" size="mini">
       <el-form-item label="选择发票类型" prop="fppz">
-        <el-select  class="form-inline-input" v-model="form.fppz" :disabled="(formInline.isType??'')!==''" size="small" clearable>
+        <el-select  class="form-inline-input" v-model="form.fppz" @change="handleInvoiceType" :disabled="(formInline.isType??'')!==''" size="small" clearable>
           <el-option key="sdzp" label="数电增值税专用发票" value="01"></el-option>
           <el-option key="sdpp" label="数电增值税普通发票" value="02"></el-option>
         </el-select>
       </el-form-item>
       <div v-if="!formInline.isType">
       <el-form-item label="是否特定业务" prop="tdys">
-        <el-select :disabled="isBlank(form.fppz)"  class="form-inline-input" v-model="form.tdys" size="small" clearable>
-        <el-option key="jzfw" label="建筑服务" value="03"></el-option>
+        <el-select :disabled="isBlank(form.fppz)"   class="form-inline-input" v-model="form.tdys" size="small" clearable>
+          <el-option v-for=" i in fppzOption" :key="i.key" :label="i.label" :value="i.value"></el-option>
+        <!-- <el-option key="jzfw" label="建筑服务" value="03"></el-option>
         <el-option key="bdcxs" label="不动产销售" value="05"></el-option>
         <el-option key="bdczl" label="不动产经营租赁服务" value="06"></el-option>
-        <!-- <el-option key="ylfw" label="医疗服务（门诊）" value="02"></el-option> -->
+        <el-option key="ylfw(mz)" label="医疗服务（门诊）" value="10"></el-option>
+        <el-option key="ylfw(zy)" label="医疗服务（门诊）" value="11"></el-option>
+        <el-option key="ncpsg" label="农产品收购发票" value="16"></el-option> -->
       </el-select>
       </el-form-item>
       <el-form-item label="是否差额" prop="cezslxDm">
-        <el-select :disabled="!isBlank(form.jazs)"  class="form-inline-input" v-model="form.cezslxDm" size="small" clearable>
+        <el-select :disabled="!isBlank(form.jazs) || ['10','11'].includes(form.tdys) "  class="form-inline-input" v-model="form.cezslxDm" size="small" clearable>
           <el-option key="qekp" label="差额征税-全额开票" value="01"></el-option>
           <el-option key="cekp" label="差额征税-差额开票" value="02"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="是否减按征税" prop="jazs">
-        <el-select :disabled="isBlank(form.fppz) || form.tdys=='03' || form.tdys=='05'|| !isBlank(form.cezslxDm)"  class="form-inline-input" v-model="form.jazs" size="small" clearable>
+        <el-select :disabled="isBlank(form.fppz) || form.tdys=='03' || form.tdys=='05'|| !isBlank(form.cezslxDm) || ['10','11'].includes(form.tdys)"  class="form-inline-input" v-model="form.jazs" size="small" clearable>
           <el-option v-if="form.fppz=='02' && isBlank(form.tdys)" key="gdzc" label="销售自己使用过的固定资产" value="01"></el-option>
           <el-option key="zfzl" label="住房租赁" value="02"></el-option>
         </el-select>
@@ -121,7 +124,23 @@
           skfplx: [
             { required: true, message: '请选择发票种类', trigger: 'blur' },
           ],
-        }
+        },
+        fppzOptionArr:[
+          {label:'建筑服务',value:'03',key:'jzfw'},
+          {label:'不动产销售',value:'05',key:'bdcxs'},
+          {label:'不动产经营租赁服务',value:'06',key:'bdczl'},
+          {label:'医疗服务（门诊）',value:'11',key:'ylfw(mz)'},
+          {label:'医疗服务（住院）',value:'10',key:'ylfw(zy)'},
+          {label:'农产品收购发票',value:'16',key:'ncpsg'},
+        ],
+        fppzOption:[
+          // {label:'建筑服务',value:'03',key:'jzfw'},
+          // {label:'不动产销售',value:'05',key:'bdcxs'},
+          // {label:'不动产经营租赁服务',value:'06',key:'bdczl'},
+          // {label:'医疗服务（门诊）',value:'10',key:'ylfw(mz)'},
+          // // {label:'医疗服务（住院）',value:'11',key:'ylfw(zy)'},
+          // {label:'农产品收购发票',value:'16',key:'ncpsg'},
+        ]
       };
     },
     computed:{
@@ -260,9 +279,8 @@
         }
         this.$store.dispatch('app/removeTab', this.$store.getters.activeTab);
       },
-      
       /* 表单验证 */
-    handleFormValidate() {
+      handleFormValidate() {
         return new Promise((resolve, reject) => {
           this.$refs.form.validate((valid) => {
            
@@ -273,6 +291,25 @@
             }
           });
         });
+      },
+      /* 发票类型不同可选特定业务需变化 */
+      handleInvoiceType(val){
+        console.log(val,"-0-0")
+        let generalKey = [];
+        switch(val){
+          case '01':{
+            generalKey = ['03','05','06']
+            break;
+          }
+          case '02':{
+            generalKey = ['10','11','16','03','05','06'];
+            break;
+          }
+          default:{
+            this.fppzOption = this.fppzOptionArr.map(k=> k.value);
+          }
+        }
+        this.fppzOption = this.fppzOptionArr.filter(k=> generalKey.includes(k.value));
       }
     },
   };
