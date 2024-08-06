@@ -515,7 +515,7 @@ export default {
         handleUnitDictList(){
             getUnitList().then(res=>{
                 if(res.code === '0'){
-                    this.dwOptions = [...res.data.map(k=> {return {...k,label:k.name,value:k.name}})];
+                   // this.dwOptions = [...res.data.map(k=> {return {...k,label:k.name,value:k.name}})];
                 }
                
             })
@@ -544,6 +544,12 @@ export default {
             if(val === '免税' || val === '免征税' || val === '不征税'){
                 //this.$set(this,'taxRateOption',[{label:'0% (免税 / 免征税)',value:0}])
                 val === '免税'?this.$set(this,'taxRateOption',[{label:'免税',value:0}]):this.$set(this,'taxRateOption',[{label:'不征税',value:0}])
+            }else if(val === '按5%简易征收'){
+                this.$set(this,'taxRateOption',[{label:'5%',value:0.05}])
+            }else if(val === '按3%简易征收'){
+                this.$set(this,'taxRateOption',[{label:'3%',value:0.03}])
+            }else if(val === '按5%简易征收减按1.5%计征'){
+                this.$set(this,'taxRateOption',[{label:'5%',value:0.015}])
             }else{
                 this.taxRateOption = [...this.deepOption]
             }

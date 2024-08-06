@@ -103,10 +103,10 @@ export default {
           if (!valid) {
             return false;
           }
-          const encryptedPassword = this.encryptPassword(this.dataForm.password);
+          //const encryptedPassword = this.encryptPassword(this.dataForm.password); password:encryptedPassword
           this.loading = true;
           this.$http
-            .post('/login', {...this.dataForm,password:encryptedPassword})
+            .post('/login', {...this.dataForm,})
             .then((res) => {
               if (res.code !== 0) {
                 this.loading = false;
