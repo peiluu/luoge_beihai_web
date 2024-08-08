@@ -2959,7 +2959,7 @@ export default {
         bhsje = that.zkForm.zkje;
       }
       const record = {
-        xmmc: that.currentDiscountRow.hwhyslwfwmc,
+        xmmc: this.getContentAfterAsterisk(that.currentDiscountRow.hwhyslwfwmc),
         bhsje: -bhsje,
         je: that.zkForm.zkje
           ? parseFloat(-that.zkForm.zkje).toFixed(2)
@@ -2984,6 +2984,20 @@ export default {
       that.$set(that.currentDiscountRow, "fphxz", "02");
       this.addDiscountVisible = false;
       xTable.updateFooter();
+    },
+    getContentAfterAsterisk(str) {
+      const firstAsteriskIndex = str.indexOf('*');
+      console.log(firstAsteriskIndex,"firstAsteriskIndex")
+      if (firstAsteriskIndex === -1) {
+        return str;
+      }
+
+      const secondAsteriskIndex = str.indexOf('*', firstAsteriskIndex + 1);
+      console.log(secondAsteriskIndex,"firstAsteriskIndex")
+      if (secondAsteriskIndex !== -1) {
+        return str.substring(secondAsteriskIndex + 1);
+      }
+      return str.substring(firstAsteriskIndex + 1);
     },
     /**
      * 删除商品
