@@ -33,7 +33,7 @@
         <div><i class="el-icon-warning" /> 发票额度以月度更新;发票数量以年度更新;</div>
         <!-- <div><i class="el-icon-warning" /> 当存在临时额度时，需更新</div> -->
       </div>
-      <el-button @click="updateCredit" type="success">授信额度更新</el-button>
+      <el-button @click="updateCredit" type="success">授信额度有效期更新</el-button>
       <el-button @click="handleActionCredit" type="success">下载或退回授信额度</el-button>
     </div>
 
@@ -64,7 +64,17 @@
           <el-table-column label="所属期限" prop="skssq" :min-width="120" align="center">
             <template slot-scope="scope">{{ dateFormat('YYYY-MM', scope.row.skssq) }}</template>
           </el-table-column>
-          <el-table-column label="调整额度" prop="bysxed" :min-width="120" />
+          <el-table-column label="调整额度" prop="tzed" :min-width="120" align="right">
+            <template slot-scope="scope"> {{ formatMoney(scope.row.tzed) }}</template>
+          </el-table-column>
+          <el-table-column label="调整类型" prop="sqlx" :min-width="100" align="center" >
+            <template slot-scope="scope">
+                <span>
+                  <span v-if="scope.row.sqlx === '0'">下载</span>
+                  <span v-else-if="scope.row.sqlx === '1'">退回</span>
+                </span>
+            </template>
+          </el-table-column>
           <el-table-column label="授信时间" prop="updatetime" :min-width="150" align="center"/>
           <el-table-column label="授信有效时间起" prop="syqjq" :min-width="150" align="center"/>
           <el-table-column label="授信有效时间止" prop="syqjz" :min-width="150" align="center"/>

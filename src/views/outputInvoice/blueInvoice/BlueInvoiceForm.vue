@@ -281,7 +281,7 @@
                   销售方信息
                 </div>
                 <div class="seller-form-items">
-                  <div class="top-bar" style="color: #e6a23c">
+                  <div class="top-bar" :style="{color: '#e6a23c', visibility: form.djkpfs == '1'? 'hidden': 'visible' }">
                     当前可用发票额度：{{ kysyed || 0 }}
                   </div>
                   <el-col :span="24">
@@ -3359,6 +3359,8 @@ export default {
         this.$set(this.form, "xsfkhh", data.bank);
         this.$set(this.form, "xsfzh", data.bankAccount);
         this.$set(this.form, "kpr", data.kpr);
+        this.$set(this.form, "djkpfs", data.djkpfs);
+
         this.$set(this.form, "skrxm", data.skr);
         this.$set(this.form, "fhrxm", data.fhr);
       }
@@ -3452,10 +3454,10 @@ export default {
                                   this.$emit("handeDoneOk",{type:'makeInvoice',data:res.data})
                                 }
                               }else{
-                                that.$notify({
-                                  message: res.msg,
-                                  type: "error",
-                                });
+                                // that.$notify({
+                                //   message: res.msg,
+                                //   type: "error",
+                                // });
                               }
                             })
                             .finally(() => {
@@ -3492,25 +3494,25 @@ export default {
                             }
                           }else{
                            
-                            that.$notify({
-                              message: res.msg,
-                              type: "error",
-                            });
+                            // that.$notify({
+                            //   message: res.msg,
+                            //   type: "error",
+                            // });
                           }
                         }).catch((e)=>{
                          
-                          that.$notify({
-                              message: e.msg,
-                              type: "error",
-                            });
+                          // that.$notify({
+                          //     message: e.msg,
+                          //     type: "error",
+                          //   });
                           that.loading = false;
                         });
                       }
                     }else{
-                      that.$notify({
-                        message: result.msg,
-                        type: "error",
-                      });
+                      // that.$notify({
+                      //   message: result.msg,
+                      //   type: "error",
+                      // });
                       that.loading = false;
                     }
                   }).catch((e)=>{
@@ -3532,10 +3534,10 @@ export default {
                       if(this.detailInfo.isFormInvoiced)this.$emit("handeDoneOk");
                     }else{
                       
-                      that.$notify({
-                        message: res.msg,
-                        type: "error",
-                      });
+                      // that.$notify({
+                      //   message: res.msg,
+                      //   type: "error",
+                      // });
                     }
                     
                   }).finally(()=>{
@@ -3718,7 +3720,7 @@ export default {
     if((this.query.cezslxDm??'') !==''){
       this.$set(this.form,'sfhs','N')
     }
-    this.getTaxRates();
+    // this.getTaxRates();
     // if(this.query?.isType){
     //   this.$set(this.form,'sfhs','Y')
     // }

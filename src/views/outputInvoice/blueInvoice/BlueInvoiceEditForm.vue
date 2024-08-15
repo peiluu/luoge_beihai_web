@@ -134,7 +134,7 @@
                   销售方信息
                 </div>
                 <div class="seller-form-items">
-                  <div class="top-bar" style="color: #e6a23c">
+                  <div class="top-bar" :style="{ color: '#e6a23c', visibility: form.djkpfs == '1'? 'hidden': 'visible' }">
                     当前可用发票额度：{{ kysyed || 0 }}
                   </div>
                   <el-col :span="24">
@@ -2341,6 +2341,7 @@ export default {
       this.$set(this.form, "xsfkhh", data.bank);
       this.$set(this.form, "xsfzh", data.bankAccount);
       this.$set(this.form, "kpr", data.kpr);
+      this.$set(this.form, "djkpfs", data.djkpfs);
     },
     //保存发票
     async saveInvoice(type) {
@@ -2470,7 +2471,7 @@ export default {
               //保存
               that.form.fpmxList = tableData;
               that.api.saveInvoicePreview(that.form).then((res) => {
-                if (res.code === 0) {
+                if (['0',0].includes(res.code)) {
                   window.open(
                     dynamicUrlMap[process.env.NODE_ENV].frontUrl +
                       "#/invoice/preview?fpqqlsh=" +

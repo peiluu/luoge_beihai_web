@@ -1,5 +1,10 @@
 <template>
-  <div>
+  <div 
+    v-loading="loading" 
+    :element-loading-text="loadingTxt" 
+    element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(255, 255, 255, 0.5)"
+  >
     <div>
       <el-form :inline="true" :model="form" :rules="rules" ref="ruleForm" :disabled="operateType === 'detail'">
         <div class="content-title">基本信息</div>
@@ -26,14 +31,44 @@
         <el-form-item label="电话" prop="phone">
           <el-input v-model="form.phone" placeholder="请输入" maxlength="13" />
         </el-form-item>
-        <!-- <template v-if="form.isDigital === 'Y'"> -->
-        <template>
-          <el-form-item label="乐企ID" prop="lqid">
-            <el-input v-model="form.lqid" placeholder="请输入" maxlength="30" />
+        <template v-if="form.isDigital === 'Y'">
+          <el-form-item label="开票方式" prop="djkpfs">
+            <el-select v-model="form.djkpfs" placeholder="请选择">
+              <el-option label="乐企直连" value="0" />
+              <el-option label="RPA开票" value="1" />
+            </el-select>
           </el-form-item>
-          <el-form-item label="乐企秘钥" prop="secretkey">
-            <el-input v-model="form.secretkey" placeholder="请输入" maxlength="100" />
-          </el-form-item>
+          <!-- RPA开票 -->
+          <template v-if="form.djkpfs === '1'">
+            <el-form-item label="电子税务局身份" prop="dzswjsf">
+              <el-select v-model="form.dzswjsf" placeholder="请选择">
+                <el-option v-for="(item, index) in dzswjsfList" :key="index" :label="item.label" :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="操作员姓名" prop="czyxm">
+              <el-input v-model="form.czyxm" placeholder="请输入" maxlength="100" />
+            </el-form-item>
+            <el-form-item label="电子税务局账号" prop="dzswjzh">
+              <el-input v-model="form.dzswjzh" placeholder="请输入" maxlength="100" auto-complete="off"/>
+            </el-form-item>
+            <el-form-item label="电子税务局密码" prop="dzswjmm">
+              <el-input show-password v-model="form.dzswjmm" placeholder="请输入" maxlength="100" auto-complete="new-password"/>
+            </el-form-item>
+            <el-form-item label="确认密码" prop="confirmDzswjmm">
+              <el-input show-password v-model="form.confirmDzswjmm" placeholder="请输入" maxlength="100" />
+            </el-form-item>
+          </template>
+
+          <!-- 乐企直连 -->
+          <template v-if="form.djkpfs === '0'">
+            <el-form-item label="乐企ID" prop="lqid">
+              <el-input v-model="form.lqid" placeholder="请输入" maxlength="30" />
+            </el-form-item>
+            <el-form-item label="乐企秘钥" prop="secretkey">
+              <el-input v-model="form.secretkey" placeholder="请输入" maxlength="100" />
+            </el-form-item>
+          </template>
         </template>
 
         <el-form-item label="开户行名称" prop="bank">
@@ -184,10 +219,10 @@
 
     <div class="footer">
       <el-button @click="cancel">取消</el-button>
-      <el-button type="success" @click="submit" v-if="operateType !== 'detail'" :loading="saveLoading">保存</el-button>
+      <el-button type="success" @click="submit" v-if="operateType !== 'detail'" :loading="loading">保存</el-button>
     </div>
 
-    <el-dialog title="编辑独立生产经营部门" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
+    <!-- <el-dialog title="编辑独立生产经营部门" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
       <div class="table-tools"><el-button @click="handleAddFun">新增</el-button></div>
 
       <div class="custom-table">
@@ -224,12 +259,12 @@
         <el-button @click="handleClose">取 消</el-button>
         <el-button type="success" @click="saveDlscjybmList">保 存</el-button>
       </span>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
 <script>
-import { regCollection } from '@/config/constant.js';
+import { regCollection, dzswjsfList } from '@/config/constant.js';
 import { rgionEnum, cityEnum, provincesEnmu, areaEnum } from '@/config/regionEnums.js';
 import ExtendInfo from './ExtendInfo'
 import { listCascaderDict, getDetailById, getAllZt, selectYtList, selectQyList, addTaxBody, getZgsList, getTaxArea, updateTaxBody } from "./Api";
@@ -258,6 +293,7 @@ export default {
       cityEnum, // 所属城市
       provincesEnmu, // 所属省份
       areaEnum, // 所属市区
+      dzswjsfList,
       rules: {
         nsrsbh: [{ required: true, message: "请输入", trigger: "blur" }, regCollection.nsrsbh],
         oldNsrsbh: [regCollection.nsrsbh],
@@ -275,11 +311,18 @@ export default {
         zgsId: [{ required: true, message: "请选择", trigger: "blur" }],
         areaList: [{ required: true, message: "请选择", trigger: "blur" }],
         withdrawalDate: [{ required: true, message: "请选择", trigger: "blur" }],
+        djkpfs: [{ required: true, message: "请选择", trigger: "blur" }],
+        dzswjsf: [{ required: true, message: "请选择", trigger: "blur" }],
+        dzswjzh: [{ required: true, message: "请输入", trigger: "blur" }],
+        dzswjmm: [{ required: true, message: "请输入", trigger: "blur" }],
+        confirmDzswjmm: [{ required: true, message: "请输入", trigger: "blur" }],
+        czyxm: [{ required: true, message: "请输入", trigger: "blur" }],
         businessFormat:[{ required: true, message: "请选择或输入", trigger: "blur" }],
         region:[{ required: true, message: "请选择或输入", trigger: "blur" }],
         province:[{ required: true, message: "请选择", trigger: "blur" }],
       },
-      saveLoading: false
+      loading: false,
+      loadingTxt: ''
     };
   },
 
@@ -351,11 +394,14 @@ export default {
      * @desption 【组织管理】根据id获取纳税主体详情
      */
     async getDetailById(id) {
+      this.loading = true;
       const { code = '', data = {} } = await getDetailById({ id })
+      this.loading = false;
       if (code === '0') {
         this.form = {
           ...data,
           isInstitution: data.isInstitution == 'Y' ? true : false,
+          confirmDzswjmm: data.dzswjmm
         }
         this.dlscjybmList = data.dlscjybmList || []
 
@@ -385,6 +431,10 @@ export default {
     async submit() {
       this.$refs["ruleForm"].validate(async valid => {
         if (!valid) return;
+        if (this.form.isDigital === 'Y' && this.form.djkpfs == '1' && this.form.confirmDzswjmm !== this.form.dzswjmm) {
+          this.$message.warning('两次输入的密码不一致！请重新输入');
+          return
+        }
         const param = {
           ...this.form,
           dlscjybmList: this.dlscjybmList,
@@ -400,7 +450,8 @@ export default {
     */
     async saveTaxBody(param) {
       try {
-        this.saveLoading = true
+        this.loading = true
+        this.loadingTxt = '保存中'
         const api = param.id ? updateTaxBody : addTaxBody
         const { code = '', data = [], msg = '操作失败' } = await api(param)
         if (code === '0') {
@@ -412,7 +463,8 @@ export default {
       } catch (error) {
           this.$message.error(error.msg || '操作失败')
       } finally {
-        this.saveLoading = false;
+        this.loading = false;
+        this.loadingTxt = ''
       }
       
     },
