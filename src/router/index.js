@@ -70,9 +70,9 @@ router.beforeEach((to, from, next) => {
     return next()
   }
   const token = getToken();
-  console.log('----token----', token, router)
-  console.log('----beforeEach to----', to)
-  console.log('----beforeEach from----', to)
+  // console.log('----token----', token, router)
+  // console.log('----beforeEach to----', to)
+  // console.log('----beforeEach from----', to)
   if (!token ) { // 未登录
     if(to.path !== '/login'){ // 不是在登录页，重定向到登录页
       return next('/login');
@@ -80,7 +80,7 @@ router.beforeEach((to, from, next) => {
       return next();
     }
   }
-  console.log('--store.state.app.--', store.state.app.sidebarMenuList)
+  // console.log('--store.state.app.--', store.state.app.sidebarMenuList)
   if (store.state.app.sidebarMenuList.length) {
     if(to.path === '/'){
       return next({name: 'home'})

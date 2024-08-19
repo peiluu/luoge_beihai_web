@@ -13,9 +13,10 @@ const http = axios.create({
   timeout: 600000,
   withCredentials: true
 })
-function goLogin() {
+function goLogin(msg) {
+  if(!Cookies.get('token'))return;
   clearLoginInfo()
-  Message.warning('登录失效，请重新登录')
+  Message.warning(msg || '登录失效，请重新登录')
   router.replace({ name: 'login' })
 }
 /**
@@ -63,8 +64,7 @@ http.interceptors.response.use(response => {
     return res
   }
   if (res.code === 401 || res.code === '5') {
-    Message.error(res.msg);
-    goLogin()
+    goLogin(res.msg)
   }
   // 兼容部分业务接口调用有的判断code，有的没有判断code
   // 注意登录和权限走的是同一个服务器，返回code=0为正常
@@ -144,7 +144,7 @@ http.interceptors.response.use(response => {
       code,
       msg
     }
-    Message.error(err.msg)
+    code != 401 && Message.error(err.msg)
     return Promise.reject(err);
   }
 })

@@ -527,7 +527,7 @@ export default {
     }
   },
   mounted(){
-    console.log(this.formParams,"接收的参数0")
+    // console.log(this.formParams,"接收的参数0")
   },
   activated() {
     this.formParams = cloneDeep(this.param);
@@ -539,10 +539,12 @@ export default {
         
       });
     }
+
+		this.$refs.table && this.$refs.table.doLayout()
   },
   updated(){
-    console.log("update")
-    this.$refs['table'].doLayout()
+    // console.log("update")
+    // this.$refs['table'].doLayout()
   }
 };
 </script>

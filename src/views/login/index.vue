@@ -125,7 +125,7 @@ export default {
               console.log(e);
               this.loading = false;
               this.dataForm.password ='';
-              this.$message.error(e.msg || '登录失败');
+              // this.$message.error(e.msg || '登录失败');
               this.getCaptcha();
             });
         });

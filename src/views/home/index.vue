@@ -416,7 +416,7 @@ export default {
             }
           });
           this.xAxisData = bottomX;
-          console.log('---bottomX---', bottomX, this.echartForm.month)
+          // console.log('---bottomX---', bottomX, this.echartForm.month)
           const index = bottomX.length < this.echartForm.month ? bottomX.length : this.echartForm.month
           this.ringMonth = bottomX[index - 1];
           this.xMonth = index - 1;
