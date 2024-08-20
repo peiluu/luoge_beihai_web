@@ -65,6 +65,7 @@ http.interceptors.response.use(response => {
   }
   if (res.code === 401 || res.code === '5') {
     goLogin(res.msg)
+    return res
   }
   // 兼容部分业务接口调用有的判断code，有的没有判断code
   // 注意登录和权限走的是同一个服务器，返回code=0为正常

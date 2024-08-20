@@ -97,7 +97,7 @@ router.beforeEach((to, from, next) => {
   // 获取菜单列表, 添加并全局变量保存
   http.get('/sys/menu/nav').then(res => {
     if (res.code !== 0) {
-      Vue.prototype.$message.error(res.msg)
+      // Vue.prototype.$message.error(res.msg)
       return next({ name: 'login' })
     }
     store.commit('app/saveSidebarMenuList', res.data || []);
