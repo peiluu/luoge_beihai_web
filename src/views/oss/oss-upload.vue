@@ -17,6 +17,7 @@
 
 <script>
 import Cookies from 'js-cookie'
+import { config } from '@/config/index.js'
 export default {
   data () {
     return {
@@ -29,7 +30,7 @@ export default {
   methods: {
     init () {
       this.visible = true
-      this.url = `${process.env.VUE_APP_APIURL}/sys/oss/upload?token=${Cookies.get('token')}`
+      this.url = `${config.hostUser}/sys/oss/upload?token=${Cookies.get('token')}`
       this.num = 0
       this.fileList = []
     },

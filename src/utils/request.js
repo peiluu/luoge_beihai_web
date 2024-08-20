@@ -5,11 +5,12 @@ import router from '@/router'
 import qs from 'qs'
 import { clearLoginInfo } from '@/utils'
 import isPlainObject from 'lodash/isPlainObject'
+import { config } from '@/config/index.js'
 
 const CancelToken = axios.CancelToken
 const source = CancelToken.source()
 const http = axios.create({
-  baseURL: process.env.VUE_APP_APIURL,
+  baseURL: config.hostUser,
   timeout: 600000,
   withCredentials: true
 })

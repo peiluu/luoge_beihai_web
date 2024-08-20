@@ -64,6 +64,7 @@ import { getUUID, fnAddDynamicMenuRoutes } from '@/utils';
 import {passwordKey} from '@/config/setting.js';
 import CryptoJS from 'crypto-js';
 import { mapActions, mapGetters } from 'vuex';
+import { config } from '@/config/index.js'
 export default {
   data() {
     return {
@@ -94,7 +95,7 @@ export default {
     // 获取验证码
     getCaptcha() {
       this.dataForm.uuid = getUUID();
-      this.captchaPath = `${process.env.VUE_APP_APIURL}/captcha?uuid=${this.dataForm.uuid}`;
+      this.captchaPath = `${config.hostUser}/captcha?uuid=${this.dataForm.uuid}`;
     },
     // 表单提交
     dataFormSubmitHandle: debounce(
@@ -103,10 +104,10 @@ export default {
           if (!valid) {
             return false;
           }
-          //const encryptedPassword = this.encryptPassword(this.dataForm.password); password:encryptedPassword
+          const encryptedPassword = this.encryptPassword(this.dataForm.password); 
           this.loading = true;
           this.$http
-            .post('/login', {...this.dataForm,})
+            .post('/login', {...this.dataForm,password:encryptedPassword})
             .then((res) => {
               if (res.code !== 0) {
                 this.loading = false;

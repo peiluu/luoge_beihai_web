@@ -1,5 +1,6 @@
 import Cookies from 'js-cookie'
 import qs from 'qs'
+import { config } from '@/config/index.js'
 export default {
   data () {
     /* eslint-disable */
@@ -168,7 +169,7 @@ export default {
         'token': Cookies.get('token'),
         ...this.dataForm
       })
-      window.location.href = `${process.env.VUE_APP_APIURL}${this.mixinViewModuleOptions.exportURL}?${params}`
+      window.location.href = `${config.hostUser}${this.mixinViewModuleOptions.exportURL}?${params}`
     }
   }
 }
