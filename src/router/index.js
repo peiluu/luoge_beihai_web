@@ -6,7 +6,6 @@ import { getToken, fnAddDynamicMenuRoutes, clearLoginInfo } from '@/utils'
 import store from '../store/index'
 import { routerWhitelist } from '@/config/constant'
 import { moduleRoutes, pageRoutes } from './router.config'
-
 Vue.use(Router)
 
 const originalPush = Router.prototype.push
